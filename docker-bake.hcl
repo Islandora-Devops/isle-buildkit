@@ -132,6 +132,11 @@ function "cacheTo" {
   result =  [notequal("", BRANCH) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${CACHE_TO_REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
 }
 
+function "context" {
+  params = [image]
+  result = "images/${image}"
+}
+
 ###############################################################################
 # Groups
 ###############################################################################
@@ -176,17 +181,17 @@ target "arm64-common" {
 ###############################################################################
 target "activemq-common" {
   inherits = ["common"]
-  context = "activemq"
+  context = context("activemq")
 }
 
 target "alpaca-common" {
   inherits = ["common"]
-  context = "alpaca"
+  context = context("alpaca")
 }
 
 target "base-common" {
   inherits = ["common"]
-  context = "base"
+  context = context("base")
   contexts = {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
@@ -197,62 +202,62 @@ target "base-common" {
 
 target "blazegraph-common" {
   inherits = ["common"]
-  context = "blazegraph"
+  context = context("blazegraph")
 }
 
 target "cantaloupe-common" {
   inherits = ["common"]
-  context = "cantaloupe"
+  context = context("cantaloupe")
 }
 
 target "crayfish-common" {
   inherits = ["common"]
-  context = "crayfish"
+  context = context("crayfish")
 }
 
 target "crayfits-common" {
   inherits = ["common"]
-  context = "crayfits"
+  context = context("crayfits")
 }
 
 target "drupal-common" {
   inherits = ["common"]
-  context = "drupal"
+  context = context("drupal")
 }
 
 target "fcrepo6-common" {
   inherits = ["common"]
-  context = "fcrepo6"
+  context = context("fcrepo6")
 }
 
 target "fits-common" {
   inherits = ["common"]
-  context = "fits"
+  context = context("fits")
 }
 
 target "handle-common" {
   inherits = ["common"]
-  context = "handle"
+  context = context("handle")
 }
 
 target "homarus-common" {
   inherits = ["common"]
-  context = "homarus"
+  context = context("homarus")
 }
 
 target "houdini-common" {
   inherits = ["common"]
-  context = "houdini"
+  context = context("houdini")
 }
 
 target "hypercube-common" {
   inherits = ["common"]
-  context = "hypercube"
+  context = context("hypercube")
 }
 
 target "imagemagick-common" {
   inherits = ["common"]
-  context = "imagemagick"
+  context = context("imagemagick")
   contexts = {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
@@ -263,12 +268,12 @@ target "imagemagick-common" {
 
 target "java-common" {
   inherits = ["common"]
-  context = "java"
+  context = context("java")
 }
 
 target "leptonica-common" {
   inherits = ["common"]
-  context = "leptonica"
+  context = context("leptonica")
   contexts = {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
@@ -279,57 +284,57 @@ target "leptonica-common" {
 
 target "mariadb-common" {
   inherits = ["common"]
-  context = "mariadb"
+  context = context("mariadb")
 }
 
 target "mergepdf-common" {
   inherits = ["common"]
-  context = "mergepdf"
+  context = context("mergepdf")
 }
 
 target "milliner-common" {
   inherits = ["common"]
-  context = "milliner"
+  context = context("milliner")
 }
 
 target "nginx-common" {
   inherits = ["common"]
-  context = "nginx"
+  context = context("nginx")
 }
 
 target "postgresql-common" {
   inherits = ["common"]
-  context = "postgresql"
+  context = context("postgresql")
 }
 
 target "riprap-common" {
   inherits = ["common"]
-  context = "riprap"
+  context = context("riprap")
 }
 
 target "scyllaridae-common" {
   inherits = ["common"]
-  context = "scyllaridae"
+  context = context("scyllaridae")
 }
 
 target "solr-common" {
   inherits = ["common"]
-  context = "solr"
+  context = context("solr")
 }
 
 target "test-common" {
   inherits = ["common"]
-  context = "test"
+  context = context("test")
 }
 
 target "tomcat-common" {
   inherits = ["common"]
-  context = "tomcat"
+  context = context("tomcat")
 }
 
 target "transkribus-common" {
   inherits = ["common"]
-  context = "transkribus"
+  context = context("transkribus")
 }
 
 ###############################################################################

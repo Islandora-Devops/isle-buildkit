@@ -83,7 +83,7 @@ build:
 # not track permissions for folders, so we rely on this hack.
 .PHONY: folder-permissions
 folder-permissions:
-	find . -type d -exec chmod +x {} \;
+	find images -type d -exec chmod +x {} \;
 
 # Prior to building, all scripts which might be copied into Docker images must
 # have the executable bit set for all users. So that they can be executed by
@@ -91,7 +91,7 @@ folder-permissions:
 # not track executable permissions for "groups" or "others".
 .PHONY: executable-permissons
 executable-permissons:
-	find . -type f \
+	find images -type f \
     \( \
       -name "*.sh" \
       -o -name "run" \
