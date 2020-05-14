@@ -1,0 +1,7 @@
+[template]
+src = "ca.islandora.alpaca.http.client.cfg.tmpl"
+dest = "/opt/karaf/etc/ca.islandora.alpaca.http.client.cfg"
+uid = 100
+gid = 1000
+mode = "0644"
+keys = [ "/http" ]

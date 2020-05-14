@@ -1,0 +1,4 @@
+index.stream={{ getv "/indexing/stream/triplestore/index" "broker:queue:islandora-indexing-triplestore-index" }}
+delete.stream={{ getv "/indexing/stream/triplestore/delete" "broker:queue:islandora-indexing-triplestore-delete" }}
+triplestore.baseUrl={{ getv "/indexing/url" "http://blazegraph/bigdata/namespace/islandora/sparql" }}
+error.maxRedeliveries={{ getv "/indexing/redeliveries" "10" }}

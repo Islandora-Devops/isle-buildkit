@@ -1,0 +1,7 @@
+[template]
+src = "cantaloupe.properties.tmpl"
+dest = "/opt/tomcat/conf/cantaloupe.properties"
+uid = 100
+gid = 1000
+mode = "0640"
+keys = [ "/" ]

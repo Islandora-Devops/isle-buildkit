@@ -1,0 +1,4 @@
+#!/usr/bin/execlineb -P
+# -*- mode: sh -*-
+# vi: set ft=sh:
+/usr/sbin/php-fpm7

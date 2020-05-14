@@ -1,0 +1,6 @@
+#!/bin/sh
+export JAVA_OPTS="{{ getv "/java/opts" "" }}"
+export CATALINA_OPTS="{{ getv "/catalina/opts" "" }}"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.home=/data/home"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.velocity.runtime.log=/opt/tomcat/logs/velocity.log"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.modeshape.configuration={{ getv "/modeshape/configuration" "classpath:/config/repository.json" }} -Dfcrepo.jms.baseUrl=http://{{ index (lookupIP (getenv "HOSTNAME")) 0 }}/fcrepo/rest"

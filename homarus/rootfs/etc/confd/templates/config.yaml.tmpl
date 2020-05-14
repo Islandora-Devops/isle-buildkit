@@ -1,0 +1,41 @@
+---
+homarus:
+  # path to the ffmpeg executable
+  executable: ffmpeg
+  mime_types:
+    valid:
+      - video/mp4
+      - video/x-msvideo
+      - video/ogg
+      - audio/x-wav
+      - audio/mpeg
+      - audio/aac
+      - image/jpeg
+      - image/png
+    default: video/mp4
+  mime_to_format:
+    valid:
+      - video/mp4_mp4
+      - video/x-msvideo_avi
+      - video/ogg_ogg
+      - audio/x-wav_wav
+      - audio/mpeg_mp3
+      - audio/aac_m4a
+      - image/jpeg_image2pipe
+      - image/png_image2pipe
+    default: mp4
+
+log:
+  # Valid log levels are:
+  # DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY, NONE
+  # log level none won't open logfile
+  level: {{ getv "/log/level" "WARNING" }}
+  file: /var/log/islandora/homarus.log
+
+syn:
+  # toggles JWT security for service
+  enable: True
+  # Path to the syn config file for authentication.
+  # example can be found here:
+  # https://github.com/Islandora/Syn/blob/master/conf/syn-settings.example$
+  config: /var/www/crayfish/syn-settings.xml

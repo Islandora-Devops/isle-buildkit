@@ -1,0 +1,7 @@
+[template]
+src = "ca.islandora.alpaca.connector.ocr.blueprint.xml.tmpl"
+dest = "/opt/karaf/deploy/ca.islandora.alpaca.connector.ocr.blueprint.xml"
+uid = 100
+gid = 1000
+mode = "0644"
+keys = [ "/ocr" ]

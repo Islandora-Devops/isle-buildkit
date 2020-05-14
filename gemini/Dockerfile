@@ -1,0 +1,11 @@
+# syntax=docker/dockerfile:experimental
+FROM islandora/crayfish:latest
+
+RUN --mount=id=composer,sharing=locked,type=cache,target=/root/.composer/cache \
+    composer install -d /var/www/crayfish/Gemini && \
+    ln -s /var/www/crayfish/Gemini/src /var/www/html && \
+    cleanup.sh
+
+COPY /rootfs /
+
+WORKDIR /var/www/crayfish/Gemini/

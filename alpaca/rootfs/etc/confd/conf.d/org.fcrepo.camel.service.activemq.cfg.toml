@@ -1,0 +1,7 @@
+[template]
+src = "org.fcrepo.camel.service.activemq.cfg.tmpl"
+dest = "/opt/karaf/etc/org.fcrepo.camel.service.activemq.cfg"
+uid = 100
+gid = 1000
+mode = "0644"
+keys = [ "/activemq" ]

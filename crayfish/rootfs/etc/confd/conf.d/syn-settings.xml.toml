@@ -1,0 +1,7 @@
+[template]
+src = "syn-settings.xml.tmpl"
+dest = "/var/www/crayfish/syn-settings.xml"
+uid = 100
+gid = 101
+mode = "0644"
+keys = [ "/jwt" ]

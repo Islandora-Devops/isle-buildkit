@@ -1,0 +1,7 @@
+[template]
+src = "sandbox-setup.sh.tmpl"
+dest = "/var/run/islandora/sandbox-setup.sh"
+uid = 0
+gid = 0
+mode = "0700"
+keys = [ "/" ]

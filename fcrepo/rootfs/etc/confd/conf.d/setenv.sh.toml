@@ -1,0 +1,7 @@
+[template]
+src = "setenv.sh.tmpl"
+dest = "/opt/tomcat/bin/setenv.sh"
+uid = 100
+gid = 1000
+mode = "0655"
+keys = [ "/modeshape/configuration" ]

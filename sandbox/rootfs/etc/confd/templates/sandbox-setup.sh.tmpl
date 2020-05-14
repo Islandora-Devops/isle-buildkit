@@ -1,0 +1,178 @@
+#!/usr/bin/with-contenv bash
+set -ex
+
+function drush {
+    s6-setuidgid nginx php -d memory_limit=-1 /usr/local/bin/drush ${@}
+}
+
+function main {
+    local broker_host="{{ getv "/broker/host" "activemq" }}"
+    local broker_port="{{ getv "/broker/port" "61613" }}"
+    local broker_url="tcp://${broker_host}:${broker_port}"
+    local gemini_host="{{ getv "/gemini/host" "gemini" }}"
+    local gemini_port="{{ getv "/gemini/port" "8000" }}"
+    local gemini_url="http://${gemini_host}:${gemini_port}"
+    local solr_host="{{ getv "/solr/host" "solr" }}"
+    local solr_port="{{ getv "/solr/port" "8983" }}"
+    local matamo_url="{{ getv "/matomo/url" "http://matomo.localhost/" }}"
+    local cantaloupe_url="{{ getv "/cantaloupe/url" "http://cantaloupe/cantaloupe/iiif/2" }}"
+    local triplestore_host="{{ getv "/triplestore/host" "blazegraph" }}"
+    local triplestore_port="{{ getv "/triplestore/port" "80" }}"
+    local triplestore_url="http://${triplestore_host}:${triplestore_port}/bigdata"
+    local fcrepo_host="{{ getv "/fcrepo/host" "fcrepo.localhost" }}"
+    local fcrepo_port="{{ getv "/fcrepo/host" "80" }}"
+    local fcrepo_url=
+
+    # Indexing fails if port 80 is given explicitly.
+    if [[ "${fcrepo_port}" == "80" ]]; then
+        fcrepo_url="http://${fcrepo_host}/fcrepo/rest/"
+    else
+        fcrepo_url="http://${fcrepo_host}:${fcrepo_port}/fcrepo/rest/"
+    fi
+
+    # Create keys prior to any installation as other services depend on them.
+    if [[ ! -f "/opt/keys/claw/private.key" ]]; then
+        openssl genrsa -out "/opt/keys/claw/private.key" 2048
+        openssl rsa -pubout -in "/opt/keys/claw/private.key" -out "/opt/keys/claw/public.key"
+        chmod a=r /opt/keys/claw/* 
+    fi
+
+    # Hackity hack sack.
+    if ! grep flysystem /var/www/drupal/web/sites/default/settings.php &> /dev/null; then
+    cat <<-EOT >> /var/www/drupal/web/sites/default/settings.php
+
+\$settings['flysystem'] = [
+    'fedora' => [
+        'driver' => 'fedora',
+        'config' => [
+            'root' => '${fcrepo_url}',
+        ],
+    ],
+];
+EOT
+    fi
+
+    # Ensure JWT is setup before any module installations run.
+    drush en --uri "http://drupal:80/" --no-interaction --yes jwt
+    drush config-import -y --partial --source=/opt/islandora/configs/jwt
+
+    # Ensure Islandora settings are correct, before install hooks run.
+    drush en --uri "http://drupal:80/" --no-interaction --yes islandora
+    drush -y cset --input-format=yaml islandora.settings broker_url "${broker_url}"
+    drush -y cset --input-format=yaml islandora.settings gemini_url "${gemini_url}"
+
+    # Need access to Solr before we can actually import the right config.
+    if timeout 60 wait-for-open-port.sh "${solr_host}" "${solr_port}" ; then
+        echo "Solr Found"
+    else
+        echo "Could not connect to Solr"
+        exit 1
+    fi
+
+    # Need access to Solr before we can actually import the right config.
+    if timeout 60 wait-for-open-port.sh "${fcrepo_host}" "${fcrepo_port}" ; then
+        echo "Fcrepo Found"
+    else
+        echo "Could not connect to Fcrepo"
+        exit 1
+    fi
+
+    # Need access to activemq so we can publish the creation of before we can actually import the right config.
+    if timeout 60 wait-for-open-port.sh ${broker_host} ${broker_port}; then
+        echo "Broker Found"
+    else
+        echo "Could not connect to Broker"
+        exit 1
+    fi
+
+    # Need access to gemini before importing features.
+    if timeout 60 wait-for-open-port.sh "${gemini_host}" "${gemini_port}"; then
+        echo "Gemini Found"
+    else
+        echo "Could not connect to Gemini"
+        exit 1
+    fi
+
+    if timeout 60 wait-for-open-port.sh "${triplestore_host}" "${triplestore_port}"; then
+        echo "Triplestore Found"
+    else
+        echo "Could not connect to Triplestore"
+        exit 1
+    fi
+
+    # Setup namespace / inference.
+    curl -X POST -H "Content-type: text/plain" --data-binary @/var/run/islandora/blazegraph.properties "${triplestore_url}/namespace"
+    curl -X POST -H "Content-type: text/plain" --data-binary @/var/run/islandora/inference.nt "${triplestore_url}/namespace/islandora/sparql"
+
+    # From: islandora-playbook/inventory/vagrant/group_vars/webserver/drupal.yml
+    drush en --uri "http://drupal:80/" --no-interaction --yes \
+        admin_toolbar \
+        basic_auth \
+        content_browser \
+        controlled_access_terms_defaults \
+        devel \
+        facets \
+        islandora_breadcrumbs \
+        islandora_defaults \
+        islandora_fits \
+        islandora_iiif \
+        islandora_oaipmh \
+        islandora_search \
+        matomo \
+        pdf \
+        rdf \
+        responsive_image \
+        rest \
+        restui \
+        search_api_solr \
+        search_api_solr_defaults \
+        serialization \
+        simpletest \
+        syslog \
+        transliterate_filenames
+
+    # search_api.index.default_solr_index?
+    drush -y cset search_api.server.default_solr_server backend_config.connector_config.host "${solr_host}"
+    drush -y cset search_api.server.default_solr_server backend_config.connector_config.port "${solr_port}"
+
+    # From: islandora-playbook/roles/internal/webserver-app/tasks/drupal.yml
+    drush -y pm-uninstall search
+    drush -y "then" -y carapace
+    drush -y config-set system.theme default carapace
+    drush -y config-set matomo.settings site_id 1
+    drush -y config-set matomo.settings url_http "${matamo_url}"
+    drush fim --uri "http://drupal:80/" --no-interaction --yes islandora_core_feature,controlled_access_terms_defaults,islandora_defaults,islandora_search
+
+    # Fix what the features overides.
+    drush -y cset search_api.server.default_solr_server backend_config.connector_config.host "${solr_host}"
+    drush -y cset search_api.server.default_solr_server backend_config.connector_config.port "${solr_port}"
+
+    # Export the configuration into shared volume.
+    drush -y solr-gsc default_solr_server /tmp/solr_config.zip 7.1
+    mkdir -p /opt/solr/server/solr/ISLANDORA/conf || true
+    mkdir -p /opt/solr/server/solr/ISLANDORA/data || true
+    unzip -o /tmp/solr_config.zip -d /opt/solr/server/solr/ISLANDORA/conf
+    # The uid:gid "100:1000" is "solr:solr" inside of the solr container.
+    chown -R 100:1000 /opt/solr/server/solr/ISLANDORA
+    curl -s "http://${solr_host}:${solr_port}/solr/admin/cores?action=CREATE&name=ISLANDORA&instanceDir=ISLANDORA&config=solrconfig.xml&dataDir=data" &> /dev/null
+
+    # From: islandora-playbook/post-install.yml
+    drush -y urol fedoraadmin admin
+    drush -y cset --input-format=yaml jsonld.settings remove_jsonld_format true
+    drush -y cset --input-format=yaml islandora.settings broker_url "${broker_url}"
+    drush -y cset --input-format=yaml islandora.settings gemini_url "${gemini_url}"
+    drush -y cset --input-format=yaml islandora.settings gemini_pseudo_bundles.0 "islandora_object:node"
+    drush -y cset --input-format=yaml islandora.settings gemini_pseudo_bundles.1 "image:media"
+    drush -y cset --input-format=yaml islandora.settings gemini_pseudo_bundles.2 "file:media"
+    drush -y cset --input-format=yaml islandora.settings gemini_pseudo_bundles.3 "audio:media"
+    drush -y cset --input-format=yaml islandora.settings gemini_pseudo_bundles.4 "video:media"
+    drush -y cset --input-format=yaml media.settings standalone_url true
+    drush -y cset --input-format=yaml islandora_iiif.settings iiif_server "${cantaloupe_url}" 
+    drush -y cset --input-format=yaml openseadragon.settings manifest_view iiif_manifest
+    drush -y --uri "http://drupal:80/" --userid=1 mim --group=islandora
+    s6-setuidgid nginx mkdir -p /var/www/drupal/web/simpletest /var/www/drupal/web/sites/simpletest 
+
+    # Cache clear.
+    drush -y cr
+}
+main

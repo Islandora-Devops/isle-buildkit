@@ -1,0 +1,7 @@
+[template]
+src = "org.fcrepo.camel.indexing.triplestore.cfg.tmpl"
+dest = "/opt/karaf/etc/org.fcrepo.camel.indexing.triplestore.cfg"
+uid = 100
+gid = 1000
+mode = "0644"
+keys = [ "/indexing" ]

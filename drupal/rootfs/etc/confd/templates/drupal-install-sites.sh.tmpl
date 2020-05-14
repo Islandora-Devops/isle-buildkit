@@ -1,0 +1,101 @@
+#!/usr/bin/with-contenv bash
+
+set -e
+
+function main {
+    local site=
+    local profile=
+    local subdir=
+    local name=
+    local email=
+    local locale=
+    local account_name=
+    local account_password=
+    local account_email=
+    local db_driver=
+    local db_host=
+    local db_port=
+    local db_root_user=
+    local db_root_password=
+    local db_name=
+    local db_user=
+    local db_password=
+
+    # Install the default site.
+    name="{{ getv "/default/name" "Default" }}"
+    profile="{{ getv "/default/profile" "standard" }}"
+    subdir="{{ getv "/default/subdir" "default" }}"
+    email="{{ getv "/default/email" "webmaster@localhost.com" }}"
+    local="{{ getv "/default/locale" "en" }}"
+    account_name="{{ getv "/default/account/name" "admin" }}"
+    account_password="{{ getv "/default/account/password" "password" }}"
+    account_email="{{ getv "/default/account/email" "webmaster@localhost.com" }}"
+    db_driver="{{ getv "/db/driver" "mysql" }}"
+    db_host="{{ getv "/db/host" "database" }}"
+    db_port="{{ getv "/db/port" "3306" }}"
+    db_root_user="{{ getv "/db/root/user" "root" }}"
+    db_root_password="{{ getv "/db/root/password" "password" }}"
+    db_name="{{ getv "/default/db/name" "drupal_default"  }}"
+    db_user="{{ getv "/default/db/user" "drupal_default" }}"
+    db_password="{{ getv "/default/db/password" "password" }}"
+
+    # Check the number of tables to determine if it has already been installed.
+    count=$(mysql --user="${db_root_user}" --password="${db_root_password}" --host="${db_host}" --port="${db_port}" --protocol=tcp -Ne "SELECT COUNT(DISTINCT table_name) FROM information_schema.columns WHERE table_schema = '${db_name}'")
+
+    # Only install if it is not already installed.
+    if [[ $count -eq 0 ]]; then
+        echo "Installing Default site."
+        s6-setuidgid nginx drush -n si "${profile}" \
+            --sites-subdir="${subdir}" \
+            --site-name="${name}" \
+            --site-mail="${email}" \
+            --locale="${local}" \
+            --account-name="${account_name}" \
+            --account-pass="${account_password}" \
+            --account-mail="${account_email}" \
+            --db-url="${db_driver}://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}"
+    else
+        echo "Default Site already is installed."
+    fi
+
+    # Install all of the specified sub-sites. 
+{{ range $site := lsdir "/site" }}
+    site="{{base $site}}"
+    name="{{ getv (printf "/site/%s/name" $site) }}"
+    profile="{{ getv (printf "/site/%s/profile" $site) "standard" }}"
+    subdir="{{ getv (printf "/site/%s/subdir" $site) "${site}" }}"
+    email="{{ getv (printf "/site/%s/email" $site) "webmaster@localhost.com" }}"
+    local="{{ getv (printf "/site/%s/locale" $site) "en" }}"
+    account_name="{{ getv (printf "/site/%s/account/name" $site) "admin" }}"
+    account_password="{{ getv (printf "/site/%s/account/password" $site) "password" }}"
+    account_email="{{ getv (printf "/site/%s/account/email" $site) "webmaster@localhost.com" }}"
+    db_driver="{{ getv "/db/driver" "mysql" }}"
+    db_host="{{ getv "/db/host" "database" }}"
+    db_port="{{ getv "/db/port" "3306" }}"
+    db_root_user="{{ getv "/db/root/user" "root" }}"
+    db_root_password="{{ getv "/db/root/password" "password" }}"
+    db_name="{{ getv (printf "/site/%s/db/name" $site) "drupal_${site}"  }}"
+    db_user="{{ getv (printf "/site/%s/db/user" $site) "drupal_${site}" }}"
+    db_password="{{ getv (printf "/site/%s/db/password" $site) "password" }}"
+
+    # Check the number of tables to determine if it has already been installed.
+    count=$(mysql --user="${db_root_user}" --password="${db_root_password}" --host="${db_host}" --port="${db_port}" --protocol=tcp -Ne "SELECT COUNT(DISTINCT table_name) FROM information_schema.columns WHERE table_schema = '${db_name}'")
+
+    # Only install if it is not already installed.
+    if [[ $count -eq 0 ]]; then
+        echo "Installing site: {{base $site}}"
+        s6-setuidgid nginx drush -n si "${profile}" \
+            --sites-subdir="${subdir}" \
+            --site-name="${name}" \
+            --site-mail="${email}" \
+            --locale="${local}" \
+            --account-name="${account_name}" \
+            --account-pass="${account_password}" \
+            --account-mail="${account_email}" \
+            --db-url="${db_driver}://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}"
+    else
+        echo "Site already is installed."
+    fi
+{{ end }}
+}
+main

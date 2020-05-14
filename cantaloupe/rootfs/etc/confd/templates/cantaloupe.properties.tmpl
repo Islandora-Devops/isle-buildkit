@@ -1,0 +1,311 @@
+###########################################################################
+# GENERAL SETTINGS
+###########################################################################
+
+http.enabled = {{ getv "/http/enabled" "true" }}
+http.host = {{ getv "/http/host" "0.0.0.0" }}
+http.port = {{ getv "/http/port" "8182" }}
+https.enabled = {{ getv "/https/enabled" "false" }}
+https.host = {{ getv "/https/host" "0.0.0.0" }}
+https.port = {{ getv "/https/port" "8183" }}
+https.key_store_type = {{ getv "/https/key/store/type" "JKS" }}
+https.key_store_password = {{ getv "/https/key/store/password" "password" }}
+https.key_store_path = {{ getv "/https/key/store/path" "/path/to/keystore.jks" }}
+https.key_password = {{ getv "/https/key/password" "password" }}
+auth.basic.enabled = {{ getv "/auth/basic/enabled" "false" }}
+auth.basic.username = {{ getv "/auth/basic/username" "admin" }}
+auth.basic.secret = {{ getv "/auth/basic/secret" "password" }}
+admin.enabled = {{ getv "/admin/enabled" "true" }}
+admin.password = {{ getv "/admin/password" "password" }}
+base_uri = {{ getv "/base/uri" "" }}
+slash_substitute = {{ getv "/slash/substitute" "" }}
+max_pixels = {{ getv "/max/pixels" "400000000" }}
+print_stack_trace_on_error_pages = {{ getv "/print/stack/trace/on/error/pages" "true" }}
+
+###########################################################################
+# DELEGATE SCRIPT
+###########################################################################
+
+delegate_script.enabled = {{ getv "/delegate/script/enabled" "false" }}
+delegate_script.pathname = {{ getv "/delegate/script/pathname" "delegates.rb" }}
+delegate_script.cache.enabled = {{ getv "/delegate/script/cache/enabled" "false" }}
+
+###########################################################################
+# ENDPOINTS
+###########################################################################
+
+endpoint.iiif.1.enabled = {{ getv "/endpoint/iiif/1/enabled" "true" }}
+endpoint.iiif.2.enabled = {{ getv "/endpoint/iiif/2/enabled" "true" }}
+endpoint.iiif.content_disposition = {{ getv "/endpoint/iiif/content/disposition" "inline" }}
+endpoint.iiif.min_tile_size = {{ getv "/endpoint/iiif/min/tile/size" "1024" }}
+endpoint.iiif.2.restrict_to_sizes = {{ getv "/endpoint/iiif/2/restrict/to/sizes" "false" }}
+endpoint.api.enabled = {{ getv "/endpoint/api/enabled" "false" }}
+endpoint.api.username = {{ getv "/endpoint/api/username" "" }}
+endpoint.api.secret = {{ getv "/endpoint/api/secret" "" }}
+
+###########################################################################
+# RESOLVERS
+###########################################################################
+
+resolver.static = {{ getv "/resolver/static" "HttpResolver" }}
+resolver.delegate = {{ getv "/resolver/delegate" "false" }}
+
+#----------------------------------------
+# FilesystemResolver
+#----------------------------------------
+
+FilesystemResolver.lookup_strategy = {{ getv "/filesystemresolver/lookup/strategy" "BasicLookupStrategy" }}
+FilesystemResolver.BasicLookupStrategy.path_prefix = {{ getv "/filesystemresolver/basiclookupstrategy/path/prefix" "/var/www/drupal/web/" }}
+FilesystemResolver.BasicLookupStrategy.path_suffix = {{ getv "/filesystemresolver/basiclookupstrategy/path/suffix" "" }}
+
+#----------------------------------------
+# HttpResolver
+#----------------------------------------
+
+HttpResolver.lookup_strategy = {{ getv "/httpresolver/lookup/strategy" "BasicLookupStrategy" }}
+HttpResolver.BasicLookupStrategy.url_prefix = {{ getv "/httpresolver/basiclookupstrategy/url/prefix" "" }}
+HttpResolver.BasicLookupStrategy.url_suffix = {{ getv "/httpresolver/basiclookupstrategy/url/suffix" "" }}
+HttpResolver.auth.basic.username = {{ getv "/httpresolver/auth/basic/username" "" }}
+HttpResolver.auth.basic.secret = {{ getv "/httpresolver/auth/basic/secret" "" }}
+
+#----------------------------------------
+# JdbcResolver
+#----------------------------------------
+
+JdbcResolver.url = {{ getv "/jdbcresolver/url" "jdbc:postgresql://database:5432/cantaloupe" }}
+JdbcResolver.user = {{ getv "/jdbcresolver/user" "admin" }}
+JdbcResolver.password = {{ getv "/jdbcresolver/password" "password" }}
+JdbcResolver.connection_timeout = {{ getv "/jdbcresolver/connection/timeout" "10" }}
+
+#----------------------------------------
+# AmazonS3Resolver
+#----------------------------------------
+
+AmazonS3Resolver.access_key_id = {{ getv "/amazons3resolver/access/key/id" "" }}
+AmazonS3Resolver.secret_key = {{ getv "/amazons3resolver/secret/key" "" }}
+AmazonS3Resolver.bucket.name = {{ getv "/amazons3resolver/bucket/name" "" }}
+AmazonS3Resolver.bucket.region = {{ getv "/amazons3resolver/bucket/region" "" }}
+AmazonS3Resolver.lookup_strategy = {{ getv "/amazons3resolver/lookup/strategy" "BasicLookupStrategy" }}
+
+#----------------------------------------
+# AzureStorageResolver
+#----------------------------------------
+
+AzureStorageResolver.account_name = {{ getv "/azurestorageresolver/account/name" "" }}
+AzureStorageResolver.account_key = {{ getv "/azurestorageresolver/account/key" "" }}
+AzureStorageResolver.container_name = {{ getv "/azurestorageresolver/container/name" "" }}
+AzureStorageResolver.lookup_strategy = {{ getv "/azurestorageresolver/lookup/strategy" "BasicLookupStrategy" }}
+
+###########################################################################
+# PROCESSORS
+###########################################################################
+
+#----------------------------------------
+# Processor Selection
+#----------------------------------------
+
+processor.avi = {{ getv "/processor/avi" "FfmpegProcessor" }}
+processor.bmp = {{ getv "/processor/bmp" "ImageMagickProcessor" }}
+processor.dcm = {{ getv "/processor/dcm" "ImageMagickProcessor" }}
+processor.gif = {{ getv "/processor/gif" "ImageMagickProcessor" }}
+processor.jp2 = {{ getv "/processor/jp2" "OpenJpegProcessor" }}
+processor.jpg = {{ getv "/processor/jpg" "ImageMagickProcessor" }}
+processor.mov = {{ getv "/processor/mov" "FfmpegProcessor" }}
+processor.mp4 = {{ getv "/processor/mp4" "FfmpegProcessor" }}
+processor.mpg = {{ getv "/processor/mpg" "FfmpegProcessor" }}
+processor.pdf = {{ getv "/processor/pdf" "ImageMagickProcessor" }}
+processor.png = {{ getv "/processor/png" "ImageMagickProcessor" }}
+processor.tif = {{ getv "/processor/tif" "ImageMagickProcessor" }}
+processor.webm = {{ getv "/processor/webm" "FfmpegProcessor" }}
+processor.webp = {{ getv "/processor/webp" "ImageMagickProcessor" }}
+processor.fallback = {{ getv "/processor/fallback" "Java2dProcessor" }}
+
+#----------------------------------------
+# Global Processor Configuration
+#----------------------------------------
+
+processor.normalize = {{ getv "/processor/normalize" "false" }}
+processor.background_color = {{ getv "/processor/background/color" "black" }}
+processor.downscale_filter = {{ getv "/processor/downscale/filter" "bicubic" }}
+processor.upscale_filter = {{ getv "/processor/upscale/filter" "bicubic" }}
+processor.sharpen = {{ getv "/processor/sharpen" "0" }}
+processor.jpg.progressive = {{ getv "/processor/jpg/progressive" "true" }}
+processor.jpg.quality = {{ getv "/processor/jpg/quality" "80" }}
+processor.tif.compression = {{ getv "/processor/tif/compression" "LZW" }}
+StreamProcessor.retrieval_strategy = {{ getv "/streamprocessor/retrieval/strategy" "StreamStrategy" }}
+
+#----------------------------------------
+# FfmpegProcessor
+#----------------------------------------
+
+FfmpegProcessor.path_to_binaries = {{ getv "/ffmpegprocessor/path/to/binaries" "" }}
+
+#----------------------------------------
+# GraphicsMagickProcessor
+#----------------------------------------
+
+GraphicsMagickProcessor.path_to_binaries = {{ getv "/graphicsmagickprocessor/path/to/binaries" "" }}
+
+#----------------------------------------
+# ImageMagickProcessor
+#----------------------------------------
+
+ImageMagickProcessor.path_to_binaries = {{ getv "/imagemagickprocessor/path/to/binaries" "" }}
+
+#----------------------------------------
+# KakaduProcessor
+#----------------------------------------
+
+KakaduProcessor.path_to_binaries = {{ getv "/kakaduprocessor/path/to/binaries" "" }}
+
+#----------------------------------------
+# OpenJpegProcessor
+#----------------------------------------
+
+OpenJpegProcessor.path_to_binaries = {{ getv "/openjpegprocessor/path/to/binaries" "" }}
+
+#----------------------------------------
+# PdfBoxProcessor
+#----------------------------------------
+
+PdfBoxProcessor.dpi = {{ getv "/pdfboxprocessor/dpi" "150" }}
+
+###########################################################################
+# CLIENT-SIDE CACHING
+###########################################################################
+
+cache.client.enabled = {{ getv "/cache/client/enabled" "true" }}
+cache.client.max_age = {{ getv "/cache/client/max/age" "2592000" }}
+cache.client.shared_max_age = {{ getv "/cache/client/shared/max/age" "" }}
+cache.client.public = {{ getv "/cache/client/public" "true" }}
+cache.client.private = {{ getv "/cache/client/private" "false" }}
+cache.client.no_cache = {{ getv "/cache/client/no/cache" "false" }}
+cache.client.no_store = {{ getv "/cache/client/no/store" "false" }}
+cache.client.must_revalidate = {{ getv "/cache/client/must/revalidate" "false" }}
+cache.client.proxy_revalidate = {{ getv "/cache/client/proxy/revalidate" "false" }}
+cache.client.no_transform = {{ getv "/cache/client/no/transform" "true" }}
+
+###########################################################################
+# SERVER-SIDE CACHING
+###########################################################################
+
+cache.source = {{ getv "/cache/source" "FilesystemCache" }}
+cache.derivative = {{ getv "/cache/derivative" "FilesystemCache" }}
+cache.server.ttl_seconds = {{ getv "/cache/server/ttl/seconds" "2592000" }}
+cache.server.purge_missing = {{ getv "/cache/server/purge/missing" "false" }}
+cache.server.resolve_first = {{ getv "/cache/server/resolve/first" "false" }}
+cache.server.worker.enabled = {{ getv "/cache/server/worker/enabled" "false" }}
+cache.server.worker.interval = {{ getv "/cache/server/worker/interval" "86400" }}
+
+#----------------------------------------
+# FilesystemCache
+#----------------------------------------
+
+FilesystemCache.pathname = {{ getv "/filesystemcache/pathname" "/data" }}
+FilesystemCache.dir.depth = {{ getv "/filesystemcache/dir/depth" "3" }}
+FilesystemCache.dir.name_length = {{ getv "/filesystemcache/dir/name/length" "2" }}
+
+#----------------------------------------
+# JdbcCache
+#----------------------------------------
+
+JdbcCache.url = {{ getv "/jdbccache/url" "jdbc:postgresql://database:5432/cantaloupe" }}
+JdbcCache.user = {{ getv "/jdbccache/user" "admin" }}
+JdbcCache.password = {{ getv "/jdbccache/password" "password" }}
+JdbcCache.connection_timeout = {{ getv "/jdbccache/connection/timeout" "10" }}
+JdbcCache.derivative_image_table = {{ getv "/jdbccache/derivative/image/table" "derivative_cache" }}
+JdbcCache.info_table = {{ getv "/jdbccache/info/table" "info_cache" }}
+
+#----------------------------------------
+# AmazonS3Cache
+#----------------------------------------
+
+AmazonS3Cache.access_key_id = {{ getv "/amazons3cache/access/key/id" "" }}
+AmazonS3Cache.secret_key = {{ getv "/amazons3cache/secret/key" "" }}}
+AmazonS3Cache.bucket.name = {{ getv "/amazons3cache/bucket/name" "" }}}
+AmazonS3Cache.bucket.region = {{ getv "/amazons3cache/bucket/region" "" }}}
+AmazonS3Cache.object_key_prefix = {{ getv "/amazons3cache/object/key/prefix" "" }}}
+
+#----------------------------------------
+# AzureStorageCache
+#----------------------------------------
+
+AzureStorageCache.account_name = {{ getv "/azurestoragecache/account/name" "" }}
+AzureStorageCache.account_key = {{ getv "/azurestoragecache/account/key" "" }}
+AzureStorageCache.container_name = {{ getv "/azurestoragecache/container/name" "" }}
+AzureStorageCache.object_key_prefix = {{ getv "/azurestoragecache/object/key/prefix" "" }}
+
+###########################################################################
+# OVERLAYS
+###########################################################################
+
+overlays.enabled = {{ getv "/overlays/enabled" "false" }}
+overlays.strategy = {{ getv "/overlays/strategy" "BasicStrategy" }}
+overlays.BasicStrategy.type = {{ getv "/overlays/basicstrategy/type" "image" }}
+overlays.BasicStrategy.image = {{ getv "/overlays/basicstrategy/image" "/path/to/overlay.png" }}
+overlays.BasicStrategy.string = {{ getv "/overlays/basicstrategy/string" "Copyright. All rights reserved." }}
+overlays.BasicStrategy.string.font = {{ getv "/overlays/basicstrategy/string/font" "Helvetica" }}
+overlays.BasicStrategy.string.font.size = {{ getv "/overlays/basicstrategy/string/font/size" "24" }}
+overlays.BasicStrategy.string.font.min_size = {{ getv "/overlays/basicstrategy/string/font/min/size" "18" }}
+overlays.BasicStrategy.string.font.weight = {{ getv "/overlays/basicstrategy/string/font/weight" "1.0" }}
+overlays.BasicStrategy.string.glyph_spacing = {{ getv "/overlays/basicstrategy/string/glyph/spacing" "0.02" }}
+overlays.BasicStrategy.string.color = {{ getv "/overlays/basicstrategy/string/color" "white" }}
+overlays.BasicStrategy.string.stroke.color = {{ getv "/overlays/basicstrategy/string/stroke/color" "black" }}
+overlays.BasicStrategy.string.stroke.width = {{ getv "/overlays/basicstrategy/string/stroke/width" "1" }}
+overlays.BasicStrategy.string.background.color = {{ getv "/overlays/basicstrategy/string/background/color" "rgba(0, 0, 0, 100)" }}
+overlays.BasicStrategy.position = {{ getv "/overlays/basicstrategy/position" "bottom right" }}
+overlays.BasicStrategy.inset = {{ getv "/overlays/basicstrategy/inset" "10" }}
+overlays.BasicStrategy.output_width_threshold = {{ getv "/overlays/basicstrategy/output/width/threshold" "400" }}
+overlays.BasicStrategy.output_height_threshold = {{ getv "/overlays/basicstrategy/output/height/threshold" "300" }}
+
+###########################################################################
+# REDACTIONS
+###########################################################################
+
+redaction.enabled = {{ getv "/redaction/enabled" "false" }}
+
+###########################################################################
+# METADATA
+###########################################################################
+
+metadata.preserve = {{ getv "/metadata/preserve" "false" }}
+metadata.respect_orientation = {{ getv "/metadata/respect/orientation" "false" }}
+
+###########################################################################
+# LOGGING
+###########################################################################
+
+#----------------------------------------
+# Application Log
+#----------------------------------------
+
+log.application.level = {{ getv "/log/application/level" "debug" }}
+log.application.ConsoleAppender.enabled = {{ getv "/log/application/consoleappender/enabled" "true" }}
+log.application.FileAppender.enabled = {{ getv "/log/application/fileappender/enabled" "false" }}
+log.application.FileAppender.pathname = {{ getv "/log/application/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.application.log" }}
+log.application.RollingFileAppender.enabled = {{ getv "/log/application/rollingfileappender/enabled" "false" }}
+log.application.RollingFileAppender.pathname = {{ getv "/log/application/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.application.log" }}
+log.application.RollingFileAppender.policy = {{ getv "/log/application/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
+log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/application/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.application-%d{yyyy-MM-dd}.log" }}
+log.application.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getv "/log/application/rollingfileappender/timebasedrollingpolicy/max/history" "30" }}
+log.application.SyslogAppender.enabled = {{ getv "/log/application/syslogappender/enabled" "false" }}
+log.application.SyslogAppender.host = {{ getv "/log/application/syslogappender/host" "" }}
+log.application.SyslogAppender.port = {{ getv "/log/application/syslogappender/port" "514" }}
+log.application.SyslogAppender.facility = {{ getv "/log/application/syslogappender/facility" "LOCAL0" }}
+
+#----------------------------------------
+# Access Log
+#----------------------------------------
+
+log.access.ConsoleAppender.enabled = {{ getv "/log/access/consoleappender/enabled" "false" }}
+log.access.FileAppender.enabled = {{ getv "/log/access/fileappender/enabled" "true" }}
+log.access.FileAppender.pathname = {{ getv "/log/access/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.access.log" }}
+log.access.RollingFileAppender.enabled = {{ getv "/log/access/rollingfileappender/enabled" "false" }}
+log.access.RollingFileAppender.pathname = {{ getv "/log/access/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.access.log" }}
+log.access.RollingFileAppender.policy = {{ getv "/log/access/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
+log.access.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/access/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.access-%d{yyyy-MM-dd}.log" }}
+log.access.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getv "/log/access/rollingfileappender/timebasedrollingpolicy/max/history" "30" }}
+log.access.SyslogAppender.enabled = {{ getv "/log/access/syslogappender/enabled" "false" }}
+log.access.SyslogAppender.host = {{ getv "/log/access/syslogappender/host" "" }}
+log.access.SyslogAppender.port = {{ getv "/log/access/syslogappender/port" "514" }}
+log.access.SyslogAppender.facility = {{ getv "/log/access/syslogappender/facility" "LOCAL0" }}

@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.cfg.tmpl": "properties",
+        "*.cnf.tmpl": "properties",
+        "*.conf.tmpl": "properties",
+        "*.ini.tmpl": "properties",
+        "*.json.tmpl": "json",
+        "*.local.tmpl": "shellscript",
+        "*.properties.tmpl": "properties",
+        "*.sh.tmpl": "shellscript",
+        "*.sql.tmpl": "sql",
+        "*.xml.tmpl": "xml"
+    }
+}

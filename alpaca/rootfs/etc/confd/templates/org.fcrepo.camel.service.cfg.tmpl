@@ -1,0 +1,7 @@
+# The baseUrl for the fedora repository.
+fcrepo.baseUrl={{ getv "/fcrep/url" "http://fcrepo/fcrepo/rest" }}
+
+# If authentication is enabled on the Fedora repository, add appropriate values here
+fcrepo.authUsername={{ getv "/fcrep/auth/user" "" }}
+fcrepo.authPassword={{ getv "/fcrep/auth/password" "" }}
+fcrepo.authHost={{ getv "/fcrep/host" "" }}

@@ -1,0 +1,6 @@
+#!/usr/bin/execlineb -P
+# -*- mode: sh -*-
+# vi: set ft=sh :
+with-contenv
+s6-setuidgid activemq
+/opt/activemq/bin/activemq console

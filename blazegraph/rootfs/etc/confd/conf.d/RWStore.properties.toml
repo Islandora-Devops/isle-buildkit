@@ -1,0 +1,6 @@
+[template]
+src = "RWStore.properties.tmpl"
+dest = "/opt/tomcat/webapps/bigdata/WEB-INF/classes/RWStore.properties"
+uid = 100
+gid = 1000
+keys = ["/"]

@@ -1,0 +1,66 @@
+{
+    "name" : "repo",
+    "jndiName" : "",
+    "workspaces" : {
+        "predefined" : ["default"],
+        "default" : "default",
+        "allowCreation" : true,
+        "cacheSize" : 10000
+    },
+    "storage" : {
+        {{ if eq (getv "/persistence/type" "file") "file" }}
+        "persistence": {
+            "type": "file",
+            "path" : "/data/objects"
+        },
+        {{ end }}
+        {{ if eq (getv "/persistence/type" "file") "mysql" }}
+        "persistence": {
+            "type" : "db",
+            "connectionUrl": "jdbc:mysql://{{ getv "/db/host" "database" }}:{{ getv "/db/port" "3306" }}/{{ getv "/db/name" "fcrepo" }}?createDatabaseIfNotExist=true",
+            "driver" : "com.mysql.jdbc.Driver",
+            "username" : "{{ getv "/db/user" "admin" }}",
+            "password" : "{{ getv "/db/password" "password" }}"
+        },
+        {{ end }}
+        {{ if eq (getv "/persistence/type" "file") "postgresql" }}
+        "persistence": {
+            "type" : "db",
+            "connectionUrl": "jdbc:postgresql://{{ getv "/db/host" "database" }}:{{ getv "/db/port" "5432" }}/{{ getv "/db/name" "fcrepo" }}?createDatabaseIfNotExist=true",
+            "driver" : "org.postgresql.Driver",
+            "username" : "{{ getv "/db/user" "admin" }}",
+            "password" : "{{ getv "/db/password" "password" }}"
+        },
+        {{ end }}
+        {{ if eq (getv "/binarystorage/type" "file") "file" }}
+        "binaryStorage" : {
+            "type" : "file",
+            "directory" : "/data/binaries",
+            "minimumBinarySizeInBytes" : 4096
+        }
+        {{ end }}
+        {{ if eq (getv "/binarystorage/type" "file") "s3" }}
+        "binaryStorage" : {
+            "type" : "s3",
+            "username" : "{{ getv "/s3/user" }}",
+            "password" : "{{ getv "/s3/password" }}",
+            "bucketName" : "{{ getv "/s3/bucket" }}"
+        }
+        {{ end }}
+    },
+    "security" : {
+        "anonymous" : {
+            "roles" : ["readonly","readwrite","admin"],
+            "useOnFailedLogin" : false
+        },
+        "providers" : [
+            { "classname" : "org.fcrepo.auth.common.BypassSecurityServletAuthenticationProvider" }
+        ]
+    },
+    "garbageCollection" : {
+        "threadPool" : "modeshape-gc",
+        "initialTime" : "00:00",
+        "intervalInHours" : 24
+    },
+    "node-types" : ["fedora-node-types.cnd", "file:/opt/tomcat/webapps/fcrepo/WEB-INF/classes/config/claw.cnd"]
+}

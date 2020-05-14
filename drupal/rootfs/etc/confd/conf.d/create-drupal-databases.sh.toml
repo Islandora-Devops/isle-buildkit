@@ -1,0 +1,7 @@
+[template]
+src = "create-drupal-databases.sh.tmpl"
+dest = "/var/run/islandora/create-drupal-databases.sh"
+uid = 0
+gid = 0
+mode = "0700"
+keys = [ "/db" ]

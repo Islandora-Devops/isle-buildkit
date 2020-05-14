@@ -1,0 +1,6 @@
+[template]
+src = "catalina.properties.tmpl"
+dest = "/opt/tomcat/conf/catalina.properties"
+uid = 100
+gid = 1000
+mode = "0644"

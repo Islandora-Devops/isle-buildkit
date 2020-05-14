@@ -1,0 +1,4 @@
+# Defines groups and the users that belong to them.
+# group=user[,user ...]
+{{ range $dir := lsdir "/group" }}{{ getv (printf "/group/%s/name" $dir) }}={{ getv (printf "/group/%s/members" $dir) }}
+{{ end }}
