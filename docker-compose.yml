@@ -31,9 +31,13 @@ networks:
   default:
     internal: true
 volumes:
+  activemq-data:
+  blazegraph-data:
   drupal-config-data:
   drupal-sites-data:
+  cantaloupe-data:
   etcd-data:
+  fcrepo-data:
   jwt-data:
   jwt-public-data:
   karaf-data:
@@ -70,6 +74,8 @@ services:
     command: --interval 1 --no-pull
   activemq:
     image: islandora/activemq:latest
+    volumes:
+      - activemq-data:/opt/activemq/data
     labels:
       # Do not expose in production.
       - traefik.http.services.activemq.loadbalancer.server.port=8161
@@ -83,6 +89,8 @@ services:
       - activemq
   blazegraph:
     image: islandora/blazegraph:latest
+    volumes:
+      - blazegraph-data:/data
     networks:
       default:
         aliases:
@@ -93,6 +101,8 @@ services:
       - traefik.http.routers.blazegraph_http.entrypoints=http
   cantaloupe:
     image: islandora/cantaloupe:latest
+    volumes:
+      - cantaloupe-data:/data
   crayfits:
     image: islandora/crayfits:latest
     depends_on:
@@ -129,6 +139,7 @@ services:
   fcrepo:
     image: islandora/fcrepo:latest
     volumes:
+      - fcrepo-data:/data
       - jwt-data:/opt/keys/claw/
     depends_on: 
       - activemq
