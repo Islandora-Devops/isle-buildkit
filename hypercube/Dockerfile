@@ -3,7 +3,7 @@ FROM islandora/crayfish:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
     --mount=type=cache,target=/etc/cache/apk \ 
-    --mount=id=composer,sharing=locked,type=cache,target=/root/.composer/cache \
+    --mount=type=cache,target=/root/.composer/cache \
     apk-install.sh \
         poppler-utils \
         tesseract-ocr \

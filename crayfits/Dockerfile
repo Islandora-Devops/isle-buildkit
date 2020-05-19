@@ -3,7 +3,7 @@ FROM islandora/nginx:latest
 
 ARG COMMIT=4e0faeb31f84e74e7cecc083b2f096d55e425fbb
 
-RUN --mount=id=composer,sharing=locked,type=cache,target=/root/.composer/cache \
+RUN --mount=type=cache,target=/root/.composer/cache \
     --mount=id=downloads,type=cache,target=/opt/downloads \
     git-clone-cached.sh \
         --url https://github.com/roblib/CrayFits.git \

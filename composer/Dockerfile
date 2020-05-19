@@ -8,7 +8,7 @@ ARG composer_project="drupal/recommended-project"
 
 WORKDIR /build
 
-RUN --mount=id=composer,sharing=locked,type=cache,target=/root/.composer/cache \
+RUN --mount=type=cache,target=/root/.composer/cache \
     composer create-project --no-install ${composer_project} /build && \
     composer require -- drush/drush && \
     composer install

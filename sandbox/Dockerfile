@@ -2,7 +2,7 @@
 FROM islandora/drupal:latest
 
 # Islandora based Drupal install.
-RUN --mount=id=composer,sharing=locked,type=cache,target=/root/.composer/cache \
+RUN --mount=type=cache,target=/root/.composer/cache \
     --mount=id=downloads,type=cache,target=/opt/downloads \
     php -d memory_limit=-1 /usr/bin/composer create-project islandora/drupal-project:8.8.1 \
         --prefer-dist \

@@ -24,7 +24,7 @@
 # For other images you can use the command:
 #
 # ./commands/open-in-browser SERVICE
-version: "3.8"
+version: "3.7"
 networks:
   external:
     internal: false

@@ -7,7 +7,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     --mount=type=cache,target=/etc/cache/apk \ 
     --mount=type=bind,from=imagemagick,source=/home/builder/packages/x86_64,target=/packages \
     --mount=type=bind,from=imagemagick,source=/etc/apk/keys,target=/etc/apk/keys \
-    --mount=id=composer,sharing=locked,type=cache,target=/root/.composer/cache \
+    --mount=type=cache,target=/root/.composer/cache \
     apk add /packages/imagemagick-*.apk && \
     composer install -d /var/www/crayfish/Houdini && \
     php /var/www/crayfish/Houdini/bin/console cache:clear && \

@@ -8,7 +8,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     && \
     cleanup.sh
 
-RUN --mount=id=composer,sharing=locked,type=cache,target=/root/.composer/cache \
+RUN --mount=type=cache,target=/root/.composer/cache \
     composer install -d /var/www/crayfish/Homarus && \
     ln -s /var/www/crayfish/Homarus/src /var/www/html && \
     cleanup.sh
