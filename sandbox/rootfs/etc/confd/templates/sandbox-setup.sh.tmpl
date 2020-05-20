@@ -62,7 +62,7 @@ EOT
     drush -y cset --input-format=yaml islandora.settings gemini_url "${gemini_url}"
 
     # Need access to Solr before we can actually import the right config.
-    if timeout 60 wait-for-open-port.sh "${solr_host}" "${solr_port}" ; then
+    if timeout 300 wait-for-open-port.sh "${solr_host}" "${solr_port}" ; then
         echo "Solr Found"
     else
         echo "Could not connect to Solr"
@@ -70,7 +70,7 @@ EOT
     fi
 
     # Need access to Solr before we can actually import the right config.
-    if timeout 60 wait-for-open-port.sh "${fcrepo_host}" "${fcrepo_port}" ; then
+    if timeout 300 wait-for-open-port.sh "${fcrepo_host}" "${fcrepo_port}" ; then
         echo "Fcrepo Found"
     else
         echo "Could not connect to Fcrepo"
@@ -78,7 +78,7 @@ EOT
     fi
 
     # Need access to activemq so we can publish the creation of before we can actually import the right config.
-    if timeout 60 wait-for-open-port.sh ${broker_host} ${broker_port}; then
+    if timeout 300 wait-for-open-port.sh ${broker_host} ${broker_port}; then
         echo "Broker Found"
     else
         echo "Could not connect to Broker"
@@ -86,14 +86,14 @@ EOT
     fi
 
     # Need access to gemini before importing features.
-    if timeout 60 wait-for-open-port.sh "${gemini_host}" "${gemini_port}"; then
+    if timeout 300 wait-for-open-port.sh "${gemini_host}" "${gemini_port}"; then
         echo "Gemini Found"
     else
         echo "Could not connect to Gemini"
         exit 1
     fi
 
-    if timeout 60 wait-for-open-port.sh "${triplestore_host}" "${triplestore_port}"; then
+    if timeout 300 wait-for-open-port.sh "${triplestore_host}" "${triplestore_port}"; then
         echo "Triplestore Found"
     else
         echo "Could not connect to Triplestore"

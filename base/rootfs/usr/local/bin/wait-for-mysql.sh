@@ -95,7 +95,7 @@ function cmdline {
 
 function main {
     cmdline ${ARGS}
-    local duration=${TIMEOUT:-60}
+    local duration=${TIMEOUT:-300}
     echo "Waiting for up to ${duration} seconds to connect to Database ${DB_HOST}:${DB_PORT}" 
     if timeout ${duration} wait-for-open-port.sh ${DB_HOST} ${DB_PORT}; then
         echo "Database found"

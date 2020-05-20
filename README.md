@@ -560,7 +560,7 @@ fi
 #...
 
 # Need access to Solr before we can actually import the right config.
-if timeout 60 wait-for-open-port.sh "${fcrepo_host}" "${fcrepo_port}" ; then
+if timeout 300 wait-for-open-port.sh "${fcrepo_host}" "${fcrepo_port}" ; then
     echo "Fcrepo Found"
 else
     echo "Could not connect to Fcrepo"
