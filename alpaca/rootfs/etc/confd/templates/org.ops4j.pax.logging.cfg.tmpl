@@ -1,5 +1,5 @@
 # Root logger
-log4j.rootLogger={{ getv "logger/root/level" "WARN" }}, out, osgi:*
+log4j.rootLogger={{ getv "/logger/root/level" "WARN" }}, out, osgi:*
 log4j.throwableRenderer=org.apache.log4j.OsgiThrowableRenderer
 
 # File appender
@@ -20,7 +20,7 @@ log4j.appender.camel.append=false
 log4j.appender.camel.maxFileSize=1MB
 log4j.appender.camel.maxBackupIndex=10
 
-log4j.logger.org.apache.camel={{ getv "logger/camel/level" "WARN" }}, camel
+log4j.logger.org.apache.camel={{ getv "/logger/camel/level" "WARN" }}, camel
 
 # Islandora Logger
 log4j.appender.islandora=org.apache.log4j.RollingFileAppender
@@ -31,4 +31,4 @@ log4j.appender.islandora.append=false
 log4j.appender.islandora.maxFileSize=1MB
 log4j.appender.islandora.maxBackupIndex=10
 
-log4j.logger.ca.islandora.camel={{ getv "logger/islandora/level" "WARN" }}, islandora
+log4j.logger.ca.islandora.camel={{ getv "/logger/islandora/level" "WARN" }}, islandora

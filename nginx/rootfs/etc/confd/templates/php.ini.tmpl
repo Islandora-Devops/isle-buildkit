@@ -398,7 +398,7 @@ max_input_time = {{ getv "/php/max/input/time" "60" }}
 
 ; Maximum amount of memory a script may consume (128MB)
 ; http://php.net/memory-limit
-memory_limit = {{ getv "/php/memory/limit" "128M" }}
+memory_limit = {{ getv "/php/memory/limit" "256M" }}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -686,7 +686,7 @@ auto_globals_jit = On
 ; Its value may be 0 to disable the limit. It is ignored if POST data reading
 ; is disabled through enable_post_data_reading.
 ; http://php.net/post-max-size
-post_max_size = {{ getv "/php/post/max/size" "8M" }}
+post_max_size = {{ getv "/php/post/max/size" "0" }}
 
 ; Automatically add files before PHP document.
 ; http://php.net/auto-prepend-file
@@ -838,7 +838,7 @@ file_uploads = On
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = {{ getv "/php/upload/max/filesize" "2M" }}
+upload_max_filesize = {{ getv "/php/upload/max/filesize" "128M" }}
 
 ; Maximum number of files that can be uploaded via a single request
 max_file_uploads = {{ getv "/php/max/file/uploads" "20" }}
