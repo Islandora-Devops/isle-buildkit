@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/crayfish:latest
+FROM local/crayfish:latest
 
 RUN --mount=type=cache,target=/root/.composer/cache \
     composer install -d /var/www/crayfish/Gemini && \

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/base:latest
+FROM local/base:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
     --mount=type=cache,target=/etc/cache/apk \ 

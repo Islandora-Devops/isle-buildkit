@@ -73,7 +73,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 1 --no-pull
   activemq:
-    image: islandora/activemq:latest
+    image:  ${REPOSITORY:-local}/activemq:latest
     volumes:
       - activemq-data:/opt/activemq/data
     labels:
@@ -82,13 +82,13 @@ services:
       - traefik.http.routers.activemq_http.service=activemq
       - traefik.http.routers.activemq_http.entrypoints=http
   alpaca:
-    image: islandora/alpaca:latest
+    image:  ${REPOSITORY:-local}/alpaca:latest
     volumes:
       - karaf-data:/opt/karaf/data
     depends_on:
       - activemq
   blazegraph:
-    image: islandora/blazegraph:latest
+    image:  ${REPOSITORY:-local}/blazegraph:latest
     volumes:
       - blazegraph-data:/data
     networks:
@@ -100,7 +100,7 @@ services:
       - traefik.http.routers.blazegraph_http.service=blazegraph
       - traefik.http.routers.blazegraph_http.entrypoints=http
   cantaloupe:
-    image: islandora/cantaloupe:latest
+    image:  ${REPOSITORY:-local}/cantaloupe:latest
     volumes:
       - cantaloupe-data:/data
     networks:
@@ -112,19 +112,19 @@ services:
       - traefik.http.routers.cantaloupe_http.service=cantaloupe
       - traefik.http.routers.cantaloupe_http.entrypoints=http
   crayfits:
-    image: islandora/crayfits:latest
+    image:  ${REPOSITORY:-local}/crayfits:latest
     depends_on:
       - fits
   # Database is chosen as the service name rather than mariadb,
   # as institutions may want to swap out back-ends later and
   # database is a more sensible default.
   database:
-    image: islandora/mariadb:latest
+    image:  ${REPOSITORY:-local}/mariadb:latest
     volumes:
       - mysql-data:/var/lib/mysql
       - mysql-files:/var/lib/mysql-files
   drupal:
-    image: islandora/sandbox:latest
+    image:  ${REPOSITORY:-local}/sandbox:latest
     restart: unless-stopped
     volumes:
       - drupal-config-data:/var/www/drupal/config
@@ -145,7 +145,7 @@ services:
       - traefik.http.routers.drupal_http.service=drupal
       - traefik.http.routers.drupal_http.entrypoints=http
   fcrepo:
-    image: islandora/fcrepo:latest
+    image:  ${REPOSITORY:-local}/fcrepo:latest
     volumes:
       - fcrepo-data:/data
       - jwt-data:/opt/keys/claw/
@@ -162,27 +162,27 @@ services:
       - traefik.http.routers.fcrepo_http.service=fcrepo
       - traefik.http.routers.fcrepo_http.entrypoints=http
   fits:
-    image: islandora/fits
+    image:  ${REPOSITORY:-local}/fits
   gemini:
-    image: islandora/gemini:latest
+    image:  ${REPOSITORY:-local}/gemini:latest
     volumes:
       - jwt-data:/opt/keys/claw/
     depends_on: 
       - database
   homarus:
-    image: islandora/homarus:latest
+    image:  ${REPOSITORY:-local}/homarus:latest
     volumes:
       - jwt-data:/opt/keys/claw/
   houdini:
-    image: islandora/houdini:latest
+    image:  ${REPOSITORY:-local}/houdini:latest
     volumes:
       - jwt-data:/opt/keys/claw/
   hypercube:
-    image: islandora/hypercube:latest
+    image:  ${REPOSITORY:-local}/hypercube:latest
     volumes:
       - jwt-data:/opt/keys/claw/
   matomo:
-    image: islandora/matomo
+    image:  ${REPOSITORY:-local}/matomo
     volumes:
       - matomo-config-data:/opt/matomo/config
     depends_on: 
@@ -196,15 +196,15 @@ services:
       - traefik.http.routers.matomo_http.service=matomo
       - traefik.http.routers.matomo_http.entrypoints=http
   milliner:
-    image: islandora/milliner:latest
+    image:  ${REPOSITORY:-local}/milliner:latest
     volumes:
       - jwt-data:/opt/keys/claw/
   recast:
-    image: islandora/recast:latest
+    image:  ${REPOSITORY:-local}/recast:latest
     volumes:
       - jwt-data:/opt/keys/claw/
   solr:
-    image: islandora/solr:latest
+    image:  ${REPOSITORY:-local}/solr:latest
     volumes:
       - solr-data:/opt/solr/server/solr
     labels:

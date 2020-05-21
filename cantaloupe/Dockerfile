@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/tomcat:latest
+FROM local/tomcat:latest
 
 # Opted for OpenJPG over Kakadu but that could be changed.
 # Check 00-cantaloupe-setup-environment for the defaults.

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/nginx:latest
+FROM local/nginx:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     MATOMO_VERSION=3.13.5 && \

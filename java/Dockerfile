@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/base:latest
+FROM local/base:latest
 
 # Install packages and tools required by all downstream images.
 RUN --mount=type=cache,target=/var/cache/apk \ 

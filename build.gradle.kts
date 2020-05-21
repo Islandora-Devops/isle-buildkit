@@ -1,4 +1,7 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile.From
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile.FromInstruction
 
 plugins {
     id("com.bmuschko.docker-remote-api") version "6.4.0"
@@ -10,6 +13,17 @@ extensions.findByName("buildScan")?.withGroovyBuilder {
 }
 
 val repository: String by project
+val cacheRepository: String by project
+
+val registryUrl: String by project
+val registryUsername: String by project
+val registryPassword: String by project
+
+// https://docs.docker.com/engine/reference/builder/#from
+// FROM [--platform=<platform>] <image> [AS <name>]
+// FROM [--platform=<platform>] <image>[:<tag>] [AS <name>]
+// FROM [--platform=<platform>] <image>[@<digest>] [AS <name>]
+val extractProjectDependenciesFromDockerfileRegex = """FROM[ \t]+(:?--platform=[^ ]+[ \t]+)?local/([^ :@]+):(.*)""".toRegex()
 
 subprojects {
     // Make all build directories relative to the root, only supports projects up to a depth of one for now.
@@ -27,28 +41,58 @@ subprojects {
                 "$image:${version}"
         ) + tags.split(' ').filter { it.isNotEmpty() }.map { "$image:$it" }
 
+        val createDockerfile = tasks.register<Dockerfile>("createDockerFile") {
+            instructionsFromTemplate(projectDir.resolve("Dockerfile"))
+            // Update the FROM instructions to use the repository given.
+            instructions.set(
+                instructions.get().toMutableList().map { instruction ->
+                    if (instruction.keyword == FromInstruction.KEYWORD) {
+                        extractProjectDependenciesFromDockerfileRegex.find(instruction.text)?.let {
+                            val image = it.groupValues[2]
+                            val remainder = it.groupValues[3]
+                            FromInstruction(From("$repository/$image:$remainder"))
+                        } ?: instruction
+                    }
+                    else {
+                        instruction
+                    }
+                }
+            )
+            destFile.set(buildDir.resolve("Dockerfile"))
+        }
+
+        val prepareContext = tasks.register<Sync>("prepareContext") {
+            from(projectDir)
+            from(createDockerfile.map { it.destFile.get() })
+            into(buildDir.resolve("context"))
+        }
+
         val buildDockerImage = tasks.register<DockerBuildImage>("build") {
             group = "islandora"
             description = "Creates Docker image."
             images.addAll(imageTags)
-            inputDir.set(projectDir)
+            inputDir.set(layout.dir(prepareContext.map { it.destinationDir }))
+            // Use the remote cache to build this image if possible.
+            cacheFrom.add("$cacheRepository/${project.name}:latest")
+            // Allow image to be used as a cache when building on other machine.
+            buildArgs.put("BUILDKIT_INLINE_CACHE", "1")
         }
 
         tasks.register<DockerPushImage>("push") {
             images.set(buildDockerImage.map { it.images.get() })
+            registryCredentials {
+                url.set(registryUrl)
+                username.set(registryUsername)
+                password.set(registryPassword)
+            }
         }
     }
 }
 
-// https://docs.docker.com/engine/reference/builder/#from
-// FROM [--platform=<platform>] <image> [AS <name>]
-// FROM [--platform=<platform>] <image>[:<tag>] [AS <name>]
-// FROM [--platform=<platform>] <image>[@<digest>] [AS <name>]
-val extractProjectDependenciesFromDockerfileRegex = """FROM[ \t]+(:?--platform=[^ ]+[ \t]+)?islandora/([^ :@]+)""".toRegex()
 subprojects {
     tasks.withType<DockerBuildImage> {
-        val contents = inputDir.get().asFile.resolve("Dockerfile").readText()
-        // Extract the image name without the prefix 'islandora' it should match an existing project.
+        val contents = projectDir.resolve("Dockerfile").readText()
+        // Extract the image name without the prefix 'local' it should match an existing project.
         val matches = extractProjectDependenciesFromDockerfileRegex.findAll(contents)
 
         // If the project is found and it has a build task, link the dependency.
@@ -64,6 +108,7 @@ subprojects {
                         // This used to replace the FROM statements such that the referred to the Image ID rather
                         // than "latest". Though this is currently broken when BuildKit is enabled:
                         // https://github.com/moby/moby/issues/39769
+                        // Now it uses whatever repository we're building / latest since that is variable.
                     }
         }
     }
@@ -79,6 +124,10 @@ open class DockerBuildImage : DefaultTask() {
     @InputDirectory
     @PathSensitive(PathSensitivity.RELATIVE)
     val inputDir = project.objects.directoryProperty()
+
+    @Input
+    @get:Optional
+    val cacheFrom = project.objects.listProperty<String>()
 
     @Input
     @get:Optional
@@ -103,6 +152,7 @@ open class DockerBuildImage : DefaultTask() {
     @TaskAction
     fun exec() {
         val command = mutableListOf("docker", "build")
+        command.addAll(cacheFrom.get().flatMap { listOf("--cache-from", it) })
         command.addAll(buildArgs.get().flatMap { listOf("--build-arg", "${it.key}=${it.value}") })
         command.addAll(images.get().flatMap { listOf("--tag", it) })
         command.addAll(listOf("--iidfile", imageIdFile.get().asFile.absolutePath))

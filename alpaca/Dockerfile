@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/karaf:latest
+FROM local/karaf:latest
 
 # Install common features and repos
 RUN bin/start && \

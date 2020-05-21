@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/tomcat:latest
+FROM local/tomcat:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     BLAZEGRAPH_VERSION=CANDIDATE_2_1_5 && \

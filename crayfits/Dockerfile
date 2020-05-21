@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/nginx:latest
+FROM local/nginx:latest
 
 ARG COMMIT=4e0faeb31f84e74e7cecc083b2f096d55e425fbb
 

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/nginx:latest as composer
+FROM local/nginx:latest as composer
 
 # Overwrite with your own arguments or explicitly copy in 
 # your own composer.json / composer.lock files instead.
@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     composer require -- drush/drush && \
     composer install
 
-FROM islandora/drupal:latest
+FROM local/drupal:latest
 
 RUN --mount=type=bind,from=composer,source=/build,target=/build \
     cp -r /build/* /var/www/drupal && \

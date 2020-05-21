@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/java:latest
+FROM local/java:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     TOMCAT_VERSION="9.0.34" && \

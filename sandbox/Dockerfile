@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/drupal:latest
+FROM local/drupal:latest
 
 # Islandora based Drupal install.
 RUN --mount=type=cache,target=/root/.composer/cache \

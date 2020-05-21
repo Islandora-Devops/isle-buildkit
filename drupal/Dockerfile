@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/nginx:latest
+FROM local/nginx:latest
 
 RUN mkdir -p /var/www/drupal && chown nginx:nginx /var/www/drupal
 

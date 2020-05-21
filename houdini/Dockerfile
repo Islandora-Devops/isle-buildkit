@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/imagemagick:latest as imagemagick
+FROM local/imagemagick:latest as imagemagick
 
-FROM islandora/crayfish:latest
+FROM local/crayfish:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
     --mount=type=cache,target=/etc/cache/apk \ 

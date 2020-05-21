@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM islandora/tomcat:latest
+FROM local/tomcat:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     FITSSERVLET_VERSION=1.2.1 && \
