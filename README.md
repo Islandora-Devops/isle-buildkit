@@ -1,7 +1,7 @@
 # ISLE: Docker Prototype <!-- omit in toc -->
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
-![CI](https://github.com/nigelgbanks/docker-experiment/workflows/CI/badge.svg?branch=master)
+![CI](https://github.com/Islandora-Devops/isle-buildkit/workflows/CI/badge.svg?branch=master)
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
