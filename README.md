@@ -7,6 +7,7 @@
 - [Requirements](#requirements)
 - [Building](#building)
   - [Build All Images](#build-all-images)
+  - [Building without Buildkit](#building-without-buildkit)
   - [Build Specific Image](#build-specific-image)
   - [Building Continuously](#building-continuously)
 - [Running](#running)
@@ -24,6 +25,7 @@
   - [Folder Layout](#folder-layout)
   - [Build System](#build-system)
 - [Design Constraints](#design-constraints)
+- [Issues / FAQ](#issues--faq)
 - [To Do](#to-do)
 
 ## Introduction
@@ -34,7 +36,7 @@ Islandora. It is not yet in a production ready state.
 
 ## Requirements
 
-To build the Docker images using the provided Gradle build scripts requires:
+To build the Docker images using the provided Gradle build scripts with [BuildKit] requires:
 
 - [Docker 18.09+](https://docs.docker.com/get-docker/)
 - [OpenJDK or Oracle JDK 8+](https://www.java.com/en/download/)
@@ -124,6 +126,15 @@ The following will build all the images in the correct order.
 
 ```bash
 ./gradlew build
+```
+
+### Building without Buildkit
+
+If you are having trouble building, consider building without BuildKit as it's
+supported by older versions of Docker.
+
+```bash
+./gradlew build -PuseBuildKit=false
 ```
 
 ### Build Specific Image
@@ -571,6 +582,18 @@ fi
 
 This allows container to start up in any order, and to be orchestrated by any tool.
 
+## Issues / FAQ
+
+**Question:** I'm getting the following error when building:
+
+```bash
+failed to solve with frontend dockerfile.v0: failed to solve with frontend gateway.v0: runc did not terminate successfully: context canceled
+```
+
+**Answer:** If possible upgrade Docker to the latest version, and switch to using the
+[Overlay2](https://docs.docker.com/storage/storagedriver/overlayfs-driver/#configure-docker-with-the-overlay-or-overlay2-storage-driver)
+filesystem with Docker. If that doesn't work trying building [without BuildKit](#building-without-buildkit).
+
 ## To Do
 
 - Blazegraph isn't working
@@ -589,6 +612,7 @@ This allows container to start up in any order, and to be orchestrated by any to
 - Developer workflow documentation / examples
 
 [Amazon Elastic Container Service]: https://aws.amazon.com/ecs/
+[Buildkit]: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md
 [Docker Compose]: https://docs.docker.com/compose/
 [docker-compose.yml]: ./docker-compose.yml
 [Drupal Installation Profile]: https://www.drupal.org/docs/8/distributions/creating-distributions/how-to-write-a-drupal-8-installation-profile

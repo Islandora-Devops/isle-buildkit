@@ -20,6 +20,4 @@ WORKDIR /opt/karaf
 
 EXPOSE 8101 1099 44444 8181
 
-VOLUME [ "/opt/karaf/data/" ]
-
 COPY rootfs /

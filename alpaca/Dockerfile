@@ -38,4 +38,6 @@ RUN chown -R karaf:karaf /opt/karaf
 
 COPY rootfs /
 
+VOLUME [ "/opt/karaf/data/" ]
+
 ENV JAVA_OPTS="-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx8g"
