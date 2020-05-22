@@ -1,0 +1,8 @@
+error.maxRedeliveries={{ getv "/indexing/redeliveries" "10" }}
+file.delete.stream={{ getv "/indexing/stream/file/delete" "broker:queue:islandora-indexing-fcrepo-file-delete" }}
+file.stream={{ getv "/indexing/stream/file/index" "broker:queue:islandora-indexing-fcrepo-file" }}
+gemini.baseUrl={{ getv "/indexing/gemini/url" "http://gemini:8000" }}
+media.stream={{ getv "/indexing/stream/media/index" "broker:queue:islandora-indexing-fcrepo-media" }}
+milliner.baseUrl={{ getv "/indexing/milliner/url" "http://milliner:8000" }}
+node.delete.stream={{ getv "/indexing/stream/node/delete" "broker:queue:islandora-indexing-fcrepo-delete" }}
+node.stream={{ getv "/indexing/stream/node/index" "broker:queue:islandora-indexing-fcrepo-content" }}

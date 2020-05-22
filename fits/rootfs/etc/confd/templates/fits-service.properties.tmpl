@@ -1,0 +1,8 @@
+# Number of objects in FITSServlet object pool
+max.objects.in.pool={{ getv "/max/objects/in/pool" "5" }}
+# Maximum allowable size of uploaded file
+max.upload.file.size.MB={{ getv "/max/upload/file/size" "2000" }}
+# Maximum size of HTTP Request object. Must be equal to or larger than the value for max.upload.file.size.MB
+max.request.size.MB={{ getv "/max/request/size" "2000" }}
+# Maximum size of an uploaded size kept in memory. Otherwise temporarily persisted to disk.
+max.in.memory.file.size.MB={{ getv "/max/in/memory/file/size" "4" }}

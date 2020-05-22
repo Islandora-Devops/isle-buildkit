@@ -1,0 +1,6 @@
+[template]
+src = "setenv.sh.tmpl"
+dest = "/opt/tomcat/bin/setenv.sh"
+uid = 100
+gid = 1000
+keys = ["/java/opts", "/catalina/opts"]

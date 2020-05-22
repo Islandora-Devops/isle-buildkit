@@ -1,0 +1,7 @@
+[template]
+src = "create-gemini-database.sql.tmpl"
+dest = "/var/run/islandora/create-gemini-database.sql"
+uid = 0
+gid = 0
+mode = "0600"
+keys = [ "/db" ]

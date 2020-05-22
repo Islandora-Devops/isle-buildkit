@@ -1,0 +1,13 @@
+-- Create gemini database in mariadb or mysql. 
+CREATE DATABASE IF NOT EXISTS {{ getv "/db/name" "gemini" }} CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE TABLE IF NOT EXISTS {{ getv "/db/name" "gemini" }}.Gemini (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    drupal VARCHAR(2048) NOT NULL UNIQUE,
+    fedora VARCHAR(2048) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+-- Create gemini_user and grant rights.
+CREATE USER IF NOT EXISTS '{{ getv "/db/user" "gemini" }}'@'%' IDENTIFIED BY '{{ getv "/db/password" "password" }}';
+GRANT ALL PRIVILEGES ON {{ getv "/db/name" "gemini" }}.* to '{{ getv "/db/user" "gemini" }}'@'%';
+FLUSH PRIVILEGES;

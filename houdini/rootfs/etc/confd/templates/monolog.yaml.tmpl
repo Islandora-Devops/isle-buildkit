@@ -1,0 +1,7 @@
+monolog:
+  handlers:
+    houdini:
+      type: rotating_file
+      path: /var/log/islandora/houdini.log
+      level: {{ getv "/log/level" "WARNING" }}
+      max_files: 1

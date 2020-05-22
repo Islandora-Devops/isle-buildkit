@@ -1,0 +1,5 @@
+[template]
+src = "mariadb-server.cnf.tmpl"
+dest = "/etc/my.cnf.d/mariadb-server.cnf"
+mode="0644"
+keys = [ "/root" ]

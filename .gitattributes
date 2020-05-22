@@ -1,0 +1,20 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Gradle files
+gradlew text eol=lf diff=bash
+*.gradle text eol=lf diff=java
+*.gradle.kts text eol=lf diff=java
+
+# Force bash scripts to always use lf line endings so that if a repo is accessed
+# in Unix via a file share from Windows, the scripts will work.
+*.bat text eol=crlf diff=batch
+*.sh text eol=lf diff=bash
+*.properties text eol=lf
+run text eol=lf diff=bash
+finish text eol=lf diff=bash
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.jar binary
+*.war binary

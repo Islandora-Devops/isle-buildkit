@@ -1,0 +1,33 @@
+#!/usr/bin/with-contenv bash
+
+set -e
+
+function main {
+  local driver="{{ getv "/db/driver" "pdo_mysql" }}"
+  local host="{{ getv "/db/host" "database" }}"
+  local port="{{ getv "/db/port" "3306" }}"
+  local user="{{ getv "/db/root/user" "root" }}"
+  local password="{{ getv "/db/root/password" "password" }}"
+
+  if [[ "${driver}" == "pdo_mysql" ]]; then
+    echo "Waiting for connection to database."
+    wait-for-mysql.sh \
+      --host "${host}" \
+      --port "${port}" \
+      --user "${user}" \
+      --password "${password}"
+
+    echo "Create database / user if it does not exist."
+    mysql \
+        --user="${user}" \
+        --password="${password}" \
+        --host="${host}" \
+        --port="${port}" \
+        --protocol=tcp \
+        < /var/run/islandora/create-gemini-database.sql
+  else
+    echo "Only MySQL databases are supported for now."
+    exit 1
+  fi
+}
+main

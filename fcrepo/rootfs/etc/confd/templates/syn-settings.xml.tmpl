@@ -1,0 +1,6 @@
+<config version='1' header='X-Islandora'>
+    <site algorithm='RS256' encoding='PEM' anonymous='true' default='true' path='/opt/keys/claw/public.key'/>
+    <token user='admin' roles='admin,fedoraAdmin'>
+      {{ getv "/jwt/admin/token" "islandora" }}
+    </token>
+</config>

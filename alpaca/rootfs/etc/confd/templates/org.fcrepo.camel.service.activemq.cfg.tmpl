@@ -1,0 +1,6 @@
+# The JMS connection URI, used for connecting to a local or remote ActiveMQ broker
+jms.brokerUrl={{ getv "/activemq/url" "tcp://activemq:61616" }}
+
+# If authentication is enabled on the activemq broker, add appropriate values here
+jms.username={{ getv "/activemq/user" "" }}
+jms.password={{ getv "/activemq/password" "" }}

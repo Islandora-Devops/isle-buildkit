@@ -1,0 +1,6 @@
+[template]
+src = "log4j.properties.tmpl"
+dest = "/opt/tomcat/webapps/bigdata/WEB-INF/classes/log4j.properties"
+uid = 100
+gid = 1000
+keys = ["/"]

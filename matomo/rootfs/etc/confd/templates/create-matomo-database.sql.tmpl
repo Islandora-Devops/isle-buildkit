@@ -1,0 +1,7 @@
+-- Create matomo database in mariadb or mysql. 
+CREATE DATABASE IF NOT EXISTS {{ getv "/db/name" "matomo" }} CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+-- Create matomo_user and grant rights.
+CREATE USER IF NOT EXISTS '{{ getv "/db/user" "matomo" }}'@'%' IDENTIFIED BY '{{ getv "/db/password" "password" }}';
+GRANT ALL PRIVILEGES ON {{ getv "/db/name" "matomo" }}.* to '{{ getv "/db/user" "matomo" }}'@'%';
+FLUSH PRIVILEGES;

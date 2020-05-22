@@ -1,0 +1,3 @@
+input.stream={{ getv "/indexing/stream/input" "broker:topic:fedora"}}
+triplestore.baseUrl={{ getv "/indexing/url" "http://blazegraph/bigdata/namespace/islandora/sparql" }}
+triplestore.reindex.stream={{ getv "/indexing/stream/triplestore/reindex" "broker:queue:triplestore.reindex" }}

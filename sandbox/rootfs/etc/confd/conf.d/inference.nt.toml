@@ -1,0 +1,7 @@
+[template]
+src = "inference.nt.tmpl"
+dest = "/var/run/islandora/inference.nt"
+uid = 0
+gid = 0
+mode = "0700"
+keys = [ "/" ]

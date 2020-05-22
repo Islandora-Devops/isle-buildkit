@@ -1,0 +1,5 @@
+#!/usr/bin/execlineb -P
+# -*- mode: sh -*-
+# vi: set ft=sh :
+with-contenv
+s6-setuidgid solr /opt/solr/bin/solr start -f

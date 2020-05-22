@@ -1,0 +1,6 @@
+[template]
+src = "claw.cnd.tmpl"
+dest = "/opt/tomcat/webapps/fcrepo/WEB-INF/classes/config/claw.cnd"
+uid = 100
+gid = 1000
+mode = "0655"

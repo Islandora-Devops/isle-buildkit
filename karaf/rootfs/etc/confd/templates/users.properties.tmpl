@@ -1,0 +1,18 @@
+#
+# This file contains the users, groups, and roles.
+# Each line has to be of the format:
+#
+# USER=PASSWORD,ROLE1,ROLE2,...
+# USER=PASSWORD,_g_:GROUP,...
+# _g_\:GROUP=ROLE1,ROLE2,...
+#
+# All users, groups, and roles entered in this file are available after Karaf startup
+# and modifiable via the JAAS command group. These users reside in a JAAS domain
+# with the name "karaf".
+#
+{{ getv "/karaf/admin/name" "admin" }} = {{ getv "/karaf/admin/password" "password" }}, _g_:admingroup
+_g_\:admingroup = group,admin,manager,viewer,systembundles
+{{ range $dir := lsdir "/karaf/user" }}{{ getv (printf "/karaf/user/%s/name" $dir) }} = {{ getv (printf "/karaf/user/%s/password" $dir) }} {{ getv (printf "/karaf/user/%s/roles" $dir) }}
+{{ end }}
+{{ range $dir := lsdir "/karaf/group" }}{{ getv (printf "/karaf/group/%s/name" $dir) }} = {{ getv (printf "/karaf/group/%s/roles" $dir) }}
+{{ end }}

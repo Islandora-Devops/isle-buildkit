@@ -1,0 +1,6 @@
+[template]
+src = "context.xml.tmpl"
+dest = "/opt/tomcat/conf/context.xml"
+uid = 100
+gid = 1000
+mode = "0640"

@@ -1,0 +1,7 @@
+[template]
+src = "repository.json.tmpl"
+dest = "/opt/tomcat/webapps/fcrepo/WEB-INF/classes/config/repository.json"
+uid = 100
+gid = 1000
+mode = "0640"
+keys = [ "/" ]

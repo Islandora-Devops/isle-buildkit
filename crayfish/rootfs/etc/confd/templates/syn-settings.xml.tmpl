@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config version='1'>
+    <site algorithm='RS256' encoding='PEM' path='/opt/keys/claw/public.key' default='true' anonymous='true'/>
+    <token user='admin' roles='admin'>
+        {{ getv "/jwt/admin/token" "islandora" }}
+    </token>
+</config>

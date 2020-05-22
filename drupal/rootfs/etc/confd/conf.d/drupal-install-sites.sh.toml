@@ -1,0 +1,7 @@
+[template]
+src = "drupal-install-sites.sh.tmpl"
+dest = "/var/run/islandora/drupal-install-sites.sh"
+uid = 0
+gid = 0
+mode = "0700"
+keys = [ "/site", "/db" ]

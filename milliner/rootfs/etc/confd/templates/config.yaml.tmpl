@@ -1,0 +1,28 @@
+---
+
+fedora_base_url: {{ getv "/fcrepo/url" "http://fcrepo:8080/fcrepo/rest" }}
+# if drupal_base_url contains a path, be sure to include trailing slash
+# or relative paths will not resolve correctly.
+drupal_base_url: {{ getv "/drupal/url" "http://drupal:80" }}
+gemini_base_url: {{ getv "/gemini/url" "http://gemini:8000" }}
+
+modified_date_predicate: http://schema.org/dateModified
+
+strip_format_jsonld: true 
+
+debug: true
+
+log:
+  # Valid log levels are:
+  # DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY, NONE
+  # log level none won't open logfile
+  level: {{ getv "/log/level" "DEBUG" }}
+  file: /var/log/islandora/milliner.log
+
+syn:
+  # toggles JWT security for service
+  enable: false
+  # Path to the syn config file for authentication.
+  # example can be found here:
+  # https://github.com/Islandora/Syn/blob/master/conf/syn-settings.example.xml
+  config: /var/www/crayfish/syn-settings.xml

@@ -1,0 +1,7 @@
+[template]
+src = "blazegraph.properties.tmpl"
+dest = "/var/run/islandora/blazegraph.properties"
+uid = 0
+gid = 0
+mode = "0700"
+keys = [ "/" ]
