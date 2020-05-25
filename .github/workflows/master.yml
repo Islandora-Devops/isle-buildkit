@@ -27,10 +27,12 @@ jobs:
           ${{ runner.os }}-gradle-
     - name: Log in to Docker Hub
       run: docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
+    - name: Enable buildkit
+      run: echo '{ "experimental": "enabled" }' > ~/.docker/config.json
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build -PuseBuildKit=false '-Prepository=${{ secrets.REPOSITORY }}' --info
+        arguments: build '-Prepository=${{ secrets.REPOSITORY }}' --info
     - name: Push Docker images
       uses: eskatos/gradle-command-action@v1
       with:
