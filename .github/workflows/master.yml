@@ -28,10 +28,9 @@ jobs:
     - name: Log in to Docker Hub
       run: docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
     - name: Enable buildkit
-      uses: finnp/create-file-action@1.0.0
-      env:
-        FILE_NAME: '~/.docker/config.json'
-        FILE_DATA: '{ "experimental": "enabled" }'
+      shell: bash
+      run: |
+        echo '{"experimental": "enabled"}' > ~/.docker/config.json
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
