@@ -57,9 +57,6 @@ data class BindMount(val from: String, val source: String, val target: String) {
     fun toCopyInstruction() = GenericInstruction("COPY --from=${from} $source $target")
 }
 
-fun extractBindMountFlagFromInstruction() {
-
-}
 //--mount=type=bind,from=imagemagick,source=/home/builder/packages/x86_64,target=/packages
 // Generate a list of image tages for the given image, using the project, version and tag properties.
 fun imagesTags(image: String, project: Project): Set<String> {
