@@ -2,7 +2,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile.*
-import java.lang.RuntimeException
+import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.bmuschko.docker-remote-api") version "6.4.0"
@@ -46,25 +46,39 @@ data class BindMount(val from: String, val source: String, val target: String) {
         private val EXTRACT_BIND_MOUNT_REGEX = """--mount=type=bind,([^\\]+)""".toRegex()
 
         fun fromInstruction(instruction: Instruction) = EXTRACT_BIND_MOUNT_REGEX.find(instruction.text)?.let {
-                val properties = it.groupValues[1].split(',').map { property ->
-                    val parts = property.split('=')
-                    Pair(parts[0], parts[1])
-                }.toMap()
-                BindMount(properties["from"]!!, properties["source"]!!, properties["target"]!!)
-            }
+            val properties = it.groupValues[1].split(',').map { property ->
+                val parts = property.split('=')
+                Pair(parts[0], parts[1])
+            }.toMap()
+            BindMount(properties["from"]!!, properties["source"]!!, properties["target"]!!)
+        }
     }
+
     // eg. COPY --from=imagemagick /home/builder/packages/x86_64 /packages
     fun toCopyInstruction() = GenericInstruction("COPY --from=${from} $source $target")
 }
 
 //--mount=type=bind,from=imagemagick,source=/home/builder/packages/x86_64,target=/packages
-// Generate a list of image tages for the given image, using the project, version and tag properties.
+// Generate a list of image tags for the given image, using the project, version and tag properties.
 fun imagesTags(image: String, project: Project): Set<String> {
     val tags: String by project
     return setOf(
-        "$image:latest",
-        "$image:${project.version}"
+            "$image:latest",
+            "$image:${project.version}"
     ) + tags.split(' ').filter { it.isNotEmpty() }.map { "$image:$it" }
+}
+
+fun imageExists(project: Project, imageIdFile: RegularFileProperty) = try {
+    val imageId = imageIdFile.asFile.get().readText()
+    val result = project.exec {
+        commandLine = listOf("docker", "image", "inspect", imageId)
+        // Ignore output, only concerned with exit value.
+        standardOutput = ByteArrayOutputStream()
+        errorOutput = ByteArrayOutputStream()
+    }
+    result.exitValue == 0
+} catch (e: Exception) {
+    false
 }
 
 subprojects {
@@ -75,7 +89,7 @@ subprojects {
     // If there is a docker file in the project add the appropriate tasks.
     if (projectDir.resolve("Dockerfile").exists()) {
         apply(plugin = "com.bmuschko.docker-remote-api")
-        
+
         val imageTags = imagesTags("$repository/$name", project)
         val cachedImageTags = imagesTags("$cacheRepository/$name", project)
 
@@ -90,25 +104,24 @@ subprojects {
                 // An empty keyword means the line of text belongs to the previous instruction keyword.
                 if (instruction.keyword != "") {
                     groupedInstructions.add(Pair(instruction.keyword, mutableListOf(instruction)))
-                }
-                else {
+                } else {
                     groupedInstructions.last().second.add(instruction)
                 }
             }
             // Using bind mounts from other images needs to be mapped to COPY instructions, if not using Buildkit.
             // Add these COPY instructions prior to the RUN instructions that used the bind mount.
             val iterator = groupedInstructions.listIterator()
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 val (keyword, instructions) = iterator.next()
                 when (keyword) {
                     RunCommandInstruction.KEYWORD -> {
                         // Get any bind mount flags and convert them into copy instructions.
-                        val bindMounts = instructions.mapNotNull { instruction->
+                        val bindMounts = instructions.mapNotNull { instruction ->
                             BindMount.fromInstruction(instruction)
                         }
                         bindMounts.forEach { bindMount ->
                             // Add before RUN instruction, previous is safe here as there has to always be at least a
-                            // single FROM instruction preceeding it.
+                            // single FROM instruction preceding it.
                             iterator.previous()
                             iterator.add(Pair(CopyFileInstruction.KEYWORD, mutableListOf(bindMount.toCopyInstruction())))
                             iterator.next()
@@ -118,22 +131,22 @@ subprojects {
             }
             // Process instructions in place, and flatten to list.
             val processedInstructions = groupedInstructions.flatMap { (keyword, instructions) ->
-                    when (keyword) {
-                        // Use the 'repository' name for the images when building, defaults to 'local'.
-                        FromInstruction.KEYWORD -> {
-                            instructions.map { instruction ->
-                                extractProjectDependenciesFromDockerfileRegex.find(instruction.text)?.let {
-                                    val name = it.groupValues[2]
-                                    val remainder = it.groupValues[3]
-                                    FromInstruction(From("$repository/$name:$remainder"))
-                                } ?: instruction
-                            }
+                when (keyword) {
+                    // Use the 'repository' name for the images when building, defaults to 'local'.
+                    FromInstruction.KEYWORD -> {
+                        instructions.map { instruction ->
+                            extractProjectDependenciesFromDockerfileRegex.find(instruction.text)?.let {
+                                val name = it.groupValues[2]
+                                val remainder = it.groupValues[3]
+                                FromInstruction(From("$repository/$name:$remainder"))
+                            } ?: instruction
                         }
-                        // Strip Buildkit flags if applicable.
-                        RunCommandInstruction.KEYWORD -> instructions.map { preprocessRunInstruction(it) }
-                        else -> instructions
                     }
+                    // Strip Buildkit flags if applicable.
+                    RunCommandInstruction.KEYWORD -> instructions.map { preprocessRunInstruction(it) }
+                    else -> instructions
                 }
+            }
             instructions.set(processedInstructions)
             destFile.set(buildDir.resolve("Dockerfile"))
         }
@@ -154,6 +167,10 @@ subprojects {
                 cacheFrom.addAll(cachedImageTags)
                 // Allow image to be used as a cache when building on other machine.
                 buildArgs.put("BUILDKIT_INLINE_CACHE", "1")
+                // Check that so other process has not removed the image since it was last built.
+                outputs.upToDateWhen { task ->
+                    imageExists(project, (task as DockerBuildKitBuildImage).imageIdFile)
+                }
             }
         } else {
             tasks.register<DockerBuildImage>("build") {
@@ -161,6 +178,10 @@ subprojects {
                 description = "Creates Docker image."
                 images.addAll(imageTags)
                 inputDir.set(layout.dir(prepareContext.map { it.destinationDir }))
+                // Check that so other process has not removed the image since it was last built.
+                outputs.upToDateWhen { task ->
+                    imageExists(project, (task as DockerBuildImage).imageIdFile)
+                }
             }
         }
 
@@ -181,7 +202,7 @@ subprojects {
     }
 }
 
-inline fun <reified T: DefaultTask> getBuildDependencies(childTask: T) = childTask.project.run {
+inline fun <reified T : DefaultTask> getBuildDependencies(childTask: T) = childTask.project.run {
     val contents = projectDir.resolve("Dockerfile").readText()
     // Extract the image name without the prefix 'local' it should match an existing project.
     val matches = extractProjectDependenciesFromDockerfileRegex.findAll(contents)
@@ -253,9 +274,8 @@ open class DockerBuildKitBuildImage : DefaultTask() {
                 workingDir = inputDir.get().asFile
                 commandLine = listOf("docker", "manifest", "inspect", image)
             }
-            result.exitValue == 0;
-        }
-        catch (e: Exception) {
+            result.exitValue == 0
+        } catch (e: Exception) {
             logger.error("Failed to find cache image: ${image}, either it does not exist, or authentication failed.")
             false
         }
