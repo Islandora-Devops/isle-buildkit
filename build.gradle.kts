@@ -57,9 +57,6 @@ data class BindMount(val from: String, val source: String, val target: String) {
     fun toCopyInstruction() = GenericInstruction("COPY --from=${from} $source $target")
 }
 
-fun extractBindMountFlagFromInstruction() {
-
-}
 //--mount=type=bind,from=imagemagick,source=/home/builder/packages/x86_64,target=/packages
 // Generate a list of image tages for the given image, using the project, version and tag properties.
 fun imagesTags(image: String, project: Project): Set<String> {
@@ -184,27 +181,32 @@ subprojects {
     }
 }
 
+inline fun <reified T: DefaultTask> getBuildDependencies(childTask: T) = childTask.project.run {
+    val contents = projectDir.resolve("Dockerfile").readText()
+    // Extract the image name without the prefix 'local' it should match an existing project.
+    val matches = extractProjectDependenciesFromDockerfileRegex.findAll(contents)
+
+    // If the project is found and it has a build task, it is a dependency.
+    matches.mapNotNull {
+        rootProject.findProject(it.groupValues[2])?.tasks?.withType<T>()
+    }.flatten()
+}
+
+// This used to replace the FROM statements such that the referred to the Image ID rather
+// than "latest". Though this is currently broken when BuildKit is enabled:
+// https://github.com/moby/moby/issues/39769
+// Now it uses whatever repository we're building / latest since that is variable.
 subprojects {
     tasks.withType<DockerBuildImage> {
-        val contents = projectDir.resolve("Dockerfile").readText()
-        // Extract the image name without the prefix 'local' it should match an existing project.
-        val matches = extractProjectDependenciesFromDockerfileRegex.findAll(contents)
-
-        // If the project is found and it has a build task, link the dependency.
-        matches.forEach {
-            rootProject.findProject(it.groupValues[2])
-                    ?.tasks
-                    ?.withType<DockerBuildImage>()
-                    ?.first()
-                    ?.let { buildTask ->
-                        // If generated image id changes, rebuild.
-                        inputs.file(buildTask.imageIdFile.asFile)
-                        dependsOn(buildTask)
-                        // This used to replace the FROM statements such that the referred to the Image ID rather
-                        // than "latest". Though this is currently broken when BuildKit is enabled:
-                        // https://github.com/moby/moby/issues/39769
-                        // Now it uses whatever repository we're building / latest since that is variable.
-                    }
+        getBuildDependencies(this).forEach { parentTask ->
+            inputs.file(parentTask.imageIdFile.asFile) // If generated image id changes, rebuild.
+            dependsOn(parentTask)
+        }
+    }
+    tasks.withType<DockerBuildKitBuildImage> {
+        getBuildDependencies(this).forEach { parentTask ->
+            inputs.file(parentTask.imageIdFile.asFile) // If generated image id changes, rebuild.
+            dependsOn(parentTask)
         }
     }
 }
