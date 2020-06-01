@@ -20,6 +20,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-tokenizer \
         php7-xml \
         php7-xmlwriter \
+        php7-fileinfo \ 
     && \
     cleanup.sh
 
