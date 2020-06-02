@@ -12,13 +12,13 @@ RUN --mount=type=cache,target=/var/cache/apk \
         openjpeg
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    CANTALOUPE_VERSION="3.3.1" && \
-    wget -N -P /opt/downloads "https://github.com/medusa-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/Cantaloupe-${CANTALOUPE_VERSION}.zip" && \
-    unzip "/opt/downloads/Cantaloupe-${CANTALOUPE_VERSION}.zip" -d /tmp && \
+    CANTALOUPE_VERSION="4.1.5" && \
+    wget -N -P /opt/downloads "https://github.com/medusa-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/cantaloupe-${CANTALOUPE_VERSION}.zip" && \
+    unzip "/opt/downloads/cantaloupe-${CANTALOUPE_VERSION}.zip" -d /tmp && \
     install-war-into-tomcat.sh \
         --name "cantaloupe" \
-        --file "/tmp/Cantaloupe-${CANTALOUPE_VERSION}/Cantaloupe-${CANTALOUPE_VERSION}.war" \
-        --key "a56593bae377b4db6b1e0cd5c8a9d62fdda41632f6295b5d4fe846e66c15768a" && \
+        --file "/tmp/cantaloupe-${CANTALOUPE_VERSION}/cantaloupe-${CANTALOUPE_VERSION}.war" \
+        --key "fb7dc129ec1c1f965e5c4459743730af92fb9001a8fe79632c3ed17ecefc0fe3" && \
     rm -fr /tmp/Cantaloupe-*
 
 
