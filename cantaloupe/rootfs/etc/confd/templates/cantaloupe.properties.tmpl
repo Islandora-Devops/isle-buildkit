@@ -280,10 +280,10 @@ metadata.respect_orientation = {{ getv "/metadata/respect/orientation" "false" }
 #----------------------------------------
 
 log.application.level = {{ getv "/log/application/level" "debug" }}
-log.application.ConsoleAppender.enabled = {{ getv "/log/application/consoleappender/enabled" "true" }}
+log.application.ConsoleAppender.enabled = {{ getv "/log/application/consoleappender/enabled" "false" }}
 log.application.FileAppender.enabled = {{ getv "/log/application/fileappender/enabled" "false" }}
 log.application.FileAppender.pathname = {{ getv "/log/application/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.application.log" }}
-log.application.RollingFileAppender.enabled = {{ getv "/log/application/rollingfileappender/enabled" "false" }}
+log.application.RollingFileAppender.enabled = {{ getv "/log/application/rollingfileappender/enabled" "true" }}
 log.application.RollingFileAppender.pathname = {{ getv "/log/application/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.application.log" }}
 log.application.RollingFileAppender.policy = {{ getv "/log/application/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
 log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/application/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.application-%d{yyyy-MM-dd}.log" }}
@@ -294,13 +294,32 @@ log.application.SyslogAppender.port = {{ getv "/log/application/syslogappender/p
 log.application.SyslogAppender.facility = {{ getv "/log/application/syslogappender/facility" "LOCAL0" }}
 
 #----------------------------------------
+# Error Log
+#----------------------------------------
+
+log.error.ConsoleAppender.enabled = {{ getv "/log/error/consoleappender/enabled" "false" }}
+log.error.FileAppender.enabled = {{ getv "/log/error/fileappender/enabled" "false" }}
+log.error.FileAppender.pathname = {{ getv "/log/error/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.error.log" }}
+log.error.RollingFileAppender.enabled = {{ getv "/log/error/rollingfileappender/enabled" "true" }}
+log.error.RollingFileAppender.pathname = {{ getv "/log/error/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.error.log" }}
+log.error.RollingFileAppender.policy = {{ getv "/log/error/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
+log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/error/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.error-%d{yyyy-MM-dd}.log" }}
+log.error.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getv "/log/error/rollingfileappender/timebasedrollingpolicy/max/history" "30" }}
+log.error.SyslogAppender.enabled = {{ getv "/log/error/syslogappender/enabled" "false" }}
+log.error.SyslogAppender.host = {{ getv "/log/error/syslogappender/host" "" }}
+log.error.SyslogAppender.port = {{ getv "/log/error/syslogappender/port" "514" }}
+log.error.SyslogAppender.facility = {{ getv "/log/error/syslogappender/facility" "LOCAL0" }}
+
+#----------------------------------------
 # Access Log
 #----------------------------------------
 
+# Currently not working: https://github.com/cantaloupe-project/cantaloupe/issues/338
+# Although the output is replicated in the application log so we can read it there.
 log.access.ConsoleAppender.enabled = {{ getv "/log/access/consoleappender/enabled" "false" }}
-log.access.FileAppender.enabled = {{ getv "/log/access/fileappender/enabled" "true" }}
+log.access.FileAppender.enabled = {{ getv "/log/access/fileappender/enabled" "false" }}
 log.access.FileAppender.pathname = {{ getv "/log/access/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.access.log" }}
-log.access.RollingFileAppender.enabled = {{ getv "/log/access/rollingfileappender/enabled" "false" }}
+log.access.RollingFileAppender.enabled = {{ getv "/log/access/rollingfileappender/enabled" "true" }}
 log.access.RollingFileAppender.pathname = {{ getv "/log/access/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.access.log" }}
 log.access.RollingFileAppender.policy = {{ getv "/log/access/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
 log.access.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/access/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.access-%d{yyyy-MM-dd}.log" }}
