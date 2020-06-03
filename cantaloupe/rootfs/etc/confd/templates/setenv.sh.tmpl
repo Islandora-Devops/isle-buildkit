@@ -2,3 +2,5 @@
 export JAVA_OPTS="{{ getv "/java/opts" "" }}"
 export CATALINA_OPTS="{{ getv "/catalina/opts" "" }}"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dcantaloupe.config=/opt/tomcat/conf/cantaloupe.properties"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true"

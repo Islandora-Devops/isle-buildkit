@@ -111,6 +111,7 @@ services:
       - traefik.http.services.cantaloupe.loadbalancer.server.port=80
       - traefik.http.routers.cantaloupe_http.service=cantaloupe
       - traefik.http.routers.cantaloupe_http.entrypoints=http
+      - traefik.http.routers.cantaloupe_http.rule=Host(`drupal.localhost`) && PathPrefix(`/cantaloupe`)
   crayfits:
     image:  ${REPOSITORY:-local}/crayfits:latest
     depends_on:
@@ -216,6 +217,8 @@ services:
     image: traefik:2.2.1
     command: >
       --api.insecure=true 
+      --api.dashboard=true 
+      --api.debug=true 
       --entryPoints.http.address=:80
       --entryPoints.https.address=:443
       --providers.docker 
@@ -227,6 +230,9 @@ services:
       - 8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      # Do not expose in production.
+      - traefik.http.routers.api.service=api@internal
     networks:
       - external
       - default

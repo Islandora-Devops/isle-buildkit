@@ -2,6 +2,7 @@
 # GENERAL SETTINGS
 ###########################################################################
 
+temp_pathname = {{ getv "/temp/pathname" "" }}
 http.enabled = {{ getv "/http/enabled" "true" }}
 http.host = {{ getv "/http/host" "0.0.0.0" }}
 http.port = {{ getv "/http/port" "8182" }}
@@ -21,6 +22,7 @@ base_uri = {{ getv "/base/uri" "" }}
 slash_substitute = {{ getv "/slash/substitute" "" }}
 max_pixels = {{ getv "/max/pixels" "400000000" }}
 print_stack_trace_on_error_pages = {{ getv "/print/stack/trace/on/error/pages" "true" }}
+scale_constraints.delimiter = {{ getv "/scale/constraints/delimiter" "-" }}
 
 ###########################################################################
 # DELEGATE SCRIPT
@@ -37,64 +39,84 @@ delegate_script.cache.enabled = {{ getv "/delegate/script/cache/enabled" "false"
 endpoint.iiif.1.enabled = {{ getv "/endpoint/iiif/1/enabled" "true" }}
 endpoint.iiif.2.enabled = {{ getv "/endpoint/iiif/2/enabled" "true" }}
 endpoint.iiif.content_disposition = {{ getv "/endpoint/iiif/content/disposition" "inline" }}
+endpoint.iiif.min_size = {{ getv "/endpoint/iiif/min//size" "64" }}
 endpoint.iiif.min_tile_size = {{ getv "/endpoint/iiif/min/tile/size" "1024" }}
-endpoint.iiif.2.restrict_to_sizes = {{ getv "/endpoint/iiif/2/restrict/to/sizes" "false" }}
+endpoint.iiif.restrict_to_sizes = {{ getv "/endpoint/iiif/restrict/to/sizes" "false" }}
 endpoint.api.enabled = {{ getv "/endpoint/api/enabled" "false" }}
 endpoint.api.username = {{ getv "/endpoint/api/username" "" }}
 endpoint.api.secret = {{ getv "/endpoint/api/secret" "" }}
+endpoint.admin.enabled = {{ getv "/endpoint/admin/enabled" "false" }}
+endpoint.admin.username = {{ getv "/endpoint/admin/username" "admin" }}
+endpoint.admin.secret = {{ getv "/endpoint/admin/secret" "" }}
 
 ###########################################################################
-# RESOLVERS
+# SOURCES
 ###########################################################################
 
-resolver.static = {{ getv "/resolver/static" "HttpResolver" }}
-resolver.delegate = {{ getv "/resolver/delegate" "false" }}
+source.static = {{ getv "/source/static" "HttpSource" }}
+source.delegate = {{ getv "/source/delegate" "false" }}
 
 #----------------------------------------
-# FilesystemResolver
+# FilesystemSource
 #----------------------------------------
 
-FilesystemResolver.lookup_strategy = {{ getv "/filesystemresolver/lookup/strategy" "BasicLookupStrategy" }}
-FilesystemResolver.BasicLookupStrategy.path_prefix = {{ getv "/filesystemresolver/basiclookupstrategy/path/prefix" "/var/www/drupal/web/" }}
-FilesystemResolver.BasicLookupStrategy.path_suffix = {{ getv "/filesystemresolver/basiclookupstrategy/path/suffix" "" }}
+FilesystemSource.lookup_strategy = {{ getv "/filesystemsource/lookup/strategy" "BasicLookupStrategy" }}
+FilesystemSource.BasicLookupStrategy.path_prefix = {{ getv "/filesystemsource/basiclookupstrategy/path/prefix" "/var/www/drupal/web/" }}
+FilesystemSource.BasicLookupStrategy.path_suffix = {{ getv "/filesystemsource/basiclookupstrategy/path/suffix" "" }}
 
 #----------------------------------------
-# HttpResolver
+# HttpSource
 #----------------------------------------
 
-HttpResolver.lookup_strategy = {{ getv "/httpresolver/lookup/strategy" "BasicLookupStrategy" }}
-HttpResolver.BasicLookupStrategy.url_prefix = {{ getv "/httpresolver/basiclookupstrategy/url/prefix" "" }}
-HttpResolver.BasicLookupStrategy.url_suffix = {{ getv "/httpresolver/basiclookupstrategy/url/suffix" "" }}
-HttpResolver.auth.basic.username = {{ getv "/httpresolver/auth/basic/username" "" }}
-HttpResolver.auth.basic.secret = {{ getv "/httpresolver/auth/basic/secret" "" }}
+HttpSource.allow_insecure = {{ getv "/httpsource/allow/insecure" "false" }}
+HttpSource.request_timeout = {{ getv "/httpsource/request/timeout" "" }}
+HttpSource.lookup_strategy = {{ getv "/httpsource/lookup/strategy" "BasicLookupStrategy" }}
+HttpSource.BasicLookupStrategy.url_prefix = {{ getv "/httpsource/basiclookupstrategy/url/prefix" "" }}
+HttpSource.BasicLookupStrategy.url_suffix = {{ getv "/httpsource/basiclookupstrategy/url/suffix" "" }}
+HttpSource.auth.basic.username = {{ getv "/httpsource/auth/basic/username" "" }}
+HttpSource.auth.basic.secret = {{ getv "/httpsource/auth/basic/secret" "" }}
+HttpSource.chunking.enabled = {{ getv "/httpsource/chunking/enabled" "true" }}
+HttpSource.chunking.chunk_size = {{ getv "/httpsource/chunking/chunk/size" "512K" }}
+HttpSource.chunking.cache.enabled = {{ getv "/httpsource/chunking/cache/enabled" "true" }}
+HttpSource.chunking.cache.max_size = {{ getv "/httpsource/chunking/cache/max/size" "5M" }}
 
 #----------------------------------------
-# JdbcResolver
+# JdbcSource
 #----------------------------------------
 
-JdbcResolver.url = {{ getv "/jdbcresolver/url" "jdbc:postgresql://database:5432/cantaloupe" }}
-JdbcResolver.user = {{ getv "/jdbcresolver/user" "admin" }}
-JdbcResolver.password = {{ getv "/jdbcresolver/password" "password" }}
-JdbcResolver.connection_timeout = {{ getv "/jdbcresolver/connection/timeout" "10" }}
+JdbcSource.url = {{ getv "/jdbcsoure/url" "jdbc:postgresql://database:5432/cantaloupe" }}
+JdbcSource.user = {{ getv "/jdbcsoure/user" "admin" }}
+JdbcSource.password = {{ getv "/jdbcsoure/password" "password" }}
+JdbcSource.connection_timeout = {{ getv "/jdbcsoure/connection/timeout" "10" }}
 
 #----------------------------------------
-# AmazonS3Resolver
+# S3Source
 #----------------------------------------
 
-AmazonS3Resolver.access_key_id = {{ getv "/amazons3resolver/access/key/id" "" }}
-AmazonS3Resolver.secret_key = {{ getv "/amazons3resolver/secret/key" "" }}
-AmazonS3Resolver.bucket.name = {{ getv "/amazons3resolver/bucket/name" "" }}
-AmazonS3Resolver.bucket.region = {{ getv "/amazons3resolver/bucket/region" "" }}
-AmazonS3Resolver.lookup_strategy = {{ getv "/amazons3resolver/lookup/strategy" "BasicLookupStrategy" }}
+S3Source.endpoint = {{ getv "/s3source/endpoint" "" }}
+S3Source.access_key_id = {{ getv "/s3source/access/key/id" "" }}
+S3Source.secret_key = {{ getv "/s3source/secret/key" "" }}
+S3Source.lookup_strategy = {{ getv "/s3source/lookup/strategy" "BasicLookupStrategy" }}
+S3Source.BasicLookupStrategy.bucket.name = {{ getv "/s3source/basiclookupstrategy/bucket/name" "" }}
+S3Source.BasicLookupStrategy.path_prefix = {{ getv "/s3source/basiclookupstrategy/path/prefix" "" }}
+S3Source.BasicLookupStrategy.path_suffix = {{ getv "/s3source/basiclookupstrategy/path/suffix" "" }}
+S3Source.chunking.enabled = {{ getv "/s3source/chunking/enabled" "true" }}
+S3Source.chunking.chunk_size = {{ getv "/s3source/chunking/chunk/size" "512K" }}
+S3Source.chunking.cache.enabled = {{ getv "/s3source/chunking/cache/enabled" "true" }}
+S3Source.chunking.cache.max_size = {{ getv "/s3source/chunking/cache/max/size" "5M" }}
 
 #----------------------------------------
-# AzureStorageResolver
+# AzureStorageSource
 #----------------------------------------
 
-AzureStorageResolver.account_name = {{ getv "/azurestorageresolver/account/name" "" }}
-AzureStorageResolver.account_key = {{ getv "/azurestorageresolver/account/key" "" }}
-AzureStorageResolver.container_name = {{ getv "/azurestorageresolver/container/name" "" }}
-AzureStorageResolver.lookup_strategy = {{ getv "/azurestorageresolver/lookup/strategy" "BasicLookupStrategy" }}
+AzureStorageSource.account_name = {{ getv "/azurestoragesource/account/name" "" }}
+AzureStorageSource.account_key = {{ getv "/azurestoragesource/account/key" "" }}
+AzureStorageSource.container_name = {{ getv "/azurestoragesource/container/name" "" }}
+AzureStorageSource.lookup_strategy = {{ getv "/azurestoragesource/lookup/strategy" "BasicLookupStrategy" }}
+AzureStorageSource.chunking.enabled = {{ getv "/azurestoragesource/chunking/enabled" "true" }}
+AzureStorageSource.chunking.chunk_size = {{ getv "/azurestoragesource/chunking/chunk/size" "512K" }}
+AzureStorageSource.chunking.cache.enabled = {{ getv "/azurestoragesource/chunking/cache/enabled" "true" }}
+AzureStorageSource.chunking.cache.max_size = {{ getv "/azurestoragesource/chunking/cache/max/size" "5M" }}
 
 ###########################################################################
 # PROCESSORS
@@ -104,26 +126,28 @@ AzureStorageResolver.lookup_strategy = {{ getv "/azurestorageresolver/lookup/str
 # Processor Selection
 #----------------------------------------
 
-processor.avi = {{ getv "/processor/avi" "FfmpegProcessor" }}
-processor.bmp = {{ getv "/processor/bmp" "ImageMagickProcessor" }}
-processor.dcm = {{ getv "/processor/dcm" "ImageMagickProcessor" }}
-processor.gif = {{ getv "/processor/gif" "ImageMagickProcessor" }}
-processor.jp2 = {{ getv "/processor/jp2" "OpenJpegProcessor" }}
-processor.jpg = {{ getv "/processor/jpg" "ImageMagickProcessor" }}
-processor.mov = {{ getv "/processor/mov" "FfmpegProcessor" }}
-processor.mp4 = {{ getv "/processor/mp4" "FfmpegProcessor" }}
-processor.mpg = {{ getv "/processor/mpg" "FfmpegProcessor" }}
-processor.pdf = {{ getv "/processor/pdf" "ImageMagickProcessor" }}
-processor.png = {{ getv "/processor/png" "ImageMagickProcessor" }}
-processor.tif = {{ getv "/processor/tif" "ImageMagickProcessor" }}
-processor.webm = {{ getv "/processor/webm" "FfmpegProcessor" }}
-processor.webp = {{ getv "/processor/webp" "ImageMagickProcessor" }}
-processor.fallback = {{ getv "/processor/fallback" "Java2dProcessor" }}
+processor.selection_strategy = {{ getv "/processor/selection/strategy" "AutomaticSelectionStrategy" }}
+processor.ManualSelectionStrategy.avi = {{ getv "/processor/manualselectionstrategy/avi" "FfmpegProcessor" }}
+processor.ManualSelectionStrategy.bmp = {{ getv "/processor/manualselectionstrategy/bmp" "ImageMagickProcessor" }}
+processor.ManualSelectionStrategy.dcm = {{ getv "/processor/manualselectionstrategy/dcm" "ImageMagickProcessor" }}
+processor.ManualSelectionStrategy.gif = {{ getv "/processor/manualselectionstrategy/gif" "ImageMagickProcessor" }}
+processor.ManualSelectionStrategy.jp2 = {{ getv "/processor/manualselectionstrategy/jp2" "OpenJpegProcessor" }}
+processor.ManualSelectionStrategy.jpg = {{ getv "/processor/manualselectionstrategy/jpg" "ImageMagickProcessor" }}
+processor.ManualSelectionStrategy.mov = {{ getv "/processor/manualselectionstrategy/mov" "FfmpegProcessor" }}
+processor.ManualSelectionStrategy.mp4 = {{ getv "/processor/manualselectionstrategy/mp4" "FfmpegProcessor" }}
+processor.ManualSelectionStrategy.mpg = {{ getv "/processor/manualselectionstrategy/mpg" "FfmpegProcessor" }}
+processor.ManualSelectionStrategy.pdf = {{ getv "/processor/manualselectionstrategy/pdf" "ImageMagickProcessor" }}
+processor.ManualSelectionStrategy.png = {{ getv "/processor/manualselectionstrategy/png" "ImageMagickProcessor" }}
+processor.ManualSelectionStrategy.tif = {{ getv "/processor/manualselectionstrategy/tif" "ImageMagickProcessor" }}
+processor.ManualSelectionStrategy.webm = {{ getv "/processor/manualselectionstrategy/webm" "FfmpegProcessor" }}
+processor.ManualSelectionStrategy.webp = {{ getv "/processor/manualselectionstrategy/webp" "ImageMagickProcessor" }}
+processor.ManualSelectionStrategy.fallback = {{ getv "/processor/manualselectionstrategy/fallback" "Java2dProcessor" }}
 
 #----------------------------------------
 # Global Processor Configuration
 #----------------------------------------
 
+processor.dpi = {{ getv "/processor/dpi" "150" }}
 processor.normalize = {{ getv "/processor/normalize" "false" }}
 processor.background_color = {{ getv "/processor/background/color" "black" }}
 processor.downscale_filter = {{ getv "/processor/downscale/filter" "bicubic" }}
@@ -132,7 +156,23 @@ processor.sharpen = {{ getv "/processor/sharpen" "0" }}
 processor.jpg.progressive = {{ getv "/processor/jpg/progressive" "true" }}
 processor.jpg.quality = {{ getv "/processor/jpg/quality" "80" }}
 processor.tif.compression = {{ getv "/processor/tif/compression" "LZW" }}
-StreamProcessor.retrieval_strategy = {{ getv "/streamprocessor/retrieval/strategy" "StreamStrategy" }}
+processor.stream_retrieval_strategy = {{ getv "/processor/stream/retrieval/strategy" "StreamStrategy" }}
+processor.fallback_retrieval_strategy = {{ getv "/processor/fallback/retrieval/strategy" "DownloadStrategy" }}
+
+#----------------------------------------
+# ImageIO Plugin Preferences
+#----------------------------------------
+
+processor.imageio.bmp.reader = {{ getv "/processor/imageio/bmp/reader" "" }}
+processor.imageio.gif.reader = {{ getv "/processor/imageio/gif/reader" "" }}
+processor.imageio.gif.writer = {{ getv "/processor/imageio/gif/writer" "" }}
+processor.imageio.jpg.reader = {{ getv "/processor/imageio/jpg/reader" "" }}
+processor.imageio.jpg.writer = {{ getv "/processor/imageio/jpg/writer" "" }}
+processor.imageio.png.reader = {{ getv "/processor/imageio/png/reader" "" }}
+processor.imageio.png.writer = {{ getv "/processor/imageio/png/writer" "" }}
+processor.imageio.tif.reader = {{ getv "/processor/imageio/tif/reader" "" }}
+processor.imageio.tif.writer = {{ getv "/processor/imageio/tif/writer" "" }}
+processor.imageio.xpm.reader = {{ getv "/processor/imageio/xpm/reader" "" }}
 
 #----------------------------------------
 # FfmpegProcessor
@@ -141,34 +181,10 @@ StreamProcessor.retrieval_strategy = {{ getv "/streamprocessor/retrieval/strateg
 FfmpegProcessor.path_to_binaries = {{ getv "/ffmpegprocessor/path/to/binaries" "" }}
 
 #----------------------------------------
-# GraphicsMagickProcessor
-#----------------------------------------
-
-GraphicsMagickProcessor.path_to_binaries = {{ getv "/graphicsmagickprocessor/path/to/binaries" "" }}
-
-#----------------------------------------
-# ImageMagickProcessor
-#----------------------------------------
-
-ImageMagickProcessor.path_to_binaries = {{ getv "/imagemagickprocessor/path/to/binaries" "" }}
-
-#----------------------------------------
-# KakaduProcessor
-#----------------------------------------
-
-KakaduProcessor.path_to_binaries = {{ getv "/kakaduprocessor/path/to/binaries" "" }}
-
-#----------------------------------------
 # OpenJpegProcessor
 #----------------------------------------
 
 OpenJpegProcessor.path_to_binaries = {{ getv "/openjpegprocessor/path/to/binaries" "" }}
-
-#----------------------------------------
-# PdfBoxProcessor
-#----------------------------------------
-
-PdfBoxProcessor.dpi = {{ getv "/pdfboxprocessor/dpi" "150" }}
 
 ###########################################################################
 # CLIENT-SIDE CACHING
@@ -189,9 +205,12 @@ cache.client.no_transform = {{ getv "/cache/client/no/transform" "true" }}
 # SERVER-SIDE CACHING
 ###########################################################################
 
-cache.source = {{ getv "/cache/source" "FilesystemCache" }}
-cache.derivative = {{ getv "/cache/derivative" "FilesystemCache" }}
-cache.server.ttl_seconds = {{ getv "/cache/server/ttl/seconds" "2592000" }}
+cache.server.source = {{ getv "/cache/server/source" "FilesystemCache" }}
+cache.server.source.ttl_seconds = {{ getv "/cache/server/source/ttl/seconds" "2592000" }}
+cache.server.derivative.enabled = {{ getv "/cache/server/derivative/enabled" "false" }}
+cache.server.derivative = {{ getv "/cache/server/derivative" "" }}
+cache.server.derivative.ttl_seconds = {{ getv "/cache/server/derivative/ttl/seconds" "2592000" }}
+cache.server.info.enabled = {{ getv "/cache/server/info/enabled" "true" }}
 cache.server.purge_missing = {{ getv "/cache/server/purge/missing" "false" }}
 cache.server.resolve_first = {{ getv "/cache/server/resolve/first" "false" }}
 cache.server.worker.enabled = {{ getv "/cache/server/worker/enabled" "false" }}
@@ -204,6 +223,14 @@ cache.server.worker.interval = {{ getv "/cache/server/worker/interval" "86400" }
 FilesystemCache.pathname = {{ getv "/filesystemcache/pathname" "/data" }}
 FilesystemCache.dir.depth = {{ getv "/filesystemcache/dir/depth" "3" }}
 FilesystemCache.dir.name_length = {{ getv "/filesystemcache/dir/name/length" "2" }}
+
+#----------------------------------------
+# HeapCache
+#----------------------------------------
+
+HeapCache.target_size = {{ getv "/heapcache/target/size" "2G" }}
+HeapCache.persist = {{ getv "/heapcache/persist" "false" }}
+HeapCache.persist.filesystem.pathname = {{ getv "/heapcache/persist/filesystem/pathname" "/var/cache/cantaloupe/heap.cache" }}
 
 #----------------------------------------
 # JdbcCache
@@ -220,11 +247,22 @@ JdbcCache.info_table = {{ getv "/jdbccache/info/table" "info_cache" }}
 # AmazonS3Cache
 #----------------------------------------
 
-AmazonS3Cache.access_key_id = {{ getv "/amazons3cache/access/key/id" "" }}
-AmazonS3Cache.secret_key = {{ getv "/amazons3cache/secret/key" "" }}}
 AmazonS3Cache.bucket.name = {{ getv "/amazons3cache/bucket/name" "" }}}
 AmazonS3Cache.bucket.region = {{ getv "/amazons3cache/bucket/region" "" }}}
 AmazonS3Cache.object_key_prefix = {{ getv "/amazons3cache/object/key/prefix" "" }}}
+
+#----------------------------------------
+# S3Cache
+#----------------------------------------
+
+S3Cache.endpoint = {{ getv "/s3cache/endpoint" "" }}
+S3Cache.access_key_id = {{ getv "/s3cache/access/key/id" "" }}
+S3Cache.secret_key = {{ getv "/s3cache/secret/key" "" }}}
+S3Cache.bucket.name = {{ getv "/s3cache/bucket/name" "" }}}
+S3Cache.bucket.region = {{ getv "/s3cache/bucket/region" "" }}}
+S3Cache.object_key_prefix = {{ getv "/s3cache/object/key/prefix" "" }}}
+S3Cache.max_connections = {{ getv "/s3cache/max/connections" "" }}}
+
 
 #----------------------------------------
 # AzureStorageCache
@@ -234,6 +272,25 @@ AzureStorageCache.account_name = {{ getv "/azurestoragecache/account/name" "" }}
 AzureStorageCache.account_key = {{ getv "/azurestoragecache/account/key" "" }}
 AzureStorageCache.container_name = {{ getv "/azurestoragecache/container/name" "" }}
 AzureStorageCache.object_key_prefix = {{ getv "/azurestoragecache/object/key/prefix" "" }}
+
+#----------------------------------------
+# RedisCache
+#----------------------------------------
+
+RedisCache.host = {{ getv "/rediscache/host" "localhost" }}
+RedisCache.port = {{ getv "/rediscache/port" "6379" }}
+RedisCache.ssl = {{ getv "/rediscache/ssl" "false" }}
+RedisCache.password = {{ getv "/rediscache/password" "" }}
+RedisCache.database = {{ getv "/rediscache/database" "0" }}
+
+#----------------------------------------
+# DynamoDBCache
+#----------------------------------------
+
+DynamoDBCache.endpoint = {{ getv "dynamodbcache/endpoint" "" }}
+DynamoDBCache.table.name = {{ getv "dynamodbcache/table/name" "CantaloupeDynamoDBCache" }}
+DynamoDBCache.access_key_id = {{ getv "dynamodbcache/access/key/id" "" }}
+DynamoDBCache.secret_key = {{ getv "dynamodbcache/sectre/key" "" }}
 
 ###########################################################################
 # OVERLAYS
@@ -281,9 +338,12 @@ metadata.respect_orientation = {{ getv "/metadata/respect/orientation" "false" }
 
 log.application.level = {{ getv "/log/application/level" "debug" }}
 log.application.ConsoleAppender.enabled = {{ getv "/log/application/consoleappender/enabled" "false" }}
+log.application.ConsoleAppender.logstash.enabled = {{ getv "/log/application/consoleappender/logstash/enabled" "false" }}
 log.application.FileAppender.enabled = {{ getv "/log/application/fileappender/enabled" "false" }}
+log.application.FileAppender.logstash.enabled = {{ getv "/log/application/fileappender/logstash/enabled" "false" }}
 log.application.FileAppender.pathname = {{ getv "/log/application/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.application.log" }}
 log.application.RollingFileAppender.enabled = {{ getv "/log/application/rollingfileappender/enabled" "true" }}
+log.application.RollingFileAppender.logstash.enabled = {{ getv "/log/application/rollingfileappender/logstash/enabled" "false" }}
 log.application.RollingFileAppender.pathname = {{ getv "/log/application/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.application.log" }}
 log.application.RollingFileAppender.policy = {{ getv "/log/application/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
 log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/application/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.application-%d{yyyy-MM-dd}.log" }}
@@ -297,25 +357,20 @@ log.application.SyslogAppender.facility = {{ getv "/log/application/syslogappend
 # Error Log
 #----------------------------------------
 
-log.error.ConsoleAppender.enabled = {{ getv "/log/error/consoleappender/enabled" "false" }}
 log.error.FileAppender.enabled = {{ getv "/log/error/fileappender/enabled" "false" }}
+log.error.FileAppender.logstash.enabled = {{ getv "/log/error/fileappender/logstash/enabled" "false" }}
 log.error.FileAppender.pathname = {{ getv "/log/error/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.error.log" }}
 log.error.RollingFileAppender.enabled = {{ getv "/log/error/rollingfileappender/enabled" "true" }}
+log.error.RollingFileAppender.logstash.enabled = {{ getv "/log/error/rollingfileappender/logstash/enabled" "false" }}
 log.error.RollingFileAppender.pathname = {{ getv "/log/error/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.error.log" }}
 log.error.RollingFileAppender.policy = {{ getv "/log/error/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
 log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/error/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.error-%d{yyyy-MM-dd}.log" }}
 log.error.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getv "/log/error/rollingfileappender/timebasedrollingpolicy/max/history" "30" }}
-log.error.SyslogAppender.enabled = {{ getv "/log/error/syslogappender/enabled" "false" }}
-log.error.SyslogAppender.host = {{ getv "/log/error/syslogappender/host" "" }}
-log.error.SyslogAppender.port = {{ getv "/log/error/syslogappender/port" "514" }}
-log.error.SyslogAppender.facility = {{ getv "/log/error/syslogappender/facility" "LOCAL0" }}
 
 #----------------------------------------
 # Access Log
 #----------------------------------------
 
-# Currently not working: https://github.com/cantaloupe-project/cantaloupe/issues/338
-# Although the output is replicated in the application log so we can read it there.
 log.access.ConsoleAppender.enabled = {{ getv "/log/access/consoleappender/enabled" "false" }}
 log.access.FileAppender.enabled = {{ getv "/log/access/fileappender/enabled" "false" }}
 log.access.FileAppender.pathname = {{ getv "/log/access/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.access.log" }}

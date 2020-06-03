@@ -6,6 +6,7 @@ function drush {
 }
 
 function main {
+    local drupal_url="{{ getv "/drupal/url" "http://drupal.localhost" }}"
     local broker_host="{{ getv "/broker/host" "activemq" }}"
     local broker_port="{{ getv "/broker/port" "61613" }}"
     local broker_url="tcp://${broker_host}:${broker_port}"
@@ -14,8 +15,8 @@ function main {
     local gemini_url="http://${gemini_host}:${gemini_port}"
     local solr_host="{{ getv "/solr/host" "solr" }}"
     local solr_port="{{ getv "/solr/port" "8983" }}"
-    local matamo_url="{{ getv "/matomo/url" "http://matomo.localhost/" }}"
-    local cantaloupe_url="{{ getv "/cantaloupe/url" "http://cantaloupe/cantaloupe/iiif/2" }}"
+    local matamo_url="{{ getv "/matomo/url" "http://matomo.localhost" }}"
+    local cantaloupe_url="{{ getv "/cantaloupe/url" "http://drupal.localhost/cantaloupe/iiif/2" }}"
     local triplestore_host="{{ getv "/triplestore/host" "blazegraph" }}"
     local triplestore_port="{{ getv "/triplestore/port" "80" }}"
     local triplestore_url="http://${triplestore_host}:${triplestore_port}/bigdata"
@@ -42,7 +43,7 @@ function main {
     cat <<-EOT >> /var/www/drupal/web/sites/default/settings.php
 
 \$settings['flysystem'] = [
-    'fedora' => [
+    'fedora'  => [
         'driver' => 'fedora',
         'config' => [
             'root' => '${fcrepo_url}',
@@ -53,11 +54,11 @@ EOT
     fi
 
     # Ensure JWT is setup before any module installations run.
-    drush en --uri "http://drupal:80/" --no-interaction --yes jwt
+    drush en --uri "${drupal_url}" --no-interaction --yes jwt
     drush config-import -y --partial --source=/opt/islandora/configs/jwt
 
     # Ensure Islandora settings are correct, before install hooks run.
-    drush en --uri "http://drupal:80/" --no-interaction --yes islandora
+    drush en --uri "${drupal_url}" --no-interaction --yes islandora
     drush -y cset --input-format=yaml islandora.settings broker_url "${broker_url}"
     drush -y cset --input-format=yaml islandora.settings gemini_url "${gemini_url}"
 
@@ -70,7 +71,7 @@ EOT
     fi
 
     # Need access to Solr before we can actually import the right config.
-    if timeout 300 wait-for-open-port.sh "${fcrepo_host}" "${fcrepo_port}" ; then
+    if timeout 300 wait-for-open-port.sh ${fcrepo_host} ${fcrepo_port}; then
         echo "Fcrepo Found"
     else
         echo "Could not connect to Fcrepo"
@@ -105,7 +106,7 @@ EOT
     curl -X POST -H "Content-type: text/plain" --data-binary @/var/run/islandora/inference.nt "${triplestore_url}/namespace/islandora/sparql"
 
     # From: islandora-playbook/inventory/vagrant/group_vars/webserver/drupal.yml
-    drush en --uri "http://drupal:80/" --no-interaction --yes \
+    drush en --uri "${drupal_url}" --no-interaction --yes \
         admin_toolbar \
         basic_auth \
         content_browser \
@@ -135,13 +136,23 @@ EOT
     drush -y cset search_api.server.default_solr_server backend_config.connector_config.host "${solr_host}"
     drush -y cset search_api.server.default_solr_server backend_config.connector_config.port "${solr_port}"
 
+    # From: islandora-playbook/roles/external/Islandora-Devops.drupal-openseadragon/tasks/install.yml
+    if [[ ! -d /var/www/drupal/web/sites/all/assets/vendor/openseadragon ]]; then
+        mkdir -p /var/www/drupal/web/sites/all/assets/vendor
+        mv /var/www/drupal/openseadragon /var/www/drupal/web/sites/all/assets/vendor
+    fi
+
+    # From: islandora-playbook/roles/external/Islandora-Devops.drupal-openseadragon/tasks/config.yml
+    cp /var/www/drupal/web/modules/contrib/openseadragon/openseadragon.json /var/www/drupal/web/sites/default/files/library-definitions
+    drush -y cset --input-format=yaml openseadragon.settings iiif_server "${cantaloupe_url}" 
+
     # From: islandora-playbook/roles/internal/webserver-app/tasks/drupal.yml
     drush -y pm-uninstall search
     drush -y "then" -y carapace
     drush -y config-set system.theme default carapace
     drush -y config-set matomo.settings site_id 1
     drush -y config-set matomo.settings url_http "${matamo_url}"
-    drush fim --uri "http://drupal:80/" --no-interaction --yes islandora_core_feature,controlled_access_terms_defaults,islandora_defaults,islandora_search
+    drush fim --uri "${drupal_url}" --no-interaction --yes islandora_core_feature,controlled_access_terms_defaults,islandora_defaults,islandora_search
 
     # Fix what the features overides.
     drush -y cset search_api.server.default_solr_server backend_config.connector_config.host "${solr_host}"
@@ -169,7 +180,7 @@ EOT
     drush -y cset --input-format=yaml media.settings standalone_url true
     drush -y cset --input-format=yaml islandora_iiif.settings iiif_server "${cantaloupe_url}" 
     drush -y cset --input-format=yaml openseadragon.settings manifest_view iiif_manifest
-    drush -y --uri "http://drupal:80/" --userid=1 mim --group=islandora
+    drush -y --uri "${drupal_url}" --userid=1 mim --group=islandora
     s6-setuidgid nginx mkdir -p /var/www/drupal/web/simpletest /var/www/drupal/web/sites/simpletest 
 
     # Cache clear.
