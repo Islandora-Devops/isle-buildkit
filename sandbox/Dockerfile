@@ -45,6 +45,13 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     wget -N -P /opt/downloads https://github.com/mozilla/pdf.js/releases/download/v${PDFJS_VERSION}/pdfjs-${PDFJS_VERSION}-dist.zip && \
     mkdir -p /var/www/drupal/web/libraries/pdfjs.js && \
     unzip "/opt/downloads/pdfjs-${PDFJS_VERSION}-dist.zip" -d /var/www/drupal/web/libraries/pdfjs.js && \
+    # Download and unzip openseadragon here, but deploy it in sandbox-setup.sh b/c we want
+    # to put it somewhere that's on a volume.
+    OPENSEADRAGON_VERSION=2.4.2 && \
+    wget -N -P /opt/downloads https://github.com/openseadragon/openseadragon/releases/download/v${OPENSEADRAGON_VERSION}/openseadragon-bin-${OPENSEADRAGON_VERSION}.zip && \
+    unzip /opt/downloads/openseadragon-bin-${OPENSEADRAGON_VERSION}.zip -d /opt/downloads && \
+    mv /opt/downloads/openseadragon-bin-${OPENSEADRAGON_VERSION} /var/www/drupal/openseadragon && \
+    rm /opt/downloads/openseadragon-bin-${OPENSEADRAGON_VERSION}.zip && \
     cleanup.sh
 
 VOLUME [ "/opt/keys/claw", "/var/www/drupal/config", "/var/www/drupal/web/sites" ]
