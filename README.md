@@ -293,7 +293,7 @@ following urls.
 - <http://activemq.localhost/admin>
 - <http://blazegraph.localhost/bigdata>
 - <http://drupal.localhost>
-- <http://fcrepo.localhost/fcrepo/reset>
+- <http://fcrepo.localhost/fcrepo/rest>
 - <http://matomo.localhost>
 
 Note if you cannot map ``traefik`` to the hosts port 80, you will need to
