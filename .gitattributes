@@ -9,10 +9,12 @@ gradlew text eol=lf diff=bash
 # Force bash scripts to always use lf line endings so that if a repo is accessed
 # in Unix via a file share from Windows, the scripts will work.
 *.bat text eol=crlf diff=batch
-*.sh text eol=lf diff=bash
+*.patch text eol=lf diff=batch
 *.properties text eol=lf
-run text eol=lf diff=bash
+*.sh text eol=lf diff=bash
+APKBUILD text eol=lf diff=batch
 finish text eol=lf diff=bash
+run text eol=lf diff=bash
 
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)
