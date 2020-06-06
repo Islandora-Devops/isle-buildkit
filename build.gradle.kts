@@ -283,7 +283,7 @@ open class DockerBuildKitBuildImage : DefaultTask() {
 
     @TaskAction
     fun exec() {
-        val command = mutableListOf("docker", "build")
+        val command = mutableListOf("docker", "build", "--progress=plain")
         command.addAll(cacheFrom.get().filter { cacheFromValid(it) }.flatMap { listOf("--cache-from", it) })
         command.addAll(buildArgs.get().flatMap { listOf("--build-arg", "${it.key}=${it.value}") })
         command.addAll(images.get().flatMap { listOf("--tag", it) })
