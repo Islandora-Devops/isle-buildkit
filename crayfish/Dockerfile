@@ -4,8 +4,10 @@ FROM local/nginx:latest
 ARG COMMIT=1.1.1
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
+    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
     git-clone-cached.sh \
         --url https://github.com/Islandora/Crayfish.git \
+        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
         --commit "${COMMIT}" \
         --worktree /var/www/crayfish && \
     mkdir /var/log/islandora && \

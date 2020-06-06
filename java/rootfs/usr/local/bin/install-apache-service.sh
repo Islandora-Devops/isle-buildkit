@@ -6,8 +6,6 @@ set -e
 readonly PROGNAME=$(basename $0)
 readonly ARGS="$@"
 
-readonly DOWNLOAD_CACHE_DIRECTORY=/opt/downloads
-
 function usage() {
     cat <<- EOF
     usage: $PROGNAME options [FILE]...
@@ -20,9 +18,7 @@ function usage() {
  
     OPTIONS:
        -n --name          The name of the services to install (used to create user/group and install directory).
-       -v --version       Version of apache service to install.
        -k --key           GPG Key used to verify the downloaded file.
-       -m --mirror        The URL where the package is downloaded from.
        -f --file          The name of the file to download.
        -h --help          Show this help.
        -x --debug         Debug this script.
@@ -31,9 +27,7 @@ function usage() {
        Install ActiveMQ:
        $PROGNAME \\
                  --name "activemq" \\
-                 --version "5.14.5" \\
                  --key "62ED4DF0BACB8793" \\
-                 --mirror "https://archive.apache.org/dist/activemq/5.14.5" \\
                  --file "apache-activemq-5.14.5-bin.tar.gz" \\
                  examples webapps-demo docs
 EOF
@@ -47,9 +41,7 @@ function cmdline() {
         case "$arg" in
             # Translate --gnu-long-options to -g (short options)
             --name)       args="${args}-n ";;
-            --version)    args="${args}-v ";;
             --key)        args="${args}-k ";;
-            --mirror)     args="${args}-m ";;
             --file)       args="${args}-f ";;
             --help)       args="${args}-h ";;
             --debug)      args="${args}-x ";;
@@ -62,23 +54,17 @@ function cmdline() {
     # Reset the positional parameters to the short options
     eval set -- $args
  
-    while getopts "n:v:k:m:f:hx" OPTION
+    while getopts "n:k:f:hx" OPTION
     do
         case $OPTION in
         n)
             readonly NAME=${OPTARG}
             ;;
-        v)
-            readonly VERSION=${OPTARG}
-            ;;
         k)
             readonly KEY=${OPTARG}
             ;;
-        m)
-            readonly MIRROR=${OPTARG}
-            ;;
         f)
-            readonly FILE=${OPTARG}
+            readonly FILE="${OPTARG}"
             ;;
         h)
             usage
@@ -91,8 +77,8 @@ function cmdline() {
         esac
     done
 
-    if [[ -z $NAME || -z $VERSION || -z $KEY || -z $MIRROR || -z $FILE ]]; then
-        echo "Missing one or more required options: --name --version --key --mirror --file"
+    if [[ -z $NAME || -z $KEY || -z $FILE ]]; then
+        echo "Missing one or more required options: --name --key --file"
         exit 1
     fi
 
@@ -108,17 +94,13 @@ function main {
     local install_directory=/opt/${NAME}
     local user=${NAME}
     local group=${NAME}
-    # Expects that the RUN uses ${DOWNLOAD_CACHE_DIRECTORY} as a cache
-    # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#run---mounttypecache
-    wget -N -P ${DOWNLOAD_CACHE_DIRECTORY} ${MIRROR}/${FILE}
-    wget -N -P ${DOWNLOAD_CACHE_DIRECTORY} ${MIRROR}/${FILE}.asc
     gpg --keyserver hkp://keys.gnupg.net:80 --recv-key ${KEY}
-    gpg --verify ${DOWNLOAD_CACHE_DIRECTORY}/${FILE}.asc ${DOWNLOAD_CACHE_DIRECTORY}/${FILE}
+    gpg --verify ${FILE}.asc ${FILE}
     mkdir ${install_directory}
     addgroup ${group} && \
     adduser --system --disabled-password --no-create-home --ingroup ${group} --shell /sbin/nologin --home ${install_directory} ${user}
     chown ${user}:${group} ${install_directory}
-    s6-setuidgid ${user} tar -xzf /opt/downloads/${FILE} -C ${install_directory} --strip-components 1
+    s6-setuidgid ${user} tar -xzf ${FILE} -C ${install_directory} --strip-components 1
     for i in "${REMOVE[@]}"; do
         rm -fr "${install_directory}/${i}"
     done

@@ -5,8 +5,6 @@ set -e
 readonly PROGNAME=$(basename $0)
 readonly ARGS="$@"
 
-readonly DOWNLOAD_CACHE_DIRECTORY=/opt/downloads
-
 function usage {
     cat <<- EOF
     usage: $PROGNAME options [FILE]...
@@ -15,6 +13,7 @@ function usage {
 
     OPTIONS:
        -u --url           The URL of the repository to clone.
+       -d --cache-dir     The directory to use as a cache.
        -c --commit        The commit hash or tag to checkout.
        -w --worktree      The directory to checkout the repository into.
        -s --strip         Remove the git repo as well as any files passed as parameters to save space.
@@ -25,6 +24,7 @@ function usage {
        Clone repository:
        $PROGNAME \\
                 --url https://github.com/Islandora-CLAW/Alpaca.git \\
+                --cache-dir /opt/downloads \\
                 --commit "${COMMIT}" \\
                 --worktree /opt/alpaca
 EOF
@@ -38,6 +38,7 @@ function cmdline {
         case "$arg" in
             # Translate --gnu-long-options to -g (short options)
             --url)        args="${args}-u ";;
+            --cache-dir)  args="${args}-d ";;
             --commit)     args="${args}-c ";;
             --worktree)   args="${args}-w ";;
             --strip)      args="${args}-s ";;
@@ -52,11 +53,14 @@ function cmdline {
     # Reset the positional parameters to the short options
     eval set -- $args
  
-    while getopts "u:c:w:shx" OPTION
+    while getopts "u:d:c:w:shx" OPTION
     do
         case $OPTION in
         u)
             readonly URL=${OPTARG}
+            ;;
+        d)
+            readonly CACHE_DIRECTORY=${OPTARG}
             ;;
         c)
             readonly COMMIT=${OPTARG}
@@ -75,8 +79,8 @@ function cmdline {
         esac
     done
 
-    if [[ -z $URL || -z $COMMIT || -z $WORKTREE ]]; then
-        echo "Missing one or more required options: --url --commit --worktree"
+    if [[ -z $URL || -z $CACHE_DIRECTORY || -z $COMMIT || -z $WORKTREE ]]; then
+        echo "Missing one or more required options: --url --cache-dir --commit --worktree"
         exit 1
     fi
 
@@ -90,8 +94,8 @@ function cmdline {
 function main {
     cmdline ${ARGS}
     local repo=$(basename ${WORKTREE})
-    git clone --mirror ${URL} ${DOWNLOAD_CACHE_DIRECTORY}/${repo} || true
-    git clone ${DOWNLOAD_CACHE_DIRECTORY}/${repo} ${WORKTREE}
+    git clone --mirror ${URL} ${CACHE_DIRECTORY}/${repo} || true
+    git clone ${CACHE_DIRECTORY}/${repo} ${WORKTREE}
     git -C ${WORKTREE} fetch --all 
     git -C ${WORKTREE} reset --hard ${COMMIT}
     if [[ -z $STRIP ]]; then

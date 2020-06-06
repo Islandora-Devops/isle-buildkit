@@ -1,10 +1,13 @@
 # syntax=docker/dockerfile:experimental
 FROM alpine:3.11.6
 
+COPY build/download.sh /usr/local/bin
+
 # Install packages and tools required by all downstream images.
 RUN --mount=type=cache,target=/var/cache/apk \ 
     --mount=type=cache,target=/etc/cache/apk \
     --mount=id=downloads,type=cache,target=/opt/downloads \
+    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
     ln -s /var/cache/apk /etc/apk/cache && \
     apk add --update \
         bash \
@@ -19,16 +22,20 @@ RUN --mount=type=cache,target=/var/cache/apk \
         wget \
     && \
     S6_VERSION="1.22.1.0" && \
-    CONFD_VERSION="0.15.0" && \
-    CONFD_SHA256="7f3aba1d803543dd1df3944d014f055112cf8dadf0a583c76dd5f46578ebe3c2" && \
-    wget -N -P /opt/downloads https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz && \
-    wget -N -P /opt/downloads https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz.sig && \
+    S6_FILE="s6-overlay-amd64.tar.gz" && \
+    S6_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/${S6_FILE}" && \
+    S6_SHA256="73f9779203310ddf9c5132546a1978e1a2b05990263b92ed2c34c1e258e2df6c" && \
+    S6_SIG_SHA256="7e9c33f45bca1f89b3a1702175a4109e99c911e47ae9de62fbec013406db2b01" && \
+    download.sh --url "${S6_URL}" --sha256 "${S6_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    download.sh --url "${S6_URL}.sig" --sha256 "${S6_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     gpg --keyserver hkp://keys.gnupg.net:80 --recv-key 2536CA16DF4FCDA2 && \
-    gpg /opt/downloads/s6-overlay-amd64.tar.gz.sig && \
-    wget -N -P /opt/downloads https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 && \
-    sha256sum /opt/downloads/confd-${CONFD_VERSION}-linux-amd64 | cut -f1 -d' ' | xargs test ${CONFD_SHA256} == && \
-    tar -xzf /opt/downloads/s6-overlay-amd64.tar.gz -C / && \
-    cp /opt/downloads/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd && \
+    gpg "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}.sig" && \
+    tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}" -C / && \
+    CONFD_VERSION="0.15.0" && \
+    CONFD_URL="https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" && \
+    CONFD_SHA256="7f3aba1d803543dd1df3944d014f055112cf8dadf0a583c76dd5f46578ebe3c2" && \
+    download.sh --url "${CONFD_URL}" --sha256 "${CONFD_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/confd-${CONFD_VERSION}-linux-amd64" /usr/local/bin/confd && \
     chmod a+x /usr/local/bin/confd && \
     echo '' > /root/.ash_history
 
