@@ -105,18 +105,18 @@ function main {
         activemq)     open "http://activemq.localhost/admin" &> /dev/null;;
         alpaca)       open $(url alpaca 8181 /system/console) &> /dev/null;;
         blazegraph)   open "http://blazegraph.localhost/bigdata" &> /dev/null;;
-        cantaloupe)   open $(url cantaloupe 8080 /cantaloupe/) &> /dev/null;;
+        cantaloupe)   open "http://islandora.localhost/cantaloupe" &> /dev/null;;
         crayfits)     open $(url crayfits 8000 /) &> /dev/null;;
         fcrepo)       open "http://fcrepo.localhost/fcrepo/rest" &> /dev/null;;
         gemini)       open $(url gemini 8000 /) &> /dev/null;;
         homarus)      open $(url homarus 8000 /) &> /dev/null;;
         houdini)      open $(url houdini 8000 /) &> /dev/null;;
         hypercube)    open $(url hypercube 8000 /) &> /dev/null;;
-        drupal)       open "http://drupal.localhost" &> /dev/null;;
+        drupal)       open "http://islandora.localhost" &> /dev/null;;
         milliner)     open $(url milliner 8000 /) &> /dev/null;;
         recast)       open $(url recast 8000 /) &> /dev/null;;
         solr)         open "http://solr.localhost/solr" &> /dev/null;;
-        matomo)       open "http://matomo.localhost" &> /dev/null;;
+        matomo)       open "http://islandora.localhost/matomo" &> /dev/null;;
         *)            exit 1;;
     esac
 }

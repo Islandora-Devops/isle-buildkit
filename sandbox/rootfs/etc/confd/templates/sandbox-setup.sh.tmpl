@@ -6,7 +6,7 @@ function drush {
 }
 
 function main {
-    local drupal_url="{{ getv "/drupal/url" "http://drupal.localhost" }}"
+    local drupal_url="{{ getv "/drupal/url" "http://islandora.localhost" }}"
     local broker_host="{{ getv "/broker/host" "activemq" }}"
     local broker_port="{{ getv "/broker/port" "61613" }}"
     local broker_url="tcp://${broker_host}:${broker_port}"
@@ -15,8 +15,8 @@ function main {
     local gemini_url="http://${gemini_host}:${gemini_port}"
     local solr_host="{{ getv "/solr/host" "solr" }}"
     local solr_port="{{ getv "/solr/port" "8983" }}"
-    local matamo_url="{{ getv "/matomo/url" "http://matomo.localhost/" }}"
-    local cantaloupe_url="{{ getv "/cantaloupe/url" "http://drupal.localhost/cantaloupe/iiif/2" }}"
+    local matamo_url="{{ getv "/matomo/url" "http://islandora.localhost/matomo/" }}"
+    local cantaloupe_url="{{ getv "/cantaloupe/url" "http://islandora.localhost/cantaloupe/iiif/2" }}"
     local triplestore_host="{{ getv "/triplestore/host" "blazegraph" }}"
     local triplestore_port="{{ getv "/triplestore/port" "80" }}"
     local triplestore_url="http://${triplestore_host}:${triplestore_port}/bigdata"
