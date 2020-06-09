@@ -292,8 +292,8 @@ following urls.
 
 - <http://activemq.localhost/admin>
 - <http://blazegraph.localhost/bigdata>
-- <http://drupal.localhost>
-- <http://fcrepo.localhost/fcrepo/rest>
+- <http://islandora.localhost>
+- <http://fcrepo.localhost/fcrepo/reset>
 - <http://matomo.localhost>
 
 Note if you cannot map ``traefik`` to the hosts port 80, you will need to
@@ -304,7 +304,7 @@ virtual network, and you can access that address from your machine.
 ```properties
 x.x.x.x     activemq.localhost
 x.x.x.x     blazegraph.localhost
-x.x.x.x     drupal.localhost
+x.x.x.x     islandora.localhost
 x.x.x.x     fcrepo.localhost
 x.x.x.x     matomo.localhost
 ```

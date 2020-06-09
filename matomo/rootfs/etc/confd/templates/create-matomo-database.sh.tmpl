@@ -8,6 +8,7 @@ function main {
   local port="{{ getv "/db/port" "3306" }}"
   local user="{{ getv "/db/root/user" "root" }}"
   local password="{{ getv "/db/root/password" "password" }}"
+  local dbname="{{getv "/db/name" "matomo"}}"
 
   if [[ "${driver}" == "pdo_mysql" ]]; then
     echo "Waiting for connection to database."
@@ -17,14 +18,27 @@ function main {
       --user "${user}" \
       --password "${password}"
 
-    echo "Create database / user if it does not exist."
-    mysql \
+    echo "Querying for an existing Matomo database named ${dbname}."
+    local databases=$(mysql \
         --user="${user}" \
         --password="${password}" \
         --host="${host}" \
         --port="${port}" \
         --protocol=tcp \
-        < /var/run/islandora/create-matomo-database.sql
+        -e "SHOW DATABASES")
+
+    if ! grep -q "${dbname}" <<< "${databases}"; then
+        echo "No database found, creating a database named ${dbname}"
+        mysql \
+            --user="${user}" \
+            --password="${password}" \
+            --host="${host}" \
+            --port="${port}" \
+            --protocol=tcp \
+            < /var/run/islandora/create-matomo-database.sql
+    else
+        echo "Existing database found, skipping installation."
+    fi
   else
     echo "Only MySQL databases are supported for now."
     exit 1
