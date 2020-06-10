@@ -56,15 +56,16 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     download.sh --url "${PDFJS_URL}" --sha256 "${PDFJS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     mkdir -p /var/www/drupal/web/libraries/pdfjs.js && \
     unzip "${DOWNLOAD_CACHE_DIRECTORY}/${PDFJS_FILE}" -d /var/www/drupal/web/libraries/pdfjs.js && \
-    # Download and unzip openseadragon here, but deploy it in sandbox-setup.sh b/c we want
-    # to put it somewhere that's on a volume.
     OPENSEADRAGON_VERSION="2.4.2" && \
     OPENSEADRAGON_FILE="openseadragon-bin-${OPENSEADRAGON_VERSION}.zip" && \
     OPENSEADRAGON_URL="https://github.com/openseadragon/openseadragon/releases/download/v${OPENSEADRAGON_VERSION}/${OPENSEADRAGON_FILE}" && \
     OPENSEADRAGON_SHA256="8e32d808b80206d5f5aadcfc51ffecf2ecc89e5fb6876c51f409940cf4b1087e" && \
     download.sh --url "${OPENSEADRAGON_URL}" --sha256 "${OPENSEADRAGON_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    unzip "${DOWNLOAD_CACHE_DIRECTORY}/${OPENSEADRAGON_FILE}" -d /var/www/drupal && \
-    mv "/var/www/drupal/${OPENSEADRAGON_FILE%.zip}" /var/www/drupal/openseadragon && \
+    mkdir -p /var/www/drupal/web/sites/all/assets/vendor && \
+    unzip "${DOWNLOAD_CACHE_DIRECTORY}/${OPENSEADRAGON_FILE}" -d /var/www/drupal/web/sites/all/assets/vendor && \
+    mv "/var/www/drupal/web/sites/all/assets/vendor/${OPENSEADRAGON_FILE%.zip}" /var/www/drupal/web/sites/all/assets/vendor/openseadragon && \
+    mkdir -p /var/www/drupal/web/sites/default/files/library-definitions && \
+    cp /var/www/drupal/web/modules/contrib/openseadragon/openseadragon.json /var/www/drupal/web/sites/default/files/library-definitions && \
     chown -R nginx:nginx /var/www/drupal && \
     cleanup.sh
 
