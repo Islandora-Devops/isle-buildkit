@@ -41,7 +41,6 @@ volumes:
   jwt-data:
   jwt-public-data:
   karaf-data:
-  matomo-config-data:
   mysql-data:
   mysql-files:
   solr-data:
@@ -177,8 +176,6 @@ services:
       - jwt-data:/opt/keys/claw/
   matomo:
     image:  ${REPOSITORY:-local}/matomo
-    volumes:
-      - matomo-config-data:/opt/matomo/config
     depends_on: 
       - database
     networks:
