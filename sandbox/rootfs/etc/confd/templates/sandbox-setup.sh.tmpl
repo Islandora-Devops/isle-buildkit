@@ -136,14 +136,7 @@ EOT
     drush -y cset search_api.server.default_solr_server backend_config.connector_config.host "${solr_host}"
     drush -y cset search_api.server.default_solr_server backend_config.connector_config.port "${solr_port}"
 
-    # From: islandora-playbook/roles/external/Islandora-Devops.drupal-openseadragon/tasks/install.yml
-    if [[ ! -d /var/www/drupal/web/sites/all/assets/vendor/openseadragon ]]; then
-        mkdir -p /var/www/drupal/web/sites/all/assets/vendor
-        mv /var/www/drupal/openseadragon /var/www/drupal/web/sites/all/assets/vendor
-    fi
-
     # From: islandora-playbook/roles/external/Islandora-Devops.drupal-openseadragon/tasks/config.yml
-    cp /var/www/drupal/web/modules/contrib/openseadragon/openseadragon.json /var/www/drupal/web/sites/default/files/library-definitions
     drush -y cset --input-format=yaml openseadragon.settings iiif_server "${cantaloupe_url}" 
 
     # From: islandora-playbook/roles/internal/webserver-app/tasks/drupal.yml
