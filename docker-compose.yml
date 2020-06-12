@@ -38,8 +38,6 @@ volumes:
   cantaloupe-data:
   etcd-data:
   fcrepo-data:
-  jwt-data:
-  jwt-public-data:
   karaf-data:
   matomo-config-data:
   mysql-data:
@@ -127,7 +125,6 @@ services:
       - drupal-config-data:/var/www/drupal/config
       - drupal-sites-data:/var/www/drupal/web/sites
       - solr-data:/opt/solr/server/solr
-      - jwt-data:/opt/keys/claw/
     depends_on:
       - solr
       - fcrepo
@@ -142,7 +139,6 @@ services:
     image:  ${REPOSITORY:-local}/fcrepo:latest
     volumes:
       - fcrepo-data:/data
-      - jwt-data:/opt/keys/claw/
     depends_on: 
       - activemq
       - database
@@ -159,22 +155,14 @@ services:
     image:  ${REPOSITORY:-local}/fits
   gemini:
     image:  ${REPOSITORY:-local}/gemini:latest
-    volumes:
-      - jwt-data:/opt/keys/claw/
     depends_on: 
       - database
   homarus:
     image:  ${REPOSITORY:-local}/homarus:latest
-    volumes:
-      - jwt-data:/opt/keys/claw/
   houdini:
     image:  ${REPOSITORY:-local}/houdini:latest
-    volumes:
-      - jwt-data:/opt/keys/claw/
   hypercube:
     image:  ${REPOSITORY:-local}/hypercube:latest
-    volumes:
-      - jwt-data:/opt/keys/claw/
   matomo:
     image:  ${REPOSITORY:-local}/matomo
     volumes:
@@ -197,12 +185,8 @@ services:
       #matomo-stripprefix@docker
   milliner:
     image:  ${REPOSITORY:-local}/milliner:latest
-    volumes:
-      - jwt-data:/opt/keys/claw/
   recast:
     image:  ${REPOSITORY:-local}/recast:latest
-    volumes:
-      - jwt-data:/opt/keys/claw/
   solr:
     image:  ${REPOSITORY:-local}/solr:latest
     volumes:
