@@ -20,6 +20,4 @@ WORKDIR /opt/solr
 
 EXPOSE 8983
 
-VOLUME [ "/opt/solr/server/solr" ]
-
 COPY rootfs /
