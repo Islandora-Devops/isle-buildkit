@@ -1,0 +1,11 @@
+[template]
+src = "update-matomo-database.sql.tmpl"
+dest = "/var/run/islandora/update-matomo-database.sql"
+uid = 0
+gid = 0
+mode = "0600"
+keys = [
+    "/db",
+    "/site",
+    "/user",
+]

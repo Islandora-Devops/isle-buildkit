@@ -16,7 +16,7 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     chown -R nginx:nginx /opt/matomo && \
     cleanup.sh
 
-WORKDIR /opt/matomo
+WORKDIR /var/www/matomo
 
 VOLUME [ "/opt/matomo/config" ]
 
