@@ -6,7 +6,7 @@ function drush {
 }
 
 function main {
-    local drupal_url="{{ getv "/drupal/url" "http://islandora.localhost" }}"
+    local drupal_url="{{ getv "/site/url" "http://islandora.localhost" }}"
     local broker_host="{{ getv "/broker/host" "activemq" }}"
     local broker_port="{{ getv "/broker/port" "61613" }}"
     local broker_url="tcp://${broker_host}:${broker_port}"
@@ -31,12 +31,6 @@ function main {
         fcrepo_url="http://${fcrepo_host}:${fcrepo_port}/fcrepo/rest/"
     fi
 
-    # Create keys prior to any installation as other services depend on them.
-    if [[ ! -f "/opt/keys/claw/private.key" ]]; then
-        openssl genrsa -out "/opt/keys/claw/private.key" 2048
-        openssl rsa -pubout -in "/opt/keys/claw/private.key" -out "/opt/keys/claw/public.key"
-        chmod a=r /opt/keys/claw/* 
-    fi
 
     # Hackity hack sack.
     if ! grep flysystem /var/www/drupal/web/sites/default/settings.php &> /dev/null; then
