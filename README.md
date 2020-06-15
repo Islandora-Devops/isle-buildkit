@@ -522,8 +522,8 @@ To make reasoning about what files go where each image follows the same
 filesystem layout for copying files into the image.
 
 A folder called ``rootfs`` maps directly onto the linux filesystem of the final
-image. So for example ``rootfs/opt/islandora/configs/jwt`` will be
-``/opt/islandora/configs/jwt`` in the generated image.
+image. So for example ``rootfs/opt/islandora/configs`` will be
+``/opt/islandora/configs`` in the generated image.
 
 ### Build System
 
