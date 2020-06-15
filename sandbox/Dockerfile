@@ -54,8 +54,8 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     PDFJS_URL="https://github.com/mozilla/pdf.js/releases/download/v${PDFJS_VERSION}/${PDFJS_FILE}" && \
     PDFJS_SHA256="381683b05f494fe28e11185f98a238b34a663b1b41b5432aa769ca493e5cd087" && \
     download.sh --url "${PDFJS_URL}" --sha256 "${PDFJS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    mkdir -p /var/www/drupal/web/libraries/pdfjs.js && \
-    unzip "${DOWNLOAD_CACHE_DIRECTORY}/${PDFJS_FILE}" -d /var/www/drupal/web/libraries/pdfjs.js && \
+    mkdir -p /var/www/drupal/web/libraries/pdf.js && \
+    unzip "${DOWNLOAD_CACHE_DIRECTORY}/${PDFJS_FILE}" -d /var/www/drupal/web/libraries/pdf.js && \
     OPENSEADRAGON_VERSION="2.4.2" && \
     OPENSEADRAGON_FILE="openseadragon-bin-${OPENSEADRAGON_VERSION}.zip" && \
     OPENSEADRAGON_URL="https://github.com/openseadragon/openseadragon/releases/download/v${OPENSEADRAGON_VERSION}/${OPENSEADRAGON_FILE}" && \
