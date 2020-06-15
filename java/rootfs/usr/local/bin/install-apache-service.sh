@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-
-# Exit non-zero if any command fails.
 set -e
 
 readonly PROGNAME=$(basename $0)

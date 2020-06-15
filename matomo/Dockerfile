@@ -18,8 +18,6 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
 
 WORKDIR /var/www/matomo
 
-VOLUME [ "/opt/matomo/config" ]
-
 COPY rootfs /
 
 EXPOSE 8000
