@@ -69,6 +69,4 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     chown -R nginx:nginx /var/www/drupal && \
     cleanup.sh
 
-VOLUME [ "/opt/keys/claw", "/var/www/drupal/config", "/var/www/drupal/web/sites" ]
-
 COPY rootfs /

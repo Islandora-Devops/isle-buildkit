@@ -20,6 +20,4 @@ WORKDIR /opt/activemq
 
 EXPOSE 61616 5672 61613 1883 61614 8161
 
-VOLUME [ "/opt/activemq/data" ]
-
 COPY rootfs /
