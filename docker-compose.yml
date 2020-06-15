@@ -38,7 +38,6 @@ volumes:
   cantaloupe-data:
   etcd-data:
   fcrepo-data:
-  karaf-data:
   matomo-config-data:
   mysql-data:
   mysql-files:
@@ -81,10 +80,6 @@ services:
       - traefik.http.routers.activemq_http.entrypoints=http
   alpaca:
     image:  ${REPOSITORY:-local}/alpaca:latest
-    volumes:
-      - karaf-data:/opt/karaf/data
-    depends_on:
-      - activemq
   blazegraph:
     image:  ${REPOSITORY:-local}/blazegraph:latest
     volumes:
