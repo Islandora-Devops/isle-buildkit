@@ -1,6 +1,6 @@
 [template]
 src = "config.ini.php.tmpl"
-dest = "/opt/matomo/config/config.ini.php"
+dest = "/var/www/matomo/config/config.ini.php"
 uid = 100
 gid = 101
 mode = "0644"

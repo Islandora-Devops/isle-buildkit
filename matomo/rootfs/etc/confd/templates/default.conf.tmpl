@@ -2,7 +2,7 @@ server {
     listen 80;
 
     add_header Referrer-Policy origin; # make sure outgoing links don't show the URL to the Matomo instance
-    root /opt/matomo;
+    root /var/www/matomo;
     index index.php;
     try_files $uri $uri/ =404;
 

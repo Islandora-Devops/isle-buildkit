@@ -161,7 +161,7 @@ services:
   matomo:
     image:  ${REPOSITORY:-local}/matomo
     volumes:
-      - matomo-config-data:/opt/matomo/config
+      - matomo-config-data:/var/www/matomo
     depends_on: 
       - database
     networks:
@@ -177,7 +177,6 @@ services:
       - traefik.http.middlewares.matomo-customrequestheaders.headers.customrequestheaders.X-Forwarded-Uri=/matomo
       - traefik.http.middlewares.matomo.chain.middlewares=matomo-stripprefix,matomo-customrequestheaders
       - traefik.http.routers.matomo_http.middlewares=matomo
-      #matomo-stripprefix@docker
   milliner:
     image:  ${REPOSITORY:-local}/milliner:latest
   recast:

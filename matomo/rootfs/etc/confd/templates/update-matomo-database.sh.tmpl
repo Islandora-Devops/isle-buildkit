@@ -1,0 +1,27 @@
+#!/usr/bin/with-contenv bash
+
+set -e
+
+function main {
+  local driver="{{ getv "/db/driver" "pdo_mysql" }}"
+  local host="{{ getv "/db/host" "database" }}"
+  local port="{{ getv "/db/port" "3306" }}"
+  local db_root_user="{{ getv "/db/root/user" "root" }}"
+  local db_root_password="{{ getv "/db/root/password" "password" }}"
+  local dbname="{{getv "/db/name" "matomo"}}"
+
+  if [[ "${driver}" == "pdo_mysql" ]]; then
+    echo "Updating database named ${dbname}"
+    mysql \
+        --user="${db_root_user}" \
+        --password="${db_root_password}" \
+        --host="${host}" \
+        --port="${port}" \
+        --protocol=tcp \
+        < /var/run/islandora/update-matomo-database.sql "${dbname}"
+  else
+    echo "Only MySQL databases are supported for now."
+    exit 1
+  fi
+}
+main
