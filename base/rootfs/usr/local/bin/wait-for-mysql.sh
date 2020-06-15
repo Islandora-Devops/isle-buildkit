@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -e
 
 readonly PROGNAME=$(basename $0)

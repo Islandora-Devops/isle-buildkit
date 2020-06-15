@@ -15,6 +15,8 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     SYN_SHA256="bcad5f872930b1bcc9ea4a176c60e22683297121357336769a21ead9fadcbbd5" && \
     download.sh --url "${SYN_URL}" --sha256 "${SYN_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${SYN_FILE}" /opt/tomcat/lib && \
+    mkdir -p /opt/keys/jwt && \
+    chown tomcat:tomcat /opt/keys/jwt && \
     cleanup.sh
 
 COPY rootfs /
