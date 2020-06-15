@@ -1,5 +1,4 @@
 #!/usr/bin/with-contenv bash
-
 set -e
 
 # Make run directory if it does not exist.

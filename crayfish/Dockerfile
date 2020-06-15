@@ -11,7 +11,9 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
         --commit "${COMMIT}" \
         --worktree /var/www/crayfish && \
     mkdir /var/log/islandora && \
+    mkdir -p /opt/keys/jwt && \
     chown nginx:nginx /var/log/islandora && \
+    chown nginx:nginx /opt/keys/jwt && \
     chown -R nginx:nginx /var/www && \
     cleanup.sh
 

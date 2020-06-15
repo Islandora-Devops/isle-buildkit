@@ -14,6 +14,4 @@ RUN --mount=type=cache,target=/var/cache/apk \
 
 EXPOSE 3306
 
-VOLUME [ "/var/lib/mysql", "/var/lib/mysql-files" ]
-
 COPY rootfs /

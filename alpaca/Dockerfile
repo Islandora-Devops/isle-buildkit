@@ -21,7 +21,7 @@ RUN bin/start && \
     bin/stop && \
     rm -rf instances/*
 
-# Fcrepo indexing THIS IS THE PROBLEM
+# Fcrepo indexing
 RUN bin/start && \
     bin/client -r 10 -d 5  "feature:install islandora-indexing-fcrepo" && \
     bin/stop && \
@@ -37,5 +37,6 @@ RUN bin/start && \
 RUN chown -R karaf:karaf /opt/karaf
 
 COPY rootfs /
+
 
 ENV JAVA_OPTS="-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx8g"

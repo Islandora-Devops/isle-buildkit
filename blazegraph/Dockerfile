@@ -15,5 +15,3 @@ COPY rootfs /
 RUN mkdir /data && \
     chown tomcat:tomcat /data && \
     chown -R tomcat:tomcat /opt/tomcat
-
-VOLUME /data
