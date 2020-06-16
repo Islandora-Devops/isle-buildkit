@@ -1,4 +1,11 @@
-rootProject.name = "docker"
+rootProject.name = "isle-buildkit"
+
+// Include plugin for building Docker images.
+sourceControl {
+    gitRepository(uri("https://github.com/Islandora-Devops/isle-gradle-docker-plugin.git")) {
+        producesModule("ca.islandora:isle-gradle-docker-plugin")
+    }
+}
 
 // Include any folder that has a Dockerfile as a sub-project.
 rootProject.projectDir
