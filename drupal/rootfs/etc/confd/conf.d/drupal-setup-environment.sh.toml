@@ -1,0 +1,7 @@
+[template]
+src = "drupal-setup-environment.sh.tmpl"
+dest = "/var/run/islandora/drupal-setup-environment.sh"
+uid = 0
+gid = 0
+mode = "0700"
+keys = [ "/" ]
