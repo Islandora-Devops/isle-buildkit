@@ -59,17 +59,19 @@ function install_site {
 }
 
 function install_default_site {
-    install_site \
-        "${DRUPAL_DEFAULT_DB_NAME}" \
-        "${DRUPAL_DEFAULT_CONFIGDIR}" \
-        "${DRUPAL_DEFAULT_PROFILE}" \
-        --sites-subdir="${DRUPAL_DEFAULT_SUBDIR}" \
-        --site-name="${DRUPAL_DEFAULT_NAME}" \
-        --site-mail="${DRUPAL_DEFAULT_EMAIL}" \
-        --locale="${DRUPAL_DEFAULT_LOCALE}" \
-        --account-name="${DRUPAL_DEFAULT_ACCOUNT_NAME}" \
-        --account-pass="${DRUPAL_DEFAULT_ACCOUNT_PASSWORD}" \
-        --account-mail="${DRUPAL_DEFAULT_ACCOUNT_EMAIL}"
+    if [ "${DRUPAL_DEFAULT_INSTALL}" = "true" ]; then
+        install_site \
+            "${DRUPAL_DEFAULT_DB_NAME}" \
+            "${DRUPAL_DEFAULT_CONFIGDIR}" \
+            "${DRUPAL_DEFAULT_PROFILE}" \
+            --sites-subdir="${DRUPAL_DEFAULT_SUBDIR}" \
+            --site-name="${DRUPAL_DEFAULT_NAME}" \
+            --site-mail="${DRUPAL_DEFAULT_EMAIL}" \
+            --locale="${DRUPAL_DEFAULT_LOCALE}" \
+            --account-name="${DRUPAL_DEFAULT_ACCOUNT_NAME}" \
+            --account-pass="${DRUPAL_DEFAULT_ACCOUNT_PASSWORD}" \
+            --account-mail="${DRUPAL_DEFAULT_ACCOUNT_EMAIL}"
+    fi
 }
 
 function install_subsite {
@@ -99,8 +101,12 @@ function install_subsite {
 }
 
 function install_subsites {
+    local install_var=
     for site in ${DRUPAL_SITES}; do
-        install_subsite "${site}"
+        install_var="DRUPAL_SITE_${site}_INSTALL"
+        if [ "${!install_var}" = "true" ]; then
+            install_subsite "${site}"
+        fi
     done
 }
 

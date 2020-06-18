@@ -130,7 +130,6 @@ function main {
         return 0
     fi
     echo "Installing site."
-    chown -R nginx:nginx .
     s6-setuidgid nginx drush \
         -n \
         si ${DRUSH_ARGS} \

@@ -26,6 +26,7 @@ foreground {
   DRUPAL_DEFAULT_PROFILE="{{ getv "/default/profile" "standard" }}"
   DRUPAL_DEFAULT_SUBDIR="{{ getv "/default/subdir" "default" }}"
   DRUPAL_DEFAULT_CONFIGDIR="{{ getv "/default/configdir" "" }}"
+  DRUPAL_DEFAULT_INSTALL="{{ getv "/default/install" "true" }}"
   DRUPAL_SITES="{{ toUpper (join (lsdir "/site") " ") }}"
   {{ range $site := lsdir "/site" }}
   DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_EMAIL="{{ getv (printf "/site/%s/account/email" $site) "webmaster@localhost.com" }}"
@@ -40,6 +41,7 @@ foreground {
   DRUPAL_SITE_{{ toUpper $site }}_PROFILE="{{ getv (printf "/site/%s/profile" $site) "standard" }}"
   DRUPAL_SITE_{{ toUpper $site }}_SUBDIR="{{ getv (printf "/site/%s/subdir" $site) $site }}"
   DRUPAL_SITE_{{ toUpper $site }}_CONFIGDIR="{{ getv (printf "/site/%s/configdir" $site) "" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_INSTALL="{{ getv (printf "/site/%s/install" $site) "true" }}"
   {{ end }}
   s6-dumpenv -- /var/run/s6/container_environment
 }
