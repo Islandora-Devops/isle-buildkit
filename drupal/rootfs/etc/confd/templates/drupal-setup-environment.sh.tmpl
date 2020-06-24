@@ -1,0 +1,47 @@
+#!/usr/bin/execlineb -P
+# -*- mode: sh -*-
+# vi: set ft=sh:
+with-contenv
+foreground {
+  # We add / update the environment defined for the container,
+  # this allows our other initialization and service scripts
+  # use these settings; but does not change the existing
+  # environment as seen by linked containers.
+  # Variables can only be seen when using '#!/usr/bin/with-contenv'
+  s6-env -i
+  DRUPAL_DB_DRIVER="{{ getv "/db/driver" "mysql" }}"
+  DRUPAL_DB_HOST="{{ getv "/db/host" "database" }}"
+  DRUPAL_DB_PORT="{{ getv "/db/port" "3306" }}"
+  DRUPAL_DB_ROOT_PASSWORD="{{ getv "/db/root/password" "password" }}"
+  DRUPAL_DB_ROOT_USER="{{ getv "/db/root/user" "root" }}"
+  DRUPAL_DEFAULT_ACCOUNT_EMAIL="{{ getv "/default/account/email" "webmaster@localhost.com" }}"
+  DRUPAL_DEFAULT_ACCOUNT_NAME="{{ getv "/default/account/name" "admin" }}"
+  DRUPAL_DEFAULT_ACCOUNT_PASSWORD="{{ getv "/default/account/password" "password" }}"
+  DRUPAL_DEFAULT_DB_NAME="{{ getv "/default/db/name" "drupal_default"  }}"
+  DRUPAL_DEFAULT_DB_PASSWORD="{{ getv "/default/db/password" "password" }}"
+  DRUPAL_DEFAULT_DB_USER="{{ getv "/default/db/user" "drupal_default" }}"
+  DRUPAL_DEFAULT_EMAIL="{{ getv "/default/email" "webmaster@localhost.com" }}"
+  DRUPAL_DEFAULT_LOCALE="{{ getv "/default/locale" "en" }}"
+  DRUPAL_DEFAULT_NAME="{{ getv "/default/name" "Default" }}"
+  DRUPAL_DEFAULT_PROFILE="{{ getv "/default/profile" "standard" }}"
+  DRUPAL_DEFAULT_SUBDIR="{{ getv "/default/subdir" "default" }}"
+  DRUPAL_DEFAULT_CONFIGDIR="{{ getv "/default/configdir" "" }}"
+  DRUPAL_DEFAULT_INSTALL="{{ getv "/default/install" "true" }}"
+  DRUPAL_SITES="{{ toUpper (join (lsdir "/site") " ") }}"
+  {{ range $site := lsdir "/site" }}
+  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_EMAIL="{{ getv (printf "/site/%s/account/email" $site) "webmaster@localhost.com" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_NAME="{{ getv (printf "/site/%s/account/name" $site) "admin" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_PASSWORD="{{ getv (printf "/site/%s/account/password" $site) "password" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_NAME="{{ getv (printf "/site/%s/db/name" $site) (printf "drupal_%s" $site) }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_PASSWORD="{{ getv (printf "/site/%s/db/password" $site) "password" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_USER="{{ getv (printf "/site/%s/db/user" $site) (printf "drupal_%s" $site) }}"
+  DRUPAL_SITE_{{ toUpper $site }}_EMAIL="{{ getv (printf "/site/%s/email" $site) "webmaster@localhost.com" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_LOCALE="{{ getv (printf "/site/%s/locale" $site) "en" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_NAME="{{ getv (printf "/site/%s/name" $site) }}"
+  DRUPAL_SITE_{{ toUpper $site }}_PROFILE="{{ getv (printf "/site/%s/profile" $site) "standard" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_SUBDIR="{{ getv (printf "/site/%s/subdir" $site) $site }}"
+  DRUPAL_SITE_{{ toUpper $site }}_CONFIGDIR="{{ getv (printf "/site/%s/configdir" $site) "" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_INSTALL="{{ getv (printf "/site/%s/install" $site) "true" }}"
+  {{ end }}
+  s6-dumpenv -- /var/run/s6/container_environment
+}

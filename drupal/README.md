@@ -33,28 +33,33 @@ additional settings, volumes, ports, etc.
 | DRUPAL_DEFAULT_ACCOUNT_PASSWORD | /drupal/default/account/password | password                | The Drupal administrator user password                    |
 | DRUPAL_DEFAULT_DB_NAME          | /drupal/default/db/name          | drupal_default          | The name of the sites database                            |
 | DRUPAL_DEFAULT_DB_PASSWORD      | /drupal/default/db/password      | password                | The database users password                               |
-| DRUPAL_DEFAULT_DB_USER          | /drupal/default/db/user          | drupal_default          | The database user used by the site.                       |
+| DRUPAL_DEFAULT_DB_USER          | /drupal/default/db/user          | drupal_default          | The database user used by the site                        |
 | DRUPAL_DEFAULT_EMAIL            | /drupal/default/email            | webmaster@localhost.com | The Drupal administrators email                           |
 | DRUPAL_DEFAULT_LOCALE           | /drupal/default/locale           | en                      | The Drupal sites locale                                   |
 | DRUPAL_DEFAULT_NAME             | /drupal/default/name             | default                 | The Drupal sites name                                     |
 | DRUPAL_DEFAULT_PROFILE          | /drupal/default/profile          | standard                | The installation profile to use                           |
+| DRUPAL_DEFAULT_SUBDIR           | /drupal/default/subdir           | default                 | The installation profile to use                           |
+| DRUPAL_DEFAULT_CONFIGDIR        | /drupal/default/configdir        |                         | Install using existing config files from directory        |
+| DRUPAL_DEFAULT_INSTALL          | /drupal/default/install          | true                    | Perform install if not already installed                  |
 
 Additional multi-sites can be defined by adding more environment variables,
 following the above conventions, only the `DRUPAL_SITE_{SITE}_NAME` is required
 to create an additional site:
 
-| Environment Variable                | Etcd Key                             | Default                 | Description                                   |
-| :---------------------------------- | :----------------------------------- | :---------------------- | :-------------------------------------------- |
-| DRUPAL_SITE_{SITE}_ACCOUNT_EMAIL    | /drupal/site/{SITE}/account/email    | webmaster@localhost.com | The email to use for the admin account        |
-| DRUPAL_SITE_{SITE}_ACCOUNT_NAME     | /drupal/site/{SITE}/account/name     | admin                   | The Drupal administrator user                 |
-| DRUPAL_SITE_{SITE}_ACCOUNT_PASSWORD | /drupal/site/{SITE}/account/password | password                | The Drupal administrator user password        |
-| DRUPAL_SITE_{SITE}_DB_NAME          | /drupal/site/{SITE}/db/name          | drupal_{SITE}           | The name of the sites database                |
-| DRUPAL_SITE_{SITE}_DB_PASSWORD      | /drupal/site/{SITE}/db/password      | password                | The database users password                   |
-| DRUPAL_SITE_{SITE}_DB_USER          | /drupal/site/{SITE}/db/user          | drupal_{SITE}           | The database user used by the site.           |
-| DRUPAL_SITE_{SITE}_EMAIL            | /drupal/site/{SITE}/email            | webmaster@localhost.com | The Drupal administrators email               |
-| DRUPAL_SITE_{SITE}_LOCALE           | /drupal/site/{SITE}/locale           | en                      | The Drupal sites locale                       |
-| DRUPAL_SITE_{SITE}_NAME             | /drupal/site/{SITE}/name             |                         | The Drupal sites name                         |
-| DRUPAL_SITE_{SITE}_PROFILE          | /drupal/site/{SITE}/profile          | standard                | The installation profile to use               |
-| DRUPAL_SITE_{SITE}_SUBDIR           | /drupal/site/{SITE}/subdir           | {SITE}                  | The subdirectory to install the sub-site into |
+| Environment Variable                | Etcd Key                             | Default                 | Description                                        |
+| :---------------------------------- | :----------------------------------- | :---------------------- | :------------------------------------------------- |
+| DRUPAL_SITE_{SITE}_ACCOUNT_EMAIL    | /drupal/site/{SITE}/account/email    | webmaster@localhost.com | The email to use for the admin account             |
+| DRUPAL_SITE_{SITE}_ACCOUNT_NAME     | /drupal/site/{SITE}/account/name     | admin                   | The Drupal administrator user                      |
+| DRUPAL_SITE_{SITE}_ACCOUNT_PASSWORD | /drupal/site/{SITE}/account/password | password                | The Drupal administrator user password             |
+| DRUPAL_SITE_{SITE}_DB_NAME          | /drupal/site/{SITE}/db/name          | drupal_{SITE}           | The name of the sites database                     |
+| DRUPAL_SITE_{SITE}_DB_PASSWORD      | /drupal/site/{SITE}/db/password      | password                | The database users password                        |
+| DRUPAL_SITE_{SITE}_DB_USER          | /drupal/site/{SITE}/db/user          | drupal_{SITE}           | The database user used by the site                 |
+| DRUPAL_SITE_{SITE}_EMAIL            | /drupal/site/{SITE}/email            | webmaster@localhost.com | The Drupal administrators email                    |
+| DRUPAL_SITE_{SITE}_LOCALE           | /drupal/site/{SITE}/locale           | en                      | The Drupal sites locale                            |
+| DRUPAL_SITE_{SITE}_NAME             | /drupal/site/{SITE}/name             |                         | The Drupal sites name                              |
+| DRUPAL_SITE_{SITE}_PROFILE          | /drupal/site/{SITE}/profile          | standard                | The installation profile to use                    |
+| DRUPAL_SITE_{SITE}_SUBDIR           | /drupal/site/{SITE}/subdir           | {SITE}                  | The subdirectory to install the sub-site into      |
+| DRUPAL_SITE_{SITE}_CONFIGDIR        | /drupal/site/{SITE}/configdir        |                         | Install using existing config files from directory |
+| DRUPAL_SITE_{SITE}_INSTALL          | /drupal/site/{SITE}/install          | true                    | Perform install if not already installed           |
 
 [Drupal]: https://www.drupal.org/
