@@ -24,8 +24,9 @@ additional settings, volumes, ports, etc.
 > `JWT_ADMIN_TOKEN` would become `GEMINI_JWT_ADMIN_TOKEN` this is to allow for
 > different settings on a per-service basis.
 
-| Environment Variable    | Etcd Key                 | Default                | Description                  |
-| :---------------------- | :----------------------- | :--------------------- | :--------------------------- |
-| CRAYFITS_WEBSERVICE_URI | /crayfits/webservice/uri | fits/fits/examine | The URL of the FITS servlet. |
+| Environment Variable    | Etcd Key                 | Default           | Description                                                                                       |
+| :---------------------- | :----------------------- | :---------------- | :------------------------------------------------------------------------------------------------ |
+| CRAYFITS_LOG_LEVEL      | /crayfits/log/level      | debug             | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
+| CRAYFITS_WEBSERVICE_URI | /crayfits/webservice/uri | fits/fits/examine | The URL of the FITS servlet.                                                                      |
 
 [CrayFits]: https://github.com/roblib/CrayFits

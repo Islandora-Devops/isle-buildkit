@@ -35,19 +35,14 @@ Requires `islandora/base` docker image to build. Please refer to the
 | Environment Variable       | Etcd Key                    | Default | Description                                                       |
 | :------------------------- | :-------------------------- | :------ | :---------------------------------------------------------------- |
 | PHP_DEFAULT_SOCKET_TIMEOUT | /php/default/socket/timeout | 60      | Default timeout for socket based streams (seconds)                |
+| PHP_LOG_LEVEL              | /php/log/level              | notice  | Log level. Possible Values: alert, error, warning, notice, debug  |
+| PHP_LOG_LIMIT              | /php/log/limit              | 16384   | Log limit on number of characters in the single line              |
 | PHP_MAX_EXECUTION_TIME     | /php/max/execution/time     | 30      | Maximum execution time of each script, in seconds                 |
+| PHP_MAX_FILE_UPLOADS       | /php/max/file/uploads       | 20      | Maximum number of files that can be uploaded via a single request |
 | PHP_MAX_INPUT_TIME         | /php/max/input/time         | 60      | Maximum amount of time each script may spend parsing request data |
 | PHP_MEMORY_LIMIT           | /php/memory/limit           | 128M    | Maximum amount of memory a script may consume                     |
 | PHP_POST_MAX_SIZE          | /php/post/max/size          | 8M      | Maximum size of POST data that PHP will accept                    |
-| PHP_MAX_FILE_UPLOADS       | /php/max/file/uploads       | 20      | Maximum number of files that can be uploaded via a single request |
 | PHP_UPLOAD_MAX_FILESIZE    | /php/upload/max/filesize    | 2M      | Maximum allowed size for uploaded files                           |
-
-## Logs
-
-| Path            | Description     |
-| :-------------- | :-------------- |
-| /var/log/nginx/ | [Nginx Logging] |
-| /var/log/php7/  | [FPM Logging]   |
 
 [FPM Documentation]: https://www.php.net/manual/en/install.fpm.configuration.php
 [FPM Logging]: https://www.php.net/manual/en/install.fpm.configuration.php

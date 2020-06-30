@@ -10,10 +10,9 @@ debug: false
 
 log:
   # Valid log levels are:
-  # DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY, NONE
-  # log level none won't open logfile
-  level: {{ getv "/log/level" "DEBUG" }}
-  file: /var/log/islandora/recast.log
+  # debug, info, notice, warning, error, critical, alert, emergency, none
+  file: "php://stderr"
+  level: {{ getv "/log/level" "debug" }}
 
 syn:
   # toggles JWT security for service

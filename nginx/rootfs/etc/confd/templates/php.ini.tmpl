@@ -117,6 +117,7 @@
 ;   Default Value: Off
 ;   Development Value: On
 ;   Production Value: On
+log_errors = On
 
 ; max_input_time
 ;   Default Value: -1 (Unlimited)
@@ -578,9 +579,7 @@ html_errors = On
 ; empty.
 ; http://php.net/error-log
 ; Example:
-;error_log = php_errors.log
-; Log errors to syslog (Event Log on Windows).
-;error_log = syslog
+error_log = /dev/stderr
 
 ; The syslog ident is a string which is prepended to every message logged
 ; to syslog. Only used when error_log is set to syslog.
