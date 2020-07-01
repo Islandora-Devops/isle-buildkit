@@ -12,7 +12,7 @@ proxy_uri_header = 1
 proxy_client_headers[] = "HTTP_X_FORWARDED_FOR"
 proxy_host_headers[] = "HTTP_X_FORWARDED_HOST"
 salt = "5a472390550bd59e4428a41aa472137b"
-trusted_hosts[] = {{ getv "/site/host" "islandora.localhost" }}
+trusted_hosts[] = {{ getv "/site/host" "islandora.isle-dc.localhost" }}
 
 [PluginsInstalled]
 PluginsInstalled[] = "Diagnostics"

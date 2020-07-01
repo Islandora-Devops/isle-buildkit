@@ -12,9 +12,13 @@ gradlew text eol=lf diff=bash
 *.patch text eol=lf diff=batch
 *.properties text eol=lf
 *.sh text eol=lf diff=bash
+*.toml text eol=lf diff=bash
+*.tmpl text eol=lf diff=bash
 APKBUILD text eol=lf diff=batch
 finish text eol=lf diff=bash
 run text eol=lf diff=bash
+drush text eol=lf diff=bash
+composer text eol=lf diff=bash
 
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)

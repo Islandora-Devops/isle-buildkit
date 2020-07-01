@@ -1,6 +1,6 @@
-# Sandbox
+# Demo
 
-Islandora Sandbox image meant for demoing a functioning system. If you want to
+Islandora Demo image meant for demoing a functioning system. If you want to
 build your own Islandora site site the composer folder for a template on how to
 do that.
 

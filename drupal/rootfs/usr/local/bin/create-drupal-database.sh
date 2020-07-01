@@ -101,7 +101,6 @@ function cmdline {
         esac
     done
 
-
     if [[ -z $DRIVER || -z $HOST || -z $PORT || -z $ROOT_USER || -z $ROOT_PASSWORD || -z $DB_NAME || -z $DB_USER || -z $DB_PASS ]]; then
         echo "Missing one of required options: --host --port --user --password --db-name --db-user --db-password"
         exit 1

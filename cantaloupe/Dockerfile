@@ -2,7 +2,6 @@
 FROM local/tomcat:latest
 
 # Opted for OpenJPG over Kakadu but that could be changed.
-# Check 00-cantaloupe-setup-environment for the defaults.
 # For reference see: https://cantaloupe-project.github.io/manual/3.3/processors.html
 RUN --mount=type=cache,target=/var/cache/apk \ 
     --mount=type=cache,target=/etc/cache/apk \
@@ -21,11 +20,9 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     unzip "${DOWNLOAD_CACHE_DIRECTORY}/${CANTALOUPE_FILE}" -d /tmp && \
     CANTALOUPE_UNPACKED="${CANTALOUPE_FILE%.zip}" && \
     install-war-into-tomcat.sh --name "cantaloupe" --file "/tmp/${CANTALOUPE_UNPACKED}/${CANTALOUPE_UNPACKED}.war" && \
-    rm -fr "/tmp/${CANTALOUPE_UNPACKED}"
-
-
-COPY rootfs /
-
-RUN mkdir /data && \
+    rm -fr "/tmp/${CANTALOUPE_UNPACKED}" && \
+    mkdir /data && \
     chown tomcat:tomcat /data && \
     chown -R tomcat:tomcat /opt/tomcat
+
+COPY rootfs /
