@@ -17,6 +17,8 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     chown -R nginx:nginx /var/www && \
     cleanup.sh
 
+WORKDIR /var/www/crayfits
+
 COPY /rootfs /
 
 STOPSIGNAL SIGWINCH

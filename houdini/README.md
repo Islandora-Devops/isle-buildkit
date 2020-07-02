@@ -10,14 +10,8 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Etcd Key           | Default | Description                             |
-| :------------------- | :----------------- | :------ | :-------------------------------------- |
-| HOUDINI_LOG_LEVEL    | /houdini/log/level | WARNING | The log level for Houdini micro-service |
-
-## Logs
-
-| Path                           | Description |
-| :----------------------------- | :---------- |
-| /var/log/islandora/houdini.log | Houdini Log |
+| Environment Variable | Etcd Key           | Default | Description                                                                                       |
+| :------------------- | :----------------- | :------ | :------------------------------------------------------------------------------------------------ |
+| HOUDINI_LOG_LEVEL    | /houdini/log/level | debug   | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
 [Houdini]: https://github.com/Islandora/Crayfish/tree/master/Houdini

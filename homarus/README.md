@@ -10,14 +10,8 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Etcd Key           | Default | Description                             |
-| :------------------- | :----------------- | :------ | :-------------------------------------- |
-| HOMARUS_LOG_LEVEL    | /homarus/log/level | WARNING | The log level for Homarus micro-service |
-
-## Logs
-
-| Path                           | Description |
-| :----------------------------- | :---------- |
-| /var/log/islandora/homarus.log | Homarus Log |
+| Environment Variable | Etcd Key           | Default | Description                                                                                       |
+| :------------------- | :----------------- | :------ | :------------------------------------------------------------------------------------------------ |
+| HOMARUS_LOG_LEVEL    | /homarus/log/level | debug   | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
 [Homarus]: https://github.com/Islandora/Crayfish/tree/master/Homarus
