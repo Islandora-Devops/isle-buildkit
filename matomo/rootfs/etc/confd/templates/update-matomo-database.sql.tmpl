@@ -4,7 +4,7 @@ SET PASSWORD FOR '{{ getv "/db/user" "matomo" }}'@'%' = PASSWORD('{{ getv "/db/p
 -- Update site name, host, timezone.
 UPDATE matomo_site set
     name = '{{ getv "/site/name" "Islandora" }}',
-    main_url = '{{ getv "/site/host" "islandora.localhost" }}',
+    main_url = '{{ getv "/site/host" "islandora.isle-dc.localhost" }}',
     timezone = '{{ getv "/site/timezone" "America/Halifax" }}'
     WHERE idsite = 1;
 

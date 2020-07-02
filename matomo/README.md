@@ -30,7 +30,7 @@ Additionally it requires a database backend to run, and website to aggregate met
 | MATOMO_DB_ROOT_PASSWORD | /matomo/db/root/password | password                                                     | The root user password (used to create the database / user)   |
 | MATOMO_DB_ROOT_USER     | /matomo/db/root/user     | root                                                         | The root user (used to create the database / user)            |
 | MATOMO_DB_USER          | /matomo/db/user          | matomo                                                       | The user to create / use when interacting with the database   |
-| MATOMO_SITE_HOST        | /matomo/site/host        | islandora.localhost                                          | The URL of the site for which to gather metrics for           |
+| MATOMO_SITE_HOST        | /matomo/site/host        | islandora.isle-dc.localhost                                          | The URL of the site for which to gather metrics for           |
 | MATOMO_SITE_NAME        | /matomo/site/name        | Islandora                                                    | The name of the site                                          |
 | MATOMO_SITE_TIMEZONE    | /matomo/site/timezone    | America/Halifax                                              | The timezone the site is hosted in                            |
 | MATOMO_USER_EMAIL       | /matomo/user/email       | admin@example.org                                            | The site administrator email                                  |

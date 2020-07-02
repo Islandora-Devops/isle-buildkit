@@ -1,18 +1,11 @@
 # syntax=docker/dockerfile:experimental
-FROM local/drupal:latest
+FROM local/nginx:latest as composer
 
 # Islandora based Drupal install.
 RUN --mount=type=cache,target=/root/.composer/cache \
     --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    DRUSH_VERSION="0.6.0" && \
-    DRUSH_FILE="drush.phar" && \
-    DRUSH_URL="https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_VERSION}/${DRUSH_FILE}" && \
-    DRUSH_SHA256="c3f32a800a2f18470b0010cd71c49e49ef5c087f8131eecfe9b686dc1f3f3d4e" && \
-    download.sh --url "${DRUSH_URL}" --sha256 "${DRUSH_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    cp "${DOWNLOAD_CACHE_DIRECTORY}/${DRUSH_FILE}" /usr/local/bin/drush && \
-    chmod a+x /usr/local/bin/drush && \
-    php -d memory_limit=-1 /usr/bin/composer create-project islandora/drupal-project:8.8.1 \
+    composer create-project islandora/drupal-project:8.8.1 \
         --prefer-dist \
         --no-interaction \
         --stability stable \
@@ -20,28 +13,27 @@ RUN --mount=type=cache,target=/root/.composer/cache \
         --no-install \
         /var/www/drupal \
     && \
-    php -d memory_limit=-1 /usr/bin/composer require --update-no-dev -- drush/drush:^9.7.1 && \
-    mkdir /var/www/drupal/config && \
-    mkdir -p /var/www/drupal/web/libraries && \
-    chown -R nginx:nginx /var/www && \
-    php -d memory_limit=-1 /usr/bin/composer require --update-no-dev -- \
-        zaporylie/composer-drupal-optimizations:^1.0 \
+    cd /var/www/drupal && \
+    composer require --update-no-dev -- \
+        drupal/admin_toolbar:^2.0 \
         drupal/console:~1.0 \
-        drupal/devel:^2.0 \
-        drush/drush:^9.0 \
-        drupal/rdfui:^1.0-beta1 \
-        drupal/restui:^1.16 \
-        drupal/search_api_solr:^3.8 \
-        drupal/facets:^1.3 \
         drupal/content_browser:^1.0@alpha \
+        drupal/devel:^2.0 \
+        drupal/facets:^1.3 \
         drupal/matomo:^1.7 \
         drupal/pdf:1.x-dev \
-        drupal/admin_toolbar:^2.0 \
+        drupal/rdfui:^1.0-beta1 \
         drupal/rest_oai_pmh:^1.0 \
+        drupal/restui:^1.16 \
+        drupal/search_api_solr:^3.8 \
         drupal/transliterate_filenames:^1.3 \
+        drush/drush:^9.7.1 \
+        islandora-rdm/islandora_fits:dev-master \
         islandora/carapace:dev-8.x-3.x \
         islandora/islandora_defaults:dev-8.x-1.x \
-        islandora-rdm/islandora_fits:dev-master && \
+        zaporylie/composer-drupal-optimizations:^1.0 \
+    && \
+    mkdir -p /var/www/drupal/web/libraries && \
     MASONRY_VERSION="3.3.2" && \
     MASONRY_FILE="v${MASONRY_VERSION}.zip" && \
     MASONRY_URL="https://github.com/desandro/masonry/archive/${MASONRY_FILE}" && \
@@ -68,5 +60,9 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     cp /var/www/drupal/web/modules/contrib/openseadragon/openseadragon.json /var/www/drupal/web/sites/default/files/library-definitions && \
     chown -R nginx:nginx /var/www/drupal && \
     cleanup.sh
+
+FROM local/drupal:latest
+
+COPY --chown=nginx:nginx --from=composer /var/www/drupal /var/www/drupal
 
 COPY rootfs /

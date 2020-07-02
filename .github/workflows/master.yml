@@ -27,7 +27,7 @@ jobs:
     - name: Enable buildkit
       shell: bash
       run: |
-        echo '{"experimental": "enabled"}' > ~/.docker/config.json
+        echo '{"experimental": "enabled", "dns": ["8.8.8.8", "8.8.4.4"]}' > ~/.docker/config.json
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:

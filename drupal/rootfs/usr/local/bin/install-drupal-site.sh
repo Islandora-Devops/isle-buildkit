@@ -14,8 +14,8 @@ function usage {
        --driver           The database driver.
        --host             The database host.
        --port             The database port.
-       --user             The user to connect as.
-       --password         The password to use for the user.
+       --db-user             The user to connect as.
+       --db-password         The password to use for the user.
        --db-name          The name of the database to install into.
 
        -h --help          Show this help.
@@ -27,8 +27,8 @@ function usage {
                 --driver "mysql" \\
                 --host "database" \\
                 --port "3306" \\
-                --user "root" \\
-                --password "password" \\
+                --db-user "root" \\
+                --db-password "password" \\
                 --db-name "drupal_default" \\
                 standard --sites-subdir=default --site-name=Islandora
 EOF
@@ -41,14 +41,14 @@ function cmdline {
         local delim=""
         case "$arg" in
             # Translate --gnu-long-options to -g (short options)
-            --driver)     args="${args}-a ";;
-            --host)       args="${args}-b ";;
-            --port)       args="${args}-c ";;
-            --user)       args="${args}-d ";;
-            --password)   args="${args}-e ";;
-            --db-name)    args="${args}-f ";;
-            --help)       args="${args}-h ";;
-            --debug)      args="${args}-x ";;
+            --driver)      args="${args}-a ";;
+            --host)        args="${args}-b ";;
+            --port)        args="${args}-c ";;
+            --db-user)     args="${args}-d ";;
+            --db-password) args="${args}-e ";;
+            --db-name)     args="${args}-f ";;
+            --help)        args="${args}-h ";;
+            --debug)       args="${args}-x ";;
             # Pass through anything else
             *) [[ "${arg:0:1}" == "-" ]] || delim="\""
                args="${args}${delim}${arg}${delim} ";;
@@ -71,10 +71,10 @@ function cmdline {
             readonly PORT=${OPTARG}
             ;;
         d)
-            readonly ROOT_USER=${OPTARG}
+            readonly DB_USER=${OPTARG}
             ;;
         e)
-            readonly ROOT_PASSWORD=${OPTARG}
+            readonly DB_PASSWORD=${OPTARG}
             ;;
         f)
             readonly DB_NAME=${OPTARG}
@@ -90,8 +90,8 @@ function cmdline {
         esac
     done
 
-    if [[ -z $DRIVER || -z $HOST || -z $PORT || -z $ROOT_USER || -x $ROOT_PASSWORD ]]; then
-        echo "Missing one of required options: --host --port --user --password"
+    if [[ -z $DRIVER || -z $HOST || -z $PORT || -z $DB_USER || -z $DB_PASSWORD || -z $DB_NAME ]]; then
+        echo "Missing one of required options: --host --port --db-user --db-password --db-name"
         exit 1
     fi
 
@@ -113,8 +113,8 @@ EOF
 function installed {
     # Check the number of tables to determine if it has already been installed.
     local count=$(mysql \
-        --user="${ROOT_USER}" \
-        --password="${ROOT_PASSWORD}" \
+        --user="${DB_USER}" \
+        --password="${DB_PASSWORD}" \
         --host="${HOST}" \
         --port="${PORT}" \
         --protocol=tcp \
@@ -130,9 +130,9 @@ function main {
         return 0
     fi
     echo "Installing site."
-    s6-setuidgid nginx drush \
+    drush \
         -n \
         si ${DRUSH_ARGS} \
-        --db-url="${DRIVER}://${ROOT_USER}:${ROOT_PASSWORD}@${HOST}:${PORT}/${DB_NAME}"
+        --db-url="${DRIVER}://${DB_USER}:${DB_PASSWORD}@${HOST}:${PORT}/${DB_NAME}"
 }
 main

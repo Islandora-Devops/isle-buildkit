@@ -9,6 +9,8 @@
         "*.properties.tmpl": "properties",
         "*.sh.tmpl": "shellscript",
         "*.sql.tmpl": "sql",
-        "*.xml.tmpl": "xml"
+        "*.xml.tmpl": "xml",
+        "drush": "shellscript",
+        "composer": "shellscript"
     }
 }

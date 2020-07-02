@@ -2,6 +2,46 @@
 # -*- mode: sh -*-
 # vi: set ft=sh:
 with-contenv
+multisubstitute
+{
+  # Default settings to apply if none given.
+  define ACCOUNT_EMAIL "webmaster@localhost.com"
+  define ACCOUNT_NAME "admin"
+  define ACCOUNT_PASSWORD "password"
+  define CONFIGDIR ""
+  define DB_DRIVER "mysql"
+  define DB_HOST "database"
+  define DB_NAME "drupal_default"
+  define DB_PASSWORD "password"
+  define DB_PORT "3306"
+  define DB_ROOT_PASSWORD "password"
+  define DB_ROOT_USER "root"
+  define DB_USER "drupal_default"
+  define EMAIL "webmaster@localhost.com"
+  define INSTALL "true"
+  define INSTALL_EXISTING_CONFIG "false"
+  define LOCALE "en"
+  define NAME "Default"
+  define PROFILE "standard"
+  define SALT "9PPaL0CxZAIcq0l9wxgDGlCZrp7JdT_x7v9gVzpdbUjMt1PqDz3uD0Zy-i16DuJ1-Htuq5hqeg"
+  define SUBDIR "default"
+  # Islandora Specific Variables.
+  define BROKER_HOST "activemq"
+  define BROKER_PORT "61613"
+  define CANTALOUPE_URL "http://islandora.isle-dc.localhost/cantaloupe/iiif/2"
+  define FCREPO_HOST "fcrepo.isle-dc.localhost"
+  define FCREPO_PORT "80"
+  define GEMINI_HOST "gemini"
+  define GEMINI_PORT "8000"
+  define MATOMO_URL "http://islandora.isle-dc.localhost/matomo/"
+  define SITE_URL "http://islandora.isle-dc.localhost"
+  define SOLR_CORE "ISLANDORA"
+  define SOLR_HOST "solr"
+  define SOLR_PORT "8983"
+  define TRIPLESTORE_HOST "blazegraph"
+  define TRIPLESTORE_NAMESPACE "islandora"
+  define TRIPLESTORE_PORT "80"
+}
 foreground {
   # We add / update the environment defined for the container,
   # this allows our other initialization and service scripts
@@ -9,39 +49,126 @@ foreground {
   # environment as seen by linked containers.
   # Variables can only be seen when using '#!/usr/bin/with-contenv'
   s6-env -i
-  DRUPAL_DB_DRIVER="{{ getv "/db/driver" "mysql" }}"
-  DRUPAL_DB_HOST="{{ getv "/db/host" "database" }}"
-  DRUPAL_DB_PORT="{{ getv "/db/port" "3306" }}"
-  DRUPAL_DB_ROOT_PASSWORD="{{ getv "/db/root/password" "password" }}"
-  DRUPAL_DB_ROOT_USER="{{ getv "/db/root/user" "root" }}"
-  DRUPAL_DEFAULT_ACCOUNT_EMAIL="{{ getv "/default/account/email" "webmaster@localhost.com" }}"
-  DRUPAL_DEFAULT_ACCOUNT_NAME="{{ getv "/default/account/name" "admin" }}"
-  DRUPAL_DEFAULT_ACCOUNT_PASSWORD="{{ getv "/default/account/password" "password" }}"
-  DRUPAL_DEFAULT_DB_NAME="{{ getv "/default/db/name" "drupal_default"  }}"
-  DRUPAL_DEFAULT_DB_PASSWORD="{{ getv "/default/db/password" "password" }}"
-  DRUPAL_DEFAULT_DB_USER="{{ getv "/default/db/user" "drupal_default" }}"
-  DRUPAL_DEFAULT_EMAIL="{{ getv "/default/email" "webmaster@localhost.com" }}"
-  DRUPAL_DEFAULT_LOCALE="{{ getv "/default/locale" "en" }}"
-  DRUPAL_DEFAULT_NAME="{{ getv "/default/name" "Default" }}"
-  DRUPAL_DEFAULT_PROFILE="{{ getv "/default/profile" "standard" }}"
-  DRUPAL_DEFAULT_SUBDIR="{{ getv "/default/subdir" "default" }}"
-  DRUPAL_DEFAULT_CONFIGDIR="{{ getv "/default/configdir" "" }}"
-  DRUPAL_DEFAULT_INSTALL="{{ getv "/default/install" "true" }}"
-  DRUPAL_SITES="{{ toUpper (join (lsdir "/site") " ") }}"
-  {{ range $site := lsdir "/site" }}
-  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_EMAIL="{{ getv (printf "/site/%s/account/email" $site) "webmaster@localhost.com" }}"
-  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_NAME="{{ getv (printf "/site/%s/account/name" $site) "admin" }}"
-  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_PASSWORD="{{ getv (printf "/site/%s/account/password" $site) "password" }}"
-  DRUPAL_SITE_{{ toUpper $site }}_DB_NAME="{{ getv (printf "/site/%s/db/name" $site) (printf "drupal_%s" $site) }}"
-  DRUPAL_SITE_{{ toUpper $site }}_DB_PASSWORD="{{ getv (printf "/site/%s/db/password" $site) "password" }}"
-  DRUPAL_SITE_{{ toUpper $site }}_DB_USER="{{ getv (printf "/site/%s/db/user" $site) (printf "drupal_%s" $site) }}"
-  DRUPAL_SITE_{{ toUpper $site }}_EMAIL="{{ getv (printf "/site/%s/email" $site) "webmaster@localhost.com" }}"
-  DRUPAL_SITE_{{ toUpper $site }}_LOCALE="{{ getv (printf "/site/%s/locale" $site) "en" }}"
-  DRUPAL_SITE_{{ toUpper $site }}_NAME="{{ getv (printf "/site/%s/name" $site) }}"
-  DRUPAL_SITE_{{ toUpper $site }}_PROFILE="{{ getv (printf "/site/%s/profile" $site) "standard" }}"
-  DRUPAL_SITE_{{ toUpper $site }}_SUBDIR="{{ getv (printf "/site/%s/subdir" $site) $site }}"
-  DRUPAL_SITE_{{ toUpper $site }}_CONFIGDIR="{{ getv (printf "/site/%s/configdir" $site) "" }}"
-  DRUPAL_SITE_{{ toUpper $site }}_INSTALL="{{ getv (printf "/site/%s/install" $site) "true" }}"
-  {{ end }}
+  DRUPAL_DEFAULT_ACCOUNT_EMAIL="{{ getv "/default/account/email" "${ACCOUNT_EMAIL}" }}"
+  DRUPAL_DEFAULT_ACCOUNT_NAME="{{ getv "/default/account/name" "${ACCOUNT_NAME}" }}"
+  DRUPAL_DEFAULT_ACCOUNT_PASSWORD="{{ getv "/default/account/password" "${ACCOUNT_PASSWORD}" }}"
+  DRUPAL_DEFAULT_CONFIGDIR="{{ getv "/default/configdir" "${CONFIGDIR}" }}"
+  DRUPAL_DEFAULT_DB_DRIVER="{{ getv "/default/db/driver" "${DB_DRIVER}" }}"
+  DRUPAL_DEFAULT_DB_HOST="{{ getv "/default/db/host" "${DB_HOST}" }}"
+  DRUPAL_DEFAULT_DB_NAME="{{ getv "/default/db/name" "${DB_NAME}"  }}"
+  DRUPAL_DEFAULT_DB_PASSWORD="{{ getv "/default/db/password" "${DB_PASSWORD}" }}"
+  DRUPAL_DEFAULT_DB_PORT="{{ getv "/default/db/port" "${DB_PORT}" }}"
+  DRUPAL_DEFAULT_DB_ROOT_PASSWORD="{{ getv "/default/db/root/password" "${DB_ROOT_PASSWORD}" }}"
+  DRUPAL_DEFAULT_DB_ROOT_USER="{{ getv "/default/db/root/user" "${DB_ROOT_USER}" }}"
+  DRUPAL_DEFAULT_DB_USER="{{ getv "/default/db/user" "${DB_USER}" }}"
+  DRUPAL_DEFAULT_EMAIL="{{ getv "/default/email" "${EMAIL}" }}"
+  DRUPAL_DEFAULT_INSTALL="{{ getv "/default/install" "${INSTALL}" }}"
+  DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG="{{ getv "/default/install/existing/config" "${INSTALL_EXISTING_CONFIG}" }}"
+  DRUPAL_DEFAULT_LOCALE="{{ getv "/default/locale" "${LOCALE}" }}"
+  DRUPAL_DEFAULT_NAME="{{ getv "/default/name" "${NAME}" }}"
+  DRUPAL_DEFAULT_PROFILE="{{ getv "/default/profile" "${PROFILE}" }}"
+  DRUPAL_DEFAULT_SALT="{{ getv "/default/salt" "${SALT}" }}"
+  DRUPAL_DEFAULT_SUBDIR="{{ getv "/default/subdir" "${SUBDIR}" }}"
+  # Islandora Specific Variables.
+  DRUPAL_DEFAULT_BROKER_HOST="{{ getv "/default/broker/host" "${BROKER_HOST}" }}"
+  DRUPAL_DEFAULT_BROKER_PORT="{{ getv "/default/broker/port" "${BROKER_PORT}" }}"
+  DRUPAL_DEFAULT_CANTALOUPE_URL="{{ getv "/default/cantaloupe/url" "${CANTALOUPE_URL}" }}"
+  DRUPAL_DEFAULT_FCREPO_HOST="{{ getv "/default/fcrepo/host" "${FCREPO_HOST}" }}"
+  DRUPAL_DEFAULT_FCREPO_PORT="{{ getv "/default/fcrepo/port" "${FCREPO_PORT}" }}"
+  DRUPAL_DEFAULT_GEMINI_HOST="{{ getv "/default/gemini/host" "${GEMINI_HOST}" }}"
+  DRUPAL_DEFAULT_GEMINI_PORT="{{ getv "/default/gemini/port" "${GEMINI_PORT}" }}"
+  DRUPAL_DEFAULT_MATOMO_URL="{{ getv "/default/matomo/url" "${MATOMO_URL}" }}"
+  DRUPAL_DEFAULT_SITE_URL="{{ getv "/default/site/url" "${SITE_URL}" }}"
+  DRUPAL_DEFAULT_SOLR_CORE="{{ getv "/default/solr/core" "${SOLR_CORE}" }}"
+  DRUPAL_DEFAULT_SOLR_HOST="{{ getv "/default/solr/host" "${SOLR_HOST}" }}"
+  DRUPAL_DEFAULT_SOLR_PORT="{{ getv "/default/solr/port" "${SOLR_PORT}" }}"
+  DRUPAL_DEFAULT_TRIPLESTORE_HOST="{{ getv "/default/triplestore/host" "${TRIPLESTORE_HOST}" }}"
+  DRUPAL_DEFAULT_TRIPLESTORE_NAMESPACE="{{ getv "/default/triplestore/namespace" "${TRIPLESTORE_NAMESPACE}" }}"
+  DRUPAL_DEFAULT_TRIPLESTORE_PORT="{{ getv "/default/triplestore/port" "${TRIPLESTORE_PORT}" }}"
+  # Used by scripts to iterate over all/sub sites environment variables.
+  DRUPAL_SUBSITES="{{ toUpper (join (lsdir "/site") "") }}"
+  DRUPAL_SITES="DEFAULT {{ toUpper (join (lsdir "/site") "") }}"
   s6-dumpenv -- /var/run/s6/container_environment
 }
+{{ range $site := lsdir "/site" }}
+# Import default settings from the previous statement so the default value set
+# by the user can propagate to subsites.
+with-contenv
+multisubstitute
+{
+  importas -i SUBSITE_ACCOUNT_EMAIL DRUPAL_DEFAULT_ACCOUNT_EMAIL
+  importas -i SUBSITE_ACCOUNT_NAME DRUPAL_DEFAULT_ACCOUNT_NAME
+  importas -i SUBSITE_ACCOUNT_PASSWORD DRUPAL_DEFAULT_ACCOUNT_PASSWORD
+  importas -i SUBSITE_DB_DRIVER DRUPAL_DEFAULT_DB_DRIVER
+  importas -i SUBSITE_DB_HOST DRUPAL_DEFAULT_DB_HOST
+  importas -i SUBSITE_DB_NAME DRUPAL_DEFAULT_DB_NAME
+  importas -i SUBSITE_DB_PASSWORD DRUPAL_DEFAULT_DB_PASSWORD
+  importas -i SUBSITE_DB_PORT DRUPAL_DEFAULT_DB_PORT
+  importas -i SUBSITE_DB_ROOT_PASSWORD DRUPAL_DEFAULT_DB_ROOT_PASSWORD
+  importas -i SUBSITE_DB_ROOT_USER DRUPAL_DEFAULT_DB_ROOT_USER
+  importas -i SUBSITE_DB_USER DRUPAL_DEFAULT_DB_USER
+  importas -i SUBSITE_EMAIL DRUPAL_DEFAULT_EMAIL
+  importas -i SUBSITE_INSTALL DRUPAL_DEFAULT_INSTALL
+  importas -i SUBSITE_INSTALL_EXISTING_CONFIG DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG
+  importas -i SUBSITE_LOCALE DRUPAL_DEFAULT_LOCALE
+  importas -i SUBSITE_NAME DRUPAL_DEFAULT_NAME
+  importas -i SUBSITE_PROFILE DRUPAL_DEFAULT_PROFILE
+  importas -i SUBSITE_SUBDIR DRUPAL_DEFAULT_SUBDIR
+  # Islandora Specific Variables.
+  importas -i SUBSITE_BROKER_HOST DRUPAL_DEFAULT_BROKER_HOST
+  importas -i SUBSITE_BROKER_PORT DRUPAL_DEFAULT_BROKER_PORT
+  importas -i SUBSITE_CANTALOUPE_URL DRUPAL_DEFAULT_CANTALOUPE_URL
+  importas -i SUBSITE_FCREPO_HOST DRUPAL_DEFAULT_FCREPO_HOST
+  importas -i SUBSITE_FCREPO_PORT DRUPAL_DEFAULT_FCREPO_PORT
+  importas -i SUBSITE_GEMINI_HOST DRUPAL_DEFAULT_GEMINI_HOST
+  importas -i SUBSITE_GEMINI_PORT DRUPAL_DEFAULT_GEMINI_PORT
+  importas -i SUBSITE_MATOMO_URL DRUPAL_DEFAULT_MATOMO_URL
+  importas -i SUBSITE_SITE_URL DRUPAL_DEFAULT_SITE_URL
+  importas -i SUBSITE_SOLR_HOST DRUPAL_DEFAULT_SOLR_HOST
+  importas -i SUBSITE_SOLR_PORT DRUPAL_DEFAULT_SOLR_PORT
+  importas -i SUBSITE_TRIPLESTORE_HOST DRUPAL_DEFAULT_TRIPLESTORE_HOST
+  importas -i SUBSITE_TRIPLESTORE_PORT DRUPAL_DEFAULT_TRIPLESTORE_PORT
+}
+foreground {
+  # In general subsites will use the same values specified for the default site
+  # except where it does not make sense like install directory or database name.
+  s6-env -i
+  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_EMAIL="{{ getv (printf "/site/%s/account/email" $site) "${SUBSITE_ACCOUNT_EMAIL}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_NAME="{{ getv (printf "/site/%s/account/name" $site) "${SUBSITE_ACCOUNT_NAME}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_ACCOUNT_PASSWORD="{{ getv (printf "/site/%s/account/password" $site) }}"
+  DRUPAL_SITE_{{ toUpper $site }}_CONFIGDIR="{{ getv (printf "/site/%s/configdir" $site) "" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_DRIVER="{{ getv (printf "/site/%s/db/driver" $site) "${SUBSITE_DB_DRIVER}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_HOST="{{ getv (printf "/site/%s/db/host" $site) "${SUBSITE_DB_HOST}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_NAME="{{ getv (printf "/site/%s/db/name" $site) (printf "drupal_%s" $site) }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_PASSWORD="{{ getv (printf "/site/%s/db/password" $site) }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_PORT="{{ getv (printf "/site/%s/db/port" $site) "${SUBSITE_DB_PORT}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_ROOT_PASSWORD="{{ getv (printf "/site/%s/db/root/password" $site) "${SUBSITE_DB_ROOT_PASSWORD}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_ROOT_USER="{{ getv (printf "/site/%s/db/root/password" $site) "${SUBSITE_DB_ROOT_USER}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_DB_USER="{{ getv (printf "/site/%s/db/user" $site) (printf "drupal_%s" $site) }}"
+  DRUPAL_SITE_{{ toUpper $site }}_EMAIL="{{ getv (printf "/site/%s/email" $site) "${SUBSITE_EMAIL}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_INSTALL="{{ getv (printf "/site/%s/install" $site) "${SUBSITE_INSTALL}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_INSTALL_EXISTING_CONFIG="{{ getv (printf "/site/%s/install/existing/config" $site) "${SUBSITE_INSTALL_EXISTING_CONFIG}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_LOCALE="{{ getv (printf "/site/%s/locale" $site) "${SUBSITE_LOCALE}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_NAME="{{ getv (printf "/site/%s/name" $site) $site }}"
+  DRUPAL_SITE_{{ toUpper $site }}_PROFILE="{{ getv (printf "/site/%s/profile" $site) "${SUBSITE_PROFILE}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_SALT="{{ getv (printf "/site/%s/salt" $site) }}"
+  DRUPAL_SITE_{{ toUpper $site }}_SUBDIR="{{ getv (printf "/site/%s/subdir" $site) $site }}"
+  # Islandora Specific Variables.
+  DRUPAL_SITE_{{ toUpper $site }}_BROKER_HOST="{{ getv (printf "/site/%s/broker/host" $site) "${SUBSITE_BROKER_HOST}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_BROKER_PORT="{{ getv (printf "/site/%s/broker/port" $site) "${SUBSITE_BROKER_PORT}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_CANTALOUPE_URL="{{ getv (printf "/site/%s/cantaloupe/url" $site) "${SUBSITE_CANTALOUPE_URL}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_FCREPO_HOST="{{ getv (printf "/site/%s/fcrepo/host" $site) "${SUBSITE_FCREPO_HOST}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_FCREPO_HOST="{{ getv (printf "/site/%s/fcrepo/host" $site) "${SUBSITE_FCREPO_HOST}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_GEMINI_HOST="{{ getv (printf "/site/%s/gemini/host" $site) "${SUBSITE_GEMINI_HOST}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_GEMINI_PORT="{{ getv (printf "/site/%s/gemini/port" $site) "${SUBSITE_GEMINI_PORT}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_MATOMO_URL="{{ getv (printf "/site/%s/matomo/url" $site) "${SUBSITE_MATOMO_URL}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_SITE_URL="{{ getv (printf "/site/%s/site/url" $site) "${SUBSITE_SITE_URL}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_SOLR_CORE="{{ getv (printf "/site/%s/solr/core" $site) $site }}"
+  DRUPAL_SITE_{{ toUpper $site }}_SOLR_HOST="{{ getv (printf "/site/%s/solr/host" $site) "${SUBSITE_SOLR_HOST}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_SOLR_PORT="{{ getv (printf "/site/%s/solr/port" $site) "${SUBSITE_SOLR_PORT}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_TRIPLESTORE_HOST="{{ getv (printf "/site/%s/triplestore/host" $site) "${SUBSITE_TRIPLESTORE_HOST}" }}"
+  DRUPAL_SITE_{{ toUpper $site }}_TRIPLESTORE_NAMESPACE="{{ getv (printf "/site/%s/triplestore/namespace" $site) $site }}"
+  DRUPAL_SITE_{{ toUpper $site }}_TRIPLESTORE_PORT="{{ getv (printf "/site/%s/triplestore/port" $site) "${SUBSITE_TRIPLESTORE_PORT}" }}"
+  s6-dumpenv -- /var/run/s6/container_environment
+}
+{{ end }}
