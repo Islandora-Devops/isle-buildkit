@@ -17,10 +17,9 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${SYN_FILE}" /opt/tomcat/lib && \
     mkdir -p /opt/keys/jwt && \
     chown tomcat:tomcat /opt/keys/jwt && \
+    mkdir /data && \
+    chown tomcat:tomcat /data && \
+    chown -R tomcat:tomcat /opt/tomcat && \
     cleanup.sh
 
 COPY rootfs /
-
-RUN mkdir /data && \
-    chown tomcat:tomcat /data && \
-    chown -R tomcat:tomcat /opt/tomcat

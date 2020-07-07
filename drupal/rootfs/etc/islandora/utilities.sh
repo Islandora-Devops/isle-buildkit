@@ -95,26 +95,102 @@ function for_all_sites {
     done
 }
 
-# Create a database for the given site.
-function create_database {
+function execute_sql_file {
     local site="${1}"; shift
     local driver=$(drupal_site_env "${site}" "DB_DRIVER")
     local host=$(drupal_site_env "${site}" "DB_HOST")
     local port=$(drupal_site_env "${site}" "DB_PORT")
     local user=$(drupal_site_env "${site}" "DB_ROOT_USER")
     local password=$(drupal_site_env "${site}" "DB_ROOT_PASSWORD")
-    local db_name=$(drupal_site_env "${site}" "DB_NAME")
-    local db_user=$(drupal_site_env "${site}" "DB_USER")
-    local db_password=$(drupal_site_env "${site}" "DB_PASSWORD")
-    /usr/local/bin/create-drupal-database.sh \
+    execute-sql-file.sh \
         --driver "${driver}" \
         --host "${host}" \
         --port "${port}" \
         --user "${user}" \
         --password "${password}" \
-        --db-name "${db_name}" \
-        --db-user "${db_user}" \
-        --db-password "${db_password}"
+        "${@}"
+}
+
+function mysql_query {
+    local site="${1}"; shift
+    local db_name=$(drupal_site_env "${site}" "DB_NAME")
+    local db_user=$(drupal_site_env "${site}" "DB_USER")
+    local db_password=$(drupal_site_env "${site}" "DB_PASSWORD")
+    cat <<- EOF
+-- Create if does not exist.
+CREATE DATABASE IF NOT EXISTS ${db_name} CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER IF NOT EXISTS ${db_user}@'%' IDENTIFIED BY "${db_password}";
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES ON ${db_name}.* to ${db_user}@'%' IDENTIFIED BY "${db_password}";
+FLUSH PRIVILEGES;
+
+-- Update DB_USER password if changed.
+SET PASSWORD FOR ${db_user}@'%' = PASSWORD('${db_password}');
+EOF
+}
+
+function mysql_create_database {
+    local site="${1}"; shift
+    execute_sql_file "${site}" <(mysql_query "${site}")
+}
+
+function postgres_query {
+    local site="${1}"; shift
+    local db_name=$(drupal_site_env "${site}" "DB_NAME")
+    local db_user=$(drupal_site_env "${site}" "DB_USER")
+    local db_password=$(drupal_site_env "${site}" "DB_PASSWORD")
+    cat <<- EOF
+BEGIN;
+
+DO \$\$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${db_user}') THEN
+        CREATE ROLE ${db_user};
+    END IF;
+END
+\$\$;
+
+ALTER ROLE ${db_user} WITH LOGIN;
+ALTER USER ${db_user} PASSWORD '${db_password}';
+
+ALTER DATABASE ${db_name} OWNER TO ${db_user};
+GRANT ALL PRIVILEGES ON DATABASE ${db_name} TO ${db_user};
+
+COMMIT;
+EOF
+}
+
+function postgresql_database_exists {
+    local site="${1}"; shift
+    local db_name=$(drupal_site_env "${site}" "DB_NAME")
+    execute_sql_file "${site}" --database "${db_name}" <(echo 'select 1')
+}
+
+function postgresql_create_database {
+    local site="${1}"; shift
+    local db_name=$(drupal_site_env "${site}" "DB_NAME")
+    # Postgres does not support CREATE DATABASE IF NOT EXISTS so split our logic across multiple queries.
+    if ! postgresql_database_exists "${site}"; then
+        execute_sql_file "${site}" <(echo "CREATE DATABASE ${db_name}")
+    fi
+    execute_sql_file "${site}" --database "${db_name}" <(postgres_query "${site}")
+}
+
+# Create a database for the given site.
+function create_database {
+    local site="${1}"; shift
+    local driver=$(drupal_site_env "${site}" "DB_DRIVER")
+    
+    case "${driver}" in
+        mysql|pdo_mysql)
+            mysql_create_database "${site}"
+            ;;
+        pgsql|postgresql|pdo_pgsql)
+            postgresql_create_database "${site}"
+            ;;
+        *)
+            echo "Only MySQL/PostgresSQL databases are supported for now." >&2
+            exit 1
+    esac
 }
 
 # Install the given site.
@@ -307,9 +383,14 @@ function configure_islandora_default_module {
 function configure_search_api_solr_module {
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
+    local driver=$(drupal_site_env "${site}" "DB_DRIVER")
 
     drush -l "${site_url}" -y pm:enable search_api_solr
-    drush -l "${site_url}" -y pm:uninstall search
+
+    # Currently a bug when using PostgreSQL that disallows unintalling this module.
+    if [ "${driver}" != "pgsql" ]; then
+        drush -l "${site_url}" -y pm:uninstall search
+    fi
 }
 
 # Enables and sets carapace as the default theme.

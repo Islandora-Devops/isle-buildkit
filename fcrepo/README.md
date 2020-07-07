@@ -19,9 +19,9 @@ additional settings, volumes, ports, etc.
 
 ## Volumes
 
-| Path  | Description                  |
-| :---- | :--------------------------- |
-| /data | Fcrepo Object / Binary Store |
+| Path  | Description                                                                                         |
+| :---- | :-------------------------------------------------------------------------------------------------- |
+| /data | Fcrepo Object / Binary Store if FCREPO_BINARYSTORAGE_TYPE or FCREPO_PERSISTENCE_TYPE is set to file |
 
 ## Settings
 
@@ -32,9 +32,13 @@ additional settings, volumes, ports, etc.
 | FCREPO_BINARYSTORAGE_TYPE      | /fcrepo/binarystorage/type      | file                              |             |
 | FCREPO_BROKER                  | /fcrepo/broker                  | tcp://activemq:61616              |             |
 | FCREPO_CATALINA_OPTS           | /fcrepo/catalina/opts           |                                   |             |
+| FCREPO_DB_HOST                 | /fcrepo/db/host                 | mariadb                           |             |
 | FCREPO_DB_NAME                 | /fcrepo/db/name                 | fcrepo                            |             |
 | FCREPO_DB_PASSWORD             | /fcrepo/db/password             | password                          |             |
-| FCREPO_DB_USER                 | /fcrepo/db/user                 | admin                             |             |
+| FCREPO_DB_PORT                 | /fcrepo/db/port                 | 3306                              |             |
+| FCREPO_DB_ROOT_PASSWORD        | /fcrepo/db/root/password        | password                          |             |
+| FCREPO_DB_ROOT_USER            | /fcrepo/db/root/user            | root                              |             |
+| FCREPO_DB_USER                 | /fcrepo/db/user                 | fcrepo                            |             |
 | FCREPO_JAVA_OPTS               | /fcrepo/java/opts               |                                   |             |
 | FCREPO_JWT_ADMIN_TOKEN         | /fcrepo/jwt/admin/token         | islandora                         |             |
 | FCREPO_MODESHAPE_CONFIGURATION | /fcrepo/modeshape/configuration | classpath:/config/repository.json |             |
@@ -45,12 +49,14 @@ additional settings, volumes, ports, etc.
 | FCREPO_S3_USER                 | /fcrepo/s3/user                 |                                   |             |
 | FCREPO_TOPIC                   | /fcrepo/topic                   | fedora                            |             |
 
-## Logs
+To allow
+[external content](https://wiki.lyrasis.org/display/FEDORA51/External+Content)
+provide sites as key pairs. Wherein multiple values is the url and the 'name' is
+a key that replaces the '*' symbol below.
 
-| Path                                        | Description   |
-| :------------------------------------------ | :------------ |
-| /opt/tomcat/logs/cantaloupe.access.log      | [Fcrepo Logs] |
-| /opt/tomcat/logs/cantaloupe.application.log | [Fcrepo Logs] |
+| Environment Variable    | Etcd Key                 |
+| :---------------------- | :----------------------- |
+| FCREPO_ALLOW_EXTERNAL_* | /fcrepo/allow/external/* |
 
 [Fcrepo Documentation]: https://wiki.lyrasis.org/display/FF
 [Fcrepo]: https://github.com/fcrepo4/fcrepo4

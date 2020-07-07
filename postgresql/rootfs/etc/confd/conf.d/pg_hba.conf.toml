@@ -1,0 +1,7 @@
+[template]
+src = "pg_hba.conf.tmpl"
+dest = "/var/lib/postgresql/data/pg_hba.conf"
+uid = 70
+gid = 70
+mode="0644"
+keys = [ "/root" ]

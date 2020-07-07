@@ -1,7 +1,0 @@
-[template]
-src = "create-gemini-database.sh.tmpl"
-dest = "/var/run/islandora/create-gemini-database.sh"
-uid = 0
-gid = 0
-mode = "0700"
-keys = [ "/db" ]
