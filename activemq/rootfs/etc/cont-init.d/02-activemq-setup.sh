@@ -7,3 +7,7 @@ chown activemq:activemq /opt/activemq/data/activemq.log
 
 ln -sf /dev/stdout /opt/activemq/data/audit.log
 chown activemq:activemq /opt/activemq/data/audit.log
+
+# When bind mounting we need to ensure that we
+# actually can write to the folder.
+chown activemq:activemq /opt/activemq/data
