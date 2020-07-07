@@ -17,3 +17,6 @@ chown tomcat:tomcat /dev/stdout /opt/tomcat/logs/solutions.csv
 ln -sf /dev/stdout /opt/tomcat/logs/sparql.txt
 chown tomcat:tomcat /dev/stdout /opt/tomcat/logs/sparql.txt
 
+# When bind mounting we need to ensure that we
+# actually can write to the folder.
+chown tomcat:tomcat /data
