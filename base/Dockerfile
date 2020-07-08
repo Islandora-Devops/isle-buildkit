@@ -12,7 +12,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk add --update \
         bash \
         curl \
-        ca-certificates \
         git \
         gnupg \
         mariadb-client \
