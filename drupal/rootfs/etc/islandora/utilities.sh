@@ -366,11 +366,14 @@ function configure_matomo_module {
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     local site_id=$(($(site_index "${site}")+1))
-    local matamo_url=$(drupal_site_env "${site}" "MATOMO_URL")
+    local matomo_url=$(drupal_site_env "${site}" "MATOMO_URL")
+    local matomo_http_url="http${matomo_url#https}"
+    echo "HTTP URL: ${matomo_http_url}"
 
     drush -l "${site_url}" -y pm:enable matomo
     drush -l "${site_url}" -y config-set matomo.settings site_id "${site_id}"
-    drush -l "${site_url}" -y config-set matomo.settings url_http "${matamo_url}"
+    drush -l "${site_url}" -y config-set matomo.settings url_http "${matomo_http_url}"
+    drush -l "${site_url}" -y config-set matomo.settings url_https "${matomo_url}"
 }
 
 # Configure Openseadragon to point use cantaloupe.
