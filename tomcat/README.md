@@ -35,14 +35,15 @@ additional settings, volumes, ports, etc.
 > `CATALINA_OPTS` would become `FCREPO_CATALINA_OPTS` this is to allow for
 > different settings on a per-service basis.
 
-| Environment Variable                | Etcd Key                             | Default     | Description                                                               |
-| :---------------------------------- | :----------------------------------- | :---------- | :------------------------------------------------------------------------ |
-| CATALINA_OPTS                       | /catalina/opts                       |             |                                                                           |
-| JAVA_OPTS                           | /java/opts                           |             |                                                                           |
-| TOMCAT_ADMIN_NAME                   | /tomcat/admin/name                   | admin       | The user name of the manager webapp admin user                            |
-| TOMCAT_ADMIN_PASSWORD               | /tomcat/admin/password               | password    | The password for the manager webapp admin user                            |
-| TOMCAT_ADMIN_ROLES                  | /tomcat/admin/roles                  | manager-gui | Comma separated list of roles the user has                                |
-| TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE | /tomcat/manager/remote/address/valve | ^.*$        | Allows / blocks access to manager app to addresses which match this regex |
+| Environment Variable                | Etcd Key                             | Default     | Description                                                                           |
+| :---------------------------------- | :----------------------------------- | :---------- | :------------------------------------------------------------------------------------ |
+| CATALINA_OPTS                       | /catalina/opts                       |             |                                                                                       |
+| JAVA_OPTS                           | /java/opts                           |             |                                                                                       |
+| TOMCAT_ADMIN_NAME                   | /tomcat/admin/name                   | admin       | The user name of the manager webapp admin user                                        |
+| TOMCAT_ADMIN_PASSWORD               | /tomcat/admin/password               | password    | The password for the manager webapp admin user                                        |
+| TOMCAT_ADMIN_ROLES                  | /tomcat/admin/roles                  | manager-gui | Comma separated list of roles the user has                                            |
+| TOMCAT_LOG_LEVEL                    | /tomcat/log/level                    | ALL         | Log level. Possible Values: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST or ALL |
+| TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE | /tomcat/manager/remote/address/valve | ^.*$        | Allows / blocks access to manager app to addresses which match this regex             |
 
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:
@@ -62,12 +63,6 @@ For example to add a new user `someone` you would need to define the following:
 | TOMCAT_USER_SOMEONE_NAME     | /tomcat/user/someone/name     | someone  |
 | TOMCAT_USER_SOMEONE_PASSWORD | /tomcat/user/someone/password | password |
 | TOMCAT_USER_SOMEONE_ROLES    | /tomcat/user/someone/roles    | admin    |
-
-## Logs
-
-| Path              | Description      |
-| :---------------- | :--------------- |
-| /opt/tomcat/logs/ | [Tomcat Logging] |
 
 [AJP]: https://tomcat.apache.org/tomcat-9.0-doc/config/ajp.html
 [Tomcat Documentation]: https://tomcat.apache.org/tomcat-9.0-doc/
