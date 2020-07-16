@@ -25,7 +25,7 @@ function usage {
        Install default Drupal site:
        $PROGNAME \\
                 --driver "mysql" \\
-                --host "database" \\
+                --host "mariadb" \\
                 --port "3306" \\
                 --db-user "root" \\
                 --db-password "password" \\
@@ -102,7 +102,17 @@ function cmdline {
     return 0
 }
 
-function count_query {
+function execute_sql_file {
+    execute-sql-file.sh \
+        --driver "${DRIVER}" \
+        --host "${HOST}" \
+        --port "${PORT}" \
+        --user "${DB_USER}" \
+        --password "${DB_PASSWORD}" \
+        "${@}"
+}
+
+function mysql_count_query {
     cat <<- EOF
 SELECT COUNT(DISTINCT table_name)
 FROM information_schema.columns
@@ -110,15 +120,36 @@ WHERE table_schema = '${DB_NAME}';
 EOF
 }
 
+function mysql_count {
+    execute_sql_file <(mysql_count_query) -- -N 2>/dev/null
+}
+
+function postgresql_count_query {
+    cat <<- EOF
+SELECT count(*)
+FROM information_schema.tables
+WHERE table_schema = 'public';
+EOF
+}
+
+function postgresql_count {
+    execute_sql_file --database ${DB_NAME} <(postgresql_count_query) -- -t 2>/dev/null
+}
+
+# Check the number of tables to determine if it has already been installed.
 function installed {
-    # Check the number of tables to determine if it has already been installed.
-    local count=$(mysql \
-        --user="${DB_USER}" \
-        --password="${DB_PASSWORD}" \
-        --host="${HOST}" \
-        --port="${PORT}" \
-        --protocol=tcp \
-        -Ne "$(count_query)")
+    local count=
+    case "${DRIVER}" in
+        mysql|pdo_mysql)
+            count=$(mysql_count)
+            ;;
+        pgsql|postgresql|pdo_pgsql)
+            count=$(postgresql_count)
+            ;;
+        *)
+            echo "Only MySQL/PostgresSQL databases are supported for now." >&2
+            exit 1
+    esac
     [[ $count -ne 0 ]]
 }
 

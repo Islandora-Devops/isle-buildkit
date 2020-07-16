@@ -17,18 +17,18 @@
         {{ if eq (getv "/persistence/type" "file") "mysql" }}
         "persistence": {
             "type" : "db",
-            "connectionUrl": "jdbc:mysql://{{ getv "/db/host" "database" }}:{{ getv "/db/port" "3306" }}/{{ getv "/db/name" "fcrepo" }}?createDatabaseIfNotExist=true",
+            "connectionUrl": "jdbc:mysql://{{ getv "/db/host" "mariadb" }}:{{ getv "/db/port" "3306" }}/{{ getv "/db/name" "fcrepo" }}?createDatabaseIfNotExist=true",
             "driver" : "com.mysql.jdbc.Driver",
-            "username" : "{{ getv "/db/user" "admin" }}",
+            "username" : "{{ getv "/db/user" "fcrepo" }}",
             "password" : "{{ getv "/db/password" "password" }}"
         },
         {{ end }}
         {{ if eq (getv "/persistence/type" "file") "postgresql" }}
         "persistence": {
             "type" : "db",
-            "connectionUrl": "jdbc:postgresql://{{ getv "/db/host" "database" }}:{{ getv "/db/port" "5432" }}/{{ getv "/db/name" "fcrepo" }}?createDatabaseIfNotExist=true",
+            "connectionUrl": "jdbc:postgresql://{{ getv "/db/host" "postgresql" }}:{{ getv "/db/port" "5432" }}/{{ getv "/db/name" "fcrepo" }}?createDatabaseIfNotExist=true",
             "driver" : "org.postgresql.Driver",
-            "username" : "{{ getv "/db/user" "admin" }}",
+            "username" : "{{ getv "/db/user" "fcrepo" }}",
             "password" : "{{ getv "/db/password" "password" }}"
         },
         {{ end }}

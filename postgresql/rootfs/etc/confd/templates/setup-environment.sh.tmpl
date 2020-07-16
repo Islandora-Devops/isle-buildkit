@@ -1,0 +1,15 @@
+#!/usr/bin/execlineb -P
+# -*- mode: sh -*-
+# vi: set ft=sh:
+with-contenv
+foreground {
+  # We add / update the environment defined for the container,
+  # this allows our other initialization and service scripts
+  # use these settings; but does not change the existing
+  # environment as seen by linked containers.
+  # Variables can only be seen when using '#!/usr/bin/with-contenv'
+  s6-env -i
+  POSTGRESQL_ROOT_USER="{{ getv "/root/user" "root" }}"
+  POSTGRESQL_ROOT_PASSWORD="{{ getv "/root/password" "password" }}"
+  s6-dumpenv -- /var/run/s6/container_environment
+}

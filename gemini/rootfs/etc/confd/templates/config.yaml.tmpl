@@ -17,7 +17,7 @@ syn:
   config: /var/www/crayfish/syn-settings.xml
 db.options:
   driver: {{ getv "/db/driver" "pdo_mysql" }}
-  host: {{ getv "/db/host" "database" }}
+  host: {{ getv "/db/host" "mariadb" }}
   port: {{ getv "/db/port" "3306" }}
   dbname: {{ getv "/db/name" "gemini" }}
   user: {{ getv "/db/user" "gemini" }}
