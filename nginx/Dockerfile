@@ -23,7 +23,15 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-xml \
         php7-xmlwriter \
         php7-xsl \
+        php7-fileinfo \
+        php7-pdo_sqlite \
+        php7-ldap \
+        php7-mbstring \
+        php7-sqlite3 \
+        php7-yaml \
     && \
     cleanup.sh
 
 COPY rootfs /
+
+RUN mkdir /var/sqlite && chmod 750 /var/sqlite && chown nginx:nginx /var/sqlite
