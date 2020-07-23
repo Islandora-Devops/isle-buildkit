@@ -86,8 +86,8 @@ foreground {
   DRUPAL_DEFAULT_TRIPLESTORE_NAMESPACE="{{ getv "/default/triplestore/namespace" "${TRIPLESTORE_NAMESPACE}" }}"
   DRUPAL_DEFAULT_TRIPLESTORE_PORT="{{ getv "/default/triplestore/port" "${TRIPLESTORE_PORT}" }}"
   # Used by scripts to iterate over all/sub sites environment variables.
-  DRUPAL_SUBSITES="{{ toUpper (join (lsdir "/site") "") }}"
-  DRUPAL_SITES="DEFAULT {{ toUpper (join (lsdir "/site") "") }}"
+  DRUPAL_SUBSITES="{{ toUpper (join (lsdir "/site") " ") }}"
+  DRUPAL_SITES="DEFAULT {{ toUpper (join (lsdir "/site") " ") }}"
   s6-dumpenv -- /var/run/s6/container_environment
 }
 {{ range $site := lsdir "/site" }}

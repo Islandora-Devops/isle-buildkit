@@ -27,10 +27,10 @@ additional settings, volumes, ports, etc.
 
 | Environment Variable           | Etcd Key                        | Default                           | Description |
 | :----------------------------- | :------------------------------ | :-------------------------------- | :---------- |
+| FCREPO_ACTIVEMQ_BROKER         | /fcrepo/activemq/broker         | tcp://activemq:61616              |             |
 | FCREPO_ACTIVEMQ_QUEUE          | /fcrepo/activemq/queue          | fedora                            |             |
 | FCREPO_ACTIVEMQ_TOPIC          | /fcrepo/activemq/topic          | fedora                            |             |
 | FCREPO_BINARYSTORAGE_TYPE      | /fcrepo/binarystorage/type      | file                              |             |
-| FCREPO_BROKER                  | /fcrepo/broker                  | tcp://activemq:61616              |             |
 | FCREPO_CATALINA_OPTS           | /fcrepo/catalina/opts           |                                   |             |
 | FCREPO_DB_HOST                 | /fcrepo/db/host                 | mariadb                           |             |
 | FCREPO_DB_NAME                 | /fcrepo/db/name                 | fcrepo                            |             |

@@ -17,10 +17,10 @@
         <kahaDB directory="${fcrepo.activemq.directory:ActiveMQ/kahadb}"/>
       </persistenceAdapter>
       <networkConnectors>
-        <networkConnector name="fedora/bridge" dynamicOnly="true" uri="static:({{ getv "/broker" "tcp://activemq:61616" }})">
+        <networkConnector name="fedora/bridge" dynamicOnly="true" uri="static:({{ getv "/activemq/broker" "tcp://activemq:61616" }})">
           <dynamicallyIncludedDestinations>
-            <topic physicalName="{{ getv "/topic" "fedora" }}"/>
-            <queue physicalName="{{ getv "/queue" "fedora" }}"/>
+            <topic physicalName="{{ getv "/activemq/topic" "fedora" }}"/>
+            <queue physicalName="{{ getv "/activemq/queue" "fedora" }}"/>
           </dynamicallyIncludedDestinations>
         </networkConnector>
       </networkConnectors>
