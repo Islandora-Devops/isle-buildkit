@@ -9,6 +9,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-ctype \
         php7-curl \
         php7-dom \
+        php7-fileinfo \
         php7-fpm \
         php7-gd \
         php7-opcache \
@@ -20,7 +21,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-tokenizer \
         php7-xml \
         php7-xmlwriter \
-        php7-fileinfo \ 
+        php7-xsl \
     && \
     cleanup.sh
 
