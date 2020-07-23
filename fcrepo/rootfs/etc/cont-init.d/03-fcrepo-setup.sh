@@ -93,5 +93,9 @@ function main {
     if requires_database; then
         create_database
     fi
+
+    # When bind mounting we need to ensure that we
+    # actually can write to the folder.
+    chown tomcat:tomcat /data
 }
 main
