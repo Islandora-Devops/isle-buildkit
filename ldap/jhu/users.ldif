@@ -1,0 +1,60 @@
+dn: cn=admin,dc=islandora
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+userPassword: password
+description: LDAP administrator
+
+dn: uid=staff1,ou=People,dc=islandora
+uid: staff1
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: eduPerson
+givenName: Staff One
+sn: One
+cn: Staff One
+mail: staff1@jhu.edu
+userPassword: moo
+eduPersonUniqueId: ABCDEF
+eduPersonPrincipalName: staff1
+employeeNumber: 00000001
+displayName: Staff One
+eduPersonAffiliation: STAFF
+
+dn: uid=staff2,ou=People,dc=islandora
+uid: staff2
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: eduPerson
+givenName: Staff Two
+sn: Two
+cn: Staff Two
+mail: staff2@jhu.edu
+userPassword: moo
+eduPersonUniqueId: GHIJKL
+eduPersonPrincipalName: staff2
+employeeNumber: 00000002
+displayName: Staff Two
+eduPersonAffiliation: STAFF
+
+dn: uid=student1,ou=People,dc=islandora
+uid: student1
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: eduPerson
+givenName: Student One
+sn: One
+cn: Student One
+mail: student1@jhu.edu
+userPassword: moo
+eduPersonUniqueId: MNOPQR
+eduPersonPrincipalName: student1
+employeeNumber: 00000003
+displayName: Student One
+eduPersonAffiliation: STUDENT
