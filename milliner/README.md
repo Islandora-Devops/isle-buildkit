@@ -17,4 +17,4 @@ additional settings, volumes, ports, etc.
 | MILLINER_GEMINI_URL  | /milliner/gemini/url | gemini:8000        | Gemini URL                                                                                        |
 | MILLINER_LOG_LEVEL   | /milliner/log/level  | debug              | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
-[Milliner]: https://github.com/Islandora/Crayfish/tree/master/Milliner
+[Milliner]: https://github.com/Islandora/Crayfish/tree/main/Milliner
