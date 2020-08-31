@@ -28,4 +28,4 @@ additional settings, volumes, ports, etc.
 | :------------------- | :--------------- | :-------- | :---------- |
 | JWT_ADMIN_TOKEN      | /jwt/admin/token | islandora | JWT Token   |
 
-[Crayfish]: https://github.com/Islandora/Crayfish/tree/master
+[Crayfish]: https://github.com/Islandora/Crayfish/tree/main

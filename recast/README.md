@@ -17,4 +17,4 @@ additional settings, volumes, ports, etc.
 | RECAST_GEMINI_URL    | /recast/gemini/url | gemini:8000        | Gemini URL                                                                                        |
 | RECAST_LOG_LEVEL     | /recast/log/level  | debug              | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
-[Recast]: https://github.com/Islandora/Crayfish/tree/master/Recast
+[Recast]: https://github.com/Islandora/Crayfish/tree/main/Recast

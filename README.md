@@ -1,7 +1,7 @@
 # ISLE: Docker Prototype <!-- omit in toc -->
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
-![CI](https://github.com/Islandora-Devops/isle-buildkit/workflows/CI/badge.svg?branch=master)
+![CI](https://github.com/Islandora-Devops/isle-buildkit/workflows/CI/badge.svg?branch=main)
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
@@ -408,4 +408,4 @@ failed to solve with frontend dockerfile.v0: failed to solve with frontend gatew
 [Overlay2](https://docs.docker.com/storage/storagedriver/overlayfs-driver/#configure-docker-with-the-overlay-or-overlay2-storage-driver)
 filesystem with Docker. If that doesn't work trying building [without BuildKit](#building-without-buildkit).
 
-[Buildkit]: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md
+[Buildkit]: https://github.com/moby/buildkit/blob/main/frontend/dockerfile/docs/experimental.md
