@@ -157,6 +157,25 @@ class UpdateSettingsCommands extends DrushCommands
   }
 
   /**
+   * Set `trusted_host_patterns` in settings.php
+   *
+   * @command islandora:settings:set-trusted-host-patterns
+   * @bootstrap site
+   * @param $patterns List of comma, separated patterns.
+   * @usage drush islandora:settings:set-trusted-host-patterns "^localhost$,^192\\.168\\.00\\.52$,^127\\.0\\.0\\.1$"
+   *   Sets `trusted_host_patterns` in settings.php.
+   *   Be aware that shell escaping can have an affect on the arguments.
+   */
+  public function setTrustedHostPatterns($patterns)
+  {
+    $settings['settings']['trusted_host_patterns'] = (object) [
+      'value' => explode(',', $patterns),
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
+  }
+
+  /**
    * Determine which settings file to update.
    */
   private function getSettingFilePath()
