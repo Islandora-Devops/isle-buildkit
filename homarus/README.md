@@ -14,4 +14,4 @@ additional settings, volumes, ports, etc.
 | :------------------- | :----------------- | :------ | :------------------------------------------------------------------------------------------------ |
 | HOMARUS_LOG_LEVEL    | /homarus/log/level | debug   | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
-[Homarus]: https://github.com/Islandora/Crayfish/tree/master/Homarus
+[Homarus]: https://github.com/Islandora/Crayfish/tree/main/Homarus

@@ -23,4 +23,4 @@ additional settings, volumes, ports, etc.
 | GEMINI_FCREPO_URL       | /gemini/fcrepo/url       | fcrepo/fcrepo/rest | Fcrepo Rest API URL                                                                               |
 | GEMINI_LOG_LEVEL        | /gemini/log/level        | debug              | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
-[Gemini]: https://github.com/Islandora/Crayfish/tree/master/Gemini
+[Gemini]: https://github.com/Islandora/Crayfish/tree/main/Gemini

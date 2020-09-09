@@ -92,7 +92,7 @@ function main {
     local install_directory=/opt/${NAME}
     local user=${NAME}
     local group=${NAME}
-    gpg --keyserver hkp://keys.gnupg.net:80 --recv-key ${KEY}
+    gpg --keyserver hkp://pool.sks-keyservers.net --recv-key ${KEY}
     gpg --verify ${FILE}.asc ${FILE}
     mkdir ${install_directory}
     addgroup ${group} && \

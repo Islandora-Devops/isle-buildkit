@@ -14,4 +14,4 @@ additional settings, volumes, ports, etc.
 | :------------------- | :----------------- | :------ | :------------------------------------------------------------------------------------------------ |
 | HOUDINI_LOG_LEVEL    | /houdini/log/level | debug   | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
-[Houdini]: https://github.com/Islandora/Crayfish/tree/master/Houdini
+[Houdini]: https://github.com/Islandora/Crayfish/tree/main/Houdini
