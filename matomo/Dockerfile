@@ -10,7 +10,12 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     MATOMO_SIG_SHA256="7e33ba4ea7f44370157832940d177d524b21192985b03e795e9f05f037b0c453" && \
     download.sh --url "${MATOMO_URL}" --sha256 "${MATOMO_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh --url "${MATOMO_URL}.asc" --sha256 "${MATOMO_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 814E346FA01A20DBB04B6807B5DBD5925590A237 && \
+    KEY="814E346FA01A20DBB04B6807B5DBD5925590A237" && \
+    (gpg --keyserver pool.sks-keyservers.net --recv-keys "${KEY}" \
+        || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${KEY}" \
+        || gpg --keyserver keyserver.pgp.com --recv-keys "${KEY}" \
+        || gpg --keyserver pgp.mit.edu --recv-keys "${KEY}" \
+    ) && \
     gpg --verify "${DOWNLOAD_CACHE_DIRECTORY}/${MATOMO_FILE}.asc" "${DOWNLOAD_CACHE_DIRECTORY}/${MATOMO_FILE}" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${MATOMO_FILE}" -C /opt && \
     chown -R nginx:nginx /opt/matomo && \
