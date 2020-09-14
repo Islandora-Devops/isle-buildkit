@@ -8,7 +8,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk-install.sh \
         imagemagick \
         ffmpeg \
-        openjpeg
+        openjpeg-tools
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \

@@ -126,7 +126,7 @@ AzureStorageSource.chunking.cache.max_size = {{ getv "/azurestoragesource/chunki
 # Processor Selection
 #----------------------------------------
 
-processor.selection_strategy = {{ getv "/processor/selection/strategy" "AutomaticSelectionStrategy" }}
+processor.selection_strategy = {{ getv "/processor/selection/strategy" "ManualSelectionStrategy" }}
 processor.ManualSelectionStrategy.avi = {{ getv "/processor/manualselectionstrategy/avi" "FfmpegProcessor" }}
 processor.ManualSelectionStrategy.bmp = {{ getv "/processor/manualselectionstrategy/bmp" "ImageMagickProcessor" }}
 processor.ManualSelectionStrategy.dcm = {{ getv "/processor/manualselectionstrategy/dcm" "ImageMagickProcessor" }}
