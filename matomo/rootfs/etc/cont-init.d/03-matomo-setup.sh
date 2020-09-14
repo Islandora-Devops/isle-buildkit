@@ -27,6 +27,26 @@ function execute_sql_file {
         "${@}"
 }
 
+# Patch existing sites, which should only have a single row in the table.
+# This is required to support multiple site configurations going forward.
+function add_missing_column {
+    cat <<- EOF
+SET @database = DATABASE();
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = @database
+and COLUMN_NAME = 'site'
+AND table_name = 'matomo_site' LIMIT 1;
+
+set @query = IF(@exist < 1, 'ALTER TABLE matomo_site ADD COLUMN site VARCHAR(255) NOT NULL UNIQUE AFTER idsite', 'select \'Column Exists\' status');
+prepare stmt from @query;
+
+EXECUTE stmt;
+EOF
+}
+
 # Matomo only works with MySQL.
 # https://github.com/matomo-org/matomo/issues/500
 function update_query {
@@ -35,7 +55,6 @@ function update_query {
 SET PASSWORD FOR '${MATOMO_DB_USER}'@'%' = PASSWORD('${MATOMO_DB_PASSWORD}');
 
 -- Update site name, host, timezone (idsite is hardcoded for the default site).
-ALTER TABLE matomo_site ADD COLUMN IF NOT EXISTS site VARCHAR(255) NOT NULL UNIQUE AFTER idsite;
 UPDATE matomo_site set
     site = 'DEFAULT',
     name = '${MATOMO_DEFAULT_SITE_NAME}',
@@ -75,6 +94,7 @@ EOF
 
 function update_database {
     echo "Updating Database: ${MATOMO_DB_NAME}"
+    execute_sql_file --database ${MATOMO_DB_NAME} <(add_missing_column)
     execute_sql_file --database ${MATOMO_DB_NAME} <(update_query)
     for site in ${MATOMO_SITES}; do
         execute_sql_file --database ${MATOMO_DB_NAME} <(update_site_query "${site}")
