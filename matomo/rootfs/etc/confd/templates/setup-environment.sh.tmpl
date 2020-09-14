@@ -17,11 +17,30 @@ foreground {
   MATOMO_DB_ROOT_PASSWORD="{{ getv "/db/root/password" "password" }}"
   MATOMO_DB_ROOT_USER="{{ getv "/db/root/user" "root" }}"
   MATOMO_DB_USER="{{ getv "/db/user" "matomo" }}"
-  MATOMO_SITE_HOST="{{ getv "/site/host" "islandora.isle-dc.localhost" }}"
-  MATOMO_SITE_NAME="{{ getv "/site/name" "Islandora" }}"
-  MATOMO_SITE_TIMEZONE="{{ getv "/site/timezone" "America/Halifax" }}"
+  MATOMO_DEFAULT_SITE_HOST="{{ getv "/default/site/host" "islandora.isle-dc.localhost" }}"
+  MATOMO_DEFAULT_SITE_NAME="{{ getv "/default/site/name" "Islandora" }}"
+  MATOMO_DEFAULT_SITE_TIMEZONE="{{ getv "/default/site/timezone" "America/Halifax" }}"
   MATOMO_USER_EMAIL="{{ getv "/user/email" "admin@example.org" }}"
   MATOMO_USER_NAME="{{ getv "/user/name" "admin" }}"
   MATOMO_USER_PASS="{{ getv "/user/pass" "$2y$10$S38e7HPM9LI3aOIvcnRsfuMCm4ipNP572QsvbCK60upoHVJ61hMrS" }}"
+  MATOMO_SITES="{{ toUpper (join (lsdir "/site") " ") }}"
   s6-dumpenv -- /var/run/s6/container_environment
 }
+{{ range $site := lsdir "/site" }}
+# Import default settings from the previous statement so the default value set
+# by the user can propagate to sub-sites.
+with-contenv
+multisubstitute
+{
+  importas -i SUBSITE_TIMEZONE MATOMO_DEFAULT_SITE_TIMEZONE
+}
+foreground {
+  # In general sub-sites will use the same values specified for the default site
+  # except where it does not make sense like install directory or database name.
+  s6-env -i
+  MATOMO_SITE_{{ toUpper $site }}_HOST="{{ getv (printf "/site/%s/host" $site) }}"
+  MATOMO_SITE_{{ toUpper $site }}_NAME="{{ getv (printf "/site/%s/name" $site) $site }}"
+  MATOMO_SITE_{{ toUpper $site }}_TIMEZONE="{{ getv (printf "/site/%s/timezone" $site) "${SUBSITE_TIMEZONE}" }}"
+  s6-dumpenv -- /var/run/s6/container_environment
+}
+{{ end }}

@@ -4,8 +4,4 @@ dest = "/var/run/islandora/create-matomo-database.sql"
 uid = 0
 gid = 0
 mode = "0600"
-keys = [
-    "/db",
-    "/site",
-    "/user",
-]
+keys = [ "/" ]
