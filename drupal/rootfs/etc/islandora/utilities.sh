@@ -68,11 +68,18 @@ function wait_for_service {
 # Waits for services that are required to be running to successfully ingest content.
 function wait_for_required_services {
     local site="${1}"; shift
-    wait_for_service "${site}" "SOLR"
-    wait_for_service "${site}" "FCREPO"
-    wait_for_service "${site}" "BROKER"
-    wait_for_service "${site}" "GEMINI"
-    wait_for_service "${site}" "TRIPLESTORE"
+    if [ $# -gt 0 ]; then
+        while [ $# -gt 0 ]; do
+            local service="${1}"; shift
+            wait_for_service "${site}" "${service}"
+        done
+    else
+        wait_for_service "${site}" "SOLR"
+        wait_for_service "${site}" "FCREPO"
+        wait_for_service "${site}" "BROKER"
+        wait_for_service "${site}" "GEMINI"
+        wait_for_service "${site}" "TRIPLESTORE"
+    fi
 }
 
 # Apply given function for all sites in parallel, up to the number of cores available.
