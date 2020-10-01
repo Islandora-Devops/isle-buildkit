@@ -22,7 +22,6 @@ RUN --mount=type=cache,target=/root/.composer/cache \
         drupal/facets:^1.3 \
         drupal/matomo:^1.7 \
         drupal/pdf:1.x-dev \
-        drupal/rdfui:^1.0-beta1 \
         drupal/rest_oai_pmh:^1.0 \
         drupal/restui:^1.16 \
         drupal/search_api_solr:^3.8 \
