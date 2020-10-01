@@ -33,7 +33,6 @@ function main {
     )
     local features=(
         islandora_core_feature
-        controlled_access_terms_defaults
         islandora_defaults
         islandora_search
     )
