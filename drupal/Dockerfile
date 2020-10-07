@@ -1,6 +1,11 @@
 # syntax=docker/dockerfile:experimental
 FROM local/nginx:latest
 
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk-install.sh \
+      patch && \
+    cleanup.sh
+
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
     DRUSH_VERSION="0.6.0" && \
