@@ -126,7 +126,6 @@ function main {
   local is_installed=$?
 
   # Install Composer modules if necessary.
-  # Do only in dev environment.
   COMPOSER_MEMORY_LIMIT=-1 composer install
 
   if [ ${is_installed} -lt 1 ] ; then
