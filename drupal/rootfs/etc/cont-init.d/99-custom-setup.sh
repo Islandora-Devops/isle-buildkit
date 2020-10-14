@@ -125,14 +125,14 @@ function main {
   $(installed_local)
   local is_installed=$?
 
-  if [ ${is_installed} -lt 1 ] ; then
-    echo "Drupal is not installed, no pre-existing state found."
-    exit 1
-  fi
-
   # Install Composer modules if necessary.
   # Do only in dev environment.
   COMPOSER_MEMORY_LIMIT=-1 composer install
+
+  if [ ${is_installed} -lt 1 ] ; then
+    echo "Drupal is not installed, no pre-existing state found."
+    exit 0
+  fi
 
   # Enter maintenance mode, run any database hooks from updated modules,
   # import the configuration, and perform any runtime configuration affected by
