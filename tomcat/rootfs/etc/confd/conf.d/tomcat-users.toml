@@ -3,4 +3,4 @@ src = "tomcat-users.xml.tmpl"
 dest = "/opt/tomcat/conf/tomcat-users.xml"
 uid = 100
 gid = 1000
-keys = ["/tomcat/admin/user", "/tomcat/admin/password"]
+keys = ["/tomcat/admin/user", "/tomcat/admin/password", "/tomcat/admin/roles"]
