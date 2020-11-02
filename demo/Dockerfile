@@ -5,7 +5,7 @@ FROM local/nginx:latest as composer
 RUN --mount=type=cache,target=/root/.composer/cache \
     --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    composer create-project islandora/drupal-project:8.8.1 \
+    composer create-project drupal/recommended-project:^8.9 \
         --prefer-dist \
         --no-interaction \
         --stability stable \
@@ -16,7 +16,6 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     cd /var/www/drupal && \
     composer require --update-no-dev -- \
         drupal/admin_toolbar:^2.0 \
-        drupal/console:~1.0 \
         drupal/content_browser:^1.0@alpha \
         drupal/devel:^2.0 \
         drupal/facets:^1.3 \
@@ -27,11 +26,11 @@ RUN --mount=type=cache,target=/root/.composer/cache \
         drupal/restui:^1.16 \
         drupal/search_api_solr:^3.8 \
         drupal/transliterate_filenames:^1.3 \
-        drush/drush:^9.7.1 \
-        islandora-rdm/islandora_fits:dev-master \
+        drush/drush:^10.3 \
+        islandora-rdm/islandora_fits:dev-8.x-1.x \
         islandora/carapace:dev-8.x-3.x \
         islandora/islandora_defaults:dev-8.x-1.x \
-        zaporylie/composer-drupal-optimizations:^1.0 \
+        zaporylie/composer-drupal-optimizations:^1.1 \
     && \
     mkdir -p /var/www/drupal/web/libraries && \
     MASONRY_VERSION="3.3.2" && \
