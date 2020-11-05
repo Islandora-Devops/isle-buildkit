@@ -127,7 +127,7 @@ function mysql_query {
 -- Create if does not exist.
 CREATE DATABASE IF NOT EXISTS ${db_name} CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE USER IF NOT EXISTS ${db_user}@'%' IDENTIFIED BY "${db_password}";
-GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES ON ${db_name}.* to ${db_user}@'%' IDENTIFIED BY "${db_password}";
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON ${db_name}.* to ${db_user}@'%' IDENTIFIED BY "${db_password}";
 FLUSH PRIVILEGES;
 
 -- Update DB_USER password if changed.
