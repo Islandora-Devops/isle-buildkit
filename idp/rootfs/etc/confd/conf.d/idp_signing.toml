@@ -1,0 +1,7 @@
+[template]
+src = "idp_signing.tmpl"
+dest = "/tmp/idp_signing"
+uid = 0
+gid = 0
+mode = "0644"
+keys = [ "/saml-secrets" ]

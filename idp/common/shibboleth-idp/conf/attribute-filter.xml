@@ -16,7 +16,7 @@
     <!-- Release some attributes to an SP. -->
     <AttributeFilterPolicy id="releaseToPass">
     
-        <PolicyRequirementRule xsi:type="Requester" value="https://islandora-idc.traefik.me/sp/shibboleth" />
+        <PolicyRequirementRule xsi:type="Requester" value="${SP_ENTITYID}" />
         
         <AttributeRule attributeID="eduPersonPrincipalName">
             <PermitValueRule xsi:type="ANY" />

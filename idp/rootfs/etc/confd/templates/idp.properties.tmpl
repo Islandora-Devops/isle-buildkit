@@ -17,7 +17,7 @@
 idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties
 
 # Set the entityID of the IdP
-idp.entityID= https://islandora-idp.traefik.me/idp/shibboleth
+idp.entityID= {{ getv "/saml-secrets/idp/entityid" }}
 
 # Set the scope used in the attribute resolver for scoped attributes
 idp.scope= johnshopkins.edu
@@ -47,10 +47,10 @@ idp.sealer.keyPassword= password
 # Settings for public/private signing and encryption key(s)
 # During decryption key rollover, point the ".2" properties at a second
 # keypair, uncomment in credentials.xml, then publish it in your metadata.
-idp.signing.key= /run/secrets/idp_signing
-idp.signing.cert= %{idp.home}/credentials/idp-signing.crt
-idp.encryption.key= /run/secrets/idp_encryption
-idp.encryption.cert= %{idp.home}/credentials/idp-encryption.crt
+idp.signing.key= /tmp/idp_signing
+idp.signing.cert= /tmp/idp_signing.crt
+idp.encryption.key= /tmp/idp_encryption
+idp.encryption.cert= /tmp/idp_encryption.crt
 #idp.encryption.key.2 = %{idp.home}/credentials/idp-encryption-old.key
 #idp.encryption.cert.2 = %{idp.home}/credentials/idp-encryption-old.crt
 
