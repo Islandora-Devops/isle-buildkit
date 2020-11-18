@@ -1,7 +1,0 @@
-[template]
-src = "idp-signing-cert.pem.tmpl"
-dest = "/tmp/idp-signing-cert.pem"
-uid = 100
-gid = 101
-mode = "0640"
-keys = [ "/saml-secrets" ]
