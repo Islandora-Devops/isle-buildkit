@@ -1,0 +1,7 @@
+[template]
+src = "sp-signing-key.pem.tmpl"
+dest = "/tmp/sp-signing-key.pem"
+uid = 100
+gid = 101
+mode = "0640"
+keys = [ "/saml-secrets" ]

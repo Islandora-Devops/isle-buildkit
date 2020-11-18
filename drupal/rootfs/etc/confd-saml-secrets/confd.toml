@@ -1,0 +1,6 @@
+backend = "file"
+confdir = "/etc/confd-saml-secrets"
+log-level = "info"
+interval = 600
+noop = false
+prefix = "/"

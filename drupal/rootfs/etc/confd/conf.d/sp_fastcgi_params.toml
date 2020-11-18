@@ -1,0 +1,7 @@
+[template]
+src = "sp_fastcgi_params.tmpl"
+dest = "/etc/nginx/drupal_sp_fastcgi_params"
+uid = 0
+gid = 0
+mode = "0444"
+keys = [ "/sp", "/idp" ]
