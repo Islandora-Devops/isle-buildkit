@@ -1,5 +1,5 @@
 backend = "env"
 confdir = "/etc/confd"
-log-level = "debug"
+log-level = "info"
 interval = 600
 noop = false
