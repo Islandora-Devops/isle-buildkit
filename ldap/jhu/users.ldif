@@ -21,7 +21,7 @@ eduPersonUniqueId: ABCDEF
 eduPersonPrincipalName: staff1
 employeeNumber: 00000001
 displayName: Staff One
-eduPersonAffiliation: STAFF
+employeeType: STAFF
 
 dn: uid=staff2,ou=People,dc=islandora
 uid: staff2
@@ -39,7 +39,7 @@ eduPersonUniqueId: GHIJKL
 eduPersonPrincipalName: staff2
 employeeNumber: 00000002
 displayName: Staff Two
-eduPersonAffiliation: STAFF
+employeeType: STAFF
 
 dn: uid=student1,ou=People,dc=islandora
 uid: student1
@@ -57,4 +57,22 @@ eduPersonUniqueId: MNOPQR
 eduPersonPrincipalName: student1
 employeeNumber: 00000003
 displayName: Student One
-eduPersonAffiliation: STUDENT
+employeeType: STUDENT
+
+dn: uid=student2,ou=People,dc=islandora
+uid: student2
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: eduPerson
+givenName: Student Worker
+sn: Worker
+cn: Student Worker
+mail: student2@jhu.edu
+userPassword: moo
+eduPersonUniqueId: HHYATD
+eduPersonPrincipalName: student2
+employeeNumber: 00000003
+displayName: Student One
+employeeType: STUDENT|STAFF
