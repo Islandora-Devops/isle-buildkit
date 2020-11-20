@@ -31,9 +31,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
     gpg --keyserver hkp://pool.sks-keyservers.net --recv-key 2536CA16DF4FCDA2 && \
     gpg "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}.sig" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}" -C / && \
-    CONFD_VERSION="0.15.0" && \
+    CONFD_VERSION="0.16.0" && \
     CONFD_URL="https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" && \
-    CONFD_SHA256="7f3aba1d803543dd1df3944d014f055112cf8dadf0a583c76dd5f46578ebe3c2" && \
+    CONFD_SHA256="255d2559f3824dd64df059bdc533fd6b697c070db603c76aaf8d1d5e6b0cc334" && \
     download.sh --url "${CONFD_URL}" --sha256 "${CONFD_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/confd-${CONFD_VERSION}-linux-amd64" /usr/local/bin/confd && \
     chmod a+x /usr/local/bin/confd && \

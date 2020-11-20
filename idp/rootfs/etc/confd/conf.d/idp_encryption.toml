@@ -1,0 +1,7 @@
+[template]
+src = "idp_encryption.tmpl"
+dest = "/tmp/idp_encryption"
+uid = 0
+gid = 0
+mode = "0644"
+keys = [ "/saml-secrets" ]

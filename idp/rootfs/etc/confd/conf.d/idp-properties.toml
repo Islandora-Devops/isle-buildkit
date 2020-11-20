@@ -1,0 +1,7 @@
+[template]
+src = "idp.properties.tmpl"
+dest = "/opt/shibboleth-idp/conf/idp.properties"
+uid = 0
+gid = 0
+mode = "0644"
+keys = [ "/saml-secrets" ]

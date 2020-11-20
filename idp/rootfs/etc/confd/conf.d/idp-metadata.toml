@@ -1,0 +1,7 @@
+[template]
+src = "idp-metadata.xml.tmpl"
+dest = "/opt/shibboleth-idp/metadata/idp-metadata.xml"
+uid = 0
+gid = 0
+mode = "0644"
+keys = [ "/saml-secrets" ]
