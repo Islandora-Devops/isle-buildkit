@@ -2,8 +2,22 @@
 # -*- mode: sh -*-
 # vi: set ft=sh:
 with-contenv
+# If traefik is not found allow any IP address.
+backtick -D 0.0.0.0 -n TRAEFIK_IP {
+  redirfd -w 2 /dev/null
+  backtick -i -n CAPTURE {
+    getent hosts traefik
+  }
+  importas CAPTURE CAPTURE 
+  pipeline {
+    echo ${CAPTURE}
+  }
+  awk "{ print $1 }"
+}
 multisubstitute
 {
+  # Non-site specific variables
+  importas REVERSE_PROXY_IPS TRAEFIK_IP
   # Default settings to apply if none given.
   define ACCOUNT_EMAIL "webmaster@localhost.com"
   define ACCOUNT_NAME "admin"
@@ -49,6 +63,9 @@ foreground {
   # environment as seen by linked containers.
   # Variables can only be seen when using '#!/usr/bin/with-contenv'
   s6-env -i
+  # Non-site specific variables.
+  DRUPAL_REVERSE_PROXY_IPS="{{ getv "/reverse/proxy/ips" "${REVERSE_PROXY_IPS}" }}"
+  # Default site.
   DRUPAL_DEFAULT_ACCOUNT_EMAIL="{{ getv "/default/account/email" "${ACCOUNT_EMAIL}" }}"
   DRUPAL_DEFAULT_ACCOUNT_NAME="{{ getv "/default/account/name" "${ACCOUNT_NAME}" }}"
   DRUPAL_DEFAULT_ACCOUNT_PASSWORD="{{ getv "/default/account/password" "${ACCOUNT_PASSWORD}" }}"
