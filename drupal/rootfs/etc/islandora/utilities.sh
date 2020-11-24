@@ -321,6 +321,7 @@ function update_settings_php {
     drush -l "${site_url}" islandora:settings:create-settings-if-missing
     drush -l "${site_url}" islandora:settings:set-hash-salt "${salt}"
     drush -l "${site_url}" islandora:settings:set-flystem-fedora-url "${fedora_url}"
+    drush -l "${site_url}" islandora:settings:set-reverse-proxy "${DRUPAL_REVERSE_PROXY_IPS}"
     drush -l "${site_url}" islandora:settings:set-database-settings \
         "${db_name}" \
         "${user}" \
