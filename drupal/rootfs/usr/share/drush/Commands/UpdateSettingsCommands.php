@@ -176,6 +176,32 @@ class UpdateSettingsCommands extends DrushCommands
   }
 
   /**
+   * Set `reverse_proxy` in settings.php
+   *
+   * @command islandora:settings:set-reverse-proxy
+   * @bootstrap site
+   * @param $reverse_proxy_ips List of comma separated ip adresses for the reverse proxy.
+   * @usage drush islandora:settings:set-reverse-proxy
+   *   Sets `reverse_proxy` in settings.php.
+   *   Be aware that shell escaping can have an affect on the arguments.
+   */
+  public function setReverseProxySettings($reverse_proxy_ips) {
+    $settings['settings']['reverse_proxy'] = (object) [
+      'value' => TRUE,
+      'required' => TRUE,
+    ];
+    $settings['settings']['reverse_proxy_addresses'] = (object) [
+      'value' => explode(',', $reverse_proxy_ips),
+      'required' => TRUE,
+    ];
+    $settings['settings']['reverse_proxy_trusted_headers'] = (object) [
+      'value' => \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_ALL | \Symfony\Component\HttpFoundation\Request::HEADER_FORWARDED, 
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
+  }
+
+  /**
    * Determine which settings file to update.
    */
   private function getSettingFilePath()

@@ -4,4 +4,11 @@ set -e
 # Ensures drush runs as the correct user, and does not run out of memory.
 # Takes precedence due to order of $PATH. Preferred to an alias as it will apply
 # regardless of which shell is used or how it is started (login, interactive, etc)
-s6-setuidgid nginx php -d memory_limit=-1 /usr/bin/drush "${@}"
+if test $(id -u) -eq 0; then
+    # If root run as nginx.
+    s6-setuidgid nginx php -d memory_limit=-1 /usr/bin/drush "${@}"
+else
+    # If non-root user, then run as current user
+    # as we do not have permissions to switch user.
+    php -d memory_limit=-1 /usr/bin/drush "${@}"
+fi
