@@ -296,7 +296,7 @@ function update_settings_php {
     local user=$(drupal_site_env "${site}" "DB_USER")
     local password=$(drupal_site_env "${site}" "DB_PASSWORD")
     local db_name=$(drupal_site_env "${site}" "DB_NAME")
-    local config_dir=$(drupal_site_env "${site}" "DRUPAL_DEFAULT_CONFIGURATION")
+    local config_dir=$(drupal_site_env "${site}" "CONFIGDIR")
     local fcrepo_host=$(drupal_site_env "${site}" "FCREPO_HOST")
     local fcrepo_port=$(drupal_site_env "${site}" "FCREPO_PORT")
     local salt=$(drupal_site_env "${site}" "SALT")
