@@ -14,6 +14,8 @@ url="https://www.imagemagick.org/"
 arch="all"
 license="ImageMagick"
 options="libtool"
+depends="
+	ghostscript"
 makedepends="
 	chrpath
 	fftw-dev
