@@ -40,7 +40,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable        | Etcd Key                     | Default  | Description                              |
+| Environment Variable        | Confd Key                     | Default  | Description                              |
 | :-------------------------- | :--------------------------- | :------- | :--------------------------------------- |
 | ACTIVEMQ_USER               | /activemq/user               | admin    | See [Security]: credentials.properties   |
 | ACTIVEMQ_PASSWORD           | /activemq/password           | password | See [Security]: credentials.properties   |
@@ -51,7 +51,7 @@ additional settings, volumes, ports, etc.
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:
 
-| Environment Variable              | Etcd Key                           | Description                              |
+| Environment Variable              | Confd Key                           | Description                              |
 | :-------------------------------- | :--------------------------------- | :--------------------------------------- |
 | ACTIVEMQ_USER_{USER}_NAME         | /activemq/user/{USER}/name         | See [Security]: users.properties         |
 | ACTIVEMQ_USER_{USER}_PASSWORD     | /activemq/user/{USER}/password     | See [Security]: users.properties         |
@@ -66,7 +66,7 @@ following the above conventions:
 For example to add a new user `someone` to the [WebConsole] you would need to
 define the following:
 
-| Environment Variable               | Etcd Key                            | Value    |
+| Environment Variable               | Confd Key                            | Value    |
 | :--------------------------------- | :---------------------------------- | :------- |
 | ACTIVEMQ_WEB_USER_SOMEONE_NAME     | /activemq/web/user/someone/name     | someone  |
 | ACTIVEMQ_WEB_USER_SOMEONE_PASSWORD | /activemq/web/user/someone/password | password |

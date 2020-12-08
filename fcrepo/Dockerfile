@@ -22,4 +22,23 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     chown -R tomcat:tomcat /opt/tomcat && \
     cleanup.sh
 
+ENV \
+    FCREPO_ACTIVEMQ_BROKER=tcp://activemq:61616 \
+    FCREPO_ACTIVEMQ_QUEUE=fedora \
+    FCREPO_ACTIVEMQ_TOPIC=fedora \
+    FCREPO_BINARYSTORAGE_TYPE=file \
+    FCREPO_DB_MYSQL_HOST=mariadb \
+    FCREPO_DB_MYSQL_PORT=3306 \
+    FCREPO_DB_NAME=fcrepo \
+    FCREPO_DB_PASSWORD=password \
+    FCREPO_DB_POSTGRESQL_HOST=postgresql \
+    FCREPO_DB_POSTGRESQL_PORT=5432 \
+    FCREPO_DB_ROOT_USER=root \
+    FCREPO_DB_USER=fcrepo \
+    FCREPO_MODESHAPE_CONFIGURATION=classpath:/config/repository.json \
+    FCREPO_PERSISTENCE_TYPE=file \
+    FCREPO_S3_BUCKET= \
+    FCREPO_S3_PASSWORD= \
+    FCREPO_S3_USER=
+
 COPY rootfs /

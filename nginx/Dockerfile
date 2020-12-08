@@ -42,4 +42,20 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${COMPOSER_FILE}" /usr/bin/composer && \
     chmod a+x /usr/bin/composer
 
+ENV \
+    NGINX_CLIENT_MAX_BODY_SIZE=0 \
+    NGINX_ERROR_LOG_LEVEL=warn \
+    NGINX_KEEPALIVE_TIMEOUT=65 \
+    NGINX_WORKER_CONNECTIONS=1024 \
+    NGINX_WORKER_PROCESSES=auto \
+    PHP_DEFAULT_SOCKET_TIMEOUT=60 \
+    PHP_LOG_LEVEL=notice \
+    PHP_LOG_LIMIT=16384 \
+    PHP_MAX_EXECUTION_TIME=30 \
+    PHP_MAX_FILE_UPLOADS=20 \
+    PHP_MAX_INPUT_TIME=60 \
+    PHP_MEMORY_LIMIT=256M \
+    PHP_POST_MAX_SIZE=0 \
+    PHP_UPLOAD_MAX_FILESIZE=128M
+
 COPY rootfs /

@@ -13,7 +13,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
     mkdir -p /etc/postgresql && \
     cleanup.sh
 
-ENV PGDATA /var/lib/postgresql/data
+ENV \
+    PGDATA=/var/lib/postgresql/data \
+    POSTGRESQL_ROOT_PASSWORD=password \
+    POSTGRESQL_ROOT_USER=root
 
 EXPOSE 5432
 

@@ -29,7 +29,7 @@ log:
   # Valid log levels are:
   # debug, info, notice, warning, error, critical, alert, emergency, none
   file: "php://stderr"
-  level: {{ getv "/log/level" "debug" }}
+  level: {{ getv "/log/level" (getenv "HOMARUS_LOG_LEVEL") }}
 
 syn:
   # toggles JWT security for service

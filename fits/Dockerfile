@@ -17,4 +17,10 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     download.sh --url "${FITS_URL}" --sha256 "${FITS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     unzip "${DOWNLOAD_CACHE_DIRECTORY}/${FITS_FILE}" -d /opt/fits
 
+ENV \
+    FITS_MAX_IN_MEMORY_FILE_SIZE=4 \
+    FITS_MAX_OBJECTS_IN_POOL=5 \
+    FITS_MAX_REQUEST_SIZE=2000 \
+    FITS_MAX_UPLOAD_FILE_SIZE=2000
+
 COPY rootfs /

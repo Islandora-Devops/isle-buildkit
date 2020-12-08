@@ -19,8 +19,12 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 
 WORKDIR /var/www/crayfits
 
-COPY /rootfs /
-
 STOPSIGNAL SIGWINCH
 
 EXPOSE 8000
+
+ENV \
+    CRAYFITS_LOG_LEVEL=debug \
+    CRAYFITS_WEBSERVICE_URI=fits/fits/examine
+
+COPY /rootfs /

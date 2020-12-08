@@ -20,6 +20,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
     ln -s /var/www/crayfish/Hypercube/src /var/www/html && \
     cleanup.sh
 
+RUN \
+    HYPERCUBE_FCREPO_URL=fcrepo/fcrepo/rest \
+    HYPERCUBE_LOG_LEVEL=debug
+
 COPY /rootfs /
 
 WORKDIR /var/www/crayfish/Hypercube/

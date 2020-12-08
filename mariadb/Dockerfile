@@ -14,4 +14,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
 
 EXPOSE 3306
 
+ENV MYSQL_ROOT_PASSWORD=password
+
 COPY rootfs /

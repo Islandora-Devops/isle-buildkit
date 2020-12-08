@@ -1,1 +1,1 @@
-token.value={{ getv "/http/token" "islandora" }}
+token.value={{ getv "/http/token" (getenv "ALPACA_HTTP_TOKEN") }}

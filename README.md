@@ -244,6 +244,26 @@ file defines where the template will be render to and who owns it, and the
 the same name of the file they are generating minus the ``toml`` or ``tmpl``
 suffix. This is to make the discovery of them easier.
 
+``confd`` is also the source of all truth when it comes to configuration. We've
+established a order of precedence in which environment variables can be
+provided.
+
+1. Confd backend (highest)
+2. Secrets kept in `/run/secrets`
+3. Environment variables passed into the container
+4. Environment variables defined in Dockerfile(s)
+5. Environment variables defined in the `/etc/defaults` directory (lowest only used for multiline variables, such as JWT)
+
+If not defined in the highest level the next level applies and so forth down the
+list.
+
+`/etc/defaults` and the environment variables declared in the Dockerfile(s) used
+to create the image are **required** to define all environment variables used by
+scripts and Confd templates.
+
+``confd`` templates are **required** to use `getenv` function for all default
+values to ensure this order of precedence is followed.
+
 ### S6 Overlay
 
 From this tool we only really take advantage of two features:
@@ -288,9 +308,9 @@ There are only a few Service scripts:
 - solr
 - tomcat
 
-Of these only ``confd`` is running in every container, it periodically listens
-for changes in either ``etcd`` or the ``environment variables`` and will
-re-render the templates upon any change.
+Of these only ``confd`` can be configured to run in every container, it
+periodically listens for changes in it's configured backend (e.g. ``etcd`` or
+``environment variables``) and will re-render the templates upon any change.
 
 ### Image Hierarchy
 
@@ -358,11 +378,12 @@ images.
 ## Design Constraints
 
 To be able to support a wide variety of backends for ``confd``, as well as
-orchestration tools, all calls to ``getv`` **must provide a default**. With the
-exception of keys that do not get used unless defined like
+orchestration tools, all calls to ``getv`` **must use getenv for the default
+value**. With the exception of keys that do not get used unless defined like
 ``DRUPAL_SITE_{SITE}_NAME``. This means the whatever backend for configuration,
 wether it be ``etcd``, ``consul``, or ``environment variables``, containers can
-successfully start without any other container present.
+successfully start without any other container present. Additionally it ensure
+that the order of precedence for configuration settings.
 
 This does not completely remove dependencies between containers, for example,
 when the [demo](../docker/demo/README.md) starts it requires a running

@@ -36,6 +36,43 @@ RUN bin/start && \
 
 RUN chown -R karaf:karaf /opt/karaf
 
-COPY rootfs /
+ENV \
+    ALPACA_ACTIVEMQ_PASSWORD=password \
+    ALPACA_ACTIVEMQ_URL=tcp://activemq:61616 \
+    ALPACA_ACTIVEMQ_USER=admin \
+    ALPACA_FCREPO_AUTH_HOST= \
+    ALPACA_FCREPO_AUTH_PASSWORD= \
+    ALPACA_FCREPO_AUTH_USER= \
+    ALPACA_FCREPO_URL=http://fcrepo/fcrepo/rest \
+    ALPACA_FITS_QUEUE=broker:queue:islandora-connector-fits \
+    ALPACA_FITS_REDELIVERIES=10 \
+    ALPACA_FITS_SERVICE=http://crayfits:8000 \
+    ALPACA_HOMARUS_QUEUE=broker:queue:islandora-connector-homarus \
+    ALPACA_HOMARUS_REDELIVERIES=10 \
+    ALPACA_HOMARUS_SERVICE=http://homarus:8000/convert \
+    ALPACA_HOUDINI_QUEUE=broker:queue:islandora-connector-houdini \
+    ALPACA_HOUDINI_REDELIVERIES=10 \
+    ALPACA_HOUDINI_SERVICE=http://houdini:8000/convert \
+    ALPACA_HTTP_TOKEN=islandora \
+    ALPACA_INDEXING_GEMINI_URL=http://gemini:8000 \
+    ALPACA_INDEXING_MILLINER_URL=http://milliner:8000 \
+    ALPACA_INDEXING_REDELIVERIES=10 \
+    ALPACA_INDEXING_STREAM_FILE_DELETE=broker:queue:islandora-indexing-fcrepo-file-delete \
+    ALPACA_INDEXING_STREAM_FILE_INDEX=broker:queue:islandora-indexing-fcrepo-file \
+    ALPACA_INDEXING_STREAM_INPUT=broker:topic:fedora \
+    ALPACA_INDEXING_STREAM_MEDIA_INDEX=broker:queue:islandora-indexing-fcrepo-media \
+    ALPACA_INDEXING_STREAM_NODE_DELETE=broker:queue:islandora-indexing-fcrepo-delete \
+    ALPACA_INDEXING_STREAM_NODE_INDEX=broker:queue:islandora-indexing-fcrepo-content \
+    ALPACA_INDEXING_STREAM_TRIPLESTORE_DELETE=broker:queue:islandora-indexing-triplestore-delete \
+    ALPACA_INDEXING_STREAM_TRIPLESTORE_INDEX=broker:queue:islandora-indexing-triplestore-index \
+    ALPACA_INDEXING_STREAM_TRIPLESTORE_REINDEX=broker:queue:triplestore.reindex \
+    ALPACA_INDEXING_URL=http://blazegraph/bigdata/namespace/islandora/sparql \
+    ALPACA_LOGGER_CAMEL_LEVEL=WARN \
+    ALPACA_LOGGER_ISLANDORA_LEVEL=WARN \
+    ALPACA_LOGGER_ROOT_LEVEL=WARN \
+    ALPACA_OCR_QUEUE=broker:queue:islandora-connector-ocr \
+    ALPACA_OCR_REDELIVERIES=10 \
+    ALPACA_OCR_SERVICE=http://hypercube:8000 \
+    JAVA_OPTS="-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx8g"
 
-ENV JAVA_OPTS="-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx8g"
+COPY rootfs /

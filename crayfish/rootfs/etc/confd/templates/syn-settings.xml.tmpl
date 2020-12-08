@@ -2,6 +2,6 @@
 <config version='1'>
     <site algorithm='RS256' encoding='PEM' path='/opt/keys/jwt/public.key' default='true' anonymous='true'/>
     <token user='admin' roles='admin'>
-        {{ getv "/jwt/admin/token" "islandora" }}
+        {{ getv "/jwt/admin/token" (getenv "JWT_ADMIN_TOKEN") }}
     </token>
 </config>

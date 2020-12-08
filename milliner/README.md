@@ -10,7 +10,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Etcd Key             | Default            | Description                                                                                       |
+| Environment Variable | Confd Key             | Default            | Description                                                                                       |
 | :------------------- | :------------------- | :----------------- | :------------------------------------------------------------------------------------------------ |
 | MILLINER_DRUPAL_URL  | /milliner/drupal/url | drupal:80          | Drupal URL                                                                                        |
 | MILLINER_FCREPO_URL  | /milliner/fcrepo/url | fcrepo/fcrepo/rest | Fcrepo Rest API URL                                                                               |

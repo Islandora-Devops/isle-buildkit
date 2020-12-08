@@ -32,7 +32,7 @@ Requires `islandora/base` docker image to build. Please refer to the
 
 ## Settings
 
-| Environment Variable | Etcd Key             | Default  | Description                            |
+| Environment Variable | Confd Key             | Default  | Description                            |
 | :------------------- | :------------------- | :------- | :------------------------------------- |
 | MYSQL_ROOT_PASSWORD  | /mysql/root/password | password | The password for the root user account |
 

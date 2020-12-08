@@ -10,9 +10,9 @@
 
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.fits" update-strategy="reload" >
     <cm:default-properties>
-      <cm:property name="error.maxRedeliveries" value="{{ getv "/fits/redeliveries" "10" }}"/>
-      <cm:property name="in.stream" value="{{ getv "/fits/queue" "broker:queue:islandora-connector-fits" }}"/>
-      <cm:property name="derivative.service.url" value="{{ getv "/fits/service" "http://crayfits:8000" }}"/>
+      <cm:property name="error.maxRedeliveries" value="{{ getv "/fits/redeliveries" (getenv "ALPACA_FITS_REDELIVERIES") }}"/>
+      <cm:property name="in.stream" value="{{ getv "/fits/queue" (getenv "ALPACA_FITS_QUEUE") }}"/>
+      <cm:property name="derivative.service.url" value="{{ getv "/fits/service" (getenv "ALPACA_FITS_SERVICE") }}"/>
     </cm:default-properties>
   </cm:property-placeholder>
 
