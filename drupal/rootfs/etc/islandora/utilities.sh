@@ -364,7 +364,6 @@ function configure_islandora_module {
     local gemini_port=$(drupal_site_env "${site}" "GEMINI_PORT")
     local gemini_url="http://${gemini_host}:${gemini_port}"
 
-    drush -l "${site_url}" -y pm:enable islandora
     drush -l "${site_url}" -y config:set --input-format=yaml jsonld.settings remove_jsonld_format true
     drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings broker_url "${broker_url}"
     drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_url "${gemini_url}"
@@ -458,7 +457,6 @@ function configure_matomo_module {
     local matomo_url=$(drupal_site_env "${site}" "MATOMO_URL")
     local matomo_http_url="http${matomo_url#https}"
 
-    drush -l "${site_url}" -y pm:enable matomo
     drush -l "${site_url}" -y config-set matomo.settings site_id "${site_id}"
     drush -l "${site_url}" -y config-set matomo.settings url_http "${matomo_http_url}"
     drush -l "${site_url}" -y config-set matomo.settings url_https "${matomo_url}"

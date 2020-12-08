@@ -4,5 +4,7 @@
   <!-- web application will be reloaded.                                   -->
   <WatchedResource>WEB-INF/web.xml</WatchedResource>
   <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+{{ if eq (getv "/disable/syn" "false") "false" }}
   <Valve className="ca.islandora.syn.valve.SynValve" pathname="/opt/tomcat/conf/syn-settings.xml" />
+{{ end }}
 </Context>
