@@ -122,15 +122,16 @@ function main {
   # Records whether or not we are starting from an empty database; this is a proxy for determining if Drupal is
   # already installed or not.  If installed_custom returns 0, then Drupal is already installed.  If >0, Drupal is
   # not installed.
-  $(installed_local)
-  local is_installed=$?
+
+  local db_count=0
+  $(installed_local) || db_count=$?
 
   # Install Composer modules if necessary.
   COMPOSER_MEMORY_LIMIT=-1 composer install
 
-  if [ ${is_installed} -lt 1 ] ; then
-    echo "Drupal is not installed, no pre-existing state found."
-    exit 0
+  if [ -z "${db_count}" ] || [ "${db_count}" -lt 1 ] ; then
+    printf "\n\nERROR: Drupal is not installed, no pre-existing state found\n\n"
+    exit 1
   fi
 
   # Enter maintenance mode, run any database hooks from updated modules,
