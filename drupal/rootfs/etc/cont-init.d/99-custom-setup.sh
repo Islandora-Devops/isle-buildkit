@@ -1,6 +1,10 @@
 #!/usr/bin/with-contenv bash
 set -x
 
+if [ -z "${DRUPAL_IGNORE_STARTUP_ERRORS}" ] || [ "${DRUPAL_IGNORE_STARTUP_ERRORS}" != "true" ]; then
+  set -e
+fi
+
 echo "Executing Islandora setup with the following environment:"
 env # cannot pipe through sort, because some vars are multi-line
 echo
