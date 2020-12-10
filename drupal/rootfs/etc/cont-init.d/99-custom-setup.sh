@@ -1,6 +1,10 @@
 #!/usr/bin/with-contenv bash
 set -x
 
+if [ -z "${DRUPAL_IGNORE_STARTUP_ERRORS}" ] || [ "${DRUPAL_IGNORE_STARTUP_ERRORS}" != "true" ]; then
+  set -e
+fi
+
 echo "Executing Islandora setup with the following environment:"
 env # cannot pipe through sort, because some vars are multi-line
 echo
@@ -122,15 +126,16 @@ function main {
   # Records whether or not we are starting from an empty database; this is a proxy for determining if Drupal is
   # already installed or not.  If installed_custom returns 0, then Drupal is already installed.  If >0, Drupal is
   # not installed.
-  $(installed_local)
-  local is_installed=$?
+
+  local db_count=0
+  $(installed_local) || db_count=$?
 
   # Install Composer modules if necessary.
   COMPOSER_MEMORY_LIMIT=-1 composer install
 
-  if [ ${is_installed} -lt 1 ] ; then
-    echo "Drupal is not installed, no pre-existing state found."
-    exit 0
+  if [ -z "${db_count}" ] || [ "${db_count}" -lt 1 ] ; then
+    printf "\n\nERROR: Drupal is not installed, no pre-existing state found\n\n"
+    exit 1
   fi
 
   # Enter maintenance mode, run any database hooks from updated modules,
@@ -157,7 +162,8 @@ function main {
   # Perform runtime configuration if it is not a dev env.
   if [ -n "${DRUPAL_INSTANCE}" ] && [ "${DRUPAL_INSTANCE}" != "dev" ] ;
   then
-    perform_runtime_config "${site_url}"
+    # TODO:  This fails and needs to be fixed or factored out
+    perform_runtime_config "${site_url}" || printf "\n\nWARNING: runtime config failed, ignoring\n\n"
   fi
 
   # Disable maintenance mode
