@@ -112,7 +112,6 @@ function perform_runtime_config {
   # Ensure that settings which depend on environment variables like service urls are set dynamically on startup.
   configure_islandora_module_local "${site}"
   configure_islandora_default_module_local "${site}"
-  configure_matomo_module_local "${site}"
   configure_openseadragon_local "${site}"
 
   # Settings like the hash / flystem can be affected by environment variables at runtime.
