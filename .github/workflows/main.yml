@@ -33,7 +33,7 @@ jobs:
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build '-Prepository=${{ secrets.REPOSITORY }}' --info
+        arguments: build '-Prepository=${{ secrets.REPOSITORY }}' --info -x demo:build -x matomo:build -x recast:build -x milliner:build -x postgresql:build -x fcrepo:build -x blazegraph:build
     - name: Push Docker images
       uses: eskatos/gradle-command-action@v1
       with:
