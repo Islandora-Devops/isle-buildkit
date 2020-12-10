@@ -161,8 +161,7 @@ function main {
   # Perform runtime configuration if it is not a dev env.
   if [ -n "${DRUPAL_INSTANCE}" ] && [ "${DRUPAL_INSTANCE}" != "dev" ] ;
   then
-    # TODO:  This fails and needs to be fixed or factored out
-    perform_runtime_config "${site}" || printf "\n\nWARNING: runtime config failed, ignoring\n\n"
+    perform_runtime_config "${site}"
   fi
 
   # Disable maintenance mode
