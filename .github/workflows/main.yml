@@ -8,11 +8,17 @@ jobs:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      image-tag: ${{ steps.output-image-tag.outputs.image-tag }}
+    defaults:
+      run:
+        working-directory: buildkit
     steps:
-    - name: Checkout
+    - name: Checkout idc-isle-buildkit
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        path: buildkit
     - name: Setup Java
       uses: actions/setup-java@v1
       with:
@@ -31,11 +37,48 @@ jobs:
       run: |
         echo '{"experimental": "enabled"}' > ~/.docker/config.json
     - name: Build Docker images
-      uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: build '-Prepository=${{ secrets.REPOSITORY }}' --info -x demo:build -x matomo:build -x recast:build -x milliner:build -x postgresql:build -x fcrepo:build -x blazegraph:build
+      # N.B. when projects are excluded from building (e.g '-x <project>:build'), they also need to be excluded from pushing, below (e.g. '-x <project>:push')
+      run: ./gradlew --console plain build '-Prepository=${{ secrets.REPOSITORY }}' -x demo:build -x matomo:build -x recast:build -x milliner:build -x postgresql:build -x fcrepo:build -x blazegraph:build
     - name: Push Docker images
-      uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: push '-Prepository=${{ secrets.REPOSITORY }}' '-PregistryUrl=${{ secrets.REGISTRY_URL }}' '-PregistryUsername=${{ secrets.REGISTRY_USER }}' '-PregistryPassword=${{ secrets.REGISTRY_PASS }}' --info -x demo:push -x matomo:push -x recast:push -x milliner:push -x postgresql:push -x fcrepo:push -x blazegraph:push
-    # @todo add tests.
+      # N.B. when projects are excluded from building (e.g '-x <project>:build') above, they also need to be excluded from pushing (e.g. '-x <project>:push')
+      run: ./gradlew --console plain push '-Prepository=${{ secrets.REPOSITORY }}' '-PregistryUrl=${{ secrets.REGISTRY_URL }}' '-PregistryUsername=${{ secrets.REGISTRY_USER }}' '-PregistryPassword=${{ secrets.REGISTRY_PASS }}' -x demo:push -x matomo:push -x recast:push -x milliner:push -x postgresql:push -x fcrepo:push -x blazegraph:push
+    - name: Output image tag
+      id: output-image-tag
+      # Set the image tag, same used by the isle-gradle-docker-plugin
+      run: echo ::set-output name=image-tag::$(git describe --tags --always --first-parent)
+  test:
+    name: Run idc-isle-dc Tests
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: isle-dc
+    steps:
+      - name: Checkout idc-isle-dc
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: jhu-idc/idc-isle-dc
+          path: isle-dc
+      - name: Set image tag
+        run: |
+          echo "Using image tag ${{needs.build.outputs.image-tag}}"
+          sed -i.bak -e 's@^TAG.*$@TAG=${{needs.build.outputs.image-tag}}@' .env
+          grep TAG .env
+      - name: Make static image
+        run: make static-docker-compose.yml
+      - name: Run smoke tests
+        run: make up test
+      - name: Capture Logs
+        if: failure()
+        run: |
+          mkdir -p end-to-end/reports
+          docker-compose logs drupal > end-to-end/reports/docker-drupal.log
+          docker-compose logs > end-to-end/reports/docker-allcontainers.log
+      - name: Upload Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: end-to-end-reports
+          path: isle-dc/end-to-end/reports

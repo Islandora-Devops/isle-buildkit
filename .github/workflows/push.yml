@@ -8,9 +8,17 @@ jobs:
     name: Build Docker Images
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      image-tag: ${{ steps.output-image-tag.outputs.image-tag }}
+    defaults:
+      run:
+        working-directory: buildkit
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        path: buildkit
     - name: Setup Java
       uses: actions/setup-java@v1
       with:
@@ -23,7 +31,74 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
     - name: Build Docker images
-      uses: eskatos/gradle-command-action@v1
+      # N.B. when projects are excluded from building (e.g '-x <project>:build'), insure that other jobs (e.g. those in main.yml) are updated.
+      run: |
+        ./gradlew build -x demo:build -x matomo:build -x recast:build -x milliner:build -x postgresql:build -x fcrepo:build -x blazegraph:build
+    - name: Output image tag
+      id: output-image-tag
+      # Set the image tag, same used by the isle-gradle-docker-plugin
+      run: |
+        echo ::set-output name=image-tag::$(git describe --tags --always --first-parent)
+        echo IMAGE_TAG=$(git describe --tags --always --first-parent) >> $GITHUB_ENV
+    - name: Save Images
+      run: |
+        for imageid in `docker images |grep $IMAGE_TAG|awk '{print $3}'` ; do \
+          docker image save $imageid | gzip -1 > docker-image-$imageid.tar.gz ; \
+          echo "$imageid `docker image inspect -f '{{ index .RepoTags 1 }}' $imageid`" >> docker-image-metadata.txt ; \
+        done
+    - name: Upload Images
+      uses: actions/upload-artifact@v2
       with:
-        arguments: build --info -x demo:build -x matomo:build -x recast:build -x milliner:build -x postgresql:build -x fcrepo:build -x blazegraph:build
-    # @todo add tests.
+        name: docker-images
+        path: buildkit/docker-image-*
+  test:
+    name: Run idc-isle-dc Tests
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: isle-dc
+    steps:
+      - name: Checkout idc-isle-dc
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: jhu-idc/idc-isle-dc
+          path: isle-dc
+      - name: Download Images
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-images
+          path: isle-dc/docker-images
+      - name: Load and Tag Images
+        run: |
+          for imagefile in `ls docker-images/docker-image-*.tar.gz` ; do docker image load < $imagefile ; done
+          while read line ; do \
+            TAG=$(echo $line | awk '{print $2}') ; \
+            ID=$(echo $line | awk '{print $1}') ; \
+            docker tag $ID $TAG ; \
+          done < docker-images/docker-image-metadata.txt
+      - name: List Images
+        run: docker image ls
+      - name: Set image tag
+        run: |
+          echo "Using image tag ${{needs.build.outputs.image-tag}}"
+          sed -i.bak -e 's@^TAG.*$@TAG=${{needs.build.outputs.image-tag}}@' .env
+          egrep '^TAG' .env
+      - name: Make static image
+        run: make static-docker-compose.yml
+      - name: Run smoke tests
+        run: make up test
+      - name: Capture Logs
+        if: failure()
+        run: |
+          mkdir -p end-to-end/reports
+          docker-compose logs drupal > end-to-end/reports/docker-drupal.log
+          docker-compose logs > end-to-end/reports/docker-allcontainers.log
+      - name: Upload Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: end-to-end-reports
+          path: isle-dc/end-to-end/reports
