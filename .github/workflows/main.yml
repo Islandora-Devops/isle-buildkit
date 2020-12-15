@@ -5,7 +5,7 @@ on:
       - main
 jobs:
   build:
-    name: Build and Push Docker Images
+    name: Build and Push Buildkit Docker Images
     runs-on: ubuntu-latest
     timeout-minutes: 30
     outputs:
