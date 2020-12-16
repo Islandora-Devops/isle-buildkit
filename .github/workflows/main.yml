@@ -37,5 +37,5 @@ jobs:
     - name: Push Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: push '-Prepository=${{ secrets.REPOSITORY }}' '-PregistryUrl=${{ secrets.REGISTRY_URL }}' '-PregistryUsername=${{ secrets.REGISTRY_USER }}' '-PregistryPassword=${{ secrets.REGISTRY_PASS }}' --info
+        arguments: push '-Prepository=${{ secrets.REPOSITORY }}' '-PregistryUrl=${{ secrets.REGISTRY_URL }}' '-PregistryUsername=${{ secrets.REGISTRY_USER }}' '-PregistryPassword=${{ secrets.REGISTRY_PASS }}' --info -x demo:push -x matomo:push -x recast:push -x milliner:push -x postgresql:push -x fcrepo:push -x blazegraph:push
     # @todo add tests.
