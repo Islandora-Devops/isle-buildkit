@@ -3,7 +3,7 @@ FROM local/karaf:latest
 
 # Install common features and repos
 RUN bin/start && \
-    ALPACA_VERSION=1.0.3 && \
+    ALPACA_VERSION=1.0.4 && \
     ACTIVEMQ_VERSION=5.15.0 && \
     CAMEL_VERSION=2.20.4 && \
     bin/client -r 10 -d 5  "feature:repo-add mvn:ca.islandora.alpaca/islandora-karaf/${ALPACA_VERSION}/xml/features" && \

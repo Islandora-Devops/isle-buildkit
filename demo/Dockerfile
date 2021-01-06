@@ -1,13 +1,18 @@
 # syntax=docker/dockerfile:experimental
 FROM local/nginx:latest as composer
 
+ARG COMMIT=4460371c93d0dea87211d965b23242f412369ac3
+
 # Islandora based Drupal install.
 RUN --mount=type=cache,target=/root/.composer/cache \
     --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
     # Get the Drupal codebase
-    git clone https://github.com/dannylamb/islandora-sandbox && \
-    mv islandora-sandbox /var/www/drupal && \
+    git-clone-cached.sh \
+        --url https://github.com/dannylamb/islandora-sandbox.git \
+        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
+        --commit "${COMMIT}" \
+        --worktree /var/www/drupal && \
     cd /var/www/drupal && \
     composer install && \
     # Set up libraries

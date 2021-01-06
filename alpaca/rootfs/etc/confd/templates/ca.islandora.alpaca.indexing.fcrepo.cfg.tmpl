@@ -1,4 +1,5 @@
 error.maxRedeliveries={{ getv "/indexing/redeliveries" "10" }}
+file.external.stream={{ getv "/indexing/stream/file/external" "broker:queue:islandora-indexing-fcrepo-file-external" }}
 file.delete.stream={{ getv "/indexing/stream/file/delete" "broker:queue:islandora-indexing-fcrepo-file-delete" }}
 file.stream={{ getv "/indexing/stream/file/index" "broker:queue:islandora-indexing-fcrepo-file" }}
 gemini.baseUrl={{ getv "/indexing/gemini/url" "http://gemini:8000" }}
