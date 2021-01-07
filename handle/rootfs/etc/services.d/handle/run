@@ -1,0 +1,4 @@
+#!/usr/bin/execlineb -P
+# -*- mode: sh -*-
+# vi: set ft=sh:
+/opt/handle/bin/hdl-server /var/handle
