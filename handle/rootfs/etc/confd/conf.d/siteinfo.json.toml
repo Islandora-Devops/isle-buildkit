@@ -1,0 +1,7 @@
+[template]
+src = "siteinfo.json.tmpl"
+dest = "/var/handle/siteinfo.json"
+uid = 0
+gid = 0
+mode = "0644"
+keys = [ "/handle" ]
