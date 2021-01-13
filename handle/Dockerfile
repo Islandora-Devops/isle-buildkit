@@ -21,16 +21,12 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     POSTGRES_DRIVER_URL="https://jdbc.postgresql.org/download/${POSTGRES_DRIVER_FILE}" && \
     POSTGRES_DRIVER_FILE_SHA256="0c891979f1eb2fe44432da114d09760b5063dad9e669ac0ac6b0b6bfb91bb3ba" && \
     download.sh --url "${POSTGRES_DRIVER_URL}" --sha256 "${POSTGRES_DRIVER_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    mkdir /opt/handle && \
-    tar -xf "${DOWNLOAD_CACHE_DIRECTORY}/${HANDLE_FILE}" -C /opt/handle --strip-components=1 && \
-    tar -xf "${DOWNLOAD_CACHE_DIRECTORY}/${MYSQL_DRIVER_FILE}" -C "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    cp "${DOWNLOAD_CACHE_DIRECTORY}/${MYSQL_DRIVER_FILE%.tar.gz}/${MYSQL_DRIVER_FILE%.tar.gz}.jar" \
-        /opt/handle/lib/mysql-connector-java.jar && \
-    cp "${DOWNLOAD_CACHE_DIRECTORY}/${POSTGRES_DRIVER_FILE}" \
-        /opt/handle/lib/postgres-connector-java.jar && \
+    install-service.sh --name "handle" --file "${DOWNLOAD_CACHE_DIRECTORY}/${HANDLE_FILE}" doc handle-9.3.0-src.zip jeUpgradeTool && \
+    tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${MYSQL_DRIVER_FILE}" -C /opt/handle/lib "mysql-connector-java-${MYSQL_DRIVER_VERSION}/${MYSQL_DRIVER_FILE%%.tar.gz}.jar" --strip-components 1 && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${POSTGRES_DRIVER_FILE}" "/opt/handle/lib/${POSTGRES_DRIVER_FILE}" && \
+    mkdir -p /opt/handle /opt/keys/handle /var/handle/logs && \
+    chown -R handle:handle /opt/handle /opt/keys/handle /var/handle && \
     cleanup.sh
-
-RUN mkdir -p /var/handle/logs
 
 WORKDIR /var/handle
 

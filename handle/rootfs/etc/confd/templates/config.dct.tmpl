@@ -32,36 +32,42 @@
 
   "server_config" = {
     "server_admins" = (
-      "300:0.NA/{{ getv "/handle/prefix" "200" }}"
+      "300:0.NA/{{ getv "/prefix" "200" }}"
     )
 
     "replication_admins" = (
-      "300:0.NA/{{ getv "/handle/prefix" "200" }}"
+      "300:0.NA/{{ getv "/prefix" "200" }}"
     )
 
-    "max_session_time" = "{{ getv "/handle/maxsessiontime" "86400000"}}"
-    "this_server_id" = "{{ getv "/handle/serverid" "1" }}"
-    "max_auth_time" = "{{ getv "/handle/maxauthtime" "60000"}}"
-    "server_admin_full_access" = "{{ getv "/handle/adminfullaccess" "yes"}}"
+    "max_session_time" = "{{ getv "/maxsessiontime" "86400000" }}"
+    "this_server_id" = "{{ getv "/serverid" "1" }}"
+    "max_auth_time" = "{{ getv "/maxauthtime" "60000" }}"
+    "server_admin_full_access" = "{{ getv "/adminfullaccess" "yes" }}"
     "allow_na_admins" = "yes"
     "template_ns_override" = "no"
     "trace_resolution" = "no"
-    "case_sensitive" = "{{ getv "/handle/casesensitive" "no"}}"
+    "case_sensitive" = "{{ getv "/casesensitive" "no" }}"
     "allow_recursion" = "no"
     "allow_list_hdls" = "yes"
 
     "auto_homed_prefixes" = (
-      "0.NA/{{ getv "/handle/prefix" "200" }}"
+      "0.NA/{{ getv "/prefix" "200" }}"
     )
 
-    storage_type = "{{ getv "/handle/storage/type" "" }}"
+    storage_type = "{{ getv "/storage/type" "" }}"
 
     sql_settings = {
-      sql_url = "jdbc:{{getv "/handle/persistence/type" "mysql"}}://{{ getv "/handle/db/host" "mariadb"}}/{{ getv "/handle/db/name" "handle"}}"
-      sql_driver = "com.{{ getv "/handle/persistence/type" "mysql"}}.jdbc.Driver"
-      sql_login = "{{ getv "/handle/db/user" "root"}}"
-      sql_passwd = "{{ getv "/handle/db/password" ""}}"
-      sql_read_only = "{{ getv "/handle/db/readonly" "no"}}"
+      {{ if eq (getv "/persistence/type" "mysql") "mysql" }}
+      sql_url = "jdbc:mysql://{{ getv "/db/host" "mariadb" }}:{{ getv "/db/port" "3306" }}/{{ getv "/db/name" "handle" }}"
+      sql_driver = "com.mysql.jdbc.Driver"
+      {{ end }}
+      {{ if eq (getv "/persistence/type" "mysql") "postgresql" }}
+      sql_url = "jdbc:postgresql://{{ getv "/db/host" "postgresql" }}:{{ getv "/db/port" "5432" }}/{{ getv "/db/name" "handle" }}"
+      sql_driver = "org.postgresql.Driver"
+      {{ end }}
+      sql_login = "{{ getv "/db/user" "root" }}"
+      sql_passwd = "{{ getv "/db/password" "password" }}"
+      sql_read_only = "{{ getv "/db/readonly" "no" }}"
     }
   }
 

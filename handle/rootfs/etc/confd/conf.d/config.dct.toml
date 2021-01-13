@@ -1,7 +1,7 @@
 [template]
 src = "config.dct.tmpl"
 dest = "/var/handle/config.dct"
-uid = 0
-gid = 0
+uid = 100
+gid = 1000
 mode = "0644"
-keys = [ "/handle" ]
+keys = [ "/" ]

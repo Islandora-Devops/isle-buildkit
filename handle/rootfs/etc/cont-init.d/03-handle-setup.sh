@@ -6,7 +6,7 @@ function execute_sql_file {
         --driver "${HANDLE_PERSISTENCE_TYPE}" \
         --host "${HANDLE_DB_HOST}" \
         --port "${HANDLE_DB_PORT}" \
-        --user "root" \
+        --user "${HANDLE_DB_ROOT_USER}" \
         --password "${HANDLE_DB_ROOT_PASSWORD}" \
         "${@}"
 }
@@ -23,13 +23,13 @@ FLUSH PRIVILEGES;
 SET PASSWORD FOR ${HANDLE_DB_USER}@'%' = PASSWORD('${HANDLE_DB_PASSWORD}');
 USE ${HANDLE_DB_NAME};
 CREATE TABLE IF NOT EXISTS nas (
-na varchar(255) not null,
+na varchar(255) NOT NULL,
 PRIMARY KEY(na)
 );
 
 CREATE TABLE IF NOT EXISTS handles (
-handle varchar(255) not null,
-idx int4 not null,
+handle varchar(255) NOT NULL,
+idx int4 NOT NULL,
 type blob,
 data blob,
 ttl_type int2,
@@ -47,7 +47,7 @@ EOF
 }
 
 function mysql_create_database {
-    echo "creating db"
+    echo "Initializing MySQL database"
     execute_sql_file <(mysql_query)
 }
 
@@ -67,20 +67,20 @@ ALTER DATABASE ${HANDLE_DB_NAME} OWNER TO ${HANDLE_DB_USER};
 GRANT ALL PRIVILEGES ON DATABASE ${HANDLE_DB_NAME} TO ${HANDLE_DB_USER};
 COMMIT;
 CREATE TABLE IF NOT EXISTS nas (
-na varchar(255) not null,
+na varchar(255) NOT NULL,
 PRIMARY KEY(na)
 );
 
 CREATE TABLE IF NOT EXISTS handles (
-handle varchar(255) not null,
-idx int4 not null,
-type blob,
-data blob,
+handle varchar(255) NOT NULL,
+idx int4 NOT NULL,
+type bytea,
+data bytea,
 ttl_type int2,
 ttl int4,
 timestamp int4,
-refs blob,
-admin_read bool,
+refs bytea,
+admin_read bytea,
 admin_write bool,
 pub_read bool,
 pub_write bool,
@@ -95,6 +95,7 @@ function postgresql_database_exists {
 }
 
 function postgresql_create_database {
+    echo "Initializing PostGreSQL database"
     # Postgres does not support CREATE DATABASE IF NOT EXISTS so split our logic across multiple queries.
     if ! postgresql_database_exists; then
         execute_sql_file <(echo "CREATE DATABASE ${HANDLE_DB_NAME}")
@@ -104,10 +105,10 @@ function postgresql_create_database {
 
 function create_database {
     case "${HANDLE_PERSISTENCE_TYPE}" in
-        mysql|pdo_mysql)
+        mysql)
             mysql_create_database
             ;;
-        pgsql|postgresql|pdo_pgsql)
+        postgresql)
             postgresql_create_database
             ;;
         *)
@@ -120,10 +121,12 @@ function create_database {
 function redirect_logs_to_stdout { 
     ln -sf /dev/stdout /var/handle/logs/access.log
     ln -sf /dev/stderr /var/handle/logs/error.log
+    chown -h handle:handle /var/handle/logs/*
+    chmod o+w /dev/stdout /dev/stderr
 }
 
 function requires_database {
-    [[ "${HANDLE_PERSISTENCE_TYPE}" = "mysql" ]] || [[ "${HANDLE_PERSISTENCE_TYPE}" = "postgresql" ]]
+    [[ "${HANDLE_STORAGE_TYPE}" = "sql" ]]
 }
 
 function main {

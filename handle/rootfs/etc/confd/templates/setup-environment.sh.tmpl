@@ -1,0 +1,41 @@
+#!/usr/bin/with-contenv bash
+
+set -e
+
+# Keys are provided via a confd and placed in "/opt/keys/handle"
+function convert_key {
+  local in=${1}; shift
+  local out=${1}; shift
+  s6-setuidgid handle /opt/handle/bin/hdl-convert-key "/opt/keys/handle/${in}" -o "/var/handle/${out}"
+}
+
+# Convert keys from PEM to DES bin files
+convert_key "private.key" "privkey.bin"
+convert_key "public.key" "pubkey.bin"
+convert_key "admin.private.key" "admpriv.bin"
+convert_key "admin.public.key" "admpub.bin"
+
+# Derive HANDLE_PUBLICKEY_BASE64 from the pubkey.bin file.
+s6-env -i HANDLE_PUBLICKEY_BASE64=$(openssl base64 -A < "/var/handle/pubkey.bin") s6-dumpenv -- /var/run/s6/container_environment
+
+# The HANDLE_PUBLICKEY_BASE64 is referenced in confd templates so we must re-render them.
+with-contenv confd -onetime -sync-only
+
+# Ensure other requires properties are available as environment variables for cont-init.d scripts.
+s6-env -i \
+HANDLE_DB_NAME="{{ getv "/db/name" "handle" }}" \
+HANDLE_DB_PASSWORD="{{ getv "/db/password" "password" }}" \
+HANDLE_DB_ROOT_PASSWORD="{{ getv "/db/root/password" "password" }}" \
+HANDLE_DB_ROOT_USER="{{ getv "/db/root/user" "root" }}" \
+HANDLE_DB_USER="{{ getv "/db/user" "handle" }}" \
+HANDLE_PERSISTENCE_TYPE="{{ getv "/persistence/type" "mysql" }}" \
+HANDLE_STORAGE_TYPE="{{ getv "/storage/type" "bdbje" }}" \
+{{ if eq (getv "/persistence/type" "mysql") "mysql" }} \
+HANDLE_DB_HOST="{{ getv "/db/host" "mariadb" }}" \
+HANDLE_DB_PORT="{{ getv "/db/port" "3306" }}" \
+{{ end }} \
+{{ if eq (getv "/persistence/type" "mysql") "postgresql" }} \
+HANDLE_DB_HOST="{{ getv "/db/host" "postgresql" }}" \
+HANDLE_DB_PORT="{{ getv "/db/port" "5432" }}" \
+{{ end }} \
+s6-dumpenv -- /var/run/s6/container_environment
