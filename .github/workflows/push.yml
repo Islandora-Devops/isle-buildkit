@@ -28,8 +28,8 @@ jobs:
         echo '{"experimental": "enabled"}' > ~/.docker/config.json
     - name: Set TAG Environment Variable
       run: |
-        export TAG=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
-        echo "TAG=$TAG-$GITHUB_SHA" >> $GITHUB_ENV
+        export TAG=$(echo "${GITHUB_SHA}" | cut -d "/" -f3)
+        echo "TAG=$TAG" >> $GITHUB_ENV
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
