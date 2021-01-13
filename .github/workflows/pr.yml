@@ -1,11 +1,11 @@
-name: CI
+name: Build and Test Pull Requests
 on: 
-  push:
+  pull_request:
     branches:
       - main
 jobs:
   build:
-    name: Build and Push Latest 
+    name: Build and Test PR 
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -22,8 +22,6 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-    - name: Log in to Docker Hub
-      run: docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
     - name: Enable buildkit
       shell: bash
       run: |
@@ -31,9 +29,4 @@ jobs:
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build '-Prepository=${{ secrets.REPOSITORY }}' --info
-    - name: Push Docker images
-      uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: push '-Prepository=${{ secrets.REPOSITORY }}' '-PregistryUrl=${{ secrets.REGISTRY_URL }}' '-PregistryUsername=${{ secrets.REGISTRY_USER }}' '-PregistryPassword=${{ secrets.REGISTRY_PASS }}' --info
-    # @todo add tests.
+        arguments: build --info

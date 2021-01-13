@@ -1,4 +1,4 @@
-name: Release
+name: Build and Push Release Images
 on:
   release:
     types: [published]
