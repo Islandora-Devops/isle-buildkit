@@ -1,11 +1,9 @@
 name: CI
 on:
-  pull_request:
-    branches:
-      - main
+  push:
 jobs:
   build:
-    name: Build Docker Images
+    name: Build and Push Docker Images for Any Commit
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -22,8 +20,21 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
+    - name: Log in to Docker Hub
+      run: docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
+    - name: Enable buildkit
+      shell: bash
+      run: |
+        echo '{"experimental": "enabled"}' > ~/.docker/config.json
+    - name: Set TAG Environment Variable
+      run: |
+        export TAG=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
+        echo "TAG=$TAG-$GITHUB_SHA" >> $GITHUB_ENV
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build --info
-    # @todo add tests.
+        arguments: build '-Prepository=${{ secrets.REPOSITORY }}' --info
+    - name: Push Docker images
+      uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: push '-Ptags=${{ env.TAG }}' '-Prepository=${{ secrets.REPOSITORY }}' '-PregistryUrl=${{ secrets.REGISTRY_URL }}' '-PregistryUsername=${{ secrets.REGISTRY_USER }}' '-PregistryPassword=${{ secrets.REGISTRY_PASS }}' --info
