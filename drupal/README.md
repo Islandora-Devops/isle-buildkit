@@ -21,26 +21,32 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable            | Etcd Key                         | Default                 | Description                                               |
-| :------------------------------ | :------------------------------- | :---------------------- | :-------------------------------------------------------- |
-| DRUPAL_DB_DRIVER                | /drupal/db/driver                | mysql                   | The database driver                                       |
-| DRUPAL_DB_HOST                  | /drupal/db/host                  | database                | The database host                                         |
-| DRUPAL_DB_PORT                  | /drupal/db/port                  | 3306                    | The database port                                         |
-| DRUPAL_DB_ROOT_PASSWORD         | /drupal/db/root/password         | password                | The database root user (used to create the site database) |
-| DRUPAL_DB_ROOT_USER             | /drupal/db/root/user             | root                    | The database root user password                           |
-| DRUPAL_DEFAULT_ACCOUNT_EMAIL    | /drupal/default/account/email    | webmaster@localhost.com | The email to use for the admin account                    |
-| DRUPAL_DEFAULT_ACCOUNT_NAME     | /drupal/default/account/name     | admin                   | The Drupal administrator user                             |
-| DRUPAL_DEFAULT_ACCOUNT_PASSWORD | /drupal/default/account/password | password                | The Drupal administrator user password                    |
-| DRUPAL_DEFAULT_DB_NAME          | /drupal/default/db/name          | drupal_default          | The name of the sites database                            |
-| DRUPAL_DEFAULT_DB_PASSWORD      | /drupal/default/db/password      | password                | The database users password                               |
-| DRUPAL_DEFAULT_DB_USER          | /drupal/default/db/user          | drupal_default          | The database user used by the site                        |
-| DRUPAL_DEFAULT_EMAIL            | /drupal/default/email            | webmaster@localhost.com | The Drupal administrators email                           |
-| DRUPAL_DEFAULT_LOCALE           | /drupal/default/locale           | en                      | The Drupal sites locale                                   |
-| DRUPAL_DEFAULT_NAME             | /drupal/default/name             | default                 | The Drupal sites name                                     |
-| DRUPAL_DEFAULT_PROFILE          | /drupal/default/profile          | standard                | The installation profile to use                           |
-| DRUPAL_DEFAULT_SUBDIR           | /drupal/default/subdir           | default                 | The installation profile to use                           |
-| DRUPAL_DEFAULT_CONFIGDIR        | /drupal/default/configdir        |                         | Install using existing config files from directory        |
-| DRUPAL_DEFAULT_INSTALL          | /drupal/default/install          | true                    | Perform install if not already installed                  |
+| Environment Variable            | Etcd Key                         | Default                                         | Description                                               |
+| :------------------------------ | :------------------------------- | :---------------------------------------------- | :-------------------------------------------------------- |
+| DRUPAL_DB_DRIVER                | /drupal/db/driver                | mysql                                           | The database driver                                       |
+| DRUPAL_DB_HOST                  | /drupal/db/host                  | database                                        | The database host                                         |
+| DRUPAL_DB_PORT                  | /drupal/db/port                  | 3306                                            | The database port                                         |
+| DRUPAL_DB_ROOT_PASSWORD         | /drupal/db/root/password         | password                                        | The database root user (used to create the site database) |
+| DRUPAL_DB_ROOT_USER             | /drupal/db/root/user             | root                                            | The database root user password                           |
+| DRUPAL_DEFAULT_ACCOUNT_EMAIL    | /drupal/default/account/email    | webmaster@localhost.com                         | The email to use for the admin account                    |
+| DRUPAL_DEFAULT_ACCOUNT_NAME     | /drupal/default/account/name     | admin                                           | The Drupal administrator user                             |
+| DRUPAL_DEFAULT_ACCOUNT_PASSWORD | /drupal/default/account/password | password                                        | The Drupal administrator user password                    |
+| DRUPAL_DEFAULT_DB_NAME          | /drupal/default/db/name          | drupal_default                                  | The name of the sites database                            |
+| DRUPAL_DEFAULT_DB_PASSWORD      | /drupal/default/db/password      | password                                        | The database users password                               |
+| DRUPAL_DEFAULT_DB_USER          | /drupal/default/db/user          | drupal_default                                  | The database user used by the site                        |
+| DRUPAL_DEFAULT_EMAIL            | /drupal/default/email            | webmaster@localhost.com                         | The Drupal administrators email                           |
+| DRUPAL_DEFAULT_LOCALE           | /drupal/default/locale           | en                                              | The Drupal sites locale                                   |
+| DRUPAL_DEFAULT_NAME             | /drupal/default/name             | default                                         | The Drupal sites name                                     |
+| DRUPAL_DEFAULT_PROFILE          | /drupal/default/profile          | standard                                        | The installation profile to use                           |
+| DRUPAL_DEFAULT_SUBDIR           | /drupal/default/subdir           | default                                         | The installation profile to use                           |
+| DRUPAL_DEFAULT_CONFIGDIR        | /drupal/default/configdir        |                                                 | Install using existing config files from directory        |
+| DRUPAL_DEFAULT_INSTALL          | /drupal/default/install          | true                                            | Perform install if not already installed                  |
+| DRUPAL_JWT_PRIVATE_KEY          | /drupal/jwt/private/key          | See rootfs/etc/confd/templates/private.key.tmpl | Private key used for authentication with JWT module       |
+| DRUPAL_JWT_PUBLIC_KEY           | /drupal/jwt/public/key           | See rootfs/etc/confd/templates/public.key.tmpl  | Public key used for authentication with JWT module        |
+
+Of the above you should provide at a minium your own passwords and public /
+private key pair when running in production. The public key used here should be
+the same key as is used in the `crayfish` and `fcrepo` based containers.
 
 Additional multi-sites can be defined by adding more environment variables,
 following the above conventions, only the `DRUPAL_SITE_{SITE}_NAME` is required

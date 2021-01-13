@@ -24,8 +24,9 @@ additional settings, volumes, ports, etc.
 > `JWT_ADMIN_TOKEN` would become `GEMINI_JWT_ADMIN_TOKEN` this is to allow for
 > different settings on a per-service basis.
 
-| Environment Variable | Etcd Key         | Default   | Description |
-| :------------------- | :--------------- | :-------- | :---------- |
-| JWT_ADMIN_TOKEN      | /jwt/admin/token | islandora | JWT Token   |
+| Environment Variable | Etcd Key         | Default                                        | Description                                                           |
+| :------------------- | :--------------- | :--------------------------------------------- | :-------------------------------------------------------------------- |
+| JWT_ADMIN_TOKEN      | /jwt/admin/token | islandora                                      | JWT Token                                                             |
+| JWT_PUBLIC_KEY       | /jwt/public/key  | See rootfs/etc/confd/templates/public.key.tmpl | The public key must match the public key used in the Drupal container |
 
 [Crayfish]: https://github.com/Islandora/Crayfish/tree/main

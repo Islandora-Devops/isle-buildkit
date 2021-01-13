@@ -25,29 +25,30 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable           | Etcd Key                        | Default                           | Description |
-| :----------------------------- | :------------------------------ | :-------------------------------- | :---------- |
-| FCREPO_ACTIVEMQ_BROKER         | /fcrepo/activemq/broker         | tcp://activemq:61616              |             |
-| FCREPO_ACTIVEMQ_QUEUE          | /fcrepo/activemq/queue          | fedora                            |             |
-| FCREPO_ACTIVEMQ_TOPIC          | /fcrepo/activemq/topic          | fedora                            |             |
-| FCREPO_BINARYSTORAGE_TYPE      | /fcrepo/binarystorage/type      | file                              |             |
-| FCREPO_CATALINA_OPTS           | /fcrepo/catalina/opts           |                                   |             |
-| FCREPO_DB_HOST                 | /fcrepo/db/host                 | mariadb                           |             |
-| FCREPO_DB_NAME                 | /fcrepo/db/name                 | fcrepo                            |             |
-| FCREPO_DB_PASSWORD             | /fcrepo/db/password             | password                          |             |
-| FCREPO_DB_PORT                 | /fcrepo/db/port                 | 3306                              |             |
-| FCREPO_DB_ROOT_PASSWORD        | /fcrepo/db/root/password        | password                          |             |
-| FCREPO_DB_ROOT_USER            | /fcrepo/db/root/user            | root                              |             |
-| FCREPO_DB_USER                 | /fcrepo/db/user                 | fcrepo                            |             |
-| FCREPO_JAVA_OPTS               | /fcrepo/java/opts               |                                   |             |
-| FCREPO_JWT_ADMIN_TOKEN         | /fcrepo/jwt/admin/token         | islandora                         |             |
-| FCREPO_MODESHAPE_CONFIGURATION | /fcrepo/modeshape/configuration | classpath:/config/repository.json |             |
-| FCREPO_PERSISTENCE_TYPE        | /fcrepo/persistence/type        | file                              |             |
-| FCREPO_QUEUE                   | /fcrepo/queue                   | fedora                            |             |
-| FCREPO_S3_BUCKET               | /fcrepo/s3/bucket               |                                   |             |
-| FCREPO_S3_PASSWORD             | /fcrepo/s3/password             |                                   |             |
-| FCREPO_S3_USER                 | /fcrepo/s3/user                 |                                   |             |
-| FCREPO_TOPIC                   | /fcrepo/topic                   | fedora                            |             |
+| Environment Variable           | Etcd Key                        | Default                                        | Description                                                           |
+| :----------------------------- | :------------------------------ | :--------------------------------------------- | :-------------------------------------------------------------------- |
+| FCREPO_ACTIVEMQ_BROKER         | /fcrepo/activemq/broker         | tcp://activemq:61616                           |                                                                       |
+| FCREPO_ACTIVEMQ_QUEUE          | /fcrepo/activemq/queue          | fedora                                         |                                                                       |
+| FCREPO_ACTIVEMQ_TOPIC          | /fcrepo/activemq/topic          | fedora                                         |                                                                       |
+| FCREPO_BINARYSTORAGE_TYPE      | /fcrepo/binarystorage/type      | file                                           |                                                                       |
+| FCREPO_CATALINA_OPTS           | /fcrepo/catalina/opts           |                                                |                                                                       |
+| FCREPO_DB_HOST                 | /fcrepo/db/host                 | mariadb                                        |                                                                       |
+| FCREPO_DB_NAME                 | /fcrepo/db/name                 | fcrepo                                         |                                                                       |
+| FCREPO_DB_PASSWORD             | /fcrepo/db/password             | password                                       |                                                                       |
+| FCREPO_DB_PORT                 | /fcrepo/db/port                 | 3306                                           |                                                                       |
+| FCREPO_DB_ROOT_PASSWORD        | /fcrepo/db/root/password        | password                                       |                                                                       |
+| FCREPO_DB_ROOT_USER            | /fcrepo/db/root/user            | root                                           |                                                                       |
+| FCREPO_DB_USER                 | /fcrepo/db/user                 | fcrepo                                         |                                                                       |
+| FCREPO_JAVA_OPTS               | /fcrepo/java/opts               |                                                |                                                                       |
+| FCREPO_JWT_ADMIN_TOKEN         | /fcrepo/jwt/admin/token         | islandora                                      |                                                                       |
+| FCREPO_JWT_PUBLIC_KEY          | /fcrepo/jwt/public/key          | See rootfs/etc/confd/templates/public.key.tmpl | The public key must match the public key used in the Drupal container |
+| FCREPO_MODESHAPE_CONFIGURATION | /fcrepo/modeshape/configuration | classpath:/config/repository.json              |                                                                       |
+| FCREPO_PERSISTENCE_TYPE        | /fcrepo/persistence/type        | file                                           |                                                                       |
+| FCREPO_QUEUE                   | /fcrepo/queue                   | fedora                                         |                                                                       |
+| FCREPO_S3_BUCKET               | /fcrepo/s3/bucket               |                                                |                                                                       |
+| FCREPO_S3_PASSWORD             | /fcrepo/s3/password             |                                                |                                                                       |
+| FCREPO_S3_USER                 | /fcrepo/s3/user                 |                                                |                                                                       |
+| FCREPO_TOPIC                   | /fcrepo/topic                   | fedora                                         |                                                                       |
 
 To allow
 [external content](https://wiki.lyrasis.org/display/FEDORA51/External+Content)
