@@ -29,5 +29,4 @@ jobs:
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build '-Prepository=${{ secrets.REPOSITORY }}' --info
-    # @todo add tests.
+        arguments: build --info
