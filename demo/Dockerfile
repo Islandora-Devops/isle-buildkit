@@ -34,5 +34,3 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 FROM local/drupal:latest
 
 COPY --chown=nginx:nginx --from=composer /var/www/drupal /var/www/drupal
-
-COPY rootfs /
