@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM alpine:3.11.6
+FROM alpine:3.11.7
 
 COPY build/download.sh /usr/local/bin
 

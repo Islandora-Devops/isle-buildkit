@@ -68,7 +68,7 @@ into the destination image.
 
 ## Dependencies
 
-Requires `alpine:3.11.6` docker image to build.
+Requires `alpine:3.11.7` docker image to build.
 
 ## Reference
 
