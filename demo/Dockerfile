@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 FROM local/nginx:latest as composer
 
-ARG COMMIT=689a70347a1f7cc442a3aa211c5c9272c3db0750
+ARG COMMIT=6e9976b156e109cd87c5398afdd9786a16b0773a
 
 # Islandora based Drupal install.
 RUN --mount=type=cache,target=/root/.composer/cache \
