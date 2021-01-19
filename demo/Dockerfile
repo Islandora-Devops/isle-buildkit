@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 FROM local/nginx:latest as composer
 
-ARG COMMIT=4460371c93d0dea87211d965b23242f412369ac3
+ARG COMMIT=689a70347a1f7cc442a3aa211c5c9272c3db0750
 
 # Islandora based Drupal install.
 RUN --mount=type=cache,target=/root/.composer/cache \
@@ -25,6 +25,34 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     download.sh --url "${PDFJS_URL}" --sha256 "${PDFJS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     mkdir -p /var/www/drupal/web/libraries/pdf.js && \
     unzip "${DOWNLOAD_CACHE_DIRECTORY}/${PDFJS_FILE}" -d /var/www/drupal/web/libraries/pdf.js && \
+    # Views Slideshow Dependencies
+    ## jquery.cycle 
+    JQUERY_CYCLE_FILE="jquery.cycle.all.js" && \
+    JQUERY_CYCLE_URL="https://malsup.github.io/${JQUERY_CYCLE_FILE}" && \
+    JQUERY_CYCLE_SHA256="58b44d975e1e1f0664d0fb8ab5b2918d08e9497324a021aa93de5894cdb586d4" && \
+    mkdir -p /var/www/drupal/web/libraries/jquery.cycle && \
+    download.sh --url "${JQUERY_CYCLE_URL}" --sha256 "${JQUERY_CYCLE_SHA256}" /var/www/drupal/web/libraries/jquery.cycle && \
+    ## jquery.hoverIntent
+    JQUERY_HOVER_INTENT_FILE="jquery.hoverIntent.js" && \
+    JQUERY_HOVER_INTENT_URL="https://raw.githubusercontent.com/briancherne/jquery-hoverIntent/master/${JQUERY_HOVER_INTENT_FILE}" && \
+    JQUERY_HOVER_INTENT_SHA256="65f5f7e1298fe71f10290f4068df30b38a5df0106d6feb63210ddabcc67c3e59" && \
+    download.sh --url "${JQUERY_HOVER_INTENT_URL}" --sha256 "${JQUERY_HOVER_INTENT_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    mkdir -p /var/www/drupal/web/libraries/jquery.hoverIntent && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${JQUERY_HOVER_INTENT_FILE}" /var/www/drupal/web/libraries/jquery.hoverIntent && \
+    ## jquery.pause
+    JQUERY_PAUSE_FILE="jquery.pause.js" && \
+    JQUERY_PAUSE_URL="https://raw.githubusercontent.com/tobia/Pause/master/${JQUERY_PAUSE_FILE}" && \
+    JQUERY_PAUSE_SHA256="39505a2a9fe36fce5b987f6804723d323ac86d0ed7220a5c12094f1d698fce33" && \
+    download.sh --url "${JQUERY_PAUSE_URL}" --sha256 "${JQUERY_PAUSE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    mkdir -p /var/www/drupal/web/libraries/jquery.pause && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${JQUERY_PAUSE_FILE}" /var/www/drupal/web/libraries/jquery.pause && \
+    ## json2
+    JSON2_FILE="jquery.pause.js" && \
+    JSON2_URL="https://raw.githubusercontent.com/tobia/Pause/master/${JSON2_FILE}" && \
+    JSON2_SHA256="39505a2a9fe36fce5b987f6804723d323ac86d0ed7220a5c12094f1d698fce33" && \
+    download.sh --url "${JSON2_URL}" --sha256 "${JSON2_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    mkdir -p /var/www/drupal/web/libraries/json2 && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${JSON2_FILE}" /var/www/drupal/web/libraries/json2 && \
     # Openseadragon
     mkdir -p /var/www/drupal/web/sites/default/files/library-definitions && \
     cp /var/www/drupal/web/modules/contrib/openseadragon/openseadragon.json /var/www/drupal/web/sites/default/files/library-definitions && \
