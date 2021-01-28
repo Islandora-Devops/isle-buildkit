@@ -1,0 +1,7 @@
+[template]
+src = "syn-settings.xml.tmpl"
+dest = "/opt/tomcat/conf/syn-settings.xml"
+uid = 100
+gid = 1000
+mode = "0655"
+keys = [ "/jwt/admin/token" ]
