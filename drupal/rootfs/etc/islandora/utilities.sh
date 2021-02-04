@@ -361,18 +361,19 @@ function configure_islandora_module {
     local broker_port=$(drupal_site_env "${site}" "BROKER_PORT")
     local broker_url="tcp://${broker_host}:${broker_port}"
 
-    drush -l "${site_url}" -y pm:enable islandora 
+    drush -l "${site_url}" -y pm:enable islandora_core_feature 
     drush -l "${site_url}" -y config:set --input-format=yaml jsonld.settings remove_jsonld_format true
     drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings broker_url "${broker_url}"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.0 "islandora_object:node"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.1 "image:media"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.2 "file:media"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.3 "audio:media"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.4 "video:media"
+
+    if ! drush -l "${site_url}" role:create fedoraAdmin |& grep -q 'already exists'; then
+        drush -l "${site_url}" user:role:add fedoraAdmin admin
+    fi
 }
 
 # After enabling and importing features a number of configurations need to be updated.
 function configure_islandora_default_module {
+    if ! drush pml | grep islandora_defaults | grep -q Enabled; then return 0; fi
+
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     local host=$(drupal_site_env "${site}" "SOLR_HOST")
@@ -399,6 +400,8 @@ function configure_search_api_solr_module {
 
 # Enables and sets carapace as the default theme.
 function set_carapace_default_theme {
+    if ! drush pml | grep -q carapace; then return 0; fi
+
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     drush -l "${site_url}" -y theme:enable carapace
@@ -448,13 +451,14 @@ function create_solr_core_with_default_config {
 
 # Install matomo and configure.
 function configure_matomo_module {
+    if ! drush pml | grep matomo | grep -q Enabled; then return 0; fi
+
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     local site_id=$(($(site_index "${site}")+1))
     local matomo_url=$(drupal_site_env "${site}" "MATOMO_URL")
     local matomo_http_url="http${matomo_url#https}"
 
-    drush -l "${site_url}" -y pm:enable matomo
     drush -l "${site_url}" -y config-set matomo.settings site_id "${site_id}"
     drush -l "${site_url}" -y config-set matomo.settings url_http "${matomo_http_url}"
     drush -l "${site_url}" -y config-set matomo.settings url_https "${matomo_url}"
@@ -462,6 +466,8 @@ function configure_matomo_module {
 
 # Configure Openseadragon to point use cantaloupe.
 function configure_openseadragon  {
+    if ! drush pml | grep openseadragon | grep -q Enabled; then return 0; fi
+
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     local cantaloupe_url=$(drupal_site_env "${site}" "CANTALOUPE_URL")
