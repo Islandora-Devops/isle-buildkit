@@ -92,11 +92,7 @@ function main {
     local install_directory=/opt/${NAME}
     local user=${NAME}
     local group=${NAME}
-    # Use multiple servers as individual ones can be unreliable.
-    gpg --keyserver pool.sks-keyservers.net --recv-keys "${KEY}" \
-        || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${KEY}" \
-        || gpg --keyserver keyserver.pgp.com --recv-keys "${KEY}" \
-        || gpg --keyserver pgp.mit.edu --recv-keys "${KEY}"
+    gpg-receive-keys.sh --key ${KEY}
     gpg --verify ${FILE}.asc ${FILE}
     mkdir ${install_directory}
     addgroup ${group} && \

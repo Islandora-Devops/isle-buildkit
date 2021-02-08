@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 FROM alpine:3.11.6
 
-COPY build/download.sh /usr/local/bin
+COPY build/ /usr/local/bin/
 
 # Install packages and tools required by all downstream images.
 RUN --mount=type=cache,target=/var/cache/apk \ 
@@ -28,12 +28,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     S6_SIG_SHA256="7e9c33f45bca1f89b3a1702175a4109e99c911e47ae9de62fbec013406db2b01" && \
     download.sh --url "${S6_URL}" --sha256 "${S6_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh --url "${S6_URL}.sig" --sha256 "${S6_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    KEY="2536CA16DF4FCDA2" && \
-    (gpg --keyserver pool.sks-keyservers.net --recv-keys "${KEY}" \
-        || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${KEY}" \
-        || gpg --keyserver keyserver.pgp.com --recv-keys "${KEY}" \
-        || gpg --keyserver pgp.mit.edu --recv-keys "${KEY}" \
-    ) && \
+    gpg-receive-keys.sh --key 2536CA16DF4FCDA2 && \
     gpg "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}.sig" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}" -C / && \
     CONFD_VERSION="0.15.0" && \
