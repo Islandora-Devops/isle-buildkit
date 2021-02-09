@@ -109,6 +109,11 @@ server {
         fastcgi_intercept_errors on;
         # PHP 7 socket location.
         fastcgi_pass unix:/var/run/php-fpm7/php-fpm7.sock;
+
+        # Workaround for infinitely increasing http header size due to link rels whenever 
+        # linked entities are added to Drupal metadata
+        fastcgi_buffers {{getv "/fastcgi/buffers/number" "8"}}  {{getv "/fastcgi/buffers/size" "16k"}};
+        fastcgi_buffer_size  {{getv "/fastcgi/buffer/size" "32k"}};
     }
 
     # Fighting with Styles? This little gem is amazing.
