@@ -11,7 +11,6 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.user={{ getv "/db/user" "fcre
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.password={{ getv "/db/password" "password" }}"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.directory=file:///data/home/data/Activemq"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.configuration=file:///opt/tomcat/conf/activemq.xml"
-
 {{ if eq (getv "/disable/syn" "false") "true" }}
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.properties.management=relaxed"
 {{ end }}
