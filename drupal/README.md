@@ -41,6 +41,10 @@ additional settings, volumes, ports, etc.
 | DRUPAL_DEFAULT_SUBDIR           | /drupal/default/subdir           | default                 | The installation profile to use                           |
 | DRUPAL_DEFAULT_CONFIGDIR        | /drupal/default/configdir        |                         | Install using existing config files from directory        |
 | DRUPAL_DEFAULT_INSTALL          | /drupal/default/install          | true                    | Perform install if not already installed                  |
+| DRUPAL_FASTCGI_BUFFERS_NUMBER   | /drupal/fastcgi/buffers/number   | 8                       | nginx fastcgi_buffers number                              |
+| DRUPAL_FASTCGI_BUFFERS_SIZE     | /drupal/fastcgi/buffers/size     | 16k                     | nginx fastcgi_buffers size                                |
+| DRUPAL_FASTCGI_BUFFER_SIZE      | /drupal/fastcgi/buffer/size      | 32k                     | nginx fastcgi_buffer size                                 |
+
 
 Additional multi-sites can be defined by adding more environment variables,
 following the above conventions, only the `DRUPAL_SITE_{SITE}_NAME` is required
