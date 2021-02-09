@@ -86,6 +86,7 @@ function cmdline {
 
 function validate {
     local file=${1}
+    echo "sha256sum ${file}: " $(sha256sum "${file}" | cut -f1 -d' ')
     sha256sum "${file}" | cut -f1 -d' ' | xargs test "${CHECKSUM}" == 
 }
 

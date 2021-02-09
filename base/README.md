@@ -7,7 +7,7 @@ It's based off off [Alpine Linux], and includes [s6 overlay] and [confd].
 
 ## Dependencies
 
-Requires `alpine:3.11.6`
+Requires `alpine:3.11.7`
 
 ## Settings
 
