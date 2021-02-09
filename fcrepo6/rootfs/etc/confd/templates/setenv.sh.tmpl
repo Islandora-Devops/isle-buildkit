@@ -9,6 +9,8 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.autoversioning.enabled=false"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.url=jdbc:{{ getv "/persistance/type" "mariadb" }}://{{ getv "/db/host" "mariadb" }}:{{ getv "/db/port" "3306" }}/fcrepo"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.user={{ getv "/db/user" "fcrepo" }}"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.password={{ getv "/db/password" "password" }}"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.directory=file:///data/home/data/Activemq"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.configuration=file:///opt/tomcat/conf/activemq.xml"
 
 {{ if eq (getv "/disable/syn" "false") "true" }}
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.properties.management=relaxed"

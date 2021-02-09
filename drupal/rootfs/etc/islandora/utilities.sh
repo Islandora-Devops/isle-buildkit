@@ -365,9 +365,12 @@ function configure_islandora_module {
     drush -l "${site_url}" -y config:set --input-format=yaml jsonld.settings remove_jsonld_format true
     drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings broker_url "${broker_url}"
 
-    if ! drush -l "${site_url}" role:create fedoraAdmin |& grep -q 'already exists'; then
-        drush -l "${site_url}" user:role:add fedoraAdmin admin
+    if drush -l "${site_url}" role:list | grep -q fedoraadmin; then
+        echo "Fedora Admin role already exists.  No need to create it."
+    else
+	drush -l "${site_url}" role:create fedoraadmin fedoraAdmin
     fi
+    drush -l "${site_url}" -y user:role:add fedoraadmin admin
 }
 
 # After enabling and importing features a number of configurations need to be updated.
@@ -379,7 +382,6 @@ function configure_islandora_default_module {
     local host=$(drupal_site_env "${site}" "SOLR_HOST")
     local port=$(drupal_site_env "${site}" "SOLR_PORT")
 
-    drush -l "${site_url}" -y user:role:add fedoraadmin admin
     drush -l "${site_url}" -y config:set search_api.server.default_solr_server backend_config.connector_config.host "${host}"
     drush -l "${site_url}" -y config:set search_api.server.default_solr_server backend_config.connector_config.port "${port}"
 }
