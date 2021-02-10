@@ -30,6 +30,7 @@ Requires `islandora/java` docker image to build. Please refer to the
 | HANDLE_ADMIN_PRIVATE_KEY_PEM | /handle/admin/private/key/pem | See rootfs/etc/confd/templates/admin.private.key.tmpl | Please read the handle documentation for how this is use                                            |
 | HANDLE_ADMIN_PUBLIC_KEY_PEM  | /handle/admin/public/key/pem  | See rootfs/etc/confd/templates/admin.public.key.tmpl  | Please read the handle documentation for how this is use                                            |
 | HANDLE_ADMINFULLACCESS       | /handle/adminfullaccess       | yes                                                   | "yes" or "no". If set to "no" the "server_admins" will have default permissions at the prefix level |
+| HANDLE_ALLOWNAADMINS         | /handle/allownaadmins         | yes                                                   | "yes" or "no". Allow admins from GHR?                                                               |
 | HANDLE_CASESENSITIVE         | /handle/casesensitive         | no                                                    | "yes" or "no". Whether or not handles are case sensitive                                            |
 | HANDLE_DB_HOST               | /handle/db/host               | mariadb                                               | The database host                                                                                   |
 | HANDLE_DB_NAME               | /handle/db/name               | handle                                                | The name of the handle database                                                                     |
@@ -47,6 +48,7 @@ Requires `islandora/java` docker image to build. Please refer to the
 | HANDLE_PUBLIC_KEY_PEM        | /handle/public/key/pem        | See rootfs/etc/confd/templates/public.key.tmpl        | Please read the handle documentation for how this is use                                            |
 | HANDLE_SERVERID              | /handle/serverid              | 1                                                     | Used to distinguish from other servers within the same site                                         |
 | HANDLE_STORAGE_TYPE          | /handle/storage/type          | bdbje                                                 | Can be 'sql', if 'bdbje' make sure to create a volume at `/var/handle/bdbje` to persist changes     |
+| HANDLE_TEMPLATENSOVERRIDE    | /handle/templatensoverride    | no                                                    | Prefer server_config settings.                                                                      |
 
 **Note:** For PEM files the private key must conform to
 [PKCS#8](https://en.wikipedia.org/wiki/PKCS_8) and not
