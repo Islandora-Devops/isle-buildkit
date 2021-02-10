@@ -7,13 +7,18 @@ password = {{ getv "/db/password" "password" }}
 dbname = {{ getv "/db/name" "matomo" }}
 tables_prefix = "matomo_"
 
+; https://matomo.org/faq/how-to-install/faq_98/
 [General]
-force_ssl = 1
-proxy_uri_header = 1
-proxy_client_headers[] = "HTTP_X_FORWARDED_FOR"
-proxy_host_headers[] = "HTTP_X_FORWARDED_HOST"
-salt = "5a472390550bd59e4428a41aa472137b"
-trusted_hosts[] = {{ getv "/site/host" "islandora.isle-dc.localhost" }}
+force_ssl = {{ getv "/force/ssl" "1" }} 
+proxy_uri_header = {{ getv "/proxy/uri/header" "1" }} 
+proxy_client_headers[] = "{{ getv "/proxy/client/headers" "HTTP_X_FORWARDED_FOR" }}"
+proxy_host_headers[] = "{{ getv "/proxy/host/headers" "HTTP_X_FORWARDED_HOST" }}"
+{{if exists "/assume/secure/protocol" }}assume_secure_protocol = {{ getv "/assume/secure/protocol" }}{{ end }}
+salt = {{ getv "/salt" "5a472390550bd59e4428a41aa472137b" }} 
+trusted_hosts[] = {{ getv "/default/site/host" "islandora.isle-dc.localhost" }}
+{{ range $site := lsdir "/site" }}trusted_hosts[] = {{ getv (printf "/site/%s/host" $site) }}
+{{ end }}
+
 
 [PluginsInstalled]
 PluginsInstalled[] = "Diagnostics"
