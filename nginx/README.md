@@ -22,7 +22,7 @@ Requires `islandora/base` docker image to build. Please refer to the
 
 ### Nginx Settings
 
-| Environment Variable       | Etcd Key                    | Default | Description                                                                           |
+| Environment Variable       | Confd Key                    | Default | Description                                                                           |
 | :------------------------- | :-------------------------- | :------ | :------------------------------------------------------------------------------------ |
 | NGINX_CLIENT_MAX_BODY_SIZE | /nginx/client/max/body/size | 1m      | Specifies the maximum accepted body size of a client request                          |
 | NGINX_ERROR_LOG_LEVEL      | /nginx/error/log/level      | warn    | Log Level of Error log                                                                |
@@ -32,7 +32,7 @@ Requires `islandora/base` docker image to build. Please refer to the
 
 ### PHP Settings
 
-| Environment Variable       | Etcd Key                    | Default | Description                                                       |
+| Environment Variable       | Confd Key                    | Default | Description                                                       |
 | :------------------------- | :-------------------------- | :------ | :---------------------------------------------------------------- |
 | PHP_DEFAULT_SOCKET_TIMEOUT | /php/default/socket/timeout | 60      | Default timeout for socket based streams (seconds)                |
 | PHP_LOG_LEVEL              | /php/log/level              | notice  | Log level. Possible Values: alert, error, warning, notice, debug  |

@@ -21,9 +21,9 @@ metrics for.
 
 ## Settings
 
-| Environment Variable          | Etcd Key                       | Default                                                      | Description                                                   |
+| Environment Variable          | Confd Key                      | Default                                                      | Description                                                   |
 | :---------------------------- | :----------------------------- | :----------------------------------------------------------- | :------------------------------------------------------------ |
-| MATOMO_ASSUME_SECURE_PROTOCOL | /matomo/assume/secure/protocol |                                                              | <https://matomo.org/faq/how-to-install/faq_98/>               |
+| MATOMO_ASSUME_SECURE_PROTOCOL | /matomo/assume/secure/protocol | 1                                                            | <https://matomo.org/faq/how-to-install/faq_98/>               |
 | MATOMO_DB_DRIVER              | /matomo/db/driver              | pdo_mysql                                                    | The database driver to use                                    |
 | MATOMO_DB_HOST                | /matomo/db/host                | database                                                     | The database host                                             |
 | MATOMO_DB_NAME                | /matomo/db/name                | matomo                                                       | The database name                                             |
@@ -32,9 +32,9 @@ metrics for.
 | MATOMO_DB_ROOT_PASSWORD       | /matomo/db/root/password       | password                                                     | The root user password (used to create the database / user)   |
 | MATOMO_DB_ROOT_USER           | /matomo/db/root/user           | root                                                         | The root user (used to create the database / user)            |
 | MATOMO_DB_USER                | /matomo/db/user                | matomo                                                       | The user to create / use when interacting with the database   |
-| MATOMO_DEFAULT_SITE_HOST      | /matomo/default/site/host      | islandora.isle-dc.localhost                                  | The URL of the default site for which to gather metrics for   |
-| MATOMO_DEFAULT_SITE_NAME      | /matomo/default/site/name      | Islandora                                                    | The name of the default site                                  |
-| MATOMO_DEFAULT_SITE_TIMEZONE  | /matomo/default/site/timezone  | America/Halifax                                              | The timezone where the default site is hosted                 |
+| MATOMO_DEFAULT_HOST           | /matomo/default/host           | islandora.traefik.me                                         | The URL of the default site for which to gather metrics for   |
+| MATOMO_DEFAULT_NAME           | /matomo/default/name           | Islandora                                                    | The name of the default site                                  |
+| MATOMO_DEFAULT_TIMEZONE       | /matomo/default/timezone       | America/Halifax                                              | The timezone where the default site is hosted                 |
 | MATOMO_FORCE_SSL              | /matomo/force/ssl              | 1                                                            | <https://matomo.org/faq/how-to/faq_91/>                       |
 | MATOMO_PROXY_CLIENT_HEADERS   | /matomo/proxy/client/headers   | HTTP_X_FORWARDED_FOR                                         | <https://matomo.org/faq/how-to-install/faq_98/>               |
 | MATOMO_PROXY_HOST_HEADERS     | /matomo/proxy/host/headers     | HTTP_X_FORWARDED_HOST                                        | <https://matomo.org/faq/how-to-install/faq_98/>               |

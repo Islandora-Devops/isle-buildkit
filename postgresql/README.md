@@ -25,7 +25,7 @@ Requires `islandora/base` docker image to build. Please refer to the
 
 ## Settings
 
-| Environment Variable     | Etcd Key                  | Default  | Description                            |
+| Environment Variable     | Confd Key                  | Default  | Description                            |
 | :----------------------- | :------------------------ | :------- | :------------------------------------- |
 | POSTGRESQL_ROOT_USER     | /postgresql/root/user     | root     | The name of root user account          |
 | POSTGRESQL_ROOT_PASSWORD | /postgresql/root/password | password | The password for the root user account |

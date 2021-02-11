@@ -25,4 +25,8 @@ WORKDIR /opt/karaf
 
 EXPOSE 8101 1099 44444 8181
 
+ENV \
+    KARAF_ADMIN_NAME=admin \
+    KARAF_ADMIN_PASSWORD=password
+
 COPY rootfs /

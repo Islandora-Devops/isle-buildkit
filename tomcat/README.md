@@ -35,7 +35,7 @@ additional settings, volumes, ports, etc.
 > `CATALINA_OPTS` would become `FCREPO_CATALINA_OPTS` this is to allow for
 > different settings on a per-service basis.
 
-| Environment Variable                | Etcd Key                             | Default     | Description                                                                           |
+| Environment Variable                | Confd Key                             | Default     | Description                                                                           |
 | :---------------------------------- | :----------------------------------- | :---------- | :------------------------------------------------------------------------------------ |
 | CATALINA_OPTS                       | /catalina/opts                       |             |                                                                                       |
 | JAVA_OPTS                           | /java/opts                           |             |                                                                                       |
@@ -48,7 +48,7 @@ additional settings, volumes, ports, etc.
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:
 
-| Environment Variable        | Etcd Key                     | Description                                |
+| Environment Variable        | Confd Key                     | Description                                |
 | :-------------------------- | :--------------------------- | :----------------------------------------- |
 | TOMCAT_USER_{USER}_NAME     | /tomcat/user/{USER}/name     | The user name                              |
 | TOMCAT_USER_{USER}_PASSWORD | /tomcat/user/{USER}/password | The password for the user                  |
@@ -58,7 +58,7 @@ following the above conventions:
 
 For example to add a new user `someone` you would need to define the following:
 
-| Environment Variable         | Etcd Key                      | Value    |
+| Environment Variable         | Confd Key                      | Value    |
 | :--------------------------- | :---------------------------- | :------- |
 | TOMCAT_USER_SOMEONE_NAME     | /tomcat/user/someone/name     | someone  |
 | TOMCAT_USER_SOMEONE_PASSWORD | /tomcat/user/someone/password | password |

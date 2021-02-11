@@ -13,6 +13,9 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     ln -s /var/www/crayfish/Homarus/src /var/www/html && \
     cleanup.sh
 
+ENV \
+    HOMARUS_LOG_LEVEL=debug
+
 COPY /rootfs /
 
 RUN chown -R nginx:nginx /var/www

@@ -2,6 +2,6 @@
 # -*- mode: sh -*-
 # vi: set ft=sh:
 with-contenv
-importas -i PGDATA PGDATA
+importas -i  PGDATA
 s6-setuidgid postgres
 postgres

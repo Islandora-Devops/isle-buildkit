@@ -11,7 +11,11 @@ function uppercase {
 function matomo_site_env {
     local site="$(uppercase ${1})"; shift
     local suffix="$(uppercase ${1})"; shift
-    var="MATOMO_SITE_${site}_${suffix}"
+    if [ "${site}" = "DEFAULT" ]; then
+        var="MATOMO_DEFAULT_${suffix}"
+    else
+        var="MATOMO_SITE_${site}_${suffix}"
+    fi
     echo "${!var}"
 }
 
@@ -47,6 +51,22 @@ EXECUTE stmt;
 EOF
 }
 
+# Creates database / user if not already exists. This needs to be seperated as
+# we cannot use 'User Defined' variables to select database/tables.
+function create_database_query {
+ cat <<- EOF
+-- Create matomo database in mariadb or mysql. 
+CREATE DATABASE IF NOT EXISTS ${MATOMO_DB_NAME} CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+-- Create matomo_user and grant rights.
+CREATE USER IF NOT EXISTS ${MATOMO_DB_USER}@'%' IDENTIFIED BY "${MATOMO_DB_PASSWORD}";
+GRANT ALL PRIVILEGES ON ${MATOMO_DB_NAME}.* to ${MATOMO_DB_USER}@'%';
+FLUSH PRIVILEGES;
+
+USE ${MATOMO_DB_NAME};
+EOF
+}
+
 # Matomo only works with MySQL.
 # https://github.com/matomo-org/matomo/issues/500
 function update_query {
@@ -57,9 +77,9 @@ SET PASSWORD FOR '${MATOMO_DB_USER}'@'%' = PASSWORD('${MATOMO_DB_PASSWORD}');
 -- Update site name, host, timezone (idsite is hardcoded for the default site).
 UPDATE matomo_site set
     site = 'DEFAULT',
-    name = '${MATOMO_DEFAULT_SITE_NAME}',
-    main_url = '${MATOMO_DEFAULT_SITE_HOST}',
-    timezone = '${MATOMO_DEFAULT_SITE_TIMEZONE}'
+    name = '${MATOMO_DEFAULT_NAME}',
+    main_url = '${MATOMO_DEFAULT_HOST}',
+    timezone = '${MATOMO_DEFAULT_TIMEZONE}'
     WHERE idsite = 1;
 
 -- Update admin user password, email.
@@ -107,11 +127,24 @@ USE '${MATOMO_DB_NAME}';
 EOF
 }
 
+# https://dev.mysql.com/doc/refman/8.0/en/user-variables.html
+# Note that:
+# "User variables are intended to provide data values. They cannot be used directly in an SQL statement as an identifier or as part of an identifier..."
+function set_variables {
+   cat <<- EOF
+set @SITE_URL = "${MATOMO_DEFAULT_HOST}";
+set @SITE_NAME = "${MATOMO_DEFAULT_NAME}";
+set @SITE_TIMEZONE = "${MATOMO_DEFAULT_TIMEZONE}";
+set @USER_EMAIL = "${MATOMO_USER_EMAIL}";
+set @USER_NAME = "${MATOMO_USER_NAME}";
+set @USER_PASS = "${MATOMO_USER_PASS}";
+EOF
+}
+
 function created_database {
     if ! execute_sql_file <(exists_query); then
-        # File is created from a confd template.
         echo "Creating database: ${MATOMO_DB_NAME}"
-        execute_sql_file /var/run/islandora/create-matomo-database.sql
+        execute_sql_file <(cat <(set_variables) <(create_database_query) /etc/matomo/create-matomo-database.sql)
     else
         echo "Database: ${MATOMO_DB_NAME} already exists"
     fi

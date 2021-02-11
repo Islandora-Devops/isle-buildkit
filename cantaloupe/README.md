@@ -25,7 +25,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable                                                                   | Etcd Key                                                                                | Default                                                    |
+| Environment Variable                                                                   | Confd Key                                                                                | Default                                                    |
 | :------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- | :--------------------------------------------------------- |
 | CANTALOUPE_HTTP_ENABLED                                                                | /cantaloupe/http/enabled                                                                | true                                                       |
 | CANTALOUPE_HTTP_HOST                                                                   | /cantaloupe/http/host                                                                   | 0.0.0.0                                                    |

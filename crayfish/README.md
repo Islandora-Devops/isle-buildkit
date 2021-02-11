@@ -24,7 +24,7 @@ additional settings, volumes, ports, etc.
 > `JWT_ADMIN_TOKEN` would become `GEMINI_JWT_ADMIN_TOKEN` this is to allow for
 > different settings on a per-service basis.
 
-| Environment Variable | Etcd Key         | Default   | Description |
+| Environment Variable | Confd Key         | Default   | Description |
 | :------------------- | :--------------- | :-------- | :---------- |
 | JWT_ADMIN_TOKEN      | /jwt/admin/token | islandora | JWT Token   |
 

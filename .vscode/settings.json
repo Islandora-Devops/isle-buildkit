@@ -12,5 +12,9 @@
         "*.xml.tmpl": "xml",
         "drush": "shellscript",
         "composer": "shellscript"
-    }
+    },
+    "cSpell.words": [
+        "POSTGRESQL",
+        "getenv"
+    ]
 }

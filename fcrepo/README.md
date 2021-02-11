@@ -25,7 +25,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable           | Etcd Key                        | Default                           | Description |
+| Environment Variable           | Confd Key                        | Default                           | Description |
 | :----------------------------- | :------------------------------ | :-------------------------------- | :---------- |
 | FCREPO_ACTIVEMQ_BROKER         | /fcrepo/activemq/broker         | tcp://activemq:61616              |             |
 | FCREPO_ACTIVEMQ_QUEUE          | /fcrepo/activemq/queue          | fedora                            |             |
@@ -54,7 +54,7 @@ To allow
 provide sites as key pairs. Wherein multiple values is the url and the 'name' is
 a key that replaces the '*' symbol below.
 
-| Environment Variable    | Etcd Key                 |
+| Environment Variable    | Confd Key                 |
 | :---------------------- | :----------------------- |
 | FCREPO_ALLOW_EXTERNAL_* | /fcrepo/allow/external/* |
 

@@ -14,6 +14,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
     ln -s /var/www/crayfish/Houdini/public /var/www/html && \
     cleanup.sh
 
+ENV \
+    HOUDINI_LOG_LEVEL=debug
+
 COPY /rootfs /
 
 RUN chown -R nginx:nginx /var/www

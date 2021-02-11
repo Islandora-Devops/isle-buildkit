@@ -4,13 +4,6 @@ set -e
 readonly PROGNAME=$(basename $0)
 readonly ARGS="$@"
 
-# Define defaults if no value environment variables are specified for the following.
-readonly ETCD_HOST=${ETCD_HOST:-etcd}
-readonly ETCD_PORT=${ETCD_PORT:-2379}
-readonly ETCD_TIMEOUT=${ETCD_TIMEOUT:-0}
-readonly CONFD_LOG_LEVEL=${CONFD_LOG_LEVEL:-error}
-readonly CONFD_POLLING_INTERVAL=${CONFD_POLLING_INTERVAL:-30}
-
 function usage {
     cat <<- EOF
     usage: $PROGNAME options
@@ -71,22 +64,6 @@ function cmdline {
     return 0
 }
 
-function wait_for_connection {
-    local service="${1}"; shift
-    local host="${service}_HOST"
-    local port="${service}_PORT"
-    local duration="${service}_TIMEOUT"
-    echo "Waiting for up to ${!duration} seconds to connect to ${!host}:${!port}"
-    # Put in subshell to supress "Teminated" message that always gets printed.
-    # Its part of bashes job system and misleads those reading the log to thing
-    # there was an error at startup.
-    if $(timeout ${!duration} wait-for-open-port.sh ${!host} ${!port} &> /dev/null); then
-        return 0
-    else
-        return 1
-    fi
-}
-
 function render {
     local backend="${1}"; shift
     local onetime_args="-onetime -sync-only"
@@ -105,18 +82,20 @@ function render {
 
 function main {
     cmdline ${ARGS}
-    local backend=env # Default to env if no other backend can be reached.
+    wait-for-confd-backend.sh
+    local backend=
 
-    case "${CONFD_BACKEND:-etcdv3}" in
+    case "${CONFD_BACKEND}" in
         etcd|etcdv3)
-            if wait_for_connection ETCD; then
-                backend=etcdv3
-            fi
+            backend=etcdv3
             ;;
         env)
             backend=env
             ;;
         *)
+            # Unknown backend assume failure.
+            exit 1
+            ;;
     esac
 
     render ${backend}

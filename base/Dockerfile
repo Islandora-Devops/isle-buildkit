@@ -49,9 +49,19 @@ ENTRYPOINT [ "/init" ]
 
 LABEL License="MIT License"
 
-# https://github.com/just-containers/s6-overlay#customizing-s6-behaviour
-ENV S6_LOGGING=0 \
+# JWT_PUBLIC_KEY and JWT_PRIVATE_KEY are defined in /etc/defaults
+# As Docker does not support setting multiline environment variables via ENV.
+ENV \
+    CONFD_BACKEND=env \
+    CONFD_ENABLE_SERVICE=false \
+    CONFD_LOG_LEVEL=error \
+    CONFD_POLLING_INTERVAL=30 \
+    ETCD_CONNECTION_TIMEOUT=0 \
+    ETCD_HOST_PORT=2379 \
+    ETCD_HOST=etcd \
+    JWT_ADMIN_TOKEN=islandora \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
+    S6_LOGGING=0 \
     TERM=xterm
 
 COPY rootfs /

@@ -20,4 +20,12 @@ WORKDIR /opt/activemq
 
 EXPOSE 61616 5672 61613 1883 61614 8161
 
+# Defaults environment variables to be overloaded.
+ENV \
+    ACTIVEMQ_PASSWORD=password \
+    ACTIVEMQ_USER=admin \
+    ACTIVEMQ_WEB_ADMIN_NAME=admin \
+    ACTIVEMQ_WEB_ADMIN_PASSWORD=password \
+    ACTIVEMQ_WEB_ADMIN_ROLES=admin
+
 COPY rootfs /
