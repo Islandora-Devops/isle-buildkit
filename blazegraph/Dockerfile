@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/tomcat:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \

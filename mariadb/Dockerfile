@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/base:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
