@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/nginx:latest
 
 ARG COMMIT=85a8206a9ed1db302fdeb123f9d5391ef8aae001

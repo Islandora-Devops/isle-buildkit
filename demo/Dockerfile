@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/nginx:latest as composer
 
 # Islandora based Drupal install.
