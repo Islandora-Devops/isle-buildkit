@@ -23,7 +23,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable                       | Etcd Key                                   | Default                                              | Description                                                                                                                                                 |
+| Environment Variable                       | Confd Key                                   | Default                                              | Description                                                                                                                                                 |
 | :----------------------------------------- | :----------------------------------------- | :--------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ALPACA_ACTIVEMQ_PASSWORD                   | /alpaca/activemq/password                  | password                                             | Password to authenticate with                                                                                                                               |
 | ALPACA_ACTIVEMQ_URL                        | /alpaca/activemq/url                       | tcp://broker:61616                                   | The url for connecting to the ActiveMQ broker, shared by all components                                                                                     |

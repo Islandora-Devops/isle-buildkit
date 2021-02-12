@@ -1,13 +1,13 @@
 ---
 debug: True
 fedora_resource:
-  base_url: {{ getv "/fcrepo/url" "http://fcrepo/fcrepo/rest" }}
+  base_url: {{ getv "/fcrepo/url" (getenv "GEMINI_FCREPO_URL") }}
 log:
   # Valid log levels are:
   # debug, info, notice, warning, error, critical, alert, emergency, none
   type: stream
   file: "php://stderr"
-  level: {{ getv "/log/level" "debug" }}
+  level: {{ getv "/log/level" (getenv "GEMINI_LOG_LEVEL") }}
 syn:
   # toggles JWT security for service
   enable: true
@@ -16,9 +16,9 @@ syn:
   # https://github.com/Islandora/Syn/blob/main/conf/syn-settings.example.xml
   config: /var/www/crayfish/syn-settings.xml
 db.options:
-  driver: {{ getv "/db/driver" "pdo_mysql" }}
-  host: {{ getv "/db/host" "mariadb" }}
-  port: {{ getv "/db/port" "3306" }}
-  dbname: {{ getv "/db/name" "gemini" }}
-  user: {{ getv "/db/user" "gemini" }}
-  password: {{ getv "/db/password" "password" }}
+  driver: {{ getv "/db/driver" (getenv "GEMINI_DB_DRIVER") }}
+  host: {{ getv "/db/host" (getenv "GEMINI_DB_HOST") }}
+  port: {{ getv "/db/port" (getenv "GEMINI_DB_PORT") }}
+  dbname: {{ getv "/db/name" (getenv "GEMINI_DB_NAME") }}
+  user: {{ getv "/db/user" (getenv "GEMINI_DB_USER") }}
+  password: {{ getv "/db/password" (getenv "GEMINI_DB_PASSWORD") }}

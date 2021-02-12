@@ -52,7 +52,7 @@ Additional multi-sites can be defined by adding more environment variables,
 following the above conventions, only the `DRUPAL_SITE_{SITE}_NAME` is required
 to create an additional site:
 
-| Environment Variable                | Etcd Key                             | Default                 | Description                                        |
+| Environment Variable                | Confd Key                             | Default                 | Description                                        |
 | :---------------------------------- | :----------------------------------- | :---------------------- | :------------------------------------------------- |
 | DRUPAL_SITE_{SITE}_ACCOUNT_EMAIL    | /drupal/site/{SITE}/account/email    | webmaster@localhost.com | The email to use for the admin account             |
 | DRUPAL_SITE_{SITE}_ACCOUNT_NAME     | /drupal/site/{SITE}/account/name     | admin                   | The Drupal administrator user                      |

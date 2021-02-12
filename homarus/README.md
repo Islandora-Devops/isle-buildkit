@@ -10,7 +10,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Etcd Key           | Default | Description                                                                                       |
+| Environment Variable | Confd Key           | Default | Description                                                                                       |
 | :------------------- | :----------------- | :------ | :------------------------------------------------------------------------------------------------ |
 | HOMARUS_LOG_LEVEL    | /homarus/log/level | debug   | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 

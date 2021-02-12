@@ -19,7 +19,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable         | Etcd Key                      | Default | Description                                                                                                          |
+| Environment Variable         | Confd Key                      | Default | Description                                                                                                          |
 | :--------------------------- | :---------------------------- | :------ | :------------------------------------------------------------------------------------------------------------------- |
 | FITS_MAX_IN_MEMORY_FILE_SIZE | /fits/max/in/memory/file/size | 4       | Maximum size of an uploaded size kept in memory in MiB. Otherwise temporarily persisted to disk.                     |
 | FITS_MAX_OBJECTS_IN_POOL     | /fits/max/objects/in/pool     | 5       | Number of objects in FITSServlet object pool.                                                                        |

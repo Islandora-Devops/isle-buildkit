@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/nginx:latest
 
 ARG COMMIT=6e95f2f325c910b254a2b7bd1cedf25b17874d30
@@ -19,8 +19,12 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 
 WORKDIR /var/www/crayfits
 
-COPY /rootfs /
-
 STOPSIGNAL SIGWINCH
 
 EXPOSE 8000
+
+ENV \
+    CRAYFITS_LOG_LEVEL=debug \
+    CRAYFITS_WEBSERVICE_URI=fits/fits/examine
+
+COPY /rootfs /

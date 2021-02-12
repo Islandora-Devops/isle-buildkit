@@ -1,0 +1,32 @@
+name: Build and Test Pull Requests
+on: 
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build and Test PR 
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+    - name: Setup Gradle Cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    - name: Enable buildkit
+      shell: bash
+      run: |
+        echo '{"experimental": "enabled"}' > ~/.docker/config.json
+    - name: Build Docker images
+      uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: build --info

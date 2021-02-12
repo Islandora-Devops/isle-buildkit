@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/imagemagick:latest as imagemagick
 
 FROM local/crayfish:latest
@@ -13,6 +13,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
     php /var/www/crayfish/Houdini/bin/console cache:clear && \
     ln -s /var/www/crayfish/Houdini/public /var/www/html && \
     cleanup.sh
+
+ENV \
+    HOUDINI_LOG_LEVEL=debug
 
 COPY /rootfs /
 

@@ -55,7 +55,7 @@ To allow
 provide sites as key pairs. Wherein multiple values is the url and the 'name' is
 a key that replaces the '*' symbol below.
 
-| Environment Variable    | Etcd Key                 |
+| Environment Variable    | Confd Key                 |
 | :---------------------- | :----------------------- |
 | FCREPO_ALLOW_EXTERNAL_* | /fcrepo/allow/external/* |
 

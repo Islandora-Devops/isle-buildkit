@@ -1,5 +1,0 @@
-[template]
-src = "my.cnf.tmpl"
-dest = "/etc/my.cnf"
-mode="0644"
-keys = ["/root" ]

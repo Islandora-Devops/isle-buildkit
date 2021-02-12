@@ -10,7 +10,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable    | Etcd Key                 | Default            | Description                                                                                       |
+| Environment Variable    | Confd Key                 | Default            | Description                                                                                       |
 | :---------------------- | :----------------------- | :----------------- | :------------------------------------------------------------------------------------------------ |
 | GEMINI_DB_DRIVER        | /gemini/db/driver        | pdo_mysql          | The database driver to use                                                                        |
 | GEMINI_DB_HOST          | /gemini/db/host          | database           | The database host                                                                                 |

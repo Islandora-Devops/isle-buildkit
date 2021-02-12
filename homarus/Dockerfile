@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/crayfish:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
@@ -12,6 +12,9 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     composer install -d /var/www/crayfish/Homarus && \
     ln -s /var/www/crayfish/Homarus/src /var/www/html && \
     cleanup.sh
+
+ENV \
+    HOMARUS_LOG_LEVEL=debug
 
 COPY /rootfs /
 

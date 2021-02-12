@@ -37,7 +37,7 @@ Requires `islandora/karaf` docker image to build.
 
 ## Settings
 
-| Environment Variable | Etcd Key              | Default  | Description         |
+| Environment Variable | Confd Key              | Default  | Description         |
 | :------------------- | :-------------------- | :------- | :------------------ |
 | KARAF_ADMIN_NAME     | /karaf/admin/name     | admin    | Admin user name     |
 | KARAF_ADMIN_PASSWORD | /karaf/admin/password | password | Admin user password |
@@ -45,7 +45,7 @@ Requires `islandora/karaf` docker image to build.
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:
 
-| Environment Variable       | Etcd Key                    | Description                      |
+| Environment Variable       | Confd Key                    | Description                      |
 | :------------------------- | :-------------------------- | :------------------------------- |
 | KARAF_USER_{USER}_NAME     | /karaf/user/{USER}/name     | See [Security]: users.properties |
 | KARAF_USER_{USER}_PASSWORD | /karaf/user/{USER}/password | See [Security]: users.properties |

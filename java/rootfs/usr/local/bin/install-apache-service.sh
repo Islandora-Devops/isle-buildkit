@@ -92,7 +92,7 @@ function main {
     local install_directory=/opt/${NAME}
     local user=${NAME}
     local group=${NAME}
-    gpg --keyserver hkp://pool.sks-keyservers.net --recv-key ${KEY}
+    gpg-receive-keys.sh --key ${KEY}
     gpg --verify ${FILE}.asc ${FILE}
     install-service.sh --name "${NAME}" --file "${FILE}" ${REMOVE[@]}
 }
