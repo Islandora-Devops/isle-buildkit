@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS nas (
 na varchar(255) NOT NULL,
 PRIMARY KEY(na)
 );
+ALTER TABLE nas OWNER TO ${HANDLE_DB_USER};
 
 CREATE TABLE IF NOT EXISTS handles (
 handle varchar(255) NOT NULL,
@@ -95,7 +96,7 @@ pub_read bool,
 pub_write bool,
 PRIMARY KEY(handle, idx)
 );
-COMMIT;
+ALTER TABLE handles OWNER TO ${HANDLE_DB_USER};
 EOF
 }
 
