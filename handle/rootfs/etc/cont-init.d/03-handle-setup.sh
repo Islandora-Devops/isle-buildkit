@@ -2,6 +2,15 @@
 set -e
 
 function execute_sql_file {
+    local HANDLE_DB_HOST=""
+    local HANDLE_DB_PORT=""
+    if [[ "${HANDLE_PERSISTENCE_TYPE}" == "mysql" ]]; then
+        HANDLE_DB_HOST="${HANDLE_DB_MYSQL_HOST}"
+        HANDLE_DB_PORT="${HANDLE_DB_MYSQL_PORT}"
+    else
+        HANDLE_DB_HOST="${HANDLE_DB_POSTGRESQL_HOST}"
+        HANDLE_DB_PORT="${HANDLE_DB_POSTGRESQL_PORT}"
+    fi
     execute-sql-file.sh \
         --driver "${HANDLE_PERSISTENCE_TYPE}" \
         --host "${HANDLE_DB_HOST}" \
@@ -70,6 +79,7 @@ CREATE TABLE IF NOT EXISTS nas (
 na varchar(255) NOT NULL,
 PRIMARY KEY(na)
 );
+ALTER TABLE nas OWNER TO ${HANDLE_DB_USER};
 
 CREATE TABLE IF NOT EXISTS handles (
 handle varchar(255) NOT NULL,
@@ -86,7 +96,7 @@ pub_read bool,
 pub_write bool,
 PRIMARY KEY(handle, idx)
 );
-COMMIT;
+ALTER TABLE handles OWNER TO ${HANDLE_DB_USER};
 EOF
 }
 

@@ -62,7 +62,7 @@ Additional multi-sites can be defined by adding more environment variables,
 following the above conventions, only the `MATOMO_SITE_{SITE}_HOST` is required
 to create an additional site:
 
-| Environment Variable        | Etcd Key                     | Default         | Description                                         |
+| Environment Variable        | Confd Key                    | Default         | Description                                         |
 | :-------------------------- | :--------------------------- | :-------------- | :-------------------------------------------------- |
 | MATOMO_SITE_{SITE}_HOST     | /matomo/site/{SITE}/host     |                 | The URL of the site for which to gather metrics for |
 | MATOMO_SITE_{SITE}_NAME     | /matomo/site/{SITE}/name     | {SITE}          | The name of the site                                |
