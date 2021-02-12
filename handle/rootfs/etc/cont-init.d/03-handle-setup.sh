@@ -2,6 +2,15 @@
 set -e
 
 function execute_sql_file {
+    local HANDLE_DB_HOST=""
+    local HANDLE_DB_PORT=""
+    if [[ "${HANDLE_PERSISTENCE_TYPE}" == "mysql" ]]; then
+        HANDLE_DB_HOST="${HANDLE_DB_MYSQL_HOST}"
+        HANDLE_DB_PORT="${HANDLE_DB_MYSQL_PORT}"
+    else
+        HANDLE_DB_HOST="${HANDLE_DB_POSTGRESQL_HOST}"
+        HANDLE_DB_PORT="${HANDLE_DB_POSTGRESQL_PORT}"
+    fi
     execute-sql-file.sh \
         --driver "${HANDLE_PERSISTENCE_TYPE}" \
         --host "${HANDLE_DB_HOST}" \

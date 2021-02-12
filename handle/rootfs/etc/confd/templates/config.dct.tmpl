@@ -32,42 +32,42 @@
 
   "server_config" = {
     "server_admins" = (
-      "300:0.NA/{{ getv "/prefix" "200" }}"
+      "300:0.NA/{{ getv "/prefix" (getenv "HANDLE_PREFIX") }}"
     )
 
     "replication_admins" = (
-      "300:0.NA/{{ getv "/prefix" "200" }}"
+      "300:0.NA/{{ getv "/prefix" (getenv "HANDLE_PREFIX") }}"
     )
 
-    "max_session_time" = "{{ getv "/maxsessiontime" "86400000" }}"
-    "this_server_id" = "{{ getv "/serverid" "1" }}"
-    "max_auth_time" = "{{ getv "/maxauthtime" "60000" }}"
-    "server_admin_full_access" = "{{ getv "/adminfullaccess" "yes" }}"
-    "allow_na_admins" = "{{ getv "/allownaadmins" "yes" }}"
-    "template_ns_override" = "{{ getv "/templatensoverride" "no" }}"
+    "max_session_time" = "{{ getv "/max/session/time" (getenv "HANDLE_MAX_SESSION_TIME") }}"
+    "this_server_id" = "{{ getv "/server/id" (getenv "HANDLE_SERVER_ID") }}"
+    "max_auth_time" = "{{ getv "/max/auth/time" (getenv "HANDLE_MAX_AUTH_TIME") }}"
+    "server_admin_full_access" = "{{ getv "/admin/full/access" (getenv "HANDLE_ADMIN_FULL_ACCESS") }}"
+    "allow_na_admins" = "{{ getv "/allow/na/admins" (getenv "HANDLE_ALLOW_NA_ADMINS") }}"
+    "template_ns_override" = "{{ getv "/template/ns/override" (getenv "HANDLE_TEMPLATE_NS_OVERRIDE") }}"
     "trace_resolution" = "no"
-    "case_sensitive" = "{{ getv "/casesensitive" "no" }}"
+    "case_sensitive" = "{{ getv "/case/sensitive" (getenv "HANDLE_CASE_SENSITIVE") }}"
     "allow_recursion" = "no"
     "allow_list_hdls" = "yes"
 
     "auto_homed_prefixes" = (
-      "0.NA/{{ getv "/prefix" "200" }}"
+      "0.NA/{{ getv "/prefix" (getenv "HANDLE_PREFIX") }}"
     )
 
-    storage_type = "{{ getv "/storage/type" "" }}"
+    storage_type = "{{ getv "/storage/type" (getenv "HANDLE_STORAGE_TYPE") }}"
 
     sql_settings = {
-      {{ if eq (getv "/persistence/type" "mysql") "mysql" }}
-      sql_url = "jdbc:mysql://{{ getv "/db/host" "mariadb" }}:{{ getv "/db/port" "3306" }}/{{ getv "/db/name" "handle" }}"
+      {{ if eq (getv "/persistence/type" (getenv "HANDLE_PERSISTENCE_TYPE") ) "mysql" }}
+      sql_url = "jdbc:mysql://{{ getv "/db/mysql/host" (getenv "HANDLE_DB_MYSQL_HOST") }}:{{ getv "/db/mysql/port" (getenv "HANDLE_DB_MYSQL_PORT") }}/{{ getv "/db/name" (getenv "HANDLE_DB_NAME") }}"
       sql_driver = "com.mysql.jdbc.Driver"
       {{ end }}
-      {{ if eq (getv "/persistence/type" "mysql") "postgresql" }}
-      sql_url = "jdbc:postgresql://{{ getv "/db/host" "postgresql" }}:{{ getv "/db/port" "5432" }}/{{ getv "/db/name" "handle" }}"
+      {{ if eq (getv "/persistence/type" (getenv "HANDLE_PERSISTENCE_TYPE") ) "postgresql" }}
+      sql_url = "jdbc:postgresql://{{ getv "/db/postgresql/host" (getenv "HANDLE_DB_POSTGRESQL_HOST") }}:{{ getv "/db/postgresql/port" (getenv "HANDLE_DB_POSTGRESQL_PORT") }}/{{ getv "/db/name" (getenv "HANDLE_DB_NAME") }}"
       sql_driver = "org.postgresql.Driver"
       {{ end }}
-      sql_login = "{{ getv "/db/user" "root" }}"
-      sql_passwd = "{{ getv "/db/password" "password" }}"
-      sql_read_only = "{{ getv "/db/readonly" "no" }}"
+      sql_login = "{{ getv "/db/user" (getenv "HANDLE_DB_USER") }}"
+      sql_passwd = "{{ getv "/db/password" (getenv "HANDLE_DB_PASSWORD") }}"
+      sql_read_only = "{{ getv "/db/readonly" (getenv "HANDLE_DB_READONLY") }}"
     }
   }
 
