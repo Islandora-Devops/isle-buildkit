@@ -21,7 +21,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable            | Etcd Key                         | Default                                         | Description                                               |
+| Environment Variable            | Confd Key                        | Default                                         | Description                                               |
 | :------------------------------ | :------------------------------- | :---------------------------------------------- | :-------------------------------------------------------- |
 | DRUPAL_DB_DRIVER                | /drupal/db/driver                | mysql                                           | The database driver                                       |
 | DRUPAL_DB_HOST                  | /drupal/db/host                  | database                                        | The database host                                         |

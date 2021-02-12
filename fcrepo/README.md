@@ -25,7 +25,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable           | Etcd Key                        | Default                                        | Description                                                           |
+| Environment Variable           | Confd Key                       | Default                                        | Description                                                           |
 | :----------------------------- | :------------------------------ | :--------------------------------------------- | :-------------------------------------------------------------------- |
 | FCREPO_ACTIVEMQ_BROKER         | /fcrepo/activemq/broker         | tcp://activemq:61616                           |                                                                       |
 | FCREPO_ACTIVEMQ_QUEUE          | /fcrepo/activemq/queue          | fedora                                         |                                                                       |
