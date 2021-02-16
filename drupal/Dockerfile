@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/nginx:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \
@@ -23,6 +23,44 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
 
 WORKDIR /var/www/drupal
 
-COPY rootfs /
-
 EXPOSE 80
+
+ENV \
+    DRUPAL_DEFAULT_ACCOUNT_EMAIL=webmaster@localhost.com \
+    DRUPAL_DEFAULT_ACCOUNT_NAME=admin \
+    DRUPAL_DEFAULT_ACCOUNT_PASSWORD=password \
+    DRUPAL_DEFAULT_BROKER_HOST=activemq \
+    DRUPAL_DEFAULT_BROKER_PORT=61613 \
+    DRUPAL_DEFAULT_CANTALOUPE_URL=https://islandora.traefik.me/cantaloupe/iiif/2 \
+    DRUPAL_DEFAULT_CONFIGDIR=/var/www/drupal/config/sync \
+    DRUPAL_DEFAULT_DB_DRIVER=mysql \
+    DRUPAL_DEFAULT_DB_HOST=mariadb \
+    DRUPAL_DEFAULT_DB_NAME=drupal_default \
+    DRUPAL_DEFAULT_DB_PASSWORD=password \
+    DRUPAL_DEFAULT_DB_PORT=3306 \
+    DRUPAL_DEFAULT_DB_ROOT_PASSWORD=password \
+    DRUPAL_DEFAULT_DB_ROOT_USER=root \
+    DRUPAL_DEFAULT_DB_USER=drupal_default \
+    DRUPAL_DEFAULT_EMAIL=webmaster@localhost.com \
+    DRUPAL_DEFAULT_FCREPO_HOST=islandora.traefik.me \
+    DRUPAL_DEFAULT_FCREPO_PORT=8081 \
+    DRUPAL_DEFAULT_GEMINI_HOST=gemini \
+    DRUPAL_DEFAULT_GEMINI_PORT=8000 \
+    DRUPAL_DEFAULT_INSTALL=true \
+    DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG=false \
+    DRUPAL_DEFAULT_LOCALE=en \
+    DRUPAL_DEFAULT_MATOMO_URL=https://islandora.traefik.me/matomo/ \
+    DRUPAL_DEFAULT_NAME=Default \
+    DRUPAL_DEFAULT_PROFILE=standard \
+    DRUPAL_DEFAULT_SALT=9PPaL0CxZAIcq0l9wxgDGlCZrp7JdT_x7v9gVzpdbUjMt1PqDz3uD0Zy-i16DuJ1-Htuq5hqeg \
+    DRUPAL_DEFAULT_SITE_URL=https://islandora.traefik.me \
+    DRUPAL_DEFAULT_SOLR_CORE=ISLANDORA \
+    DRUPAL_DEFAULT_SOLR_HOST=solr \
+    DRUPAL_DEFAULT_SOLR_PORT=8983 \
+    DRUPAL_DEFAULT_SUBDIR=default \
+    DRUPAL_DEFAULT_TRIPLESTORE_HOST=blazegraph \
+    DRUPAL_DEFAULT_TRIPLESTORE_NAMESPACE=islandora \
+    DRUPAL_DEFAULT_TRIPLESTORE_PORT=80 \
+    DRUPAL_SITES=DEFAULT
+
+COPY rootfs /

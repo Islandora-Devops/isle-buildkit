@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/nginx:latest as composer
 
 ARG COMMIT=6e9976b156e109cd87c5398afdd9786a16b0773a

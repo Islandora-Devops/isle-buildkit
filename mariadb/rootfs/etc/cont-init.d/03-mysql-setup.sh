@@ -1,5 +1,5 @@
 #!/usr/bin/with-contenv bash
-set -e
+set -ex
 
 # Make run directory if it does not exist.
 mkdir /run/mysqld &> /dev/null || true
@@ -22,7 +22,13 @@ done
 
 # Change the root users password.
 echo "Changing the root users password."
-mysql --no-defaults --protocol=socket --user=root < /var/run/islandora/set-root-user-password.sql
+cat <<- EOF | mysql --no-defaults --protocol=socket --user=root 
+CREATE USER IF NOT EXISTS 'root'@'%';
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
+SET PASSWORD FOR 'root'@'%' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+EOF
 
 # Stop the database.
 kill -s TERM ${MYSQLD_PID}

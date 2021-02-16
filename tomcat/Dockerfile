@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/java:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
@@ -25,5 +25,14 @@ RUN --mount=type=cache,target=/var/cache/apk \
 WORKDIR /opt/tomcat
 
 EXPOSE 8080
+
+ENV \
+    CATALINA_OPTS= \
+    NGINX_CLIENT_MAX_BODY_SIZE=0 \
+    TOMCAT_ADMIN_NAME=admin \
+    TOMCAT_ADMIN_PASSWORD=password \
+    TOMCAT_ADMIN_ROLES=manager-gui \
+    TOMCAT_LOG_LEVEL=ALL \
+    TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE=^.*$
 
 COPY rootfs /

@@ -10,9 +10,9 @@
 
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.houdini" update-strategy="reload" >
     <cm:default-properties>
-      <cm:property name="error.maxRedeliveries" value="{{ getv "/houdini/redeliveries" "10" }}"/>
-      <cm:property name="in.stream" value="{{ getv "/houdini/queue" "broker:queue:islandora-connector-houdini" }}"/>
-      <cm:property name="derivative.service.url" value="{{ getv "/houdini/service" "http://houdini:8000/convert" }}"/>
+      <cm:property name="error.maxRedeliveries" value="{{ getv "/houdini/redeliveries" (getenv "ALPACA_HOUDINI_REDELIVERIES") }}"/>
+      <cm:property name="in.stream" value="{{ getv "/houdini/queue" (getenv "ALPACA_HOUDINI_QUEUE") }}"/>
+      <cm:property name="derivative.service.url" value="{{ getv "/houdini/service" (getenv "ALPACA_HOUDINI_SERVICE") }}"/>
     </cm:default-properties>
   </cm:property-placeholder>
 

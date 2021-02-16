@@ -1,10 +1,10 @@
 ---
 
-fedora_base_url: {{ getv "/fcrepo/url" "fcrepo/fcrepo/rest" }}
+fedora_base_url: {{ getv "/fcrepo/url" (getenv "RECAST_FCREPO_URL") }}
 # if drupal_base_url contains a path, be sure to include trailing slash
 # or relative paths will not resolve correctly.
-drupal_base_url: {{ getv "/drupal/url" "drupal:80" }}
-gemini_base_url: {{ getv "/gemini/url" "gemini:8000" }}
+drupal_base_url: {{ getv "/drupal/url" (getenv "RECAST_DRUPAL_URL") }}
+gemini_base_url: {{ getv "/gemini/url" (getenv "RECAST_GEMINI_URL") }}
 
 debug: false
 
@@ -12,7 +12,7 @@ log:
   # Valid log levels are:
   # debug, info, notice, warning, error, critical, alert, emergency, none
   file: "php://stderr"
-  level: {{ getv "/log/level" "debug" }}
+  level: {{ getv "/log/level" (getenv "RECAST_LOG_LEVEL") }}
 
 syn:
   # toggles JWT security for service

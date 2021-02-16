@@ -1,4 +1,7 @@
 #!/usr/bin/with-contenv bash
 set -e
 
-s6-svscanctl -t /var/run/s6/services
+# Only shutdown the container if this service was enabled otherwise ignore.
+if [[ "${CONFD_ENABLE_SERVICE}" == "true" ]]; then
+  s6-svscanctl -t /var/run/s6/services
+fi

@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/crayfish:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
@@ -19,6 +19,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
     composer install -d /var/www/crayfish/Hypercube && \
     ln -s /var/www/crayfish/Hypercube/src /var/www/html && \
     cleanup.sh
+
+RUN \
+    HYPERCUBE_FCREPO_URL=fcrepo/fcrepo/rest \
+    HYPERCUBE_LOG_LEVEL=debug
 
 COPY /rootfs /
 

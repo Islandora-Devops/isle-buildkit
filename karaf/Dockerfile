@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/java:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
@@ -24,5 +24,9 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
 WORKDIR /opt/karaf
 
 EXPOSE 8101 1099 44444 8181
+
+ENV \
+    KARAF_ADMIN_NAME=admin \
+    KARAF_ADMIN_PASSWORD=password
 
 COPY rootfs /

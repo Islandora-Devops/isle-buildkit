@@ -92,16 +92,8 @@ function main {
     local install_directory=/opt/${NAME}
     local user=${NAME}
     local group=${NAME}
-    gpg --keyserver hkp://pool.sks-keyservers.net --recv-key ${KEY}
+    gpg-receive-keys.sh --key ${KEY}
     gpg --verify ${FILE}.asc ${FILE}
-    mkdir ${install_directory}
-    addgroup ${group} && \
-    adduser --system --disabled-password --no-create-home --ingroup ${group} --shell /sbin/nologin --home ${install_directory} ${user}
-    chown ${user}:${group} ${install_directory}
-    s6-setuidgid ${user} tar -xzf ${FILE} -C ${install_directory} --strip-components 1
-    for i in "${REMOVE[@]}"; do
-        rm -fr "${install_directory}/${i}"
-    done
-    cleanup.sh
+    install-service.sh --name "${NAME}" --file "${FILE}" ${REMOVE[@]}
 }
 main

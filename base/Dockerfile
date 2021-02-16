@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM alpine:3.11.6
 
-COPY build/download.sh /usr/local/bin
+COPY build/ /usr/local/bin/
 
 # Install packages and tools required by all downstream images.
 RUN --mount=type=cache,target=/var/cache/apk \ 
@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     S6_SIG_SHA256="7e9c33f45bca1f89b3a1702175a4109e99c911e47ae9de62fbec013406db2b01" && \
     download.sh --url "${S6_URL}" --sha256 "${S6_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh --url "${S6_URL}.sig" --sha256 "${S6_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    gpg --keyserver hkp://pool.sks-keyservers.net --recv-key 2536CA16DF4FCDA2 && \
+    gpg-receive-keys.sh --key 2536CA16DF4FCDA2 && \
     gpg "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}.sig" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}" -C / && \
     CONFD_VERSION="0.15.0" && \
@@ -44,9 +44,19 @@ ENTRYPOINT [ "/init" ]
 
 LABEL License="MIT License"
 
-# https://github.com/just-containers/s6-overlay#customizing-s6-behaviour
-ENV S6_LOGGING=0 \
+# JWT_PUBLIC_KEY and JWT_PRIVATE_KEY are defined in /etc/defaults
+# As Docker does not support setting multiline environment variables via ENV.
+ENV \
+    CONFD_BACKEND=env \
+    CONFD_ENABLE_SERVICE=false \
+    CONFD_LOG_LEVEL=error \
+    CONFD_POLLING_INTERVAL=30 \
+    ETCD_CONNECTION_TIMEOUT=0 \
+    ETCD_HOST_PORT=2379 \
+    ETCD_HOST=etcd \
+    JWT_ADMIN_TOKEN=islandora \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
+    S6_LOGGING=0 \
     TERM=xterm
 
 COPY rootfs /

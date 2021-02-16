@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/base:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
@@ -13,5 +13,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     cleanup.sh
 
 EXPOSE 3306
+
+ENV MYSQL_ROOT_PASSWORD=password
 
 COPY rootfs /

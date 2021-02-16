@@ -1,9 +1,8 @@
-error.maxRedeliveries={{ getv "/indexing/redeliveries" "10" }}
-file.external.stream={{ getv "/indexing/stream/file/external" "broker:queue:islandora-indexing-fcrepo-file-external" }}
-file.delete.stream={{ getv "/indexing/stream/file/delete" "broker:queue:islandora-indexing-fcrepo-file-delete" }}
-file.stream={{ getv "/indexing/stream/file/index" "broker:queue:islandora-indexing-fcrepo-file" }}
-gemini.baseUrl={{ getv "/indexing/gemini/url" "http://gemini:8000" }}
-media.stream={{ getv "/indexing/stream/media/index" "broker:queue:islandora-indexing-fcrepo-media" }}
-milliner.baseUrl={{ getv "/indexing/milliner/url" "http://milliner:8000" }}
-node.delete.stream={{ getv "/indexing/stream/node/delete" "broker:queue:islandora-indexing-fcrepo-delete" }}
-node.stream={{ getv "/indexing/stream/node/index" "broker:queue:islandora-indexing-fcrepo-content" }}
+error.maxRedeliveries={{ getv "/indexing/redeliveries" (getenv "ALPACA_INDEXING_REDELIVERIES") }}
+file.external.stream={{ getv "/indexing/stream/file/external" (getenv "ALPACA_INDEXING_STREAM_FILE_EXTERNAL") }}
+file.delete.stream={{ getv "/indexing/stream/file/delete" (getenv "ALPACA_INDEXING_STREAM_FILE_DELETE") }}
+file.stream={{ getv "/indexing/stream/file/index" (getenv "ALPACA_INDEXING_STREAM_FILE_INDEX") }}
+media.stream={{ getv "/indexing/stream/media/index" (getenv "ALPACA_INDEXING_STREAM_MEDIA_INDEX") }}
+milliner.baseUrl={{ getv "/indexing/milliner/url" (getenv "ALPACA_INDEXING_MILLINER_URL") }}
+node.delete.stream={{ getv "/indexing/stream/node/delete" (getenv "ALPACA_INDEXING_STREAM_NODE_DELETE") }}
+node.stream={{ getv "/indexing/stream/node/index" (getenv "ALPACA_INDEXING_STREAM_NODE_INDEX") }}

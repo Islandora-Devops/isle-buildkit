@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM local/base:latest
 
 # Install packages and tools required by all downstream images.
@@ -10,6 +10,8 @@ RUN --mount=type=cache,target=/var/cache/apk \
     && \
     cleanup.sh
 
-ENV JAVA_HOME=/usr/lib/jvm/default-jvm
+ENV \
+    JAVA_HOME=/usr/lib/jvm/default-jvm \
+    JAVA_OPTS=
 
 COPY rootfs /
