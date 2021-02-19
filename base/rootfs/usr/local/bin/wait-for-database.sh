@@ -123,7 +123,7 @@ function postgresql_validate_credentials {
 function validate_credentials {
     echo "Validating Database credentials"
     case "${DRIVER}" in
-        mysql|pdo_mysql)
+        mysql|pdo_mysql|mariadb)
             mysql_validate_credentials
             ;;
         pgsql|postgresql|pdo_pgsql)

@@ -162,7 +162,7 @@ function postgresql_execute_sql_file {
 
 function execute_sql_file {
     case "${DRIVER}" in
-        mysql|pdo_mysql)
+        mysql|pdo_mysql|mariadb)
             mysql_execute_sql_file
             ;;
         pgsql|postgresql|pdo_pgsql)

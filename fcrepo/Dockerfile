@@ -41,10 +41,12 @@ ENV \
     FCREPO_DB_POSTGRESQL_PORT=5432 \
     FCREPO_DB_ROOT_USER=root \
     FCREPO_DB_USER=fcrepo \
+    FCREPO_DISABLE_SYN=false \
     FCREPO_MODESHAPE_CONFIGURATION=classpath:/config/repository.json \
     FCREPO_PERSISTENCE_TYPE=file \
     FCREPO_S3_BUCKET= \
     FCREPO_S3_PASSWORD= \
-    FCREPO_S3_USER=
+    FCREPO_S3_USER= \
+    FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin
 
 COPY rootfs /

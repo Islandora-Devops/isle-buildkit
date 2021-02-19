@@ -66,7 +66,8 @@ function postgresql_create_database {
 
 function create_database {
     case "${FCREPO_PERSISTENCE_TYPE}" in
-        mysql|pdo_mysql)
+        mysql|pdo_mysql|mariadb)
+	    echo "Creating database in mysql/mariadb"
             mysql_create_database
             ;;
         pgsql|postgresql|pdo_pgsql)
@@ -85,7 +86,7 @@ function redirect_logs_to_stdout {
 }
 
 function requires_database {
-    [[ "${FCREPO_PERSISTENCE_TYPE}" = "mysql" ]] || [[ "${FCREPO_PERSISTENCE_TYPE}" = "postgresql" ]]
+    [[ "${FCREPO_PERSISTENCE_TYPE}" = "mysql" || "${FCREPO_PERSISTENCE_TYPE}" = "mariadb" || "${FCREPO_PERSISTENCE_TYPE}" = "postgresql" ]]
 }
 
 function main {

@@ -6,7 +6,7 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.velocity.runtime.log=/opt/tomcat
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.jms.baseUrl=http://{{ index (lookupIP (getenv "HOSTNAME")) 0 }}/fcrepo/rest"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.external.content.allowed=/opt/tomcat/conf/allowed-external-content.txt"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.autoversioning.enabled=false"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.url=jdbc:{{ getv "/persistance/type" (getenv "FCREPO_PERSISTANCE_TYPE") }}://{{ getv "/db/host" (getenv "FCREPO_DB_HOST") }}:{{ getv "/db/port" (getenv "FCREPO_DB_PORT") }}/fcrepo"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.url=jdbc:{{ getv "/persistence/type" (getenv "FCREPO_PERSISTENCE_TYPE") }}://{{ getv "/db/host" (getenv "FCREPO_DB_HOST") }}:{{ getv "/db/port" (getenv "FCREPO_DB_PORT") }}/fcrepo"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.user={{ getv "/db/user" (getenv "FCREPO_DB_USER") }}"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.password={{ getv "/db/password" (getenv "FCREPO_DB_PASSWORD") }}"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.directory=file:///data/home/data/Activemq"
