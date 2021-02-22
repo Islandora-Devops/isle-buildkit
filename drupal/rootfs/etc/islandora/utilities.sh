@@ -77,7 +77,6 @@ function wait_for_required_services {
         wait_for_service "${site}" "SOLR"
         wait_for_service "${site}" "FCREPO"
         wait_for_service "${site}" "BROKER"
-        wait_for_service "${site}" "GEMINI"
         wait_for_service "${site}" "TRIPLESTORE"
     fi
 }
