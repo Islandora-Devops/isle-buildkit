@@ -374,7 +374,10 @@ function configure_islandora_module {
 
 # After enabling and importing features a number of configurations need to be updated.
 function configure_islandora_default_module {
-    if ! drush pml | grep islandora_defaults | grep -q Enabled; then return 0; fi
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q islandora_defaults; then
+	echo "islandora_defaults is not installed.  Skipping configuration"
+        return 0
+    fi
 
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
@@ -401,11 +404,13 @@ function configure_search_api_solr_module {
 
 # Enables and sets carapace as the default theme.
 function set_carapace_default_theme {
-    if ! drush pml | grep -q carapace; then return 0; fi
+    if ! drush pm-list --pipe --type=theme --status=enabled --no-core | grep -q carapace; then
+	echo "carapace is not available. Skipping configuration."
+        return 0
+    fi
 
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
-    drush -l "${site_url}" -y theme:enable carapace
     drush -l "${site_url}" -y config:set system.theme default carapace
 }
 
@@ -452,7 +457,10 @@ function create_solr_core_with_default_config {
 
 # Install matomo and configure.
 function configure_matomo_module {
-    if ! drush pml | grep matomo | grep -q Enabled; then return 0; fi
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q matomo; then
+	echo "matomo is not installed.  Skipping configuration"
+        return 0
+    fi
 
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
@@ -467,7 +475,10 @@ function configure_matomo_module {
 
 # Configure Openseadragon to point use cantaloupe.
 function configure_openseadragon  {
-    if ! drush pml | grep openseadragon | grep -q Enabled; then return 0; fi
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q openseadragon; then
+	echo "openseadragon is not installed.  Skipping configuration"
+        return 0
+    fi
 
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
