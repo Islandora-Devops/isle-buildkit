@@ -15,18 +15,18 @@ s6-setuidgid mysql mysqld --skip-networking &
 MYSQLD_PID=$!
 
 # Wait for it to startup.
-until mysql --no-defaults --protocol=socket --user=root -e "SELECT 1" &> /dev/null; 
+until mysql --no-defaults --protocol=socket --user=root -e "SELECT 1" &> /dev/null;
 do
 sleep 1
 done
 
 # Change the root users password.
 echo "Changing the root users password."
-cat <<- EOF | mysql --no-defaults --protocol=socket --user=root 
+cat <<- EOF | mysql --no-defaults --protocol=socket --user=root
 CREATE USER IF NOT EXISTS 'root'@'%';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
 SET PASSWORD FOR 'root'@'%' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
 
