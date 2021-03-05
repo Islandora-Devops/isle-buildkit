@@ -1,10 +1,11 @@
 ---
 
-fedora_base_url: {{ getv "/fcrepo/url" (getenv "RECAST_FCREPO_URL") }}
+fedora_resource:
+  base_url: {{ getv "/fcrepo/url" (getenv "RECAST_FCREPO_URL") }}
+
 # if drupal_base_url contains a path, be sure to include trailing slash
 # or relative paths will not resolve correctly.
 drupal_base_url: {{ getv "/drupal/url" (getenv "RECAST_DRUPAL_URL") }}
-gemini_base_url: {{ getv "/gemini/url" (getenv "RECAST_GEMINI_URL") }}
 
 debug: false
 
