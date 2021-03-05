@@ -23,11 +23,26 @@ set -e
 # Write those to the container environment if not already present. The container
 # environment has already been initialized by this point and contains levels 3 and
 # 4 as mentioned in the top of this file.
-/bin/exec -c \
-    s6-envdir -fn -- /etc/defaults \
-    s6-envdir -fn -- /var/run/s6/container_environment \
-    s6-envdir -fn -- /run/secrets \
-    s6-dumpenv -- /var/run/s6/container_environment
+
+# Temporary conditional to prevent issues with Kubernetes as `s6-envdir` expects the
+# folder to contain only files, Kubernetes mounts a folder in this location and works
+# with secrets in a different way. At a later time we'll revisit our convention to
+# hopefully support all that Kuberentes has to offer while not degrading the
+# quality of Swarm or Docker Compose. At the moment Kubernetes users will need
+# to inject the secrets as environment variables. Please see
+# https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables
+if [[ $(find /run/secrets -mindepth 1 -maxdepth 1 -type d | wc -l) > 0 ]]; then
+    /bin/exec -c \
+        s6-envdir -fn -- /etc/defaults \
+        s6-envdir -fn -- /var/run/s6/container_environment \
+        s6-dumpenv -- /var/run/s6/container_environment
+else
+    /bin/exec -c \
+        s6-envdir -fn -- /etc/defaults \
+        s6-envdir -fn -- /var/run/s6/container_environment \
+        s6-envdir -fn -- /run/secrets \
+        s6-dumpenv -- /var/run/s6/container_environment
+fi
 
 # Temporary directory to deposit generated confd configuration templates and
 # output, etc.
