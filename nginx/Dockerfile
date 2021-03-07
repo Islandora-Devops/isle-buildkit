@@ -1,9 +1,25 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/base:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/base:${tag} AS download
 
-RUN --mount=type=cache,target=/var/cache/apk \ 
-    --mount=type=cache,target=/etc/cache/apk \ 
-    apk-install.sh \
+# https://getcomposer.org/download/
+RUN --mount=type=cache,id=nginx-downloads,sharing=locked,target=/opt/downloads \
+    COMPOSER_VERSION="2.0.4" && \
+    COMPOSER_FILE="composer.phar" && \
+    COMPOSER_URL="https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}" && \
+    COMPOSER_SHA256="c3b2bc477429c923c69f7f9b137e06b2a93c6a1e192d40ffad1741ee5d54760d" && \
+    download.sh --url "${COMPOSER_URL}" --sha256 "${COMPOSER_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${COMPOSER_FILE}" /usr/bin/composer && \
+    chmod a+x /usr/bin/composer
+
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/base:${tag}
+
+COPY --from=download /usr/bin/composer /usr/bin/composer
+
+RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
         nginx \
         php7 \
         php7-ctype \
@@ -19,8 +35,8 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-opcache \
         php7-openssl \
         php7-pdo \
-        php7-pdo_mysql \ 
-        php7-pdo_pgsql \ 
+        php7-pdo_mysql \
+        php7-pdo_pgsql \
         php7-phar \
         php7-session \
         php7-simplexml \
@@ -30,17 +46,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-xsl \
     && \
     cleanup.sh
-
-# https://getcomposer.org/download/
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    COMPOSER_VERSION="2.0.4" && \
-    COMPOSER_FILE="composer.phar" && \
-    COMPOSER_URL="https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}" && \
-    COMPOSER_SHA256="c3b2bc477429c923c69f7f9b137e06b2a93c6a1e192d40ffad1741ee5d54760d" && \
-    download.sh --url "${COMPOSER_URL}" --sha256 "${COMPOSER_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    cp "${DOWNLOAD_CACHE_DIRECTORY}/${COMPOSER_FILE}" /usr/bin/composer && \
-    chmod a+x /usr/bin/composer
 
 ENV \
     NGINX_CLIENT_MAX_BODY_SIZE=0 \
@@ -55,7 +60,7 @@ ENV \
     PHP_MAX_FILE_UPLOADS=20 \
     PHP_MAX_INPUT_TIME=60 \
     PHP_MEMORY_LIMIT=256M \
-    PHP_POST_MAX_SIZE=0 \
+    PHP_POST_MAX_SIZE=128M \
     PHP_UPLOAD_MAX_FILESIZE=128M
 
 COPY rootfs /

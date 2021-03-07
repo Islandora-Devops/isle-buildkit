@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/tomcat:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/tomcat:${tag} AS download
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=fits-downloads,sharing=locked,target=/opt/downloads \
     FITSSERVLET_VERSION=1.2.1 && \
     FITSSERVLET_FILE="fits-${FITSSERVLET_VERSION}.war" && \
     FITSSERVLET_URL="http://projects.iq.harvard.edu/files/fits/files/${FITSSERVLET_FILE}" && \
@@ -15,7 +16,33 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     FITS_SHA256="1378a78892db103b3a00e45c510b58c70e19a1a401b3720ff4d64a51438bfe0b" && \
     mkdir /opt/fits && \
     download.sh --url "${FITS_URL}" --sha256 "${FITS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    unzip "${DOWNLOAD_CACHE_DIRECTORY}/${FITS_FILE}" -d /opt/fits
+    unzip "${DOWNLOAD_CACHE_DIRECTORY}/${FITS_FILE}" -d /opt/fits && \
+    rm -fr \
+        /opt/fits/lib/jna-* \
+        /opt/fits/tools/exiftool/perl/html \
+        /opt/fits/tools/exiftool/windows \
+        /opt/fits/tools/file_utility_windows \
+        /opt/fits/tools/mediainfo \
+    && \
+    cleanup.sh
+
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/tomcat:${tag}
+
+COPY --from=download /opt /opt
+
+# Replace linux shared libraries with ones that target muslibc and are platform specific.
+# Also add perl for exiftool, and platform specific jna so native libs can be loaded.
+RUN --mount=type=cache,id=fits-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
+        file \
+        java-jna \
+        libmediainfo \
+        libzen \
+        perl \
+    && \
+    cp $(realpath /usr/share/java/jna.jar) /opt/fits/lib && \
+    cleanup.sh
 
 ENV \
     FITS_MAX_IN_MEMORY_FILE_SIZE=4 \
@@ -24,3 +51,5 @@ ENV \
     FITS_MAX_UPLOAD_FILE_SIZE=2000
 
 COPY rootfs /
+
+RUN chown -R tomcat:tomcat /opt/tomcat /opt/fits

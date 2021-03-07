@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/java:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/java:${tag} AS download
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=activemq-downloads,sharing=locked,target=/opt/downloads \
     ACTIVEMQ_VERSION="5.14.5" && \
     ACTIVEMQ_FILE="apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz" && \
     ACTIVEMQ_URL="https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ_FILE}" && \
@@ -15,6 +16,13 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
         --key "62ED4DF0BACB8793" \
         --file "${DOWNLOAD_CACHE_DIRECTORY}/${ACTIVEMQ_FILE}" \
         examples webapps-demo docs
+
+FROM ${repository}/java:${tag}
+
+COPY --from=download /etc/group /etc/group
+COPY --from=download /etc/passwd /etc/passwd
+COPY --from=download /etc/shadow /etc/shadow
+COPY --from=download /opt /opt
 
 WORKDIR /opt/activemq
 

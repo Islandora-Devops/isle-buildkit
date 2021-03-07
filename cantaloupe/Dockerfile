@@ -1,17 +1,9 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/tomcat:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/tomcat:${tag} AS download
 
-# Opted for OpenJPG over Kakadu but that could be changed.
-# For reference see: https://cantaloupe-project.github.io/manual/3.3/processors.html
-RUN --mount=type=cache,target=/var/cache/apk \ 
-    --mount=type=cache,target=/etc/cache/apk \
-    apk-install.sh \
-        imagemagick \
-        ffmpeg \
-        openjpeg-tools
-
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=cantaloupe-downloads,sharing=locked,target=/opt/downloads \
     CANTALOUPE_VERSION="4.1.5" && \
     CANTALOUPE_FILE="cantaloupe-${CANTALOUPE_VERSION}.zip" && \
     CANTALOUPE_URL="https://github.com/medusa-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/${CANTALOUPE_FILE}" && \
@@ -21,9 +13,24 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     CANTALOUPE_UNPACKED="${CANTALOUPE_FILE%.zip}" && \
     install-war-into-tomcat.sh --name "cantaloupe" --file "/tmp/${CANTALOUPE_UNPACKED}/${CANTALOUPE_UNPACKED}.war" && \
     rm -fr "/tmp/${CANTALOUPE_UNPACKED}" && \
+    chown -R tomcat:tomcat /opt/tomcat
+
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/tomcat:${tag}
+
+COPY --from=download /opt /opt
+
+# Opted for OpenJPG over Kakadu but that could be changed.
+# For reference see: https://cantaloupe-project.github.io/manual/3.3/processors.html
+RUN --mount=type=cache,id=cantaloupe-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
+        ffmpeg \
+        imagemagick \
+        openjpeg-tools \
+    && \
     mkdir /data && \
     chown tomcat:tomcat /data && \
-    chown -R tomcat:tomcat /opt/tomcat
+    cleanup.sh
 
 ENV \
     CANTALOUPE_ADMIN_ENABLED="true" \

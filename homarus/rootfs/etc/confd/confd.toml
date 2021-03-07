@@ -1,6 +1,6 @@
 backend = "env"
 confdir = "/etc/confd"
-log-level = "debug"
+log-level = "error"
 interval = 600
 noop = false
 prefix = "/homarus"

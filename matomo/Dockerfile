@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/nginx:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/nginx:${tag} AS download
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=matomo-downloads,sharing=locked,target=/opt/downloads \
     MATOMO_VERSION="3.13.5" && \
     MATOMO_FILE="matomo-${MATOMO_VERSION}.tar.gz" && \
     MATOMO_URL="https://builds.matomo.org/${MATOMO_FILE}" && \
@@ -13,8 +14,11 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     gpg-receive-keys.sh --key 814E346FA01A20DBB04B6807B5DBD5925590A237 && \
     gpg --verify "${DOWNLOAD_CACHE_DIRECTORY}/${MATOMO_FILE}.asc" "${DOWNLOAD_CACHE_DIRECTORY}/${MATOMO_FILE}" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${MATOMO_FILE}" -C /opt && \
-    chown -R nginx:nginx /opt/matomo && \
-    cleanup.sh
+    chown -R nginx:nginx /opt/matomo
+
+FROM ${repository}/nginx:${tag}
+
+COPY --from=download /opt /opt
 
 WORKDIR /var/www/matomo
 

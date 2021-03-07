@@ -1,9 +1,11 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/base:latest
+ARG repository=local
+ARG tag=latest
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/base:${tag}
 
-RUN --mount=type=cache,target=/var/cache/apk \ 
-    --mount=type=cache,target=/etc/cache/apk \ 
-    apk-install.sh \
+RUN --mount=type=cache,id=postgresql-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
         postgresql \
         postgresql-client \
     && \
