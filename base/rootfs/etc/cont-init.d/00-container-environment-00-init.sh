@@ -44,40 +44,13 @@ else
         s6-dumpenv -- /var/run/s6/container_environment
 fi
 
-# Temporary directory to deposit generated confd configuration templates and
-# output, etc.
-mkdir -p /tmp/confd/conf.d /tmp/confd/templates /tmp/confd/out
-
-# Temporary confd template config.
-cat << EOF > /tmp/confd/conf.d/import.sh.toml
-[template]
-src = "import.sh.tmpl"
-dest = "/tmp/confd/out/import.sh"
-keys = ["/"]
-EOF
-
-# Generate template script that will update the container environment with
-# values provided by the confd backend. execline is used rather than bash 
-# to avoid issues with whitespace newlines and string interpolation.
+# Import environment variables from confd or default to what is currently in the
+# container environment.
 {
-    echo 's6-env -i'
     for file in /var/run/s6/container_environment/*
     do
         VAR=$(basename "${file}")
         KEY=$(echo "${VAR}" | tr '[:upper:]' '[:lower:]' | tr '_' '/')
         echo "${VAR}=\"{{ getv \"/${KEY}\" (getenv \"${VAR}\") }}\""
     done
-    echo 's6-dumpenv -- /var/run/s6/container_environment'
-} > /tmp/confd/templates/import.sh.tmpl
-
-# Allow the choosen confd backend to update the container environment.
-# If the backend is 'env' this effectively does nothing, this allows 
-# scripts to use variables defined by the confd backend.
-CONFD_LOG_LEVEL=$(</var/run/s6/container_environment/CONFD_LOG_LEVEL)
-CONFD_BACKEND=$(</var/run/s6/container_environment/CONFD_BACKEND)
-with-contenv wait-for-confd-backend.sh
-with-contenv confd -prefix '/' -onetime -sync-only -confdir /tmp/confd -log-level ${CONFD_LOG_LEVEL} -backend ${CONFD_BACKEND}
-execlineb -P /tmp/confd/out/import.sh 
-
-# Remove temporary files.
-rm -fr /tmp/confd
+} | /usr/local/bin/confd-import-environment.sh

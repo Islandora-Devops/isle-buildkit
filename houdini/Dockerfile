@@ -1,24 +1,27 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/imagemagick:latest as imagemagick
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/crayfish:${tag} AS download
 
-FROM local/crayfish:latest
-
-RUN --mount=type=cache,target=/var/cache/apk \ 
-    --mount=type=cache,target=/etc/cache/apk \ 
-    --mount=type=bind,from=imagemagick,source=/home/builder/packages/x86_64,target=/packages \
-    --mount=type=bind,from=imagemagick,source=/etc/apk/keys,target=/etc/apk/keys \
-    --mount=type=cache,target=/root/.composer/cache \
-    apk add /packages/imagemagick-*.apk && \
+RUN --mount=type=cache,id=houdini-composer,sharing=locked,target=/root/.composer/cache \
     composer install -d /var/www/crayfish/Houdini && \
     php /var/www/crayfish/Houdini/bin/console cache:clear && \
     ln -s /var/www/crayfish/Houdini/public /var/www/html && \
+    chown -R nginx:nginx /var/www
+
+FROM ${repository}/imagemagick:${tag} AS imagemagick
+FROM ${repository}/crayfish:${tag}
+
+RUN --mount=type=bind,from=imagemagick,source=/packages,target=/packages \
+    --mount=type=bind,from=imagemagick,source=/etc/apk/keys,target=/etc/apk/keys \
+    apk add /packages/imagemagick-*.apk && \
     cleanup.sh
+
+COPY --from=download /var/www /var/www
 
 ENV \
     HOUDINI_LOG_LEVEL=debug
 
-COPY /rootfs /
-
-RUN chown -R nginx:nginx /var/www
+COPY rootfs /
 
 WORKDIR /var/www/crayfish/Houdini/

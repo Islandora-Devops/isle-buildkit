@@ -1,10 +1,15 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/crayfish:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/crayfish:${tag} AS download
 
-RUN --mount=type=cache,target=/root/.composer/cache \
+RUN --mount=type=cache,id=gemini-composer,sharing=locked,target=/root/.composer/cache \
     composer install -d /var/www/crayfish/Gemini && \
-    ln -s /var/www/crayfish/Gemini/src /var/www/html && \
-    cleanup.sh
+    ln -s /var/www/crayfish/Gemini/src /var/www/html
+
+FROM ${repository}/crayfish:${tag}
+
+COPY --from=download /var/www /var/www
 
 ENV \
     GEMINI_DB_DRIVER=pdo_mysql \
@@ -18,6 +23,6 @@ ENV \
     GEMINI_FCREPO_URL=http://fcrepo/fcrepo/rest \
     GEMINI_LOG_LEVEL=debug
 
-COPY /rootfs /
+COPY rootfs /
 
 WORKDIR /var/www/crayfish/Gemini/

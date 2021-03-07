@@ -1,10 +1,11 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/nginx:latest as composer
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/nginx:${tag} AS download
 
 # Islandora based Drupal install.
-RUN --mount=type=cache,target=/root/.composer/cache \
-    --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=demo-composer,sharing=locked,target=/root/.composer/cache \
+    --mount=type=cache,id=demo-downloads,sharing=locked,target=/opt/downloads \
     composer create-project drupal/recommended-project:^8.9 \
         --prefer-dist \
         --no-interaction \
@@ -60,8 +61,8 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     chown -R nginx:nginx /var/www/drupal && \
     cleanup.sh
 
-FROM local/drupal:latest
+FROM ${repository}/drupal:${tag}
 
-COPY --chown=nginx:nginx --from=composer /var/www/drupal /var/www/drupal
+COPY --from=download /var/www /var/www
 
 COPY rootfs /

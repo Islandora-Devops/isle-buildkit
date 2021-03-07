@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/java:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/java:${tag} AS download
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=karaf-downloads,sharing=locked,target=/opt/downloads \
     KARAF_VERSION="4.0.8" && \
     KARAF_FILE="apache-karaf-${KARAF_VERSION}.tar.gz" && \
     KARAF_URL="https://archive.apache.org/dist/karaf/${KARAF_VERSION}/${KARAF_FILE}" && \
@@ -13,13 +14,19 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     install-apache-service.sh \
         --name karaf \
         --key "BFF2EE42C8282E76" \
-        --file "${DOWNLOAD_CACHE_DIRECTORY}/${KARAF_FILE}" \ 
+        --file "${DOWNLOAD_CACHE_DIRECTORY}/${KARAF_FILE}" \
         demos \
     && \
     sed -i 's@http://repo1@https://repo1@' /opt/karaf/etc/org.ops4j.pax.url.mvn.cfg && \
-    chown -R karaf:karaf /opt/karaf && \
     rm -rf /opt/karaf/instances/* && \
-    cleanup.sh
+    chown -R karaf:karaf /opt/karaf
+
+FROM ${repository}/java:${tag}
+
+COPY --from=download /etc/group /etc/group
+COPY --from=download /etc/passwd /etc/passwd
+COPY --from=download /etc/shadow /etc/shadow
+COPY --from=download /opt /opt
 
 WORKDIR /opt/karaf
 

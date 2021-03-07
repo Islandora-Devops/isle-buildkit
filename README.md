@@ -7,7 +7,6 @@
 - [Requirements](#requirements)
 - [Building](#building)
   - [Build All Images](#build-all-images)
-  - [Building without Buildkit](#building-without-buildkit)
   - [Build Specific Image](#build-specific-image)
   - [Building Continuously](#building-continuously)
 - [Running](#running)
@@ -28,13 +27,13 @@ Islandora 8 site.
 
 ## Requirements
 
-To build the Docker images using the provided Gradle build scripts with [BuildKit] requires:
+To build the Docker images using the provided Gradle build scripts requires:
 
-- [Docker 18.09+](https://docs.docker.com/get-docker/)
+- [Docker 19.03+](https://docs.docker.com/get-docker/)
 - [OpenJDK or Oracle JDK 8+](https://www.java.com/en/download/)
 
-That being said the images themselves are compatible of running with older
-versions of Docker.
+That being said the images themselves are compatible with older versions of
+Docker.
 
 ## Building
 
@@ -112,15 +111,6 @@ The following will build all the images in the correct order.
 
 ```bash
 ./gradlew build
-```
-
-### Building without Buildkit
-
-If you are having trouble building, consider building without BuildKit as it's
-supported by older versions of Docker.
-
-```bash
-./gradlew build -PuseBuildKit=false
 ```
 
 ### Build Specific Image
@@ -367,13 +357,27 @@ detect which folders should be considered
 what dependencies exist between them. The only caveat is
 that the projects cannot be nested, though that use case does not really apply.
 
-The dependencies are resolved by parsing the Dockerfile and looking for ``FROM``
-statements to determine which images are required to build it.
+The dependencies are resolved by parsing the Dockerfile and looking for:
+
+- ``FROM``statements
+- ``--mount=type=bind`` statements
+- ``COPY --from`` statements
+
+As they are capable of referring to other images.
 
 This means to add a new Docker image to the project you do not need to modify
 the build scripts, simply add a new folder and place your Dockerfile inside of
-it and it will be discovered built in the correct order relative to the other
-images.
+it. It will be discovered and built in the correct order relative to the other
+images assuming you refer to the other image using the `repository` build
+argument.
+
+For example:
+
+```Dockerfile
+ARG repository=local
+ARG tag=latest
+FROM ${repository}/base:${tag}
+```
 
 ## Design Constraints
 
@@ -393,8 +397,8 @@ block until another container is available or a timeout has been reached. For
 example:
 
 ```bash
-local fcrepo_host="{{ getv "/fcrepo/host" "fcrepo.isle-dc.localhost" }}"
-local fcrepo_port="{{ getv "/fcrepo/host" "80" }}"
+local fcrepo_host=${DRUPAL_DEFAULT_FCREPO_HOST}
+local fcrepo_port=${DRUPAL_DEFAULT_FCREPO_PORT}
 local fcrepo_url=
 
 # Indexing fails if port 80 is given explicitly.
@@ -427,6 +431,4 @@ failed to solve with frontend dockerfile.v0: failed to solve with frontend gatew
 
 **Answer:** If possible upgrade Docker to the latest version, and switch to using the
 [Overlay2](https://docs.docker.com/storage/storagedriver/overlayfs-driver/#configure-docker-with-the-overlay-or-overlay2-storage-driver)
-filesystem with Docker. If that doesn't work trying building [without BuildKit](#building-without-buildkit).
-
-[Buildkit]: https://github.com/moby/buildkit/blob/main/frontend/dockerfile/docs/experimental.md
+filesystem with Docker.
