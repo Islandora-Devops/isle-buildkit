@@ -22,10 +22,6 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-    - name: Enable buildkit
-      shell: bash
-      run: |
-        echo '{"experimental": "enabled"}' > ~/.docker/config.json
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
