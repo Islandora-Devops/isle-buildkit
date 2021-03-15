@@ -450,6 +450,11 @@ function create_solr_core {
 
 # Generate solr config and create a core for it.
 function create_solr_core_with_default_config {
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q search_api_solr; then
+        echo "search_api_solr is not installed.  Skipping core setup."
+        return 0
+    fi
+
     local site="${1}"; shift
     generate_solr_config "${site}"
     create_solr_core "${site}"
