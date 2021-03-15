@@ -19,9 +19,9 @@ additional settings, volumes, ports, etc.
 
 ## Volumes
 
-| Path  | Description                                                                                         |
-| :---- | :-------------------------------------------------------------------------------------------------- |
-| /data | Fcrepo Object / Binary Store if FCREPO_BINARYSTORAGE_TYPE or FCREPO_PERSISTENCE_TYPE is set to file |
+| Path  | Description     |
+| :---- | :---------------|
+| /data | OCFL Filesystem |
 
 ## Settings
 
@@ -32,17 +32,18 @@ additional settings, volumes, ports, etc.
 | FCREPO_ACTIVEMQ_TOPIC          | /fcrepo/activemq/topic          | fedora                            |             |
 | FCREPO_BINARYSTORAGE_TYPE      | /fcrepo/binarystorage/type      | file                              |             |
 | FCREPO_CATALINA_OPTS           | /fcrepo/catalina/opts           |                                   |             |
-| FCREPO_DB_HOST                 | /fcrepo/db/host                 | mariadb                           |             |
+| FCREPO_DB_MYSQL_HOST           | /fcrepo/db/mysql/host           | mariadb                           |             |
+| FCREPO_DB_MYSQL_PORT           | /fcrepo/db/mysql/port           | 3306                              |             |
 | FCREPO_DB_NAME                 | /fcrepo/db/name                 | fcrepo                            |             |
 | FCREPO_DB_PASSWORD             | /fcrepo/db/password             | password                          |             |
-| FCREPO_DB_PORT                 | /fcrepo/db/port                 | 3306                              |             |
+| FCREPO_DB_POSTGRESQL_HOST      | /fcrepo/db/postgresql/host      | mariadb                           |             |
+| FCREPO_DB_POSTGRESQL_PORT      | /fcrepo/db/postgresql/port      | 3306                              |             |
 | FCREPO_DB_ROOT_PASSWORD        | /fcrepo/db/root/password        | password                          |             |
 | FCREPO_DB_ROOT_USER            | /fcrepo/db/root/user            | root                              |             |
 | FCREPO_DB_USER                 | /fcrepo/db/user                 | fcrepo                            |             |
 | FCREPO_JAVA_OPTS               | /fcrepo/java/opts               |                                   |             |
 | FCREPO_JWT_ADMIN_TOKEN         | /fcrepo/jwt/admin/token         | islandora                         |             |
-| FCREPO_MODESHAPE_CONFIGURATION | /fcrepo/modeshape/configuration | classpath:/config/repository.json |             |
-| FCREPO_PERSISTENCE_TYPE        | /fcrepo/persistence/type        | file                              |             |
+| FCREPO_PERSISTENCE_TYPE        | /fcrepo/persistence/type        | mariadb                           |             |
 | FCREPO_QUEUE                   | /fcrepo/queue                   | fedora                            |             |
 | FCREPO_S3_BUCKET               | /fcrepo/s3/bucket               |                                   |             |
 | FCREPO_S3_PASSWORD             | /fcrepo/s3/password             |                                   |             |

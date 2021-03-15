@@ -2,6 +2,15 @@
 set -e
 
 function execute_sql_file {
+    local FCREPO_DB_HOST=""
+    local FCREPO_DB_PORT=""
+    if [[ "${FCREPO_PERSISTENCE_TYPE}" == "mysql" || "${FCREPO_PERSISTENCE_TYPE}" == "mariadb" ]]; then
+        FCREPO_DB_HOST="${FCREPO_DB_MYSQL_HOST}"
+        FCREPO_DB_PORT="${FCREPO_DB_MYSQL_PORT}"
+    else
+        FCREPO_DB_HOST="${FCREPO_DB_POSTGRESQL_HOST}"
+        FCREPO_DB_PORT="${FCREPO_DB_POSTGRESQL_PORT}"
+    fi
     execute-sql-file.sh \
         --driver "${FCREPO_PERSISTENCE_TYPE}" \
         --host "${FCREPO_DB_HOST}" \

@@ -15,10 +15,10 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     SYN_SHA256="bcad5f872930b1bcc9ea4a176c60e22683297121357336769a21ead9fadcbbd5" && \
     download.sh --url "${SYN_URL}" --sha256 "${SYN_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${SYN_FILE}" /opt/tomcat/lib && \
-    IMPORT_EXPORT_VERSION="1.0.0" && \
+    IMPORT_EXPORT_VERSION="1.0.1" && \
     IMPORT_EXPORT_FILE="fcrepo-import-export-${IMPORT_EXPORT_VERSION}.jar" && \
     IMPORT_EXPORT_URL="https://github.com/fcrepo-exts/fcrepo-import-export/releases/download/fcrepo-import-export-${IMPORT_EXPORT_VERSION}/${IMPORT_EXPORT_FILE}" && \
-    IMPORT_EXPORT_SHA256="f3103ce03b9ee9e38cf0a762d7b4194fd6c20fa72e19ed7e811ac5de4b890062" && \
+    IMPORT_EXPORT_SHA256="89c579d1223c8f3c0da60c4309a06e47f5919c51929d976e60ea525c60cb33d1" && \
     download.sh --url "${IMPORT_EXPORT_URL}" --sha256 "${IMPORT_EXPORT_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${IMPORT_EXPORT_FILE}" /opt/tomcat && \
     mkdir -p /opt/keys/jwt && \
@@ -33,10 +33,12 @@ ENV \
     FCREPO_ACTIVEMQ_QUEUE=fedora \
     FCREPO_ACTIVEMQ_TOPIC=fedora \
     FCREPO_BINARYSTORAGE_TYPE=file \
-    FCREPO_DB_HOST=mariadb \
-    FCREPO_DB_PORT=3306 \
+    FCREPO_DB_MYSQL_HOST=mariadb \
+    FCREPO_DB_MYSQL_PORT=3306 \
     FCREPO_DB_NAME=fcrepo \
     FCREPO_DB_PASSWORD=password \
+    FCREPO_DB_POSTGRESQL_HOST=postgresql \
+    FCREPO_DB_POSTGRESQL_PORT=5432 \
     FCREPO_DB_ROOT_USER=root \
     FCREPO_DB_ROOT_PASSWORD=password \
     FCREPO_DB_USER=fcrepo \

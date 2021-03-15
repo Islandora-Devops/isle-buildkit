@@ -75,5 +75,3 @@ ENV \
     JAVA_OPTS="-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx8g"
 
 COPY rootfs /
-
-#    bin/client -r 10 -d 5  "feature:install fcrepo-indexing-triplestore" && \

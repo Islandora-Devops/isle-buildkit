@@ -238,8 +238,8 @@ function install_site {
     fi
 
     # Ensure the files directory is writable by nginx, as when it is a new volume it is owned by root.
-	chown -R 100:101 "${files_directory}"
-	chmod -R ug+rw "${files_directory}"
+    chown -R 100:101 "${files_directory}"
+    chmod -R ug+rw "${files_directory}"
 
     # Allow changes to settings.php if it exists.
     if [[ -f "${site_directory}/settings.php" ]]; then
@@ -367,7 +367,7 @@ function configure_islandora_module {
     if drush -l "${site_url}" role:list | grep -q fedoraadmin; then
         echo "Fedora Admin role already exists.  No need to create it."
     else
-	drush -l "${site_url}" role:create fedoraadmin fedoraAdmin
+        drush -l "${site_url}" role:create fedoraadmin fedoraAdmin
     fi
     drush -l "${site_url}" -y user:role:add fedoraadmin admin
 }
@@ -375,7 +375,7 @@ function configure_islandora_module {
 # After enabling and importing features a number of configurations need to be updated.
 function configure_islandora_default_module {
     if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q islandora_defaults; then
-	echo "islandora_defaults is not installed.  Skipping configuration"
+        echo "islandora_defaults is not installed.  Skipping configuration"
         return 0
     fi
 
@@ -405,7 +405,7 @@ function configure_search_api_solr_module {
 # Enables and sets carapace as the default theme.
 function set_carapace_default_theme {
     if ! drush pm-list --pipe --type=theme --status=enabled --no-core | grep -q carapace; then
-	echo "carapace is not available. Skipping configuration."
+        echo "carapace is not available. Skipping configuration."
         return 0
     fi
 
@@ -458,7 +458,7 @@ function create_solr_core_with_default_config {
 # Install matomo and configure.
 function configure_matomo_module {
     if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q matomo; then
-	echo "matomo is not installed.  Skipping configuration"
+        echo "matomo is not installed.  Skipping configuration"
         return 0
     fi
 
@@ -476,7 +476,7 @@ function configure_matomo_module {
 # Configure Openseadragon to point use cantaloupe.
 function configure_openseadragon  {
     if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q openseadragon; then
-	echo "openseadragon is not installed.  Skipping configuration"
+        echo "openseadragon is not installed.  Skipping configuration"
         return 0
     fi
 

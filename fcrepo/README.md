@@ -32,10 +32,12 @@ additional settings, volumes, ports, etc.
 | FCREPO_ACTIVEMQ_TOPIC          | /fcrepo/activemq/topic          | fedora                                         |                                                                       |
 | FCREPO_BINARYSTORAGE_TYPE      | /fcrepo/binarystorage/type      | file                                           |                                                                       |
 | FCREPO_CATALINA_OPTS           | /fcrepo/catalina/opts           |                                                |                                                                       |
-| FCREPO_DB_HOST                 | /fcrepo/db/host                 | mariadb                                        |                                                                       |
+| FCREPO_DB_MYSQL_HOST           | /fcrepo/db/mysql/host           | mariadb                                        |                                                                       |
+| FCREPO_DB_MYSQL_PORT           | /fcrepo/db/mysql/port           | 3306                                           |                                                                       |
 | FCREPO_DB_NAME                 | /fcrepo/db/name                 | fcrepo                                         |                                                                       |
 | FCREPO_DB_PASSWORD             | /fcrepo/db/password             | password                                       |                                                                       |
-| FCREPO_DB_PORT                 | /fcrepo/db/port                 | 3306                                           |                                                                       |
+| FCREPO_DB_POSTGRESQL_HOST      | /fcrepo/db/postgresql/host      | mariadb                                        |                                                                       |
+| FCREPO_DB_POSTGRESQL_PORT      | /fcrepo/db/postgresql/port      | 3306                                           |                                                                       |
 | FCREPO_DB_ROOT_PASSWORD        | /fcrepo/db/root/password        | password                                       |                                                                       |
 | FCREPO_DB_ROOT_USER            | /fcrepo/db/root/user            | root                                           |                                                                       |
 | FCREPO_DB_USER                 | /fcrepo/db/user                 | fcrepo                                         |                                                                       |
