@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+# Handles exit codes / signals to ensure the container exits with the expected
+# value. Meant to be sourced in /etc/service.d/*/finish scripts.
+
+readonly EXIT_CODE=${1}
+readonly SIGNAL=${2}
+readonly SERVICE_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" &> /dev/null && pwd )"
+readonly SERVICE=$(basename ${SERVICE_DIR})
+
+if test ${EXIT_CODE} -gt 255; then
+    # Process received a non-catchable signal (i.e. KILL/9). s6 sets the exit
+    # code to >= 256 and expects the user to inspect the signal value instead
+    readonly NEW_EXIT_CODE=$(s6-expr 128 + ${SIGNAL})
+    echo ${NEW_EXIT_CODE} > /var/run/s6/env-stage3/S6_STAGE2_EXITED
+    echo "[services.d] service ${SERVICE} received signal: ${SIGNAL}, exiting with exit code: ${NEW_EXIT_CODE}"
+elif test ${EXIT_CODE} -ne 0; then
+    # Valid exit code terminate all services.
+    echo ${EXIT_CODE} > /var/run/s6/env-stage3/S6_STAGE2_EXITED
+    echo "[services.d] service ${SERVICE} exiting with exit code: ${EXIT_CODE}"
+fi
+
+# Regardless take down all other services.
+s6-svscanctl -t /var/run/s6/services 2>/dev/null
