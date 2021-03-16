@@ -1,10 +1,10 @@
 # Fits
 
-Docker image for [Fits] version 5.1.0.
+Docker image for [Fits](https://projects.iq.harvard.edu/fits/home) version 5.1.0.
 
 Please refer to the [Fits Documentation] for more in-depth information.
 
-As a quick example this will bring up an instance of [Fits], and allow you
+As a quick example this will bring up an instance of [Fits](https://projects.iq.harvard.edu/fits/home), and allow you
 to view on <http://localhost:80/fits/>.
 
 ```bash
