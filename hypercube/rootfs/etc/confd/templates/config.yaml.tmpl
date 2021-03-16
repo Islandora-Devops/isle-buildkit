@@ -4,16 +4,16 @@ hypercube:
   tesseract_executable: tesseract
   pdftotext_executable: pdftotext
 fedora_resource:
-  base_url: {{ getv "/fcrepo/url" (getenv "HYPERCUBE_FCREPO_URL") }}
+  base_url: {{ getenv "HYPERCUBE_FCREPO_URL" }}
 log:
   # Valid log levels are:
   # debug, info, notice, warning, error, critical, alert, emergency, none
   file: "php://stderr"
-  level: {{ getv "/log/level" (getenv "HYPERCUBE_LOG_LEVEL") }}
+  level: {{ getenv "HYPERCUBE_LOG_LEVEL" }}
 syn:
   # toggles JWT security for service
   enable: true
   # Path to the syn config file for authentication.
   # example can be found here:
   # https://github.com/Islandora/Syn/blob/main/conf/syn-settings.example.xml
-  config: /var/www/crayfish/syn-settings.xml
+  config: /opt/keys/jwt/syn-settings.xml

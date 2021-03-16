@@ -1,6 +1,6 @@
 server {
     listen 80;
-    client_max_body_size {{ getv "/nginx/client/max/body/size" (getenv "NGINX_CLIENT_MAX_BODY_SIZE") }};
+    client_max_body_size {{ getenv "TOMCAT_NGINX_CLIENT_MAX_BODY_SIZE" }};
     location / {
         proxy_set_header   X-Forwarded-For $remote_addr;
         proxy_set_header   Host $http_host;

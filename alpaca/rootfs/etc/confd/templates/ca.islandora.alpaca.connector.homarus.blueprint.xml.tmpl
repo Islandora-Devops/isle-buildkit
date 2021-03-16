@@ -10,9 +10,9 @@
 
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.homarus" update-strategy="reload" >
     <cm:default-properties>
-      <cm:property name="error.maxRedeliveries" value="{{ getv "/homarus/redeliveries" (getenv "ALPACA_HOMARUS_REDELIVERIES") }}"/>
-      <cm:property name="in.stream" value="{{ getv "/homarus/queue" (getenv "ALPACA_HOMARUS_QUEUE") }}"/>
-      <cm:property name="derivative.service.url" value="{{ getv "/homarus/service" (getenv "ALPACA_HOMARUS_SERVICE") }}"/>
+      <cm:property name="error.maxRedeliveries" value="{{ getenv "ALPACA_HOMARUS_REDELIVERIES" }}"/>
+      <cm:property name="in.stream" value="{{ getenv "ALPACA_HOMARUS_QUEUE" }}"/>
+      <cm:property name="derivative.service.url" value="{{ getenv "ALPACA_HOMARUS_SERVICE" }}"/>
     </cm:default-properties>
   </cm:property-placeholder>
 

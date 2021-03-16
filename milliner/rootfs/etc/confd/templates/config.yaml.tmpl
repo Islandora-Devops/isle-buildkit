@@ -1,10 +1,10 @@
 ---
 
-fedora_base_url: {{ getv "/fcrepo/url" (getenv "MILLINER_FCREPO_URL") }}
+fedora_base_url: {{ getenv "MILLINER_FCREPO_URL" }}
 # if drupal_base_url contains a path, be sure to include trailing slash
 # or relative paths will not resolve correctly.
-drupal_base_url: {{ getv "/drupal/url" (getenv "MILLINER_DRUPAL_URL") }}
-gemini_base_url: {{ getv "/gemini/url" (getenv "MILLINER_GEMINI_URL") }}
+drupal_base_url: {{ getenv "MILLINER_DRUPAL_URL" }}
+gemini_base_url: {{ getenv "MILLINER_GEMINI_URL" }}
 
 modified_date_predicate: http://schema.org/dateModified
 
@@ -18,7 +18,7 @@ log:
   # Valid log levels are:
   # debug, info, notice, warning, error, critical, alert, emergency, none
   file: "php://stderr"
-  level: {{ getv "/log/level" (getenv "MILLINER_LOG_LEVEL") }}
+  level: {{ getenv "MILLINER_LOG_LEVEL" }}
 
 syn:
   # toggles JWT security for service
@@ -26,4 +26,4 @@ syn:
   # Path to the syn config file for authentication.
   # example can be found here:
   # https://github.com/Islandora/Syn/blob/main/conf/syn-settings.example.xml
-  config: /var/www/crayfish/syn-settings.xml
+  config: /opt/keys/jwt/syn-settings.xml

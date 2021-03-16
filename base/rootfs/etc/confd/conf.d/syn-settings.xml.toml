@@ -1,0 +1,7 @@
+[template]
+src = "syn-settings.xml.tmpl"
+dest = "/opt/keys/jwt/syn-settings.xml"
+uid = 0
+gid = 2000
+mode = "0640"
+keys = [ "/" ]

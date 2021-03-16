@@ -4,4 +4,4 @@ dest = "/var/lib/postgresql/data/postgresql.conf"
 uid = 70
 gid = 70
 mode="0644"
-keys = [ "/root" ]
+keys = [ "/" ]

@@ -378,7 +378,7 @@ expose_php = On
 ; Maximum execution time of each script, in seconds
 ; http://php.net/max-execution-time
 ; Note: This directive is hardcoded to 0 for the CLI SAPI
-max_execution_time = {{ getv "/php/max/execution/time" (getenv "PHP_MAX_EXECUTION_TIME") }}
+max_execution_time = {{ getenv "PHP_MAX_EXECUTION_TIME" }}
 
 ; Maximum amount of time each script may spend parsing request data. It's a good
 ; idea to limit this time on productions servers in order to eliminate unexpectedly
@@ -388,7 +388,7 @@ max_execution_time = {{ getv "/php/max/execution/time" (getenv "PHP_MAX_EXECUTIO
 ; Development Value: 60 (60 seconds)
 ; Production Value: 60 (60 seconds)
 ; http://php.net/max-input-time
-max_input_time = {{ getv "/php/max/input/time" (getenv "PHP_MAX_INPUT_TIME") }}
+max_input_time = {{ getenv "PHP_MAX_INPUT_TIME" }}
 
 ; Maximum input variable nesting level
 ; http://php.net/max-input-nesting-level
@@ -399,7 +399,7 @@ max_input_time = {{ getv "/php/max/input/time" (getenv "PHP_MAX_INPUT_TIME") }}
 
 ; Maximum amount of memory a script may consume (128MB)
 ; http://php.net/memory-limit
-memory_limit = {{ getv "/php/memory/limit" (getenv "PHP_MEMORY_LIMIT") }}
+memory_limit = {{ getenv "PHP_MEMORY_LIMIT" }}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -685,7 +685,7 @@ auto_globals_jit = On
 ; Its value may be 0 to disable the limit. It is ignored if POST data reading
 ; is disabled through enable_post_data_reading.
 ; http://php.net/post-max-size
-post_max_size = {{ getv "/php/post/max/size" (getenv "PHP_POST_MAX_SIZE") }}
+post_max_size = {{ getenv "PHP_POST_MAX_SIZE" }}
 
 ; Automatically add files before PHP document.
 ; http://php.net/auto-prepend-file
@@ -837,10 +837,10 @@ file_uploads = On
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = {{ getv "/php/upload/max/filesize" (getenv "PHP_UPLOAD_MAX_FILESIZE") }}
+upload_max_filesize = {{ getenv "PHP_UPLOAD_MAX_FILESIZE" }}
 
 ; Maximum number of files that can be uploaded via a single request
-max_file_uploads = {{ getv "/php/max/file/uploads" (getenv "PHP_MAX_FILE_UPLOADS") }}
+max_file_uploads = {{ getenv "PHP_MAX_FILE_UPLOADS" }}
 
 ;;;;;;;;;;;;;;;;;;
 ; Fopen wrappers ;
@@ -865,7 +865,7 @@ allow_url_include = Off
 
 ; Default timeout for socket based streams (seconds)
 ; http://php.net/default-socket-timeout
-default_socket_timeout = {{ getv "/php/default/socket/timeout" (getenv "PHP_DEFAULT_SOCKET_TIMEOUT") }}
+default_socket_timeout = {{ getenv "PHP_DEFAULT_SOCKET_TIMEOUT" }}
 
 ; If your scripts have to deal with files from Macintosh systems,
 ; or you are running on a Mac and need to deal with files from
