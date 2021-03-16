@@ -26,7 +26,7 @@ jobs:
       shell: bash
       run: |
         echo '{"experimental": "enabled"}' > ~/.docker/config.json
-    - name: Build Docker images
+    - name: Build & Test Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build --info
+        arguments: build test --info

@@ -1,0 +1,19 @@
+# file: docker-compose.yml
+#
+# Tests that the base values for database environment variables can be
+# overridden by prefixing them.
+# 
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+version: "3.8"
+services:
+  postgresql:
+    image: ${MYSQL_IMAGE:-local/postgresql:latest}
+  fcrepo:
+    # Allow downstream container to override `DB` environment variables.
+    environment:
+      FCREPO_PERSISTENCE_TYPE: postgresql
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${BASE_IMAGE:-local/fcrepo:latest}

@@ -109,7 +109,7 @@ function update_database {
     add_missing_column
     update_user
     for site in ${MATOMO_SITES}; do
-        update_site
+        update_site "${site}"
     done
 }
 

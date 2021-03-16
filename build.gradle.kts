@@ -1,3 +1,5 @@
+import tasks.ApproximateImageDigestTask
+
 buildscript {
     repositories {
         gradlePluginPortal()
@@ -12,3 +14,18 @@ buildscript {
 }
 
 apply(plugin = "ca.islandora.gradle.docker")
+
+subprojects {
+    if (parent == rootProject) {
+        // All build tasks should generate an approximate image digest for test results caching.
+        tasks.register<ApproximateImageDigestTask>("digest") {
+            dependsOn("build")
+        }
+        // Task groups all sub-project tests into single task.
+        tasks.register("test") {
+            group = "Islandora"
+            description = "Run tests"
+            dependsOn(project.subprojects.mapNotNull { it.tasks.matching { task -> task.name == "test" } })
+        }
+    }
+}

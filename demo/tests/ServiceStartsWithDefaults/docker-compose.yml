@@ -1,0 +1,54 @@
+# file: docker-compose.yml
+#
+# Tests that we can bring up the demo site.
+#
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+version: "3.8"
+volumes:
+  solr-data: {}
+services:
+  activemq:
+    image: ${ACTIVEMQ_IMAGE:-local/activemq:latest}
+  alpaca:
+    image: ${ALPACA_IMAGE:-local/alpaca:latest}
+  blazegraph:
+    image: ${BLAZEGRAPH_IMAGE:-local/blazegraph:latest}
+  cantaloupe:
+    image: ${CANTALOUPE_IMAGE:-local/cantaloupe:latest}
+  crayfits:
+    image: ${CRAYFITS_IMAGE:-local/crayfits:latest}
+  demo:
+    image: ${DEMO_IMAGE:-local/demo:latest}
+    environment:
+      # Defaults are hardcoded to work with traefik, slight work around.
+      DRUPAL_DEFAULT_FCREPO_HOST: fcrepo
+      DRUPAL_DEFAULT_FCREPO_PORT: 8080
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+      - solr-data:/opt/solr/server/solr:rw
+    command:
+      - /test.sh # Run test and exit.
+  fcrepo:
+    image: ${FCREPO_IMAGE:-local/fcrepo:latest}
+  fits:
+    image: ${FITS_IMAGE:-local/fits:latest}
+  gemini:
+    image: ${GEMINI_IMAGE:-local/gemini:latest}
+  homarus:
+    image: ${HOMARUS_IMAGE:-local/homarus:latest}
+  houdini:
+    image: ${HOUDINI_IMAGE:-local/houdini:latest}
+  hypercube:
+    image: ${HYPERCUBE_IMAGE:-local/hypercube:latest}
+  mariadb:
+    image: ${DATABASE_IMAGE:-local/mariadb:latest}
+  matomo:
+    image: ${MATOMO_IMAGE:-local/matomo:latest}
+  milliner:
+    image: ${MILLINER_IMAGE:-local/milliner:latest}
+  recast:
+    image: ${RECAST_IMAGE:-local/recast:latest}
+  solr:
+    image: ${SOLR_IMAGE:-local/solr:latest}
+    volumes:
+      - solr-data:/opt/solr/server/solr:rw

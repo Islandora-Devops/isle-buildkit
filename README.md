@@ -161,14 +161,15 @@ The following docker images are provided:
 - [alpaca](./alpaca/README.md)
 - [base](./base/README.md)
 - [blazegraph](./blazegraph/README.md)
-- [build](./build/README.md)
 - [cantaloupe](./cantaloupe/README.md)
 - [crayfish](./crayfish/README.md)
 - [crayfits](./crayfits/README.md)
+- [demo](./demo/README.md)
 - [drupal](./drupal/README.md)
 - [fcrepo](./fcrepo/README.md)
 - [fits](./fits/README.md)
 - [gemini](./gemini/README.md)
+- [handle](./handle/README.md)
 - [homarus](./homarus/README.md)
 - [houdini](./houdini/README.md)
 - [hypercube](./hypercube/README.md)
@@ -179,8 +180,8 @@ The following docker images are provided:
 - [matomo](./matomo/README.md)
 - [milliner](./milliner/README.md)
 - [nginx](./nginx/README.md)
+- [postgresql](./postgresql/README.md)
 - [recast](./recast/README.md)
-- [demo](./demo/README.md)
 - [solr](./solr/README.md)
 - [tomcat](./tomcat/README.md)
 
@@ -214,42 +215,33 @@ folder ``rootfs/etc/confd`` that has the following layout:
 ./rootfs/etc/confd
 ├── conf.d
 │   └── file.ext.toml
-├── confd.toml
 └── templates
     └── file.ext.tmpl
 ```
 
-``confd.toml`` Is the configuration of ``confd`` and will typically limit the
-namespace from which ``confd`` will read key values. For example in ``activemq``:
+The ``file.ext.toml`` and ``file.ext.tmpl`` work as a pair. The ``toml`` file
+defines where the template will be render to and who owns it, and the ``tmpl``
+file being the template in question. Ideally these files should match the same
+name of the file they are generating minus the ``toml`` or ``tmpl`` suffix. This
+is to make their discovery easier.
+
+Additionally in the ``base`` image there is ``confd.toml`` which sets defaults
+such a the ``log-level``:
 
 ```toml
 backend = "env"
 confdir = "/etc/confd"
-log-level = "debug"
+log-level = "error"
 interval = 600
 noop = false
-prefix = "/activemq"
 ```
 
-The prefix is set to ``/activemq`` which means only keys / value pairs under
-this prefix can be used by templates. We restrict images by prefix to force them
-to define their own settings, reducing dependencies between images, and to allow
-for greater customization. For example you could have Gemini use PostgreSQL as a
-backend and Drupal using MariaDB since they do not share the same Database
-configuration.
-
-The ``file.ext.toml`` and ``file.ext.tmpl`` work as a pair where the ``toml``
-file defines where the template will be render to and who owns it, and the
-``tmpl`` file being the template in question. Ideally these files should match
-the same name of the file they are generating minus the ``toml`` or ``tmpl``
-suffix. This is to make the discovery of them easier.
-
-``confd`` is also the source of all truth when it comes to configuration. We've
-established a order of precedence in which environment variables can be
-provided.
+``confd`` is also the source of all truth when it comes to configuration. We
+have established a order of precedence in which environment variables at runtime
+are defined.
 
 1. Confd backend (highest)
-2. Secrets kept in `/run/secrets`
+2. Secrets kept in `/run/secrets` (Except when using ``Kubernetes``)
 3. Environment variables passed into the container
 4. Environment variables defined in Dockerfile(s)
 5. Environment variables defined in the `/etc/defaults` directory (lowest only used for multiline variables, such as JWT)
@@ -257,12 +249,25 @@ provided.
 If not defined in the highest level the next level applies and so forth down the
 list.
 
-`/etc/defaults` and the environment variables declared in the Dockerfile(s) used
-to create the image are **required** to define all environment variables used by
-scripts and Confd templates.
+> N.B. `/etc/defaults` and the environment variables declared in the
+> Dockerfile(s) used to create the image are **required** to define all
+> environment variables used by scripts and ``confd`` templates. If not
+> specified in either of those locations the environment variables will not be
+> available even if its defined at a **higher** level i.e. ``confd``.
 
-``confd`` templates are **required** to use `getenv` function for all default
-values to ensure this order of precedence is followed.
+The logic which enforces these rules is performed in
+[00-container-environment-00-init.sh](./base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh)
+
+> N.B Some containers derive environment variables dynamically from other
+> environment variables. In these cases they are expected to provided an
+> additional startup script prefixed with ``00-container-environment-01-*.sh``
+> so that the variables are defined before ``confd`` is used to render
+> templates.
+
+By either using the command ``with-contenv`` or starting a script with
+``#!/usr/bin/with-contenv bash`` the environment defined will follow the order
+of precedence above. Additionally Within ``confd`` templates it is **required**
+to use `getenv` function for fetching data.
 
 ### S6 Overlay
 
