@@ -57,7 +57,7 @@ function cmdline {
     shift $((OPTIND-1))
     
     if [ "$#" -ne 2 ]; then
-      echo "Illegal number of parameters"
+      echo "Illegal number of parameters" >&2
       usage
       return 1
     fi
@@ -70,7 +70,7 @@ function cmdline {
 
 function main {
   cmdline ${ARGS}
-  echo "Waiting for ${PORT} on ${HOST} to open."
+  echo "Waiting for ${PORT} on ${HOST} to open." >&2
   while ! nc -z -w5 $HOST $PORT &> /dev/null; do
     sleep 1
   done

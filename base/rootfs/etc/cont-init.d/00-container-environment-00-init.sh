@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-# Sets container enviroment variables in order of precedence depending on the
+# Sets container environment variables in order of precedence depending on the
 # source:
 #
 #  1. Confd backend (highest)
@@ -11,10 +11,10 @@ set -e
 #  5. Environment variables defined in the /etc/defaults directory (lowest only used for multiline variables)
 #
 # If not defined in the highest level the next level applies and so forth down
-# the list. /etc/defaults and the environment variables declared in the 
-# Dockerfile(s) used to create this image are expected to define all 
-# environment variables used by scripts and Confd templates. 
-# 
+# the list. /etc/defaults and the environment variables declared in the
+# Dockerfile(s) used to create this image are expected to define all
+# environment variables used by scripts and Confd templates.
+#
 # Confd templates are required to use `getenv` function for all default values.
 
 # Load the environment variables according to the expected precedence.
@@ -44,40 +44,32 @@ else
         s6-dumpenv -- /var/run/s6/container_environment
 fi
 
-# Temporary directory to deposit generated confd configuration templates and
-# output, etc.
-mkdir -p /tmp/confd/conf.d /tmp/confd/templates /tmp/confd/out
+# Confd backend variable needs to be normalized.
+CONFD_BACKEND=$(</var/run/s6/container_environment/CONFD_BACKEND)
+case "${CONFD_BACKEND}" in
+etcd | etcdv3)
+    CONFD_BACKEND=etcdv3
+    ;;
+env)
+    CONFD_BACKEND=env
+    ;;
+*)
+    # Unknown backend assume failure.
+    exit 1
+    ;;
+esac
+echo "CONFD_BACKEND=${CONFD_BACKEND}" | /usr/local/bin/confd-import-environment.sh
 
-# Temporary confd template config.
-cat << EOF > /tmp/confd/conf.d/import.sh.toml
-[template]
-src = "import.sh.tmpl"
-dest = "/tmp/confd/out/import.sh"
-keys = ["/"]
-EOF
-
-# Generate template script that will update the container environment with
-# values provided by the confd backend. execline is used rather than bash 
-# to avoid issues with whitespace newlines and string interpolation.
+# Import environment variables from confd or default to what is currently in the
+# container environment. This can only import values from confd that are already 
+# defined in the environment.
 {
-    echo 's6-env -i'
-    for file in /var/run/s6/container_environment/*
-    do
+    for file in /var/run/s6/container_environment/*; do
         VAR=$(basename "${file}")
         KEY=$(echo "${VAR}" | tr '[:upper:]' '[:lower:]' | tr '_' '/')
         echo "${VAR}=\"{{ getv \"/${KEY}\" (getenv \"${VAR}\") }}\""
     done
-    echo 's6-dumpenv -- /var/run/s6/container_environment'
-} > /tmp/confd/templates/import.sh.tmpl
+} | /usr/local/bin/confd-import-environment.sh
 
-# Allow the choosen confd backend to update the container environment.
-# If the backend is 'env' this effectively does nothing, this allows 
-# scripts to use variables defined by the confd backend.
-CONFD_LOG_LEVEL=$(</var/run/s6/container_environment/CONFD_LOG_LEVEL)
-CONFD_BACKEND=$(</var/run/s6/container_environment/CONFD_BACKEND)
-with-contenv wait-for-confd-backend.sh
-with-contenv confd -prefix '/' -onetime -sync-only -confdir /tmp/confd -log-level ${CONFD_LOG_LEVEL} -backend ${CONFD_BACKEND}
-execlineb -P /tmp/confd/out/import.sh 
-
-# Remove temporary files.
-rm -fr /tmp/confd
+# Allow DB_NAME to be overridden by FCREPO_DB_NAME, etc.
+/usr/local/bin/confd-override-environment.sh --prefix DB

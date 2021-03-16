@@ -1,5 +1,5 @@
 #!/usr/bin/with-contenv bash
-set -ex
+set -e
 
 # Make run directory if it does not exist.
 mkdir /run/mysqld &> /dev/null || true

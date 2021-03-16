@@ -19,8 +19,6 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 
 WORKDIR /var/www/crayfits
 
-STOPSIGNAL SIGWINCH
-
 EXPOSE 8000
 
 ENV \

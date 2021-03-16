@@ -2,4 +2,4 @@
 set -e 
 
 # Renders confd templates once.
-confd-render-templates.sh
+confd-render-templates.sh -- -onetime -sync-only

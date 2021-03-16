@@ -77,7 +77,7 @@ function cmdline() {
     done
 
     if [[ -z $NAME || -z $FILE ]]; then
-        echo "Missing one or more required options: --name --file"
+        echo "Missing one or more required options: --name --file" >&2
         exit 1
     fi
 
@@ -102,7 +102,7 @@ function main {
         s6-setuidgid ${NAME} tar -xzf ${FILE} -C ${install_directory} --strip-components ${DEPTH}
         ;;
     *)
-        echo "Unable to unpack ${FILE} please update script to support additional formats."
+        echo "Unable to unpack ${FILE} please update script to support additional formats." >&2
         exit 1
         ;;
     esac

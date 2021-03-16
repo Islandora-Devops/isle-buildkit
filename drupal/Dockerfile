@@ -4,6 +4,7 @@ FROM local/nginx:latest
 RUN --mount=type=cache,target=/var/cache/apk \
     apk-install.sh \
       patch && \
+    addgroup nginx jwt && \
     cleanup.sh
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
@@ -17,9 +18,7 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     chmod a+x /usr/bin/drush && \
     mkdir -p /var/www/drupal/config && \
     mkdir -p /var/www/drupal/web/libraries && \
-    chown -R nginx:nginx /var/www && \
-    mkdir -p /opt/keys/jwt && \
-    chown nginx:nginx /opt/keys/jwt
+    chown -R nginx:nginx /var/www
 
 WORKDIR /var/www/drupal
 

@@ -8,14 +8,20 @@ function usage {
     cat <<- EOF
     usage: $PROGNAME options
 
-    Renders the confd templates using the backend defined by CONFD_BACKEND if found falling back to environment variables otherwise.
+    Renders the confd templates according to specified environment variables:
+    
+    - CONFD_BACKEND
+    - CONFD_LOG_LEVEL
+    - ETCD_CONNECTION_TIMEOUT
+    - ETCD_HOST
+    - ETCD_PORT
+    - etc
 
-    By default this just renders once and exits, unless --continuous is specified.
+    Addional options are passed on to confd.
 
     Exits non-zero if not successful.
 
     OPTIONS:
-       --continuous       Render the templates continously according to the environment variable ${CONFD_POLLING_INTERVAL}.
        -h --help          Show this help.
        -x --debug         Debug this script.
 
@@ -32,7 +38,6 @@ function cmdline {
         local delim=""
         case "$arg" in
             # Translate --gnu-long-options to -g (short options)
-            --continuous)  args="${args}-a ";;
             --help)        args="${args}-h ";;
             --debug)       args="${args}-x ";;
             # Pass through anything else
@@ -44,12 +49,9 @@ function cmdline {
     # Reset the positional parameters to the short options
     eval set -- $args
 
-    while getopts "ahx" OPTION
+    while getopts "hx" OPTION
     do
         case $OPTION in
-        a)
-            readonly CONTINUOUS=1
-            ;;
         h)
             usage
             exit 0
@@ -61,36 +63,31 @@ function cmdline {
         esac
     done
 
-    return 0
-}
+    shift $((OPTIND-1))
 
-function render {
-    local backend="${1}"; shift
-    local onetime_args="-onetime -sync-only"
-    local continuous_args="-interval ${CONFD_POLLING_INTERVAL}"
-    local args=
-
-    if [ -z ${CONTINUOUS} ]; then
-        args="${onetime_args}"
+    # Remaining options to be passed onto the client, preceeded by '--'.
+    if [ "$#" -gt 0 ]; then
+        readonly OPTIONS=(${@}); shift $#
     else
-        args="${continuous_args}"
+        readonly OPTIONS=()
     fi
 
-    echo "confd using '${backend}' backend..."
-    confd ${args} -log-level ${CONFD_LOG_LEVEL} -backend ${backend}
+    return 0
 }
 
 function main {
     cmdline ${ARGS}
+    local args="-log-level ${CONFD_LOG_LEVEL}"
+
+    # If using remote backend make sure it is accessible before continuing
     wait-for-confd-backend.sh
-    local backend=
 
     case "${CONFD_BACKEND}" in
         etcd|etcdv3)
-            backend=etcdv3
+            args="${args} -backend etcdv3 -node http://${ETCD_HOST}:${ETCD_PORT}"
             ;;
         env)
-            backend=env
+            args="${args} -backend env"
             ;;
         *)
             # Unknown backend assume failure.
@@ -98,6 +95,6 @@ function main {
             ;;
     esac
 
-    render ${backend}
+    confd ${args} "${OPTIONS[@]}"
 }
 main

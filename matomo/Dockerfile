@@ -22,13 +22,9 @@ EXPOSE 8000
 
 ENV \
     MATOMO_ASSUME_SECURE_PROTOCOL=1 \
-    MATOMO_DB_DRIVER=pdo_mysql \
-    MATOMO_DB_HOST=mariadb \
+    MATOMO_DB_DRIVER=mysql \
     MATOMO_DB_NAME=matomo \
     MATOMO_DB_PASSWORD=password \
-    MATOMO_DB_PORT=3306 \
-    MATOMO_DB_ROOT_PASSWORD=password \
-    MATOMO_DB_ROOT_USER=root \
     MATOMO_DB_USER=matomo \
     MATOMO_DEFAULT_HOST=https://islandora.traefik.me \
     MATOMO_DEFAULT_NAME=Islandora \

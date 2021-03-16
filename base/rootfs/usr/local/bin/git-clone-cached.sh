@@ -103,7 +103,7 @@ function cmdline() {
     readonly REPOSITORY=$(basename ${WORKTREE})
 
     if [[ -z $URL || -z $CACHE_DIRECTORY || -z $COMMIT || -z $WORKTREE ]]; then
-        echo "Missing one or more required options: --url --cache-dir --commit --worktree"
+        echo "Missing one or more required options: --url --cache-dir --commit --worktree" >&2
         exit 1
     fi
 

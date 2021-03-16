@@ -10,15 +10,12 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
         --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
         --commit "${COMMIT}" \
         --worktree /var/www/crayfish && \
+    addgroup nginx jwt && \
     mkdir /var/log/islandora && \
-    mkdir -p /opt/keys/jwt && \
     chown nginx:nginx /var/log/islandora && \
-    chown nginx:nginx /opt/keys/jwt && \
     chown -R nginx:nginx /var/www && \
     cleanup.sh
 
 COPY /rootfs /
-
-STOPSIGNAL SIGWINCH
 
 EXPOSE 8000
