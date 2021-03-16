@@ -7,9 +7,8 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     cleanup.sh
 
 ENV \
-    RECAST_DRUPAL_URL=drupal:80 \
-    RECAST_FCREPO_URL=fcrepo/fcrepo/rest \
-    RECAST_GEMINI_URL=gemini:8000 \
+    RECAST_DRUPAL_URL=islandora.traefik.me \
+    RECAST_FCREPO_URL=islandora.traefik.me:8081/fcrepo/rest \
     RECAST_LOG_LEVEL=debug
 
 COPY /rootfs /

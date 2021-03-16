@@ -1,12 +1,13 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:experimental
 FROM local/tomcat:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
+    apk-install.sh openjdk11 && \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    FCREPO_VERSION="5.1.0" && \
+    FCREPO_VERSION="6.0.0-beta-1" && \
     FCREPO_FILE="fcrepo-webapp-${FCREPO_VERSION}.war" && \
-    FCREPO_URL="https://github.com/fcrepo4/fcrepo4/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}" && \
-    FCREPO_SHA256="fdcb43cfd1468a84ddb89c20e4f4c7f54476ab9a24f69beb335d26f2b58ecec5" && \
+    FCREPO_URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}" && \
+    FCREPO_SHA256="33b855bb3d314eb5e4bee41e1c9991978015f8fde3d15d685ef812407b395d5b" && \
     download.sh --url "${FCREPO_URL}" --sha256 "${FCREPO_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-war-into-tomcat.sh --name "fcrepo" --file "${DOWNLOAD_CACHE_DIRECTORY}/${FCREPO_FILE}" && \
     SYN_VERSION="1.1.0" && \
@@ -21,6 +22,12 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     IMPORT_EXPORT_SHA256="89c579d1223c8f3c0da60c4309a06e47f5919c51929d976e60ea525c60cb33d1" && \
     download.sh --url "${IMPORT_EXPORT_URL}" --sha256 "${IMPORT_EXPORT_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${IMPORT_EXPORT_FILE}" /opt/tomcat && \
+    UPGRADE_UTILS_VERSION="6.0.0-beta-1" && \
+    UPGRADE_UTILS_FILE="fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}.jar" && \
+    UPGRADE_UTILS_URL="https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}/${UPGRADE_UTILS_FILE}" && \
+    UPGRADE_UTILS_SHA256="e8a0bbbabca45ff95b2ffb5c62cad49e02548bc116b80f2747d5215f80d02a0a" && \
+    download.sh --url "${UPGRADE_UTILS_URL}" --sha256 "${UPGRADE_UTILS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${UPGRADE_UTILS_FILE}" /opt/tomcat && \
     mkdir -p /opt/keys/jwt && \
     chown tomcat:tomcat /opt/keys/jwt && \
     mkdir /data && \
@@ -43,8 +50,7 @@ ENV \
     FCREPO_DB_ROOT_PASSWORD=password \
     FCREPO_DB_USER=fcrepo \
     FCREPO_DISABLE_SYN=false \
-    FCREPO_MODESHAPE_CONFIGURATION=classpath:/config/repository.json \
-    FCREPO_PERSISTENCE_TYPE=file \
+    FCREPO_PERSISTENCE_TYPE=mariadb \
     FCREPO_S3_BUCKET= \
     FCREPO_S3_PASSWORD= \
     FCREPO_S3_USER= \

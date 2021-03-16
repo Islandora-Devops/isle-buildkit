@@ -3,4 +3,4 @@ confdir = "/etc/confd"
 log-level = "debug"
 interval = 600
 noop = false
-prefix = "/gemini"
+prefix = "/fcrepo"

@@ -1,7 +1,7 @@
 error.maxRedeliveries={{ getv "/indexing/redeliveries" (getenv "ALPACA_INDEXING_REDELIVERIES") }}
+file.external.stream={{ getv "/indexing/stream/file/external" (getenv "ALPACA_INDEXING_STREAM_FILE_EXTERNAL") }}
 file.delete.stream={{ getv "/indexing/stream/file/delete" (getenv "ALPACA_INDEXING_STREAM_FILE_DELETE") }}
 file.stream={{ getv "/indexing/stream/file/index" (getenv "ALPACA_INDEXING_STREAM_FILE_INDEX") }}
-gemini.baseUrl={{ getv "/indexing/gemini/url" (getenv "ALPACA_INDEXING_GEMINI_URL") }}
 media.stream={{ getv "/indexing/stream/media/index" (getenv "ALPACA_INDEXING_STREAM_MEDIA_INDEX") }}
 milliner.baseUrl={{ getv "/indexing/milliner/url" (getenv "ALPACA_INDEXING_MILLINER_URL") }}
 node.delete.stream={{ getv "/indexing/stream/node/delete" (getenv "ALPACA_INDEXING_STREAM_NODE_DELETE") }}

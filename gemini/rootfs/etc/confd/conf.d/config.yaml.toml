@@ -1,7 +1,0 @@
-[template]
-src = "config.yaml.tmpl"
-dest = "/var/www/crayfish/Gemini/cfg/config.yaml"
-uid = 100
-gid = 101
-mode = "0644"
-keys = [ "/log/level", "/db", "/fcrepo" ]
