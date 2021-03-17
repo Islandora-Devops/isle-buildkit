@@ -11,5 +11,5 @@ if [[ ! -f "${PGDATA}/PG_VERSION" ]]; then
     rm -fr ${PGDATA}/*
     s6-setuidgid postgres bash -c "initdb --username='${POSTGRESQL_ROOT_USER}' --pwfile=<(echo '${POSTGRESQL_ROOT_PASSWORD}')"
     # Rerun the confd to restore any files that it would have written to the ${PGDATA} directory.
-    confd-render-templates.sh
+    confd-render-templates.sh -- -onetime -sync-only
 fi

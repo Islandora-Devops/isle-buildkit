@@ -187,10 +187,10 @@ function create_database {
     local driver=$(drupal_site_env "${site}" "DB_DRIVER")
     
     case "${driver}" in
-        mysql|pdo_mysql)
+        mysql)
             mysql_create_database "${site}"
             ;;
-        pgsql|postgresql|pdo_pgsql)
+        postgresql)
             postgresql_create_database "${site}"
             ;;
         *)

@@ -1,6 +1,0 @@
-<config version='1' header='X-Islandora'>
-    <site algorithm='RS256' encoding='PEM' anonymous='true' default='true' path='/opt/keys/jwt/public.key'/>
-    <token user='admin' roles='admin,fedoraAdmin'>
-      {{ getv "/jwt/admin/token" (getenv "JWT_ADMIN_TOKEN") }}
-    </token>
-</config>

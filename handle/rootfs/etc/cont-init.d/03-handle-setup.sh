@@ -1,27 +1,9 @@
 #!/usr/bin/with-contenv bash
 set -e
 
-function execute_sql_file {
-    local HANDLE_DB_HOST=""
-    local HANDLE_DB_PORT=""
-    if [[ "${HANDLE_PERSISTENCE_TYPE}" == "mysql" ]]; then
-        HANDLE_DB_HOST="${HANDLE_DB_MYSQL_HOST}"
-        HANDLE_DB_PORT="${HANDLE_DB_MYSQL_PORT}"
-    else
-        HANDLE_DB_HOST="${HANDLE_DB_POSTGRESQL_HOST}"
-        HANDLE_DB_PORT="${HANDLE_DB_POSTGRESQL_PORT}"
-    fi
-    execute-sql-file.sh \
-        --driver "${HANDLE_PERSISTENCE_TYPE}" \
-        --host "${HANDLE_DB_HOST}" \
-        --port "${HANDLE_DB_PORT}" \
-        --user "${HANDLE_DB_ROOT_USER}" \
-        --password "${HANDLE_DB_ROOT_PASSWORD}" \
-        "${@}"
-}
-
-function mysql_query {
-    cat <<- EOF
+function mysql_create_database {
+    echo "Initializing MySQL database"
+    cat <<- EOF | create-database.sh
 -- Create handle database in mariadb or mysql.
 CREATE DATABASE IF NOT EXISTS ${HANDLE_DB_NAME} CHARACTER SET utf8 COLLATE utf8_general_ci;
 -- Create handle user and grant rights.
@@ -55,13 +37,9 @@ PRIMARY KEY(handle, idx)
 EOF
 }
 
-function mysql_create_database {
-    echo "Initializing MySQL database"
-    execute_sql_file <(mysql_query)
-}
-
-function postgres_query {
-    cat <<- EOF
+function postgresql_create_database {
+    echo "Initializing PostGreSQL database"
+    cat <<- EOF | create-database.sh
 BEGIN;
 DO \$\$
 BEGIN
@@ -100,21 +78,10 @@ ALTER TABLE handles OWNER TO ${HANDLE_DB_USER};
 EOF
 }
 
-function postgresql_database_exists {
-    execute_sql_file --database "${HANDLE_DB_NAME}" <(echo 'select 1')
-}
-
-function postgresql_create_database {
-    echo "Initializing PostGreSQL database"
-    # Postgres does not support CREATE DATABASE IF NOT EXISTS so split our logic across multiple queries.
-    if ! postgresql_database_exists; then
-        execute_sql_file <(echo "CREATE DATABASE ${HANDLE_DB_NAME}")
-    fi
-    execute_sql_file --database "${HANDLE_DB_NAME}" <(postgres_query)
-}
-
 function create_database {
-    case "${HANDLE_PERSISTENCE_TYPE}" in
+    case "${DB_DRIVER}" in
+        none)
+            ;;
         mysql)
             mysql_create_database
             ;;
@@ -122,7 +89,7 @@ function create_database {
             postgresql_create_database
             ;;
         *)
-            echo "Only MySQL/PostgresSQL databases are supported for now." >&2
+            echo "Only mysql/postgresql are supported values for DB_DRIVER." >&2
             exit 1
     esac
 }
@@ -135,14 +102,8 @@ function redirect_logs_to_stdout {
     chmod o+w /dev/stdout /dev/stderr
 }
 
-function requires_database {
-    [[ "${HANDLE_STORAGE_TYPE}" = "sql" ]]
-}
-
 function main {
     redirect_logs_to_stdout
-    if requires_database; then
-        create_database
-    fi
+    create_database
 }
 main

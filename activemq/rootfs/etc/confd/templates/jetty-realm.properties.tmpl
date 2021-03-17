@@ -1,5 +1,5 @@
 # Defines users that can access the web (console, demo, etc.)
 # username: password [,rolename ...]
-{{ getv "/web/admin/name" (getenv "ACTIVEMQ_WEB_ADMIN_NAME") }}: {{ getv "/web/admin/password" (getenv "ACTIVEMQ_WEB_ADMIN_PASSWORD") }}, {{ getv "/web/admin/roles" (getenv "ACTIVEMQ_WEB_ADMIN_ROLES") }}
-{{ range $dir := lsdir "/web/user" }}{{ getv (printf "/web/user/%s/name" $dir) }}: {{ getv (printf "/web/user/%s/password" $dir) }}, {{ getv (printf "/web/user/%s/roles" $dir) }}
+{{ getenv "ACTIVEMQ_WEB_ADMIN_NAME" }}: {{ getenv "ACTIVEMQ_WEB_ADMIN_PASSWORD" }}, {{ getenv "ACTIVEMQ_WEB_ADMIN_ROLES" }}
+{{ range $dir := lsdir "/activemq/web/user" }}{{ getv (printf "/activemq/web/user/%s/name" $dir) }}: {{ getv (printf "/activemq/web/user/%s/password" $dir) }}, {{ getv (printf "/activemq/web/user/%s/roles" $dir) }}
 {{ end }}

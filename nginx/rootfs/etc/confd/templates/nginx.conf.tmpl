@@ -1,13 +1,13 @@
 user nginx;
 
 # Set number of worker processes automatically based on number of CPU cores.
-worker_processes {{ getv "/nginx/worker/processes" (getenv "NGINX_WORKER_PROCESSES") }};
+worker_processes {{ getenv "NGINX_WORKER_PROCESSES" }};
 
 # Enables the use of JIT for regular expressions to speed-up their processing.
 pcre_jit on;
 
 # Configures default error logger.
-error_log /dev/stderr {{ getv "/nginx/error/log/level" (getenv "NGINX_ERROR_LOG_LEVEL") }};
+error_log /dev/stderr {{ getenv "NGINX_ERROR_LOG_LEVEL" }};
 
 # Includes files with directives to load dynamic modules.
 include /etc/nginx/modules/*.conf;
@@ -16,7 +16,7 @@ include /etc/nginx/modules/*.conf;
 events {
         # The maximum number of simultaneous connections that can be opened by
         # a worker process.
-        worker_connections {{ getv "/nginx/worker/connections" (getenv "NGINX_WORKER_CONNECTIONS") }};
+        worker_connections {{ getenv "NGINX_WORKER_CONNECTIONS" }};
 }
 
 http {
@@ -36,11 +36,11 @@ http {
         # indicated by the request header Content-Length. If the stated content
         # length is greater than this size, then the client receives the HTTP
         # error code 413. Set to 0 to disable.
-        client_max_body_size {{ getv "/nginx/client/max/body/size" (getenv "NGINX_CLIENT_MAX_BODY_SIZE") }};
+        client_max_body_size {{ getenv "NGINX_CLIENT_MAX_BODY_SIZE" }};
 
         # Timeout for keep-alive connections. Server will close connections after
         # this time.
-        keepalive_timeout {{ getv "/nginx/keepalive/timeout" (getenv "NGINX_KEEPALIVE_TIMEOUT") }};
+        keepalive_timeout {{ getenv "NGINX_KEEPALIVE_TIMEOUT" }};
 
         # Sendfile copies data between one FD and other from within the kernel,
         # which is more efficient than read() + write().

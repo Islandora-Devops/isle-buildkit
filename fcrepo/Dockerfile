@@ -21,8 +21,7 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     IMPORT_EXPORT_SHA256="89c579d1223c8f3c0da60c4309a06e47f5919c51929d976e60ea525c60cb33d1" && \
     download.sh --url "${IMPORT_EXPORT_URL}" --sha256 "${IMPORT_EXPORT_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${IMPORT_EXPORT_FILE}" /opt/tomcat && \
-    mkdir -p /opt/keys/jwt && \
-    chown tomcat:tomcat /opt/keys/jwt && \
+    addgroup tomcat jwt && \
     mkdir /data && \
     chown tomcat:tomcat /data && \
     chown -R tomcat:tomcat /opt/tomcat && \
@@ -33,14 +32,8 @@ ENV \
     FCREPO_ACTIVEMQ_QUEUE=fedora \
     FCREPO_ACTIVEMQ_TOPIC=fedora \
     FCREPO_BINARYSTORAGE_TYPE=file \
-    FCREPO_DB_MYSQL_HOST=mariadb \
-    FCREPO_DB_MYSQL_PORT=3306 \
     FCREPO_DB_NAME=fcrepo \
-    FCREPO_DB_PASSWORD=password \
-    FCREPO_DB_POSTGRESQL_HOST=postgresql \
-    FCREPO_DB_POSTGRESQL_PORT=5432 \
-    FCREPO_DB_ROOT_USER=root \
-    FCREPO_DB_ROOT_PASSWORD=password \
+    FCREPO_DB_PASSWORD=${DB_PASSWORD} \
     FCREPO_DB_USER=fcrepo \
     FCREPO_DISABLE_SYN=false \
     FCREPO_MODESHAPE_CONFIGURATION=classpath:/config/repository.json \

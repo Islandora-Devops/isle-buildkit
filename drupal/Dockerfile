@@ -4,6 +4,7 @@ FROM local/nginx:latest
 RUN --mount=type=cache,target=/var/cache/apk \
     apk-install.sh \
       patch && \
+    addgroup nginx jwt && \
     cleanup.sh
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
@@ -17,9 +18,7 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     chmod a+x /usr/bin/drush && \
     mkdir -p /var/www/drupal/config && \
     mkdir -p /var/www/drupal/web/libraries && \
-    chown -R nginx:nginx /var/www && \
-    mkdir -p /opt/keys/jwt && \
-    chown nginx:nginx /opt/keys/jwt
+    chown -R nginx:nginx /var/www
 
 WORKDIR /var/www/drupal
 
@@ -33,21 +32,14 @@ ENV \
     DRUPAL_DEFAULT_BROKER_PORT=61613 \
     DRUPAL_DEFAULT_CANTALOUPE_URL=https://islandora.traefik.me/cantaloupe/iiif/2 \
     DRUPAL_DEFAULT_CONFIGDIR=/var/www/drupal/config/sync \
-    DRUPAL_DEFAULT_DB_DRIVER=mysql \
-    DRUPAL_DEFAULT_DB_HOST=mariadb \
     DRUPAL_DEFAULT_DB_NAME=drupal_default \
     DRUPAL_DEFAULT_DB_PASSWORD=password \
-    DRUPAL_DEFAULT_DB_PORT=3306 \
-    DRUPAL_DEFAULT_DB_ROOT_PASSWORD=password \
-    DRUPAL_DEFAULT_DB_ROOT_USER=root \
     DRUPAL_DEFAULT_DB_USER=drupal_default \
     DRUPAL_DEFAULT_EMAIL=webmaster@localhost.com \
     DRUPAL_DEFAULT_FCREPO_HOST=islandora.traefik.me \
     DRUPAL_DEFAULT_FCREPO_PORT=8081 \
-    DRUPAL_DEFAULT_GEMINI_HOST=gemini \
-    DRUPAL_DEFAULT_GEMINI_PORT=8000 \
-    DRUPAL_DEFAULT_INSTALL=true \
     DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG=false \
+    DRUPAL_DEFAULT_INSTALL=true \
     DRUPAL_DEFAULT_LOCALE=en \
     DRUPAL_DEFAULT_MATOMO_URL=https://islandora.traefik.me/matomo/ \
     DRUPAL_DEFAULT_NAME=Default \
@@ -61,6 +53,7 @@ ENV \
     DRUPAL_DEFAULT_TRIPLESTORE_HOST=blazegraph \
     DRUPAL_DEFAULT_TRIPLESTORE_NAMESPACE=islandora \
     DRUPAL_DEFAULT_TRIPLESTORE_PORT=80 \
+    DRUPAL_REVERSE_PROXY_IPS= \
     DRUPAL_SITES=DEFAULT
 
 COPY rootfs /
