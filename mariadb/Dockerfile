@@ -1,9 +1,13 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/base:latest
+ARG repository=local
+ARG tag=latest
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/base:${tag}
 
-RUN --mount=type=cache,target=/var/cache/apk \ 
-    --mount=type=cache,target=/etc/cache/apk \ 
-    apk-install.sh \
+EXPOSE 3306
+
+RUN --mount=type=cache,id=mariadb-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
         mariadb \
         mysql-client \
     && \
@@ -11,8 +15,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     chown -R mysql:mysql /var/lib/mysql && \
     chown -R mysql:mysql /var/lib/mysql-files && \
     cleanup.sh
-
-EXPOSE 3306
 
 ENV MYSQL_ROOT_PASSWORD=password
 

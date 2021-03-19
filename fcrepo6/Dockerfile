@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:experimental
-FROM local/tomcat:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    apk-install.sh openjdk11 && \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=fcrepo6-downloads,sharing=locked,target=/opt/downloads \
     FCREPO_VERSION="6.0.0-beta-1" && \
     FCREPO_FILE="fcrepo-webapp-${FCREPO_VERSION}.war" && \
     FCREPO_URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}" && \
@@ -15,6 +15,7 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     SYN_URL="https://github.com/Islandora-CLAW/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}" && \
     SYN_SHA256="bcad5f872930b1bcc9ea4a176c60e22683297121357336769a21ead9fadcbbd5" && \
     download.sh --url "${SYN_URL}" --sha256 "${SYN_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    mkdir -p /opt/tomcat/lib && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${SYN_FILE}" /opt/tomcat/lib && \
     IMPORT_EXPORT_VERSION="1.0.1" && \
     IMPORT_EXPORT_FILE="fcrepo-import-export-${IMPORT_EXPORT_VERSION}.jar" && \
@@ -27,11 +28,17 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     UPGRADE_UTILS_URL="https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}/${UPGRADE_UTILS_FILE}" && \
     UPGRADE_UTILS_SHA256="e8a0bbbabca45ff95b2ffb5c62cad49e02548bc116b80f2747d5215f80d02a0a" && \
     download.sh --url "${UPGRADE_UTILS_URL}" --sha256 "${UPGRADE_UTILS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    cp "${DOWNLOAD_CACHE_DIRECTORY}/${UPGRADE_UTILS_FILE}" /opt/tomcat && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${UPGRADE_UTILS_FILE}" /opt/tomcat
+
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/tomcat:${tag}
+
+# Install packages and tools required by all downstream images.
+RUN --mount=type=cache,id=fcrepo6-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add openjdk11 && \
+    mkdir -p /data && \
+    chown -R tomcat:tomcat /data && \
     addgroup tomcat jwt && \
-    mkdir /data && \
-    chown tomcat:tomcat /data && \
-    chown -R tomcat:tomcat /opt/tomcat && \
     cleanup.sh
 
 ENV \
@@ -45,4 +52,7 @@ ENV \
     FCREPO_PERSISTENCE_TYPE=file \
     FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin
 
+COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
+
 COPY rootfs /
+COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat

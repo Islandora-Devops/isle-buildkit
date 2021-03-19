@@ -1,9 +1,13 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/base:latest
+ARG repository=local
+ARG tag=latest
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/base:${tag}
 
-RUN --mount=type=cache,target=/var/cache/apk \ 
-    --mount=type=cache,target=/etc/cache/apk \ 
-    apk-install.sh \
+EXPOSE 5432
+
+RUN --mount=type=cache,id=postgresql-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
         postgresql \
         postgresql-client \
     && \
@@ -17,7 +21,5 @@ ENV \
     PGDATA=/var/lib/postgresql/data \
     POSTGRESQL_ROOT_PASSWORD=password \
     POSTGRESQL_ROOT_USER=root
-
-EXPOSE 5432
 
 COPY rootfs /

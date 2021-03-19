@@ -1,10 +1,15 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/crayfish:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/crayfish:${tag} AS crayfish
 
-RUN --mount=type=cache,target=/root/.composer/cache \
+RUN --mount=type=cache,id=milliner-composer,sharing=locked,target=/root/.composer/cache \
     composer install -d /var/www/crayfish/Milliner && \
-    ln -s /var/www/crayfish/Milliner/src /var/www/html && \
-    cleanup.sh
+    ln -s /var/www/crayfish/Milliner/src /var/www/html
+
+FROM ${repository}/nginx:${tag}
+
+EXPOSE 8000
 
 ENV \
     MILLINER_DRUPAL_URL=http://drupal:80 \
@@ -12,8 +17,9 @@ ENV \
     MILLINER_FEDORA6=false \
     MILLINER_LOG_LEVEL=debug
 
-COPY /rootfs /
+COPY --from=crayfish /etc/nginx/http.d/default.conf /etc/nginx/http.d/default.conf
+COPY --from=crayfish --chown=nginx:nginx /var/www /var/www
 
-RUN chown -R nginx:nginx /var/www
+COPY rootfs /
 
 WORKDIR /var/www/crayfish/Milliner/

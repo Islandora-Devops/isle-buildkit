@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/java:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=solr-downloads,sharing=locked,target=/opt/downloads \
     SOLR_VERSION="7.1.0" && \
     SOLR_FILE="solr-${SOLR_VERSION}.tgz" && \
     SOLR_URL="https://archive.apache.org/dist/lucene/solr/${SOLR_VERSION}/${SOLR_FILE}" && \
@@ -13,11 +14,18 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     install-apache-service.sh \
         --name solr \
         --key "38D2EA16DDF5FC722EBC433FDC92616F177050F6" \
-        --file "${DOWNLOAD_CACHE_DIRECTORY}/${SOLR_FILE}" \ 
+        --file "${DOWNLOAD_CACHE_DIRECTORY}/${SOLR_FILE}" \
         docs example licenses server/solr/configsets
 
-WORKDIR /opt/solr
+FROM ${repository}/java:${tag}
 
 EXPOSE 8983
 
+COPY --from=download /etc/group /etc/group
+COPY --from=download /etc/passwd /etc/passwd
+COPY --from=download /etc/shadow /etc/shadow
+COPY --from=download --chown=solr:solr /opt/solr /opt/solr
+
 COPY rootfs /
+
+WORKDIR /opt/solr

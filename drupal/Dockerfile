@@ -1,28 +1,33 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/nginx:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
-RUN --mount=type=cache,target=/var/cache/apk \
-    apk-install.sh \
-      patch && \
-    addgroup nginx jwt && \
-    cleanup.sh
-
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=drupal-downloads,sharing=locked,target=/opt/downloads \
     DRUSH_VERSION="0.6.0" && \
     DRUSH_FILE="drush.phar" && \
     DRUSH_URL="https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_VERSION}/${DRUSH_FILE}" && \
     DRUSH_SHA256="c3f32a800a2f18470b0010cd71c49e49ef5c087f8131eecfe9b686dc1f3f3d4e" && \
     download.sh --url "${DRUSH_URL}" --sha256 "${DRUSH_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${DRUSH_FILE}" /usr/bin/drush && \
-    chmod a+x /usr/bin/drush && \
-    mkdir -p /var/www/drupal/config && \
-    mkdir -p /var/www/drupal/web/libraries && \
-    chown -R nginx:nginx /var/www
+    chmod a+x /usr/bin/drush
 
-WORKDIR /var/www/drupal
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/nginx:${tag}
 
 EXPOSE 80
+
+RUN --mount=type=cache,id=drupal-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
+      patch \
+    && \
+    mkdir -p \
+        /var/www/drupal/config \
+        /var/www/drupal/web/libraries \
+    && \
+    chown -R nginx:nginx /var/www && \
+    addgroup nginx jwt && \
+    cleanup.sh
 
 ENV \
     DRUPAL_DEFAULT_ACCOUNT_EMAIL=webmaster@localhost.com \
@@ -56,4 +61,8 @@ ENV \
     DRUPAL_REVERSE_PROXY_IPS= \
     DRUPAL_SITES=DEFAULT
 
+COPY --from=download /usr/bin/drush /usr/bin/drush
+
 COPY rootfs /
+
+WORKDIR /var/www/drupal
