@@ -1,12 +1,13 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/nginx:latest as composer
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
 ARG COMMIT=6e9976b156e109cd87c5398afdd9786a16b0773a
 
 # Islandora based Drupal install.
-RUN --mount=type=cache,target=/root/.composer/cache \
-    --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=demo-composer,sharing=locked,target=/root/.composer/cache \
+    --mount=type=cache,id=demo-downloads,sharing=locked,target=/opt/downloads \
     # Get the Drupal codebase
     git-clone-cached.sh \
         --url https://github.com/dannylamb/islandora-sandbox.git \
@@ -55,10 +56,8 @@ RUN --mount=type=cache,target=/root/.composer/cache \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${JSON2_FILE}" /var/www/drupal/web/libraries/json2 && \
     # Openseadragon
     mkdir -p /var/www/drupal/web/sites/default/files/library-definitions && \
-    cp /var/www/drupal/web/modules/contrib/openseadragon/openseadragon.json /var/www/drupal/web/sites/default/files/library-definitions && \
-    chown -R nginx:nginx /var/www/drupal && \
-    cleanup.sh
+    cp /var/www/drupal/web/modules/contrib/openseadragon/openseadragon.json /var/www/drupal/web/sites/default/files/library-definitions
 
-FROM local/drupal:latest
+FROM ${repository}/drupal:${tag}
 
-COPY --chown=nginx:nginx --from=composer /var/www/drupal /var/www/drupal
+COPY --from=composer --chown=nginx:nginx /var/www /var/www

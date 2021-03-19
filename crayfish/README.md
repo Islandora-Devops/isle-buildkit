@@ -3,7 +3,7 @@
 Docker image for [Crayfish] version 1.1.1.
 
 Acts as base Docker image for Crayfish based micro-services. It is not meant to
-be run on its own.
+be run on its own it is only used to cache the download.
 
 ## Dependencies
 

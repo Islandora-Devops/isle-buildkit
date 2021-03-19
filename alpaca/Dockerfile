@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
-FROM local/karaf:latest
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/karaf:${tag} AS download
 
 # Install common features and repos
 RUN bin/start && \
@@ -9,21 +11,21 @@ RUN bin/start && \
     bin/client -r 10 -d 5  "feature:repo-add mvn:ca.islandora.alpaca/islandora-karaf/${ALPACA_VERSION}/xml/features" && \
     bin/client -r 10 -d 5  "feature:repo-add mvn:org.apache.activemq/activemq-karaf/${ACTIVEMQ_VERSION}/xml/features" && \
     bin/client -r 10 -d 5  "feature:repo-add mvn:org.apache.camel.karaf/apache-camel/${CAMEL_VERSION}/xml/features" && \
-    bin/client -r 10 -d 5  "feature:install fcrepo-service-activemq" && \
-    bin/client -r 10 -d 5  "feature:install fcrepo-service-camel" && \
-    bin/client -r 10 -d 5  "feature:install islandora-http-client" && \
+    bin/client -r 10 -d 5  "feature:install -v fcrepo-service-activemq" && \
+    bin/client -r 10 -d 5  "feature:install -v fcrepo-service-camel" && \
+    bin/client -r 10 -d 5  "feature:install -v islandora-http-client" && \
     bin/stop && \
     rm -rf instances/*
 
 # Derivative connector
 RUN bin/start && \
-    bin/client -r 10 -d 5  "feature:install islandora-connector-derivative" && \
+    bin/client -r 10 -d 5  "feature:install -v islandora-connector-derivative" && \
     bin/stop && \
     rm -rf instances/*
 
 # Fcrepo indexing
 RUN bin/start && \
-    bin/client -r 10 -d 5  "feature:install islandora-indexing-fcrepo" && \
+    bin/client -r 10 -d 5  "feature:install -v islandora-indexing-fcrepo" && \
     bin/stop && \
     rm -rf instances/*
 
@@ -33,7 +35,10 @@ RUN bin/start && \
     bin/stop && \
     rm -rf instances/*
 
+# Fix up ownership.
 RUN chown -R karaf:karaf /opt/karaf
+
+FROM ${repository}/karaf:${tag}
 
 ENV \
     ALPACA_ACTIVEMQ_PASSWORD=password \
@@ -73,5 +78,8 @@ ENV \
     ALPACA_OCR_REDELIVERIES=10 \
     ALPACA_OCR_SERVICE=http://hypercube:8000 \
     JAVA_OPTS="-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx8g"
+
+COPY --from=download --chown=karaf:karaf /opt/karaf /opt/karaf
+COPY --from=download /root/.m2 /root/.m2
 
 COPY rootfs /
