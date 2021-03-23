@@ -61,8 +61,8 @@ function wait_for_connection {
     local service="${1}"; shift
     local host="${service}_HOST"
     local port="${service}_PORT"
-    local duration="${service}_TIMEOUT"
-    echo "Waiting for up to ${!duration} seconds to connect to ${!host}:${!port}"
+    local duration="${service}_CONNECTION_TIMEOUT"
+    echo "Waiting for up to ${!duration} seconds to connect to ${!host}:${!port}" >&2
     # Put in subshell to supress "Teminated" message that always gets printed.
     # Its part of bashes job system and misleads those reading the log to thing
     # there was an error at startup.

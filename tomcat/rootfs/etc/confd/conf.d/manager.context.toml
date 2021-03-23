@@ -3,4 +3,4 @@ src = "manager.context.xml.tmpl"
 dest = "/opt/tomcat/webapps/manager/META-INF/context.xml"
 uid = 100
 gid = 1000
-keys = ["/tomcat/manager/remote/address/valve"]
+keys = [ "/" ]

@@ -1,22 +1,24 @@
 ; <?php exit; ?> DO NOT REMOVE THIS LINE
 ; file automatically generated or modified by Matomo; you can manually override the default values in global.ini.php by redefining them in this file.
 [database]
-host = {{ getv "/db/host" (getenv "MATOMO_DB_HOST") }}
-username = {{ getv "/db/user" (getenv "MATOMO_DB_USER") }}
-password = {{ getv "/db/password" (getenv "MATOMO_DB_PASSWORD") }}
-dbname = {{ getv "/db/name" (getenv "MATOMO_DB_NAME") }}
+host = {{ getenv "DB_MYSQL_HOST" }}
+port = {{ getenv "DB_MYSQL_PORT" }}
+username = {{ getenv "MATOMO_DB_USER" }}
+password = {{ getenv "MATOMO_DB_PASSWORD" }}
+dbname = {{ getenv "MATOMO_DB_NAME" }}
 tables_prefix = "matomo_"
 
 ; https://matomo.org/faq/how-to-install/faq_98/
 [General]
-force_ssl = {{ getv "/force/ssl" (getenv "MATOMO_FORCE_SSL") }} 
-proxy_uri_header = {{ getv "/proxy/uri/header" (getenv "MATOMO_PROXY_URI_HEADER") }} 
-proxy_client_headers[] = "{{ getv "/proxy/client/headers" (getenv "MATOMO_PROXY_CLIENT_HEADERS") }}"
-proxy_host_headers[] = "{{ getv "/proxy/host/headers" (getenv "MATOMO_PROXY_HOST_HEADERS") }}"
-assume_secure_protocol = {{ getv "/assume/secure/protocol" (getenv "MATOMO_ASSUME_SECURE_PROTOCOL") }}
-salt = {{ getv "/salt" (getenv "MATOMO_SALT") }} 
-trusted_hosts[] = {{ getv "/default/host" (getenv "MATOMO_DEFAULT_HOST") }}
-{{ range $site := lsdir "/site" }}trusted_hosts[] = {{ getv (printf "/site/%s/host" $site) }}
+force_ssl = {{ getenv "MATOMO_FORCE_SSL" }} 
+proxy_uri_header = {{ getenv "MATOMO_PROXY_URI_HEADER" }} 
+proxy_client_headers[] = "{{ getenv "MATOMO_PROXY_CLIENT_HEADERS" }}"
+proxy_host_headers[] = "{{ getenv "MATOMO_PROXY_HOST_HEADERS" }}"
+assume_secure_protocol = {{ getenv "MATOMO_ASSUME_SECURE_PROTOCOL" }}
+salt = {{ getenv "MATOMO_SALT" }} 
+trusted_hosts[] = localhost
+trusted_hosts[] = {{ getenv "MATOMO_DEFAULT_HOST" }}
+{{ range $site := lsdir "/matomo/site" }}trusted_hosts[] = {{ getv (printf "/matomo/site/%s/host" $site) }}
 {{ end }}
 
 [PluginsInstalled]

@@ -4,4 +4,4 @@ dest = "/var/www/crayfish/Recast/cfg/config.yaml"
 uid = 100
 gid = 101
 mode = "0644"
-keys = [ "/log/level", "/fcrepo", "/drupal", "/gemini" ]
+keys = [ "/" ]

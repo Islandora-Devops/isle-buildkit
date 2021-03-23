@@ -22,7 +22,7 @@ handlers = java.util.logging.ConsoleHandler
 # Describes specific configuration info for Handlers.
 ############################################################
 
-java.util.logging.ConsoleHandler.level = {{ getv "/tomcat/log/level" (getenv "TOMCAT_LOG_LEVEL") }}
+java.util.logging.ConsoleHandler.level = {{ getenv "TOMCAT_LOG_LEVEL" }}
 java.util.logging.ConsoleHandler.formatter = org.apache.juli.OneLineFormatter
 java.util.logging.ConsoleHandler.encoding = UTF-8
 

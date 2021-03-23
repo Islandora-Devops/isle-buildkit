@@ -10,40 +10,15 @@ set -e
 # the confd backend. As such for any subsite will use those values unless the
 # subsite variable is explicitly overriden.
 
-# Temporary directory to deposit generated confd configuration templates and
-# output, etc.
-mkdir -p /tmp/confd/conf.d /tmp/confd/templates /tmp/confd/out
-
-# Get backend and log level.
-CONFD_LOG_LEVEL=$(</var/run/s6/container_environment/CONFD_LOG_LEVEL)
-CONFD_BACKEND=$(</var/run/s6/container_environment/CONFD_BACKEND)
-
-# Temporary confd template config.
-cat << EOF > /tmp/confd/conf.d/import.sh.toml
-[template]
-src = "import.sh.tmpl"
-dest = "/tmp/confd/out/import.sh"
-keys = ["/"]
-EOF
-
-# Temporary confd template.
-cat << EOF > /tmp/confd/templates/import.sh.tmpl
-s6-env -i 
+# Import sites/subsites environment var so we can generate defaults for each site.
+cat << EOF | /usr/local/bin/confd-import-environment.sh
 MATOMO_SUBSITES="{{ toUpper (join (lsdir "/matomo/site") " ") }}"
 MATOMO_SITES="DEFAULT {{ toUpper (join (lsdir "/matomo/site") " ") }}"
-s6-dumpenv -- /var/run/s6/container_environment
 EOF
-
-# Set MATOMO_SUBSITES and MATOMO_SITES variables by checking if any environment
-# variables have been defined for them.
-with-contenv wait-for-confd-backend.sh
-with-contenv confd -prefix '/' -onetime -sync-only -confdir /tmp/confd -log-level ${CONFD_LOG_LEVEL} -backend ${CONFD_BACKEND}
-execlineb -P /tmp/confd/out/import.sh 
 
 # Populate container environment variables for each of the MATOMO_SUBSITES.
 MATOMO_SUBSITES=$(</var/run/s6/container_environment/MATOMO_SUBSITES)
 {
-    echo 's6-env -i'
     for MATOMO_SITE in ${MATOMO_SUBSITES}
     do
         for FILE in /var/run/s6/container_environment/MATOMO_DEFAULT_*
@@ -65,15 +40,4 @@ MATOMO_SUBSITES=$(</var/run/s6/container_environment/MATOMO_SUBSITES)
             esac
         done
     done
-    echo 's6-dumpenv -- /var/run/s6/container_environment'
-} > /tmp/confd/templates/import.sh.tmpl
-
-# Allow the choosen confd backend to update the container environment.
-# If the backend is 'env' this effectively does nothing, this allows 
-# scripts to use variables defined by the confd backend.
-with-contenv wait-for-confd-backend.sh
-with-contenv confd -prefix '/' -onetime -sync-only -confdir /tmp/confd -log-level ${CONFD_LOG_LEVEL} -backend ${CONFD_BACKEND}
-execlineb -P /tmp/confd/out/import.sh 
-
-# Remove temporary files.
-rm -fr /tmp/confd
+} | /usr/local/bin/confd-import-environment.sh

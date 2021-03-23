@@ -9,7 +9,7 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 ENV \
     MILLINER_DRUPAL_URL=http://drupal:80 \
     MILLINER_FCREPO_URL=http://fcrepo:8080/fcrepo/rest \
-    MILLINER_GEMINI_URL=http://gemini:8000 \
+    MILLINER_FEDORA6=false \
     MILLINER_LOG_LEVEL=debug
 
 COPY /rootfs /

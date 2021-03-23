@@ -21,17 +21,11 @@ metrics for.
 
 ## Settings
 
+### Confd Settings
+
 | Environment Variable          | Confd Key                      | Default                                                      | Description                                                   |
 | :---------------------------- | :----------------------------- | :----------------------------------------------------------- | :------------------------------------------------------------ |
 | MATOMO_ASSUME_SECURE_PROTOCOL | /matomo/assume/secure/protocol | 1                                                            | <https://matomo.org/faq/how-to-install/faq_98/>               |
-| MATOMO_DB_DRIVER              | /matomo/db/driver              | pdo_mysql                                                    | The database driver to use                                    |
-| MATOMO_DB_HOST                | /matomo/db/host                | database                                                     | The database host                                             |
-| MATOMO_DB_NAME                | /matomo/db/name                | matomo                                                       | The database name                                             |
-| MATOMO_DB_PASSWORD            | /matomo/db/password            | password                                                     | The database user password                                    |
-| MATOMO_DB_PORT                | /matomo/db/port                | 3306                                                         | The database port                                             |
-| MATOMO_DB_ROOT_PASSWORD       | /matomo/db/root/password       | password                                                     | The root user password (used to create the database / user)   |
-| MATOMO_DB_ROOT_USER           | /matomo/db/root/user           | root                                                         | The root user (used to create the database / user)            |
-| MATOMO_DB_USER                | /matomo/db/user                | matomo                                                       | The user to create / use when interacting with the database   |
 | MATOMO_DEFAULT_HOST           | /matomo/default/host           | islandora.traefik.me                                         | The URL of the default site for which to gather metrics for   |
 | MATOMO_DEFAULT_NAME           | /matomo/default/name           | Islandora                                                    | The name of the default site                                  |
 | MATOMO_DEFAULT_TIMEZONE       | /matomo/default/timezone       | America/Halifax                                              | The timezone where the default site is hosted                 |
@@ -58,6 +52,23 @@ of **PHP** it is important you keep it secret along with your passwords.
 php -r 'echo md5(uniqid(rand(), true));'
 ```
 
+### Database Settings
+
+[Matomo] unlike many of our services can only use `MySQL` as a backend. Please see
+the documentation in the [base image] for more information about the default
+database connection configuration.
+
+| Environment Variable | Confd Key           | Default  | Description                                              |
+| :------------------- | :------------------ | :------- | :------------------------------------------------------- |
+| MATOMO_DB_NAME       | /matomo/db/name     | matomo   | The name of the database                                 |
+| MATOMO_DB_USER       | /matomo/db/user     | matomo   | The user to connect to the database                      |
+| MATOMO_DB_PASSWORD   | /matomo/db/password | password | The password of the user used to connect to the database |
+
+Additionally the `DB_DRIVER` variable is hard-coded to be `mysql` as no other
+value is supported.
+
+### Multi-site Settings
+
 Additional multi-sites can be defined by adding more environment variables,
 following the above conventions, only the `MATOMO_SITE_{SITE}_HOST` is required
 to create an additional site:
@@ -68,5 +79,6 @@ to create an additional site:
 | MATOMO_SITE_{SITE}_NAME     | /matomo/site/{SITE}/name     | {SITE}          | The name of the site                                |
 | MATOMO_SITE_{SITE}_TIMEZONE | /matomo/site/{SITE}/timezone | America/Halifax | The timezone the site is hosted in                  |
 
-[Matomo]: https://matomo.org/
+[base image]: ../base/README.md
 [Matomo Documentation]: https://matomo.org/docs/
+[Matomo]: https://matomo.org/

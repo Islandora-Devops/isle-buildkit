@@ -28,8 +28,7 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     UPGRADE_UTILS_SHA256="e8a0bbbabca45ff95b2ffb5c62cad49e02548bc116b80f2747d5215f80d02a0a" && \
     download.sh --url "${UPGRADE_UTILS_URL}" --sha256 "${UPGRADE_UTILS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${UPGRADE_UTILS_FILE}" /opt/tomcat && \
-    mkdir -p /opt/keys/jwt && \
-    chown tomcat:tomcat /opt/keys/jwt && \
+    addgroup tomcat jwt && \
     mkdir /data && \
     chown tomcat:tomcat /data && \
     chown -R tomcat:tomcat /opt/tomcat && \
@@ -39,21 +38,11 @@ ENV \
     FCREPO_ACTIVEMQ_BROKER=tcp://activemq:61616 \
     FCREPO_ACTIVEMQ_QUEUE=fedora \
     FCREPO_ACTIVEMQ_TOPIC=fedora \
-    FCREPO_BINARYSTORAGE_TYPE=file \
-    FCREPO_DB_MYSQL_HOST=mariadb \
-    FCREPO_DB_MYSQL_PORT=3306 \
     FCREPO_DB_NAME=fcrepo \
     FCREPO_DB_PASSWORD=password \
-    FCREPO_DB_POSTGRESQL_HOST=postgresql \
-    FCREPO_DB_POSTGRESQL_PORT=5432 \
-    FCREPO_DB_ROOT_USER=root \
-    FCREPO_DB_ROOT_PASSWORD=password \
     FCREPO_DB_USER=fcrepo \
     FCREPO_DISABLE_SYN=false \
-    FCREPO_PERSISTENCE_TYPE=mariadb \
-    FCREPO_S3_BUCKET= \
-    FCREPO_S3_PASSWORD= \
-    FCREPO_S3_USER= \
+    FCREPO_PERSISTENCE_TYPE=file \
     FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin
 
 COPY rootfs /

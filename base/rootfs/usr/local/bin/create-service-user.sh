@@ -59,7 +59,7 @@ function cmdline() {
     done
 
     if [[ -z $NAME ]]; then
-        echo "Missing one or more required options: --name"
+        echo "Missing one or more required options: --name" >&2
         exit 1
     fi
 

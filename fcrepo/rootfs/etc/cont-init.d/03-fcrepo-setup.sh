@@ -1,27 +1,8 @@
 #!/usr/bin/with-contenv bash
 set -e
 
-function execute_sql_file {
-    local FCREPO_DB_HOST=""
-    local FCREPO_DB_PORT=""
-    if [[ "${FCREPO_PERSISTENCE_TYPE}" == "mysql" || "${FCREPO_PERSISTENCE_TYPE}" == "mariadb" ]]; then
-        FCREPO_DB_HOST="${FCREPO_DB_MYSQL_HOST}"
-        FCREPO_DB_PORT="${FCREPO_DB_MYSQL_PORT}"
-    else
-        FCREPO_DB_HOST="${FCREPO_DB_POSTGRESQL_HOST}"
-        FCREPO_DB_PORT="${FCREPO_DB_POSTGRESQL_PORT}"
-    fi
-    execute-sql-file.sh \
-        --driver "${FCREPO_PERSISTENCE_TYPE}" \
-        --host "${FCREPO_DB_HOST}" \
-        --port "${FCREPO_DB_PORT}" \
-        --user "${FCREPO_DB_ROOT_USER}" \
-        --password "${FCREPO_DB_ROOT_PASSWORD}" \
-        "${@}"
-}
-
-function mysql_query {
-    cat <<- EOF
+function mysql_create_database {
+    cat <<- EOF | create-database.sh
 -- Create fcrepo database in mariadb or mysql.
 CREATE DATABASE IF NOT EXISTS ${FCREPO_DB_NAME} CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -35,12 +16,8 @@ SET PASSWORD FOR ${FCREPO_DB_USER}@'%' = PASSWORD('${FCREPO_DB_PASSWORD}')
 EOF
 }
 
-function mysql_create_database {
-    execute_sql_file <(mysql_query)
-}
-
-function postgres_query {
-    cat <<- EOF
+function postgresql_create_database {
+    cat <<- EOF | create-database.sh
 BEGIN;
 
 DO \$\$
@@ -61,28 +38,20 @@ COMMIT;
 EOF
 }
 
-function postgresql_database_exists {
-    execute_sql_file --database "${FCREPO_DB_NAME}" <(echo 'select 1')
-}
-
-function postgresql_create_database {
-    # Postgres does not support CREATE DATABASE IF NOT EXISTS so split our logic across multiple queries.
-    if ! postgresql_database_exists; then
-        execute_sql_file <(echo "CREATE DATABASE ${FCREPO_DB_NAME}")
-    fi
-    execute_sql_file --database "${FCREPO_DB_NAME}" <(postgres_query)
-}
-
-function create_database {
-    case "${FCREPO_PERSISTENCE_TYPE}" in
-        mysql|pdo_mysql)
+# Some persistence backends require setup.
+function setup_persistence_backend {
+    case "${DB_DRIVER}" in
+        none)
+            # No action required.
+            ;;
+        mysql)
             mysql_create_database
             ;;
-        pgsql|postgresql|pdo_pgsql)
+        postgresql)
             postgresql_create_database
             ;;
         *)
-            echo "Only MySQL/PostgresSQL databases are supported for now." >&2
+            echo "Only mysql/postgresql are supported values for DB_DRIVER." >&2
             exit 1
     esac
 }
@@ -93,16 +62,9 @@ function redirect_logs_to_stdout {
     chown tomcat:tomcat /opt/tomcat/logs/velocity.log
 }
 
-function requires_database {
-    [[ "${FCREPO_PERSISTENCE_TYPE}" = "mysql" ]] || [[ "${FCREPO_PERSISTENCE_TYPE}" = "postgresql" ]]
-}
-
 function main {
     redirect_logs_to_stdout
-    if requires_database; then
-        create_database
-    fi
-
+    setup_persistence_backend
     # When bind mounting we need to ensure that we
     # actually can write to the folder.
     chown tomcat:tomcat /data

@@ -17,6 +17,7 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
         demos \
     && \
     sed -i 's@http://repo1@https://repo1@' /opt/karaf/etc/org.ops4j.pax.url.mvn.cfg && \
+    mkdir /opt/karaf/data/log && \
     chown -R karaf:karaf /opt/karaf && \
     rm -rf /opt/karaf/instances/* && \
     cleanup.sh

@@ -11,7 +11,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     cleanup.sh
 
 ENV \
-    JAVA_HOME=/usr/lib/jvm/default-jvm \
-    JAVA_OPTS=
+    JAVA_HOME=/usr/lib/jvm/default-jvm
 
 COPY rootfs /

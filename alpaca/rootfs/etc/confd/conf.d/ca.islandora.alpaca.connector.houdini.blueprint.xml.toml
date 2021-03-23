@@ -4,4 +4,4 @@ dest = "/opt/karaf/deploy/ca.islandora.alpaca.connector.houdini.blueprint.xml"
 uid = 100
 gid = 1000
 mode = "0644"
-keys = [ "/houdini" ]
+keys = [ "/" ]

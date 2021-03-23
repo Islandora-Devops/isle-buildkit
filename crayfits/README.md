@@ -19,11 +19,6 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-> N.B. For all of the settings below images that descend from
-> ``islandora/crayfits`` will apply prefix to every setting. So for example
-> `JWT_ADMIN_TOKEN` would become `GEMINI_JWT_ADMIN_TOKEN` this is to allow for
-> different settings on a per-service basis.
-
 | Environment Variable    | Confd Key                 | Default           | Description                                                                                       |
 | :---------------------- | :----------------------- | :---------------- | :------------------------------------------------------------------------------------------------ |
 | CRAYFITS_LOG_LEVEL      | /crayfits/log/level      | debug             | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
