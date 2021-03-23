@@ -25,4 +25,4 @@ jobs:
     - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build -Pdocker.driver=docker-container -Pdocker.platforms=linux/amd64,linux/arm64 --info
+        arguments: build --info
