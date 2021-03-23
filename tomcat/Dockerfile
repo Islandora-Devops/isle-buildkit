@@ -22,6 +22,10 @@ FROM ${repository}/java:${tag}
 
 EXPOSE 8080
 
+COPY --from=download /etc/group /etc/group
+COPY --from=download /etc/passwd /etc/passwd
+COPY --from=download /etc/shadow /etc/shadow
+
 # Install reverse proxy to redirect from 80 to 8080.
 RUN --mount=type=cache,id=tomcat-apk,sharing=locked,from=cache,target=/var/cache/apk \
     apk add nginx && \
@@ -37,9 +41,6 @@ ENV \
     TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE=^.*$ \
     TOMCAT_NGINX_CLIENT_MAX_BODY_SIZE=0
 
-COPY --from=download /etc/group /etc/group
-COPY --from=download /etc/passwd /etc/passwd
-COPY --from=download /etc/shadow /etc/shadow
 COPY --from=download /opt /opt
 
 COPY rootfs /
