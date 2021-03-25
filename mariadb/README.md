@@ -32,9 +32,15 @@ Requires `islandora/base` docker image to build. Please refer to the
 
 ## Settings
 
-| Environment Variable | Confd Key             | Default  | Description                            |
-| :------------------- | :------------------- | :------- | :------------------------------------- |
-| MYSQL_ROOT_PASSWORD  | /mysql/root/password | password | The password for the root user account |
+### Database Settings
+
+Please see the documentation in the [base image] for more information about the
+default database connection configuration.
+
+| Environment Variable | Confd Key            | Default | Description                                                                           |
+| :------------------- | :------------------- | :------ | :------------------------------------------------------------------------------------ |
+| MYSQL_ROOT_PASSWORD  | /mysql/root/password |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
+| MYSQL_ROOT_USER      | /mysql/root/user     |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
 
 ## Logs
 
@@ -42,5 +48,6 @@ Requires `islandora/base` docker image to build. Please refer to the
 | :----- | :------------ |
 | STDOUT | [MariaDB Log] |
 
+[base image]: ../base/README.md
 [MariaDB Documentation]: https://mariadb.org/documentation/
 [MariaDB]: https://mariadb.org/
