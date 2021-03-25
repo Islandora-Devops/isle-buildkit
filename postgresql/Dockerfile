@@ -18,8 +18,6 @@ RUN --mount=type=cache,id=postgresql-apk,sharing=locked,from=cache,target=/var/c
     cleanup.sh
 
 ENV \
-    PGDATA=/var/lib/postgresql/data \
-    POSTGRESQL_ROOT_PASSWORD=password \
-    POSTGRESQL_ROOT_USER=root
+    PGDATA=/var/lib/postgresql/data
 
 COPY rootfs /

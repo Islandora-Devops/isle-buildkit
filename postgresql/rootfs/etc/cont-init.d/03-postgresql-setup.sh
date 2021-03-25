@@ -9,7 +9,7 @@ chown postgres:postgres /run/postgresql
 if [[ ! -f "${PGDATA}/PG_VERSION" ]]; then
     # Make sure the ${PGDATA} directory is empty so the init can run successfully. 
     rm -fr ${PGDATA}/*
-    s6-setuidgid postgres bash -c "initdb --username='${POSTGRESQL_ROOT_USER}' --pwfile=<(echo '${POSTGRESQL_ROOT_PASSWORD}')"
+    s6-setuidgid postgres bash -c "initdb --username='${DB_ROOT_USER}' --pwfile=<(echo '${DB_ROOT_PASSWORD}')"
     # Rerun the confd to restore any files that it would have written to the ${PGDATA} directory.
     confd-render-templates.sh -- -onetime -sync-only
 fi

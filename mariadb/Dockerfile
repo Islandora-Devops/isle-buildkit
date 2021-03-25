@@ -16,6 +16,4 @@ RUN --mount=type=cache,id=mariadb-apk,sharing=locked,from=cache,target=/var/cach
     chown -R mysql:mysql /var/lib/mysql-files && \
     cleanup.sh
 
-ENV MYSQL_ROOT_PASSWORD=password
-
 COPY rootfs /
