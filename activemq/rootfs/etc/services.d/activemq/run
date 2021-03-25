@@ -1,5 +1,3 @@
-#!/usr/bin/execlineb -P
-# -*- mode: sh -*-
-# vi: set ft=sh :
-s6-setuidgid activemq
-/opt/activemq/bin/activemq console
+#!/usr/bin/env bash
+set -e
+exec s6-setuidgid activemq /opt/activemq/bin/activemq console

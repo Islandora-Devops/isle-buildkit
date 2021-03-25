@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+exec with-contenv \
+     importas -i PGDATA PGDATA \
+     s6-setuidgid \
+     postgres postgres

@@ -30,7 +30,7 @@ ARG TARGETARCH
 COPY --from=download /usr/local/bin/*.sh /usr/local/bin
 
 # Install s6
-RUN --mount=type=cache,id=base-downloads,sharing=locked,target=/opt/downloads \
+RUN --mount=type=cache,id=base-downloads,sharing=locked,from=download,target=/opt/downloads \
     if [ "${TARGETARCH}" = "arm64" ]; then \
         S6_FILE="s6-overlay-aarch64.tar.gz"; \
         S6_SHA256="84f585a100b610124bb80e441ef2dc2d68ac2c345fd393d75a6293e0951ccfc5"; \
@@ -69,6 +69,7 @@ ENV \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_CMD_WAIT_FOR_SERVICE=1 \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=30000 \
+    S6_SERVICES_GRACETIME=30000 \
     S6_LOGGING=0 \
     TERM=xterm
 

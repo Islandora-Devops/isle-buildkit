@@ -4,4 +4,4 @@
 scratch
 scratch.md
 volumes
-docker-compose.yml
+/docker-compose.yml

@@ -3,5 +3,5 @@ set -e
 
 # Only shutdown the container if this service was enabled otherwise ignore.
 if [[ "${CONFD_ENABLE_SERVICE}" == "true" ]]; then
-  s6-svscanctl -t /var/run/s6/services
+  source /usr/local/share/s6/finish
 fi
