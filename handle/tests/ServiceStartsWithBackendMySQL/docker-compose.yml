@@ -1,0 +1,18 @@
+# file: docker-compose.yml
+#
+# Tests that the base values for database environment variables can be
+# overridden by prefixing them.
+# 
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+version: "3.8"
+services:
+  mariadb:
+    image: ${MYSQL_IMAGE:-local/mariadb:latest}
+  handle:
+    environment:
+      HANDLE_PERSISTENCE_TYPE: mysql
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${BASE_IMAGE:-local/handle:latest}

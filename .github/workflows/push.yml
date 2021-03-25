@@ -28,7 +28,7 @@ jobs:
     - name: Set TAG Environment Variable
       run: |
         echo "TAG=$GITHUB_SHA" >> $GITHUB_ENV
-    - name: Build and Push Docker images
+    - name: Build/Test/Push Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: push '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64 --info
+        arguments: push test '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64 --info

@@ -1,5 +1,3 @@
-#!/usr/bin/execlineb -P
-# -*- mode: sh -*-
-# vi: set ft=sh:
-s6-setuidgid handle
-/opt/handle/bin/hdl-server /var/handle
+#!/usr/bin/env bash
+set -e
+exec s6-setuidgid handle /opt/handle/bin/hdl-server /var/handle

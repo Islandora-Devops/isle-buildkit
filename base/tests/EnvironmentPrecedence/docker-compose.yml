@@ -1,0 +1,50 @@
+# file: docker-compose.yml
+#
+# Used for testing environment precedence follows what is expected from:
+# 
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+version: "3.8"
+secrets:
+  # Secrets are #2 on the precedence list.
+  DB_PASSWORD:
+    file: "./secrets/DB_PASSWORD"
+  JWT_ADMIN_TOKEN:
+    file: "./secrets/JWT_ADMIN_TOKEN"
+  JWT_PRIVATE_KEY:
+    file: "./secrets/JWT_PRIVATE_KEY"
+services:
+  # Single node cluster.
+  etcd:
+    # etcd uses a different tag for arm64, default to x86_64 have gradle pass in the appropriate tag based on host.
+    image: ${ETCD_TAG:-gcr.io/etcd-development/etcd:v3.4.15}
+    environment:
+      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+    volumes:
+      - ./populate-etcd.sh:/populate-etcd.sh
+    # etcd will be the confd backend and as such is #1 on the precedence list.
+    command: >
+      etcd --data-dir=/data
+  base:
+    # Environment variables defined here are #3 on on the precedence list.
+    # Environment variables specified in the Dockerfile for are #4 on the 
+    # precedence list. Followed by files in /etc/defaults in the image, 
+    # which are #5 on the precedence list
+    environment:
+      CONFD_BACKEND: "etcd"
+      DB_NAME: "DB_NAME passed in value" # Should take precedence.
+      DB_PASSWORD: "DB_PASSWORD passed in value" # Should be overridden by the secret.
+      JWT_ADMIN_TOKEN: "JWT_ADMIN_TOKEN passed in value" # Should be overridden by the confd backend.
+    secrets:
+      - DB_PASSWORD # Should take precedence.
+      - JWT_ADMIN_TOKEN # Should be overridden by confd backend.
+      - JWT_PRIVATE_KEY # Used to test template generation, should take precedence over /etc/defaults.
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+      - ./defaults/DB_NAME:/etc/defaults/DB_NAME # Should be overridden by the passed in environment variable.
+      - ./defaults/DB_PASSWORD:/etc/defaults/DB_PASSWORD # Should be overridden by the secret.
+      - ./defaults/DB_USER:/etc/defaults/DB_USER # Should be overridden by environment variable defined in Dockerfile.
+      - ./defaults/JWT_ADMIN_TOKEN:/etc/defaults/JWT_ADMIN_TOKEN # Should be overridden by confd backend.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${BASE_IMAGE:-local/base:latest}

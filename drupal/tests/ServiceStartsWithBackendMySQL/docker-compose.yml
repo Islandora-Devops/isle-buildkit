@@ -1,0 +1,15 @@
+# file: docker-compose.yml
+#
+# Tests that we can bring up the demo site.
+#
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+version: "3.8"
+services:
+  drupal:
+    image: ${DRUPAL_IMAGE:-local/drupal:latest}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+  mariadb:
+    image: ${DATABASE_IMAGE:-local/mariadb:latest}

@@ -1,0 +1,17 @@
+# file: docker-compose.yml
+#
+# Tests that we can bring up the demo site.
+#
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+version: "3.8"
+services:
+  drupal:
+    image: ${DRUPAL_IMAGE:-local/drupal:latest}
+    environment:
+      DRUPAL_DEFAULT_DB_DRIVER: postgresql
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - bash # /test.sh # Run test and exit.
+  postgresql:
+    image: ${MYSQL_IMAGE:-local/postgresql:latest}

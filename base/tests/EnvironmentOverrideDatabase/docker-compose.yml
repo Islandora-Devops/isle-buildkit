@@ -1,0 +1,26 @@
+# file: docker-compose.yml
+#
+# Tests that the base values for database environment variables can be
+# overridden by prefixing them.
+# 
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+version: "3.8"
+services:
+  base:
+    # Allow downstream container to override `DB` environment variables.
+    environment:
+      TEST_DB_DRIVER: "postgresql"
+      TEST_DB_MYSQL_HOST: "DB_MYSQL_HOST override"
+      TEST_DB_MYSQL_PORT: "DB_MYSQL_PORT override"
+      TEST_DB_NAME: "DB_NAME override"
+      TEST_DB_PASSWORD: "DB_PASSWORD override"
+      TEST_DB_POSTGRESQL_HOST: "DB_POSTGRESQL_HOST override"
+      TEST_DB_POSTGRESQL_PORT: "DB_POSTGRESQL_PORT override"
+      TEST_DB_ROOT_PASSWORD: "DB_ROOT_PASSWORD override"
+      TEST_DB_ROOT_USER: "DB_ROOT_USER override"
+      TEST_DB_USER: "DB_USER override"
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${BASE_IMAGE:-local/base:latest}

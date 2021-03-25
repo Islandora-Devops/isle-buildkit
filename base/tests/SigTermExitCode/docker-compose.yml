@@ -1,0 +1,9 @@
+# file: docker-compose.yml
+#
+# Tests that when a service receives a SIGTERM it exits 0 after cleaning up the running services.
+version: "3.8"
+services:
+  base:
+    image: ${BASE_IMAGE:-local/base:latest}
+    volumes:
+      - ./service:/etc/services.d/test

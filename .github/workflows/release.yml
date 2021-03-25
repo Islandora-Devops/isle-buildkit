@@ -30,8 +30,7 @@ jobs:
       run: |
         export TAG=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
         echo "TAG=$TAG" >> $GITHUB_ENV
-    - name: Push Docker images
+    - name: Build/Push/Test Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: push '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64 --info
-    # @todo add tests.
+        arguments: push test '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64 --info

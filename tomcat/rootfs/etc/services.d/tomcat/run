@@ -1,6 +1,3 @@
-#!/usr/bin/execlineb -P
-# -*- mode: sh -*-
-# vi: set ft=sh :
-with-contenv
-s6-setuidgid tomcat
-/opt/tomcat/bin/catalina.sh run
+#!/usr/bin/env bash
+set -e
+exec with-contenv s6-setuidgid tomcat /opt/tomcat/bin/catalina.sh run

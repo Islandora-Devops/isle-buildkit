@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+source /usr/local/share/s6/finish
