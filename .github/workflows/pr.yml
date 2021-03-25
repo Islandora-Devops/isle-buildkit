@@ -25,4 +25,4 @@ jobs:
     - name: Build/Test Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build test --info
+        arguments: build test -PisCI=true --info
