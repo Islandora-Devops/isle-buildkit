@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+# Only run the service if explicitly told to do so.
+if [[ "${RIPRAP_CROND_ENABLE_SERVICE}" == "true" ]]; then
+  exec crond -f -l ${RIPRAP_CROND_LOG_LEVEL} -d ${RIPRAP_CROND_LOG_LEVEL}
+fi

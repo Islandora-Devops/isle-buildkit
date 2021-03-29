@@ -1,0 +1,9 @@
+# file: docker-compose.yml
+version: "3.8"
+services:
+  riprap:
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${BASE_IMAGE:-local/riprap:latest}

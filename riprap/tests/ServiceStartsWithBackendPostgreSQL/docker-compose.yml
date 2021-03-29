@@ -1,0 +1,14 @@
+# file: docker-compose.yml
+version: "3.8"
+services:
+  postgresql:
+    image: ${MYSQL_IMAGE:-local/postgresql:latest}
+  riprap:
+    # Allow downstream container to override `DB` environment variables.
+    environment:
+      RIPRAP_DB_DRIVER: postgresql
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${BASE_IMAGE:-local/riprap:latest}
