@@ -1,0 +1,7 @@
+[template]
+src = "launch.json.tmpl"
+dest = "/var/www/drupal/.vscode/launch.json"
+uid = 100
+gid = 101
+mode = "0644"
+keys = [ "/" ]
