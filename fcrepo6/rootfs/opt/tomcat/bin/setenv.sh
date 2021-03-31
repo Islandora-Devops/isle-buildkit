@@ -32,3 +32,10 @@ fi
 if [[ "${FCREPO_DISABLE_SYN}" == "true" ]]; then
   export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.properties.management=relaxed"
 fi
+
+if [[ "${FCREPO_BINARYSTORAGE_TYPE}" == "file" ]]; then
+  export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-fs"
+fi
+if [[ "${FCREPO_BINARYSTORAGE_TYPE}" == "s3" ]]; then
+  export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-s3 -Dfcrepo.aws.region=${FCREPO_AWS_REGION} -Dfcrepo.aws.region=${FCREPO_S3_BUCKET} -Dfcrepo.aws.region=${FCREPO_S3_PREFIX}"
+fi
