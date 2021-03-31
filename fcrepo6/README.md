@@ -37,7 +37,12 @@ additional settings, volumes, ports, etc.
 | FCREPO_ACTIVEMQ_QUEUE_ENABLE   | /fcrepo/activemq/queue          | false                             | If `true` publish JMS messages on the queue `FCREPO_ACTIVEMQ_QUEUE`                               |
 | FCREPO_ACTIVEMQ_TOPIC          | /fcrepo/activemq/topic          | fedora                            | The ActiveMQ Topic in which to publish JMS messages                                               |
 | FCREPO_ACTIVEMQ_TOPIC_ENABLE   | /fcrepo/activemq/topic          | true                              | If `true` publish JMS messages on the topic `FCREPO_ACTIVEMQ_TOPIC`                               |
-| FCREPO_BINARYSTORAGE_TYPE      | /fcrepo/binarystorage/type      | file                              | The binary storage type. Only `file` and `s3` are supported at this time                          |
+| FCREPO_BINARYSTORAGE_TYPE      | /fcrepo/binarystorage/type      | file                              | The binary storage type. Only `file` and `s3` are supported at this time                           |
+| FCREPO_AWS_REGION              |                                 | us-east-1                         | AWS Region for S3 Bucket                                                                           |
+| FCREPO_S3_BUCKET               |                                 |                                   | Bucket to use for S3 Storage                                                                       |
+| FCREPO_S3_USER                 |                                 |                                   | AWS User for S3 Storage                                                                           |
+| FCREPO_S3_PASSWORD             |                                 |                                   | AWS Secret Token for S3 Storage                                                                   |
+| FCREPO_S3_PREFIX.              |                                 |                                   | AWS Prefix for S3 Storage                                                                         |
 | FCREPO_PERSISTENCE_TYPE        | /fcrepo/persistence/type        | file                              | The object store type. Only `file`, `mysql`, `postgresql` are supported at this time              |
 | FCREPO_DISABLE_SYN             | /fcrepo/disable/syn             | false                             | Enable or disable authentication via [Syn](https://github.com/Islandora/Syn)                      |
 
