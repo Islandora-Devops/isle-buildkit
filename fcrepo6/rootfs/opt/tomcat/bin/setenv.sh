@@ -37,5 +37,9 @@ if [[ "${FCREPO_BINARYSTORAGE_TYPE}" == "file" ]]; then
   export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-fs"
 fi
 if [[ "${FCREPO_BINARYSTORAGE_TYPE}" == "s3" ]]; then
+  # Export AWS credentials
+  export AWS_ACCESS_KEY_ID=${FCREPO_S3_USER}
+  export AWS_SECRET_ACCESS_KEY=${FCREPO_S3_PASSWORD}
+  # Enable S3 mode and set default options
   export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-s3 -Dfcrepo.aws.region=${FCREPO_AWS_REGION} -Dfcrepo.aws.region=${FCREPO_S3_BUCKET} -Dfcrepo.aws.region=${FCREPO_S3_PREFIX}"
 fi

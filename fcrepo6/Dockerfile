@@ -50,7 +50,12 @@ ENV \
     FCREPO_DB_USER=fcrepo \
     FCREPO_DISABLE_SYN=false \
     FCREPO_PERSISTENCE_TYPE=file \
-    FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin
+    FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin \
+    FCREPO_S3_BUCKET= \
+    FCREPO_S3_PASSWORD= \
+    FCREPO_S3_USER= \
+    FCREPO_AWS_REGION=us-east-1 \
+    FCREPO_S3_PREFIX= 
 
 COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
 
