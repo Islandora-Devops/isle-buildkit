@@ -7,7 +7,6 @@
 - [Requirements](#requirements)
 - [Building](#building)
   - [Build All Images](#build-all-images)
-  - [Building without Buildkit](#building-without-buildkit)
   - [Build Specific Image](#build-specific-image)
   - [Building Continuously](#building-continuously)
 - [Running](#running)
@@ -28,13 +27,13 @@ Islandora 8 site.
 
 ## Requirements
 
-To build the Docker images using the provided Gradle build scripts with [BuildKit] requires:
+To build the Docker images using the provided Gradle build scripts requires:
 
-- [Docker 18.09+](https://docs.docker.com/get-docker/)
+- [Docker 19.03+](https://docs.docker.com/get-docker/)
 - [OpenJDK or Oracle JDK 8+](https://www.java.com/en/download/)
 
-That being said the images themselves are compatible of running with older
-versions of Docker.
+That being said the images themselves are compatible with older versions of
+Docker.
 
 ## Building
 
@@ -114,15 +113,6 @@ The following will build all the images in the correct order.
 ./gradlew build
 ```
 
-### Building without Buildkit
-
-If you are having trouble building, consider building without BuildKit as it's
-supported by older versions of Docker.
-
-```bash
-./gradlew build -PuseBuildKit=false
-```
-
 ### Build Specific Image
 
 To build a specific image and it's dependencies, for example
@@ -161,14 +151,14 @@ The following docker images are provided:
 - [alpaca](./alpaca/README.md)
 - [base](./base/README.md)
 - [blazegraph](./blazegraph/README.md)
-- [build](./build/README.md)
 - [cantaloupe](./cantaloupe/README.md)
 - [crayfish](./crayfish/README.md)
 - [crayfits](./crayfits/README.md)
+- [demo](./demo/README.md)
 - [drupal](./drupal/README.md)
 - [fcrepo](./fcrepo/README.md)
 - [fits](./fits/README.md)
-- [gemini](./gemini/README.md)
+- [handle](./handle/README.md)
 - [homarus](./homarus/README.md)
 - [houdini](./houdini/README.md)
 - [hypercube](./hypercube/README.md)
@@ -179,8 +169,8 @@ The following docker images are provided:
 - [matomo](./matomo/README.md)
 - [milliner](./milliner/README.md)
 - [nginx](./nginx/README.md)
+- [postgresql](./postgresql/README.md)
 - [recast](./recast/README.md)
-- [demo](./demo/README.md)
 - [solr](./solr/README.md)
 - [tomcat](./tomcat/README.md)
 
@@ -214,35 +204,59 @@ folder ``rootfs/etc/confd`` that has the following layout:
 ./rootfs/etc/confd
 ├── conf.d
 │   └── file.ext.toml
-├── confd.toml
 └── templates
     └── file.ext.tmpl
 ```
 
-``confd.toml`` Is the configuration of ``confd`` and will typically limit the
-namespace from which ``confd`` will read key values. For example in ``activemq``:
+The ``file.ext.toml`` and ``file.ext.tmpl`` work as a pair. The ``toml`` file
+defines where the template will be render to and who owns it, and the ``tmpl``
+file being the template in question. Ideally these files should match the same
+name of the file they are generating minus the ``toml`` or ``tmpl`` suffix. This
+is to make their discovery easier.
+
+Additionally in the ``base`` image there is ``confd.toml`` which sets defaults
+such a the ``log-level``:
 
 ```toml
 backend = "env"
 confdir = "/etc/confd"
-log-level = "debug"
+log-level = "error"
 interval = 600
 noop = false
-prefix = "/activemq"
 ```
 
-The prefix is set to ``/activemq`` which means only keys / value pairs under
-this prefix can be used by templates. We restrict images by prefix to force them
-to define their own settings, reducing dependencies between images, and to allow
-for greater customization. For example you could have Gemini use PostgreSQL as a
-backend and Drupal using MariaDB since they do not share the same Database
-configuration.
+``confd`` is also the source of all truth when it comes to configuration. We
+have established a order of precedence in which environment variables at runtime
+are defined.
 
-The ``file.ext.toml`` and ``file.ext.tmpl`` work as a pair where the ``toml``
-file defines where the template will be render to and who owns it, and the
-``tmpl`` file being the template in question. Ideally these files should match
-the same name of the file they are generating minus the ``toml`` or ``tmpl``
-suffix. This is to make the discovery of them easier.
+1. Confd backend (highest)
+2. Secrets kept in `/run/secrets` (Except when using ``Kubernetes``)
+3. Environment variables passed into the container
+4. Environment variables defined in Dockerfile(s)
+5. Environment variables defined in the `/etc/defaults` directory (lowest only used for multiline variables, such as JWT)
+
+If not defined in the highest level the next level applies and so forth down the
+list.
+
+> N.B. `/etc/defaults` and the environment variables declared in the
+> Dockerfile(s) used to create the image are **required** to define all
+> environment variables used by scripts and ``confd`` templates. If not
+> specified in either of those locations the environment variables will not be
+> available even if its defined at a **higher** level i.e. ``confd``.
+
+The logic which enforces these rules is performed in
+[00-container-environment-00-init.sh](./base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh)
+
+> N.B Some containers derive environment variables dynamically from other
+> environment variables. In these cases they are expected to provided an
+> additional startup script prefixed with ``00-container-environment-01-*.sh``
+> so that the variables are defined before ``confd`` is used to render
+> templates.
+
+By either using the command ``with-contenv`` or starting a script with
+``#!/usr/bin/with-contenv bash`` the environment defined will follow the order
+of precedence above. Additionally Within ``confd`` templates it is **required**
+to use `getenv` function for fetching data.
 
 ### S6 Overlay
 
@@ -288,9 +302,9 @@ There are only a few Service scripts:
 - solr
 - tomcat
 
-Of these only ``confd`` is running in every container, it periodically listens
-for changes in either ``etcd`` or the ``environment variables`` and will
-re-render the templates upon any change.
+Of these only ``confd`` can be configured to run in every container, it
+periodically listens for changes in it's configured backend (e.g. ``etcd`` or
+``environment variables``) and will re-render the templates upon any change.
 
 ### Image Hierarchy
 
@@ -314,7 +328,6 @@ are arranged in a hierarchy, that roughly follows below:
     ├── mariadb
     └── nginx
         ├── crayfish
-        │   ├── gemini
         │   ├── homarus
         │   ├── houdini (consumes "imagemagick" as well during its build stage)
         │   ├── hypercube
@@ -347,22 +360,37 @@ detect which folders should be considered
 what dependencies exist between them. The only caveat is
 that the projects cannot be nested, though that use case does not really apply.
 
-The dependencies are resolved by parsing the Dockerfile and looking for ``FROM``
-statements to determine which images are required to build it.
+The dependencies are resolved by parsing the Dockerfile and looking for:
+
+- ``FROM``statements
+- ``--mount=type=bind`` statements
+- ``COPY --from`` statements
+
+As they are capable of referring to other images.
 
 This means to add a new Docker image to the project you do not need to modify
 the build scripts, simply add a new folder and place your Dockerfile inside of
-it and it will be discovered built in the correct order relative to the other
-images.
+it. It will be discovered and built in the correct order relative to the other
+images assuming you refer to the other image using the `repository` build
+argument.
+
+For example:
+
+```Dockerfile
+ARG repository=local
+ARG tag=latest
+FROM ${repository}/base:${tag}
+```
 
 ## Design Constraints
 
 To be able to support a wide variety of backends for ``confd``, as well as
-orchestration tools, all calls to ``getv`` **must provide a default**. With the
-exception of keys that do not get used unless defined like
+orchestration tools, all calls **must use getenv for the default
+value**. With the exception of keys that do not get used unless defined like
 ``DRUPAL_SITE_{SITE}_NAME``. This means the whatever backend for configuration,
 wether it be ``etcd``, ``consul``, or ``environment variables``, containers can
-successfully start without any other container present.
+successfully start without any other container present. Additionally it ensure
+that the order of precedence for configuration settings.
 
 This does not completely remove dependencies between containers, for example,
 when the [demo](../docker/demo/README.md) starts it requires a running
@@ -372,21 +400,19 @@ block until another container is available or a timeout has been reached. For
 example:
 
 ```bash
-local fcrepo_host="{{ getv "/fcrepo/host" "fcrepo.isle-dc.localhost" }}"
-local fcrepo_port="{{ getv "/fcrepo/host" "80" }}"
 local fcrepo_url=
 
 # Indexing fails if port 80 is given explicitly.
-if [[ "${fcrepo_port}" == "80" ]]; then
-    fcrepo_url="http://${fcrepo_host}/fcrepo/rest/"
+if [[ "${DRUPAL_DEFAULT_FCREPO_PORT}" == "80" ]]; then
+    fcrepo_url="http://${DRUPAL_DEFAULT_FCREPO_HOST}/fcrepo/rest/"
 else
-    fcrepo_url="http://${fcrepo_host}:${fcrepo_port}/fcrepo/rest/"
+    fcrepo_url="http://${DRUPAL_DEFAULT_FCREPO_HOST}:${DRUPAL_DEFAULT_FCREPO_PORT}/fcrepo/rest/"
 fi
 
 #...
 
 # Need access to Solr before we can actually import the right config.
-if timeout 300 wait-for-open-port.sh "${fcrepo_host}" "${fcrepo_port}" ; then
+if timeout 300 wait-for-open-port.sh "${DRUPAL_DEFAULT_FCREPO_HOST}" "${DRUPAL_DEFAULT_FCREPO_PORT}" ; then
     echo "Fcrepo Found"
 else
     echo "Could not connect to Fcrepo"
@@ -404,8 +430,7 @@ This allows container to start up in any order, and to be orchestrated by any to
 failed to solve with frontend dockerfile.v0: failed to solve with frontend gateway.v0: runc did not terminate successfully: context canceled
 ```
 
-**Answer:** If possible upgrade Docker to the latest version, and switch to using the
-[Overlay2](https://docs.docker.com/storage/storagedriver/overlayfs-driver/#configure-docker-with-the-overlay-or-overlay2-storage-driver)
-filesystem with Docker. If that doesn't work trying building [without BuildKit](#building-without-buildkit).
+**Answer:** If possible upgrade Docker to the latest version, and switch to
+using the [Overlay2] filesystem with Docker.
 
-[Buildkit]: https://github.com/moby/buildkit/blob/main/frontend/dockerfile/docs/experimental.md
+[Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver

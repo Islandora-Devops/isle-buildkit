@@ -8,7 +8,15 @@ function usage {
     cat <<- EOF
     usage: $PROGNAME options FILE
 
+    With no FILE, or when FILE is -, read standard input.
+
     Executes the given SQL file against the appropriate driver.
+
+    If any of the options are not provided they will be derived from their
+    respective 'DB' environment variables.
+
+    Warning: by default DB_ROOT_USER/DB_ROOT_PASSWORD will be used if the
+    respective options are not specified.
 
     OPTIONS:
        --driver           The database driver.
@@ -17,7 +25,6 @@ function usage {
        --user             The user to connect as.
        --password         The password to use for the user.
        --database         The database to run the sql command against. (Optional)
-
        -h --help          Show this help.
        -x --debug         Debug this script.
 
@@ -30,6 +37,22 @@ function usage {
                 --user "root" \\
                 --password "password" query.sql
 EOF
+}
+
+# Check if a fallback is required / missing.
+function fallback {
+    local option=${1}
+    local name=${2}
+    local fallback=${3}
+    if [[ -z ${!name} ]]; then
+        if [[ -z ${!fallback} ]]; then
+            echo "Missing option ${option} and fallback environment variable ${fallback}" >&2
+            exit 1
+        else
+            return 0
+        fi
+    fi
+    return 1
 }
 
 function cmdline {
@@ -88,25 +111,48 @@ function cmdline {
         esac
     done
 
-    if [[ -z $DRIVER || -z $HOST || -z $PORT || -z $USER || -z $PASSWORD ]]; then
-        echo "Missing one of required options: --driver --host --port --user --password" >&2
-        exit 1
+    if fallback "--user" "USER" "DB_ROOT_USER"; then
+        readonly USER=${DB_ROOT_USER}
+    fi
+
+    if fallback "--password" "PASSWORD" "DB_ROOT_PASSWORD"; then
+        readonly PASSWORD=${DB_ROOT_PASSWORD}
+    fi
+
+    if fallback "--driver" "DRIVER" "DB_DRIVER"; then
+        readonly DRIVER=${DB_DRIVER}
+    fi
+
+    if fallback "--host" "HOST" "DB_HOST"; then
+        readonly HOST=${DB_HOST}
+    fi
+
+    if fallback "--port" "PORT" "DB_PORT"; then
+        readonly PORT=${DB_PORT}
     fi
 
     shift $((OPTIND-1))
 
-    if [ "$#" -lt 1 ]; then
-      echo "Illegal number of parameters" >&2
-      usage
-      return 1
+    # Allow either passing in a file or reading from stdin by specifiying "-" or
+    # ommiting completely.
+    if [[ -f "${1}" || -p "${1}" ]]; then
+        readonly FILE="${1}"
+        shift
+    elif [[ "${1}" == "-" ]]; then
+        readonly FILE=/dev/stdin
+        shift
+    else
+        readonly FILE=/dev/stdin
     fi
 
-    readonly FILE="${1}"; shift
-
     # Remaining options to be passed onto the client, preceeded by '--'.
+    if [[ "${1}" == "--" ]]; then
+        shift
+    fi
+
     if [ "$#" -gt 0 ]; then
-        shift;
-        readonly OPTIONS=(${@}); shift $#
+        readonly OPTIONS=(${@})
+        shift $#
     else
         readonly OPTIONS=()
     fi
@@ -162,10 +208,10 @@ function postgresql_execute_sql_file {
 
 function execute_sql_file {
     case "${DRIVER}" in
-        mysql|pdo_mysql)
+        mysql)
             mysql_execute_sql_file
             ;;
-        pgsql|postgresql|pdo_pgsql)
+        postgresql)
             postgresql_execute_sql_file
             ;;
         *)

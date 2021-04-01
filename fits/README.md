@@ -1,10 +1,10 @@
 # Fits
 
-Docker image for [Fits] version 5.1.0.
+Docker image for [Fits](https://projects.iq.harvard.edu/fits/home) version 5.1.0.
 
 Please refer to the [Fits Documentation] for more in-depth information.
 
-As a quick example this will bring up an instance of [Fits], and allow you
+As a quick example this will bring up an instance of [Fits](https://projects.iq.harvard.edu/fits/home), and allow you
 to view on <http://localhost:80/fits/>.
 
 ```bash
@@ -19,7 +19,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable         | Etcd Key                      | Default | Description                                                                                                          |
+| Environment Variable         | Confd Key                      | Default | Description                                                                                                          |
 | :--------------------------- | :---------------------------- | :------ | :------------------------------------------------------------------------------------------------------------------- |
 | FITS_MAX_IN_MEMORY_FILE_SIZE | /fits/max/in/memory/file/size | 4       | Maximum size of an uploaded size kept in memory in MiB. Otherwise temporarily persisted to disk.                     |
 | FITS_MAX_OBJECTS_IN_POOL     | /fits/max/objects/in/pool     | 5       | Number of objects in FITSServlet object pool.                                                                        |

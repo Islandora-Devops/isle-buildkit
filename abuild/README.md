@@ -20,13 +20,12 @@ Define a docker file that:
 3. Run `abuild` to build the package using `APKBUILD`.
 
 ```dockerfile
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.2.1
 FROM islandora/abuild:latest
 
 # Include packages required for building the package (not necessarily the ones require for running).
-RUN --mount=type=cache,target=/var/cache/apk \
-    --mount=type=cache,target=/etc/cache/apk \
-    apk --update add \
+RUN --mount=type=cache,id=base-apk,sharing=locked,target=/var/cache/apk \
+    apk-install.sh \
         package-require-for-building-1 \
         package-require-for-building-2 \
 

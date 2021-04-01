@@ -1,8 +1,9 @@
-# syntax=docker/dockerfile:experimental
-FROM local/tomcat:latest
+# syntax=docker/dockerfile:1.2.1
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=fcrepo-downloads,sharing=locked,target=/opt/downloads \
     FCREPO_VERSION="5.1.0" && \
     FCREPO_FILE="fcrepo-webapp-${FCREPO_VERSION}.war" && \
     FCREPO_URL="https://github.com/fcrepo4/fcrepo4/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}" && \
@@ -14,12 +15,39 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     SYN_URL="https://github.com/Islandora-CLAW/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}" && \
     SYN_SHA256="bcad5f872930b1bcc9ea4a176c60e22683297121357336769a21ead9fadcbbd5" && \
     download.sh --url "${SYN_URL}" --sha256 "${SYN_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    mkdir -p /opt/tomcat/lib && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${SYN_FILE}" /opt/tomcat/lib && \
-    mkdir -p /opt/keys/jwt && \
-    chown tomcat:tomcat /opt/keys/jwt && \
-    mkdir /data && \
-    chown tomcat:tomcat /data && \
-    chown -R tomcat:tomcat /opt/tomcat && \
+    IMPORT_EXPORT_VERSION="1.0.1" && \
+    IMPORT_EXPORT_FILE="fcrepo-import-export-${IMPORT_EXPORT_VERSION}.jar" && \
+    IMPORT_EXPORT_URL="https://github.com/fcrepo-exts/fcrepo-import-export/releases/download/fcrepo-import-export-${IMPORT_EXPORT_VERSION}/${IMPORT_EXPORT_FILE}" && \
+    IMPORT_EXPORT_SHA256="89c579d1223c8f3c0da60c4309a06e47f5919c51929d976e60ea525c60cb33d1" && \
+    download.sh --url "${IMPORT_EXPORT_URL}" --sha256 "${IMPORT_EXPORT_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${IMPORT_EXPORT_FILE}" /opt/tomcat
+
+FROM ${repository}/tomcat:${tag}
+
+RUN mkdir -p /data && \
+    chown -R tomcat:tomcat /data && \
+    addgroup tomcat jwt && \
     cleanup.sh
 
+ENV \
+    FCREPO_ACTIVEMQ_BROKER=tcp://activemq:61616 \
+    FCREPO_ACTIVEMQ_QUEUE=fedora \
+    FCREPO_ACTIVEMQ_TOPIC=fedora \
+    FCREPO_BINARYSTORAGE_TYPE=file \
+    FCREPO_DB_NAME=fcrepo \
+    FCREPO_DB_PASSWORD=${DB_PASSWORD} \
+    FCREPO_DB_USER=fcrepo \
+    FCREPO_DISABLE_SYN=false \
+    FCREPO_MODESHAPE_CONFIGURATION=classpath:/config/repository.json \
+    FCREPO_PERSISTENCE_TYPE=file \
+    FCREPO_S3_BUCKET= \
+    FCREPO_S3_PASSWORD= \
+    FCREPO_S3_USER= \
+    FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin
+
+COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
+
 COPY rootfs /
+COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat

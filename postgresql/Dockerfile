@@ -1,9 +1,13 @@
-# syntax=docker/dockerfile:experimental
-FROM local/base:latest
+# syntax=docker/dockerfile:1.2.1
+ARG repository=local
+ARG tag=latest
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/base:${tag}
 
-RUN --mount=type=cache,target=/var/cache/apk \ 
-    --mount=type=cache,target=/etc/cache/apk \ 
-    apk-install.sh \
+EXPOSE 5432
+
+RUN --mount=type=cache,id=postgresql-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
         postgresql \
         postgresql-client \
     && \
@@ -13,8 +17,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     mkdir -p /etc/postgresql && \
     cleanup.sh
 
-ENV PGDATA /var/lib/postgresql/data
-
-EXPOSE 5432
+ENV \
+    PGDATA=/var/lib/postgresql/data
 
 COPY rootfs /

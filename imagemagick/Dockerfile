@@ -1,11 +1,13 @@
-# syntax=docker/dockerfile:experimental
-FROM local/abuild:latest
+# syntax=docker/dockerfile:1.2.1
+ARG repository=local
+ARG tag=latest
+FROM alpine:3.13.2 AS cache
+FROM ${repository}/abuild:${tag} AS build
 
-RUN --mount=type=cache,target=/var/cache/apk \ 
-    --mount=type=cache,target=/etc/cache/apk \ 
-    apk --update add \
-    	libheif-dev \
-    	libwebp-dev \
+RUN --mount=type=cache,id=imagemagick-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
+        libheif-dev \
+        libwebp-dev \
         chrpath \
         fftw-dev \
         fontconfig-dev \
@@ -35,11 +37,14 @@ WORKDIR /build
 
 RUN chown -R builder /build
 
-ARG PACKAGER="Nigel Banks <nigel.g.banks@gmail.com>" 
-
 USER builder
 
-RUN export PACKAGER="${PACKAGER}" && \
+RUN export PACKAGER="Nigel Banks <nigel.g.banks@gmail.com>" && \
     abuild-keygen -ain && \
     abuild-apk update && \
     abuild
+
+FROM alpine:3.13.2
+
+COPY --from=build /etc/apk/keys /etc/apk/keys
+COPY --from=build /home/builder/packages/*/ /packages

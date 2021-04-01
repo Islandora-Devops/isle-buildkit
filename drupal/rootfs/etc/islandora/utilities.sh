@@ -77,7 +77,6 @@ function wait_for_required_services {
         wait_for_service "${site}" "SOLR"
         wait_for_service "${site}" "FCREPO"
         wait_for_service "${site}" "BROKER"
-        wait_for_service "${site}" "GEMINI"
         wait_for_service "${site}" "TRIPLESTORE"
     fi
 }
@@ -188,10 +187,10 @@ function create_database {
     local driver=$(drupal_site_env "${site}" "DB_DRIVER")
     
     case "${driver}" in
-        mysql|pdo_mysql)
+        mysql)
             mysql_create_database "${site}"
             ;;
-        pgsql|postgresql|pdo_pgsql)
+        postgresql)
             postgresql_create_database "${site}"
             ;;
         *)
@@ -239,8 +238,8 @@ function install_site {
     fi
 
     # Ensure the files directory is writable by nginx, as when it is a new volume it is owned by root.
-	chown -R 100:101 "${files_directory}"
-	chmod -R ug+rw "${files_directory}"
+    chown -R 100:101 "${files_directory}"
+    chmod -R ug+rw "${files_directory}"
 
     # Allow changes to settings.php if it exists.
     if [[ -f "${site_directory}/settings.php" ]]; then
@@ -360,29 +359,31 @@ function configure_islandora_module {
     local broker_host=$(drupal_site_env "${site}" "BROKER_HOST")
     local broker_port=$(drupal_site_env "${site}" "BROKER_PORT")
     local broker_url="tcp://${broker_host}:${broker_port}"
-    local gemini_host=$(drupal_site_env "${site}" "GEMINI_HOST")
-    local gemini_port=$(drupal_site_env "${site}" "GEMINI_PORT")
-    local gemini_url="http://${gemini_host}:${gemini_port}"
 
-    drush -l "${site_url}" -y pm:enable islandora
+    drush -l "${site_url}" -y pm:enable islandora_core_feature 
     drush -l "${site_url}" -y config:set --input-format=yaml jsonld.settings remove_jsonld_format true
     drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings broker_url "${broker_url}"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_url "${gemini_url}"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.0 "islandora_object:node"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.1 "image:media"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.2 "file:media"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.3 "audio:media"
-    drush -l "${site_url}" -y config:set --input-format=yaml islandora.settings gemini_pseudo_bundles.4 "video:media"
+
+    if drush -l "${site_url}" role:list | grep -q fedoraadmin; then
+        echo "Fedora Admin role already exists.  No need to create it."
+    else
+        drush -l "${site_url}" role:create fedoraadmin fedoraAdmin
+    fi
+    drush -l "${site_url}" -y user:role:add fedoraadmin admin
 }
 
 # After enabling and importing features a number of configurations need to be updated.
 function configure_islandora_default_module {
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q islandora_defaults; then
+        echo "islandora_defaults is not installed.  Skipping configuration"
+        return 0
+    fi
+
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     local host=$(drupal_site_env "${site}" "SOLR_HOST")
     local port=$(drupal_site_env "${site}" "SOLR_PORT")
 
-    drush -l "${site_url}" -y user:role:add fedoraadmin admin
     drush -l "${site_url}" -y config:set search_api.server.default_solr_server backend_config.connector_config.host "${host}"
     drush -l "${site_url}" -y config:set search_api.server.default_solr_server backend_config.connector_config.port "${port}"
 }
@@ -403,9 +404,13 @@ function configure_search_api_solr_module {
 
 # Enables and sets carapace as the default theme.
 function set_carapace_default_theme {
+    if ! drush pm-list --pipe --type=theme --status=enabled --no-core | grep -q carapace; then
+        echo "carapace is not available. Skipping configuration."
+        return 0
+    fi
+
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
-    drush -l "${site_url}" -y theme:enable carapace
     drush -l "${site_url}" -y config:set system.theme default carapace
 }
 
@@ -445,6 +450,11 @@ function create_solr_core {
 
 # Generate solr config and create a core for it.
 function create_solr_core_with_default_config {
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q search_api_solr; then
+        echo "search_api_solr is not installed.  Skipping core setup."
+        return 0
+    fi
+
     local site="${1}"; shift
     generate_solr_config "${site}"
     create_solr_core "${site}"
@@ -452,13 +462,17 @@ function create_solr_core_with_default_config {
 
 # Install matomo and configure.
 function configure_matomo_module {
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q matomo; then
+        echo "matomo is not installed.  Skipping configuration"
+        return 0
+    fi
+
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     local site_id=$(($(site_index "${site}")+1))
     local matomo_url=$(drupal_site_env "${site}" "MATOMO_URL")
     local matomo_http_url="http${matomo_url#https}"
 
-    drush -l "${site_url}" -y pm:enable matomo
     drush -l "${site_url}" -y config-set matomo.settings site_id "${site_id}"
     drush -l "${site_url}" -y config-set matomo.settings url_http "${matomo_http_url}"
     drush -l "${site_url}" -y config-set matomo.settings url_https "${matomo_url}"
@@ -466,6 +480,11 @@ function configure_matomo_module {
 
 # Configure Openseadragon to point use cantaloupe.
 function configure_openseadragon  {
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q openseadragon; then
+        echo "openseadragon is not installed.  Skipping configuration"
+        return 0
+    fi
+
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     local cantaloupe_url=$(drupal_site_env "${site}" "CANTALOUPE_URL")

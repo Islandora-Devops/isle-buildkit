@@ -1,7 +1,0 @@
-[template]
-src = "setup-environment.sh.tmpl"
-dest = "/var/run/islandora/setup-environment.sh"
-uid = 0
-gid = 0
-mode = "0700"
-keys = [ "/" ]

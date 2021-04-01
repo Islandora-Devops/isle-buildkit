@@ -140,10 +140,10 @@ function postgresql_count {
 function installed {
     local count=
     case "${DRIVER}" in
-        mysql|pdo_mysql)
+        mysql)
             count=$(mysql_count)
             ;;
-        pgsql|postgresql|pdo_pgsql)
+        postgresql)
             count=$(postgresql_count)
             ;;
         *)

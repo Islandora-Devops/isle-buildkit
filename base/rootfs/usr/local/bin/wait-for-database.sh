@@ -96,7 +96,7 @@ function cmdline {
 
 function wait_for_connection {
     local duration=${TIMEOUT:-300}
-    echo "Waiting for up to ${duration} seconds to connect to Database ${HOST}:${PORT}"
+    echo "Waiting for up to ${duration} seconds to connect to Database ${HOST}:${PORT}" >&2
     timeout ${duration} wait-for-open-port.sh ${HOST} ${PORT}
 }
 
@@ -121,12 +121,12 @@ function postgresql_validate_credentials {
 }
 
 function validate_credentials {
-    echo "Validating Database credentials"
+    echo "Validating Database credentials" >&2
     case "${DRIVER}" in
-        mysql|pdo_mysql)
+        mysql)
             mysql_validate_credentials
             ;;
-        pgsql|postgresql|pdo_pgsql)
+        postgresql)
             postgresql_validate_credentials
             ;;
         *)
@@ -139,17 +139,17 @@ function main {
     cmdline ${ARGS}
 
     if wait_for_connection; then
-        echo "Database found"
+        echo "Database found" >&2
     else
-        echo "Timed out waiting for database connection"
+        echo "Timed out waiting for database connection" >&2
         exit 1
     fi
 
     if validate_credentials; then
-        echo "Credentials are valid"
+        echo "Credentials are valid" >&2
         exit 0
     else
-        echo "Credentials are invalid"
+        echo "Credentials are invalid" >&2
         exit 1
     fi
 }

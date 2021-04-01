@@ -2,121 +2,121 @@
 # GENERAL SETTINGS
 ###########################################################################
 
-temp_pathname = {{ getv "/temp/pathname" "" }}
-http.enabled = {{ getv "/http/enabled" "true" }}
-http.host = {{ getv "/http/host" "0.0.0.0" }}
-http.port = {{ getv "/http/port" "8182" }}
-https.enabled = {{ getv "/https/enabled" "false" }}
-https.host = {{ getv "/https/host" "0.0.0.0" }}
-https.port = {{ getv "/https/port" "8183" }}
-https.key_store_type = {{ getv "/https/key/store/type" "JKS" }}
-https.key_store_password = {{ getv "/https/key/store/password" "password" }}
-https.key_store_path = {{ getv "/https/key/store/path" "/path/to/keystore.jks" }}
-https.key_password = {{ getv "/https/key/password" "password" }}
-auth.basic.enabled = {{ getv "/auth/basic/enabled" "false" }}
-auth.basic.username = {{ getv "/auth/basic/username" "admin" }}
-auth.basic.secret = {{ getv "/auth/basic/secret" "password" }}
-admin.enabled = {{ getv "/admin/enabled" "true" }}
-admin.password = {{ getv "/admin/password" "password" }}
-base_uri = {{ getv "/base/uri" "" }}
-slash_substitute = {{ getv "/slash/substitute" "" }}
-max_pixels = {{ getv "/max/pixels" "400000000" }}
-print_stack_trace_on_error_pages = {{ getv "/print/stack/trace/on/error/pages" "true" }}
-scale_constraints.delimiter = {{ getv "/scale/constraints/delimiter" "-" }}
+temp_pathname = {{ getenv "CANTALOUPE_TEMP_PATHNAME" }}
+http.enabled = {{ getenv "CANTALOUPE_HTTP_ENABLED" }}
+http.host = {{ getenv "CANTALOUPE_HTTP_HOST" }}
+http.port = {{ getenv "CANTALOUPE_HTTP_PORT" }}
+https.enabled = {{ getenv "CANTALOUPE_HTTPS_ENABLED" }}
+https.host = {{ getenv "CANTALOUPE_HTTPS_HOST" }}
+https.port = {{ getenv "CANTALOUPE_HTTPS_PORT" }}
+https.key_store_type = {{ getenv "CANTALOUPE_HTTPS_KEY_STORE_TYPE" }}
+https.key_store_password = {{ getenv "CANTALOUPE_HTTPS_KEY_STORE_PASSWORD" }}
+https.key_store_path = {{ getenv "CANTALOUPE_HTTPS_KEY_STORE_PATH" }}
+https.key_password = {{ getenv "CANTALOUPE_HTTPS_KEY_PASSWORD" }}
+auth.basic.enabled = {{ getenv "CANTALOUPE_AUTH_BASIC_ENABLED" }}
+auth.basic.username = {{ getenv "CANTALOUPE_AUTH_BASIC_USERNAME" }}
+auth.basic.secret = {{ getenv "CANTALOUPE_AUTH_BASIC_SECRET" }}
+admin.enabled = {{ getenv "CANTALOUPE_ADMIN_ENABLED" }}
+admin.password = {{ getenv "CANTALOUPE_ADMIN_PASSWORD" }}
+base_uri = {{ getenv "CANTALOUPE_BASE_URI" }}
+slash_substitute = {{ getenv "CANTALOUPE_SLASH_SUBSTITUTE" }}
+max_pixels = {{ getenv "CANTALOUPE_MAX_PIXELS" }}
+print_stack_trace_on_error_pages = {{ getenv "CANTALOUPE_PRINT_STACK_TRACE_ON_ERROR_PAGES" }}
+scale_constraints.delimiter = {{ getenv "CANTALOUPE_SCALE_CONSTRAINTS_DELIMITER" }}
 
 ###########################################################################
 # DELEGATE SCRIPT
 ###########################################################################
 
-delegate_script.enabled = {{ getv "/delegate/script/enabled" "false" }}
-delegate_script.pathname = {{ getv "/delegate/script/pathname" "delegates.rb" }}
-delegate_script.cache.enabled = {{ getv "/delegate/script/cache/enabled" "false" }}
+delegate_script.enabled = {{ getenv "CANTALOUPE_DELEGATE_SCRIPT_ENABLED" }}
+delegate_script.pathname = {{ getenv "CANTALOUPE_DELEGATE_SCRIPT_PATHNAME" }}
+delegate_script.cache.enabled = {{ getenv "CANTALOUPE_DELEGATE_SCRIPT_CACHE_ENABLED" }}
 
 ###########################################################################
 # ENDPOINTS
 ###########################################################################
 
-endpoint.iiif.1.enabled = {{ getv "/endpoint/iiif/1/enabled" "true" }}
-endpoint.iiif.2.enabled = {{ getv "/endpoint/iiif/2/enabled" "true" }}
-endpoint.iiif.content_disposition = {{ getv "/endpoint/iiif/content/disposition" "inline" }}
-endpoint.iiif.min_size = {{ getv "/endpoint/iiif/min//size" "64" }}
-endpoint.iiif.min_tile_size = {{ getv "/endpoint/iiif/min/tile/size" "1024" }}
-endpoint.iiif.restrict_to_sizes = {{ getv "/endpoint/iiif/restrict/to/sizes" "false" }}
-endpoint.api.enabled = {{ getv "/endpoint/api/enabled" "false" }}
-endpoint.api.username = {{ getv "/endpoint/api/username" "" }}
-endpoint.api.secret = {{ getv "/endpoint/api/secret" "" }}
-endpoint.admin.enabled = {{ getv "/endpoint/admin/enabled" "false" }}
-endpoint.admin.username = {{ getv "/endpoint/admin/username" "admin" }}
-endpoint.admin.secret = {{ getv "/endpoint/admin/secret" "" }}
+endpoint.iiif.1.enabled = {{ getenv "CANTALOUPE_ENDPOINT_IIIF_1_ENABLED" }}
+endpoint.iiif.2.enabled = {{ getenv "CANTALOUPE_ENDPOINT_IIIF_2_ENABLED" }}
+endpoint.iiif.content_disposition = {{ getenv "CANTALOUPE_ENDPOINT_IIIF_CONTENT_DISPOSITION" }}
+endpoint.iiif.min_size = {{ getenv "CANTALOUPE_ENDPOINT_IIIF_MIN__SIZE" }}
+endpoint.iiif.min_tile_size = {{ getenv "CANTALOUPE_ENDPOINT_IIIF_MIN_TILE_SIZE" }}
+endpoint.iiif.restrict_to_sizes = {{ getenv "CANTALOUPE_ENDPOINT_IIIF_RESTRICT_TO_SIZES" }}
+endpoint.api.enabled = {{ getenv "CANTALOUPE_ENDPOINT_API_ENABLED" }}
+endpoint.api.username = {{ getenv "CANTALOUPE_ENDPOINT_API_USERNAME" }}
+endpoint.api.secret = {{ getenv "CANTALOUPE_ENDPOINT_API_SECRET" }}
+endpoint.admin.enabled = {{ getenv "CANTALOUPE_ENDPOINT_ADMIN_ENABLED" }}
+endpoint.admin.username = {{ getenv "CANTALOUPE_ENDPOINT_ADMIN_USERNAME" }}
+endpoint.admin.secret = {{ getenv "CANTALOUPE_ENDPOINT_ADMIN_SECRET" }}
 
 ###########################################################################
 # SOURCES
 ###########################################################################
 
-source.static = {{ getv "/source/static" "HttpSource" }}
-source.delegate = {{ getv "/source/delegate" "false" }}
+source.static = {{ getenv "CANTALOUPE_SOURCE_STATIC" }}
+source.delegate = {{ getenv "CANTALOUPE_SOURCE_DELEGATE" }}
 
 #----------------------------------------
 # FilesystemSource
 #----------------------------------------
 
-FilesystemSource.lookup_strategy = {{ getv "/filesystemsource/lookup/strategy" "BasicLookupStrategy" }}
-FilesystemSource.BasicLookupStrategy.path_prefix = {{ getv "/filesystemsource/basiclookupstrategy/path/prefix" "/var/www/drupal/web/" }}
-FilesystemSource.BasicLookupStrategy.path_suffix = {{ getv "/filesystemsource/basiclookupstrategy/path/suffix" "" }}
+FilesystemSource.lookup_strategy = {{ getenv "CANTALOUPE_FILESYSTEMSOURCE_LOOKUP_STRATEGY" }}
+FilesystemSource.BasicLookupStrategy.path_prefix = {{ getenv "CANTALOUPE_FILESYSTEMSOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX" }}
+FilesystemSource.BasicLookupStrategy.path_suffix = {{ getenv "CANTALOUPE_FILESYSTEMSOURCE_BASICLOOKUPSTRATEGY_PATH_SUFFIX" }}
 
 #----------------------------------------
 # HttpSource
 #----------------------------------------
 
-HttpSource.allow_insecure = {{ getv "/httpsource/allow/insecure" "false" }}
-HttpSource.request_timeout = {{ getv "/httpsource/request/timeout" "" }}
-HttpSource.lookup_strategy = {{ getv "/httpsource/lookup/strategy" "BasicLookupStrategy" }}
-HttpSource.BasicLookupStrategy.url_prefix = {{ getv "/httpsource/basiclookupstrategy/url/prefix" "" }}
-HttpSource.BasicLookupStrategy.url_suffix = {{ getv "/httpsource/basiclookupstrategy/url/suffix" "" }}
-HttpSource.auth.basic.username = {{ getv "/httpsource/auth/basic/username" "" }}
-HttpSource.auth.basic.secret = {{ getv "/httpsource/auth/basic/secret" "" }}
-HttpSource.chunking.enabled = {{ getv "/httpsource/chunking/enabled" "true" }}
-HttpSource.chunking.chunk_size = {{ getv "/httpsource/chunking/chunk/size" "512K" }}
-HttpSource.chunking.cache.enabled = {{ getv "/httpsource/chunking/cache/enabled" "true" }}
-HttpSource.chunking.cache.max_size = {{ getv "/httpsource/chunking/cache/max/size" "5M" }}
+HttpSource.allow_insecure = {{ getenv "CANTALOUPE_HTTPSOURCE_ALLOW_INSECURE" }}
+HttpSource.request_timeout = {{ getenv "CANTALOUPE_HTTPSOURCE_REQUEST_TIMEOUT" }}
+HttpSource.lookup_strategy = {{ getenv "CANTALOUPE_HTTPSOURCE_LOOKUP_STRATEGY" }}
+HttpSource.BasicLookupStrategy.url_prefix = {{ getenv "CANTALOUPE_HTTPSOURCE_BASICLOOKUPSTRATEGY_URL_PREFIX" }}
+HttpSource.BasicLookupStrategy.url_suffix = {{ getenv "CANTALOUPE_HTTPSOURCE_BASICLOOKUPSTRATEGY_URL_SUFFIX" }}
+HttpSource.auth.basic.username = {{ getenv "CANTALOUPE_HTTPSOURCE_AUTH_BASIC_USERNAME" }}
+HttpSource.auth.basic.secret = {{ getenv "CANTALOUPE_HTTPSOURCE_AUTH_BASIC_SECRET" }}
+HttpSource.chunking.enabled = {{ getenv "CANTALOUPE_HTTPSOURCE_CHUNKING_ENABLED" }}
+HttpSource.chunking.chunk_size = {{ getenv "CANTALOUPE_HTTPSOURCE_CHUNKING_CHUNK_SIZE" }}
+HttpSource.chunking.cache.enabled = {{ getenv "CANTALOUPE_HTTPSOURCE_CHUNKING_CACHE_ENABLED" }}
+HttpSource.chunking.cache.max_size = {{ getenv "CANTALOUPE_HTTPSOURCE_CHUNKING_CACHE_MAX_SIZE" }}
 
 #----------------------------------------
 # JdbcSource
 #----------------------------------------
 
-JdbcSource.url = {{ getv "/jdbcsoure/url" "jdbc:postgresql://database:5432/cantaloupe" }}
-JdbcSource.user = {{ getv "/jdbcsoure/user" "admin" }}
-JdbcSource.password = {{ getv "/jdbcsoure/password" "password" }}
-JdbcSource.connection_timeout = {{ getv "/jdbcsoure/connection/timeout" "10" }}
+JdbcSource.url = {{ getenv "CANTALOUPE_JDBCSOURE_URL" }}
+JdbcSource.user = {{ getenv "CANTALOUPE_JDBCSOURE_USER" }}
+JdbcSource.password = {{ getenv "CANTALOUPE_JDBCSOURE_PASSWORD" }}
+JdbcSource.connection_timeout = {{ getenv "CANTALOUPE_JDBCSOURE_CONNECTION_TIMEOUT" }}
 
 #----------------------------------------
 # S3Source
 #----------------------------------------
 
-S3Source.endpoint = {{ getv "/s3source/endpoint" "" }}
-S3Source.access_key_id = {{ getv "/s3source/access/key/id" "" }}
-S3Source.secret_key = {{ getv "/s3source/secret/key" "" }}
-S3Source.lookup_strategy = {{ getv "/s3source/lookup/strategy" "BasicLookupStrategy" }}
-S3Source.BasicLookupStrategy.bucket.name = {{ getv "/s3source/basiclookupstrategy/bucket/name" "" }}
-S3Source.BasicLookupStrategy.path_prefix = {{ getv "/s3source/basiclookupstrategy/path/prefix" "" }}
-S3Source.BasicLookupStrategy.path_suffix = {{ getv "/s3source/basiclookupstrategy/path/suffix" "" }}
-S3Source.chunking.enabled = {{ getv "/s3source/chunking/enabled" "true" }}
-S3Source.chunking.chunk_size = {{ getv "/s3source/chunking/chunk/size" "512K" }}
-S3Source.chunking.cache.enabled = {{ getv "/s3source/chunking/cache/enabled" "true" }}
-S3Source.chunking.cache.max_size = {{ getv "/s3source/chunking/cache/max/size" "5M" }}
+S3Source.endpoint = {{ getenv "CANTALOUPE_S3SOURCE_ENDPOINT" }}
+S3Source.access_key_id = {{ getenv "CANTALOUPE_S3SOURCE_ACCESS_KEY_ID" }}
+S3Source.secret_key = {{ getenv "CANTALOUPE_S3SOURCE_SECRET_KEY" }}
+S3Source.lookup_strategy = {{ getenv "CANTALOUPE_S3SOURCE_LOOKUP_STRATEGY" }}
+S3Source.BasicLookupStrategy.bucket.name = {{ getenv "CANTALOUPE_S3SOURCE_BASICLOOKUPSTRATEGY_BUCKET_NAME" }}
+S3Source.BasicLookupStrategy.path_prefix = {{ getenv "CANTALOUPE_S3SOURCE_BASICLOOKUPSTRATEGY_PATH_PREFIX" }}
+S3Source.BasicLookupStrategy.path_suffix = {{ getenv "CANTALOUPE_S3SOURCE_BASICLOOKUPSTRATEGY_PATH_SUFFIX" }}
+S3Source.chunking.enabled = {{ getenv "CANTALOUPE_S3SOURCE_CHUNKING_ENABLED" }}
+S3Source.chunking.chunk_size = {{ getenv "CANTALOUPE_S3SOURCE_CHUNKING_CHUNK_SIZE" }}
+S3Source.chunking.cache.enabled = {{ getenv "CANTALOUPE_S3SOURCE_CHUNKING_CACHE_ENABLED" }}
+S3Source.chunking.cache.max_size = {{ getenv "CANTALOUPE_S3SOURCE_CHUNKING_CACHE_MAX_SIZE" }}
 
 #----------------------------------------
 # AzureStorageSource
 #----------------------------------------
 
-AzureStorageSource.account_name = {{ getv "/azurestoragesource/account/name" "" }}
-AzureStorageSource.account_key = {{ getv "/azurestoragesource/account/key" "" }}
-AzureStorageSource.container_name = {{ getv "/azurestoragesource/container/name" "" }}
-AzureStorageSource.lookup_strategy = {{ getv "/azurestoragesource/lookup/strategy" "BasicLookupStrategy" }}
-AzureStorageSource.chunking.enabled = {{ getv "/azurestoragesource/chunking/enabled" "true" }}
-AzureStorageSource.chunking.chunk_size = {{ getv "/azurestoragesource/chunking/chunk/size" "512K" }}
-AzureStorageSource.chunking.cache.enabled = {{ getv "/azurestoragesource/chunking/cache/enabled" "true" }}
-AzureStorageSource.chunking.cache.max_size = {{ getv "/azurestoragesource/chunking/cache/max/size" "5M" }}
+AzureStorageSource.account_name = {{ getenv "CANTALOUPE_AZURESTORAGESOURCE_ACCOUNT_NAME" }}
+AzureStorageSource.account_key = {{ getenv "CANTALOUPE_AZURESTORAGESOURCE_ACCOUNT_KEY" }}
+AzureStorageSource.container_name = {{ getenv "CANTALOUPE_AZURESTORAGESOURCE_CONTAINER_NAME" }}
+AzureStorageSource.lookup_strategy = {{ getenv "CANTALOUPE_AZURESTORAGESOURCE_LOOKUP_STRATEGY" }}
+AzureStorageSource.chunking.enabled = {{ getenv "CANTALOUPE_AZURESTORAGESOURCE_CHUNKING_ENABLED" }}
+AzureStorageSource.chunking.chunk_size = {{ getenv "CANTALOUPE_AZURESTORAGESOURCE_CHUNKING_CHUNK_SIZE" }}
+AzureStorageSource.chunking.cache.enabled = {{ getenv "CANTALOUPE_AZURESTORAGESOURCE_CHUNKING_CACHE_ENABLED" }}
+AzureStorageSource.chunking.cache.max_size = {{ getenv "CANTALOUPE_AZURESTORAGESOURCE_CHUNKING_CACHE_MAX_SIZE" }}
 
 ###########################################################################
 # PROCESSORS
@@ -126,207 +126,207 @@ AzureStorageSource.chunking.cache.max_size = {{ getv "/azurestoragesource/chunki
 # Processor Selection
 #----------------------------------------
 
-processor.selection_strategy = {{ getv "/processor/selection/strategy" "ManualSelectionStrategy" }}
-processor.ManualSelectionStrategy.avi = {{ getv "/processor/manualselectionstrategy/avi" "FfmpegProcessor" }}
-processor.ManualSelectionStrategy.bmp = {{ getv "/processor/manualselectionstrategy/bmp" "ImageMagickProcessor" }}
-processor.ManualSelectionStrategy.dcm = {{ getv "/processor/manualselectionstrategy/dcm" "ImageMagickProcessor" }}
-processor.ManualSelectionStrategy.gif = {{ getv "/processor/manualselectionstrategy/gif" "ImageMagickProcessor" }}
-processor.ManualSelectionStrategy.jp2 = {{ getv "/processor/manualselectionstrategy/jp2" "OpenJpegProcessor" }}
-processor.ManualSelectionStrategy.jpg = {{ getv "/processor/manualselectionstrategy/jpg" "ImageMagickProcessor" }}
-processor.ManualSelectionStrategy.mov = {{ getv "/processor/manualselectionstrategy/mov" "FfmpegProcessor" }}
-processor.ManualSelectionStrategy.mp4 = {{ getv "/processor/manualselectionstrategy/mp4" "FfmpegProcessor" }}
-processor.ManualSelectionStrategy.mpg = {{ getv "/processor/manualselectionstrategy/mpg" "FfmpegProcessor" }}
-processor.ManualSelectionStrategy.pdf = {{ getv "/processor/manualselectionstrategy/pdf" "ImageMagickProcessor" }}
-processor.ManualSelectionStrategy.png = {{ getv "/processor/manualselectionstrategy/png" "ImageMagickProcessor" }}
-processor.ManualSelectionStrategy.tif = {{ getv "/processor/manualselectionstrategy/tif" "ImageMagickProcessor" }}
-processor.ManualSelectionStrategy.webm = {{ getv "/processor/manualselectionstrategy/webm" "FfmpegProcessor" }}
-processor.ManualSelectionStrategy.webp = {{ getv "/processor/manualselectionstrategy/webp" "ImageMagickProcessor" }}
-processor.ManualSelectionStrategy.fallback = {{ getv "/processor/manualselectionstrategy/fallback" "Java2dProcessor" }}
+processor.selection_strategy = {{ getenv "CANTALOUPE_PROCESSOR_SELECTION_STRATEGY" }}
+processor.ManualSelectionStrategy.avi = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_AVI" }}
+processor.ManualSelectionStrategy.bmp = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_BMP" }}
+processor.ManualSelectionStrategy.dcm = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_DCM" }}
+processor.ManualSelectionStrategy.gif = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_GIF" }}
+processor.ManualSelectionStrategy.jp2 = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_JP2" }}
+processor.ManualSelectionStrategy.jpg = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_JPG" }}
+processor.ManualSelectionStrategy.mov = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MOV" }}
+processor.ManualSelectionStrategy.mp4 = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MP4" }}
+processor.ManualSelectionStrategy.mpg = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MPG" }}
+processor.ManualSelectionStrategy.pdf = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_PDF" }}
+processor.ManualSelectionStrategy.png = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_PNG" }}
+processor.ManualSelectionStrategy.tif = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_TIF" }}
+processor.ManualSelectionStrategy.webm = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_WEBM" }}
+processor.ManualSelectionStrategy.webp = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_WEBP" }}
+processor.ManualSelectionStrategy.fallback = {{ getenv "CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_FALLBACK" }}
 
 #----------------------------------------
 # Global Processor Configuration
 #----------------------------------------
 
-processor.dpi = {{ getv "/processor/dpi" "150" }}
-processor.normalize = {{ getv "/processor/normalize" "false" }}
-processor.background_color = {{ getv "/processor/background/color" "black" }}
-processor.downscale_filter = {{ getv "/processor/downscale/filter" "bicubic" }}
-processor.upscale_filter = {{ getv "/processor/upscale/filter" "bicubic" }}
-processor.sharpen = {{ getv "/processor/sharpen" "0" }}
-processor.jpg.progressive = {{ getv "/processor/jpg/progressive" "true" }}
-processor.jpg.quality = {{ getv "/processor/jpg/quality" "80" }}
-processor.tif.compression = {{ getv "/processor/tif/compression" "LZW" }}
-processor.stream_retrieval_strategy = {{ getv "/processor/stream/retrieval/strategy" "StreamStrategy" }}
-processor.fallback_retrieval_strategy = {{ getv "/processor/fallback/retrieval/strategy" "DownloadStrategy" }}
+processor.dpi = {{ getenv "CANTALOUPE_PROCESSOR_DPI" }}
+processor.normalize = {{ getenv "CANTALOUPE_PROCESSOR_NORMALIZE" }}
+processor.background_color = {{ getenv "CANTALOUPE_PROCESSOR_BACKGROUND_COLOR" }}
+processor.downscale_filter = {{ getenv "CANTALOUPE_PROCESSOR_DOWNSCALE_FILTER" }}
+processor.upscale_filter = {{ getenv "CANTALOUPE_PROCESSOR_UPSCALE_FILTER" }}
+processor.sharpen = {{ getenv "CANTALOUPE_PROCESSOR_SHARPEN" }}
+processor.jpg.progressive = {{ getenv "CANTALOUPE_PROCESSOR_JPG_PROGRESSIVE" }}
+processor.jpg.quality = {{ getenv "CANTALOUPE_PROCESSOR_JPG_QUALITY" }}
+processor.tif.compression = {{ getenv "CANTALOUPE_PROCESSOR_TIF_COMPRESSION" }}
+processor.stream_retrieval_strategy = {{ getenv "CANTALOUPE_PROCESSOR_STREAM_RETRIEVAL_STRATEGY" }}
+processor.fallback_retrieval_strategy = {{ getenv "CANTALOUPE_PROCESSOR_FALLBACK_RETRIEVAL_STRATEGY" }}
 
 #----------------------------------------
 # ImageIO Plugin Preferences
 #----------------------------------------
 
-processor.imageio.bmp.reader = {{ getv "/processor/imageio/bmp/reader" "" }}
-processor.imageio.gif.reader = {{ getv "/processor/imageio/gif/reader" "" }}
-processor.imageio.gif.writer = {{ getv "/processor/imageio/gif/writer" "" }}
-processor.imageio.jpg.reader = {{ getv "/processor/imageio/jpg/reader" "" }}
-processor.imageio.jpg.writer = {{ getv "/processor/imageio/jpg/writer" "" }}
-processor.imageio.png.reader = {{ getv "/processor/imageio/png/reader" "" }}
-processor.imageio.png.writer = {{ getv "/processor/imageio/png/writer" "" }}
-processor.imageio.tif.reader = {{ getv "/processor/imageio/tif/reader" "" }}
-processor.imageio.tif.writer = {{ getv "/processor/imageio/tif/writer" "" }}
-processor.imageio.xpm.reader = {{ getv "/processor/imageio/xpm/reader" "" }}
+processor.imageio.bmp.reader = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_BMP_READER" }}
+processor.imageio.gif.reader = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_GIF_READER" }}
+processor.imageio.gif.writer = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_GIF_WRITER" }}
+processor.imageio.jpg.reader = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_JPG_READER" }}
+processor.imageio.jpg.writer = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_JPG_WRITER" }}
+processor.imageio.png.reader = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_PNG_READER" }}
+processor.imageio.png.writer = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_PNG_WRITER" }}
+processor.imageio.tif.reader = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_TIF_READER" }}
+processor.imageio.tif.writer = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_TIF_WRITER" }}
+processor.imageio.xpm.reader = {{ getenv "CANTALOUPE_PROCESSOR_IMAGEIO_XPM_READER" }}
 
 #----------------------------------------
 # FfmpegProcessor
 #----------------------------------------
 
-FfmpegProcessor.path_to_binaries = {{ getv "/ffmpegprocessor/path/to/binaries" "" }}
+FfmpegProcessor.path_to_binaries = {{ getenv "CANTALOUPE_FFMPEGPROCESSOR_PATH_TO_BINARIES" }}
 
 #----------------------------------------
 # OpenJpegProcessor
 #----------------------------------------
 
-OpenJpegProcessor.path_to_binaries = {{ getv "/openjpegprocessor/path/to/binaries" "" }}
+OpenJpegProcessor.path_to_binaries = {{ getenv "CANTALOUPE_OPENJPEGPROCESSOR_PATH_TO_BINARIES" }}
 
 ###########################################################################
 # CLIENT-SIDE CACHING
 ###########################################################################
 
-cache.client.enabled = {{ getv "/cache/client/enabled" "true" }}
-cache.client.max_age = {{ getv "/cache/client/max/age" "2592000" }}
-cache.client.shared_max_age = {{ getv "/cache/client/shared/max/age" "" }}
-cache.client.public = {{ getv "/cache/client/public" "true" }}
-cache.client.private = {{ getv "/cache/client/private" "false" }}
-cache.client.no_cache = {{ getv "/cache/client/no/cache" "false" }}
-cache.client.no_store = {{ getv "/cache/client/no/store" "false" }}
-cache.client.must_revalidate = {{ getv "/cache/client/must/revalidate" "false" }}
-cache.client.proxy_revalidate = {{ getv "/cache/client/proxy/revalidate" "false" }}
-cache.client.no_transform = {{ getv "/cache/client/no/transform" "true" }}
+cache.client.enabled = {{ getenv "CANTALOUPE_CACHE_CLIENT_ENABLED" }}
+cache.client.max_age = {{ getenv "CANTALOUPE_CACHE_CLIENT_MAX_AGE" }}
+cache.client.shared_max_age = {{ getenv "CANTALOUPE_CACHE_CLIENT_SHARED_MAX_AGE" }}
+cache.client.public = {{ getenv "CANTALOUPE_CACHE_CLIENT_PUBLIC" }}
+cache.client.private = {{ getenv "CANTALOUPE_CACHE_CLIENT_PRIVATE" }}
+cache.client.no_cache = {{ getenv "CANTALOUPE_CACHE_CLIENT_NO_CACHE" }}
+cache.client.no_store = {{ getenv "CANTALOUPE_CACHE_CLIENT_NO_STORE" }}
+cache.client.must_revalidate = {{ getenv "CANTALOUPE_CACHE_CLIENT_MUST_REVALIDATE" }}
+cache.client.proxy_revalidate = {{ getenv "CANTALOUPE_CACHE_CLIENT_PROXY_REVALIDATE" }}
+cache.client.no_transform = {{ getenv "CANTALOUPE_CACHE_CLIENT_NO_TRANSFORM" }}
 
 ###########################################################################
 # SERVER-SIDE CACHING
 ###########################################################################
 
-cache.server.source = {{ getv "/cache/server/source" "FilesystemCache" }}
-cache.server.source.ttl_seconds = {{ getv "/cache/server/source/ttl/seconds" "2592000" }}
-cache.server.derivative.enabled = {{ getv "/cache/server/derivative/enabled" "false" }}
-cache.server.derivative = {{ getv "/cache/server/derivative" "" }}
-cache.server.derivative.ttl_seconds = {{ getv "/cache/server/derivative/ttl/seconds" "2592000" }}
-cache.server.info.enabled = {{ getv "/cache/server/info/enabled" "true" }}
-cache.server.purge_missing = {{ getv "/cache/server/purge/missing" "false" }}
-cache.server.resolve_first = {{ getv "/cache/server/resolve/first" "false" }}
-cache.server.worker.enabled = {{ getv "/cache/server/worker/enabled" "false" }}
-cache.server.worker.interval = {{ getv "/cache/server/worker/interval" "86400" }}
+cache.server.source = {{ getenv "CANTALOUPE_CACHE_SERVER_SOURCE" }}
+cache.server.source.ttl_seconds = {{ getenv "CANTALOUPE_CACHE_SERVER_SOURCE_TTL_SECONDS" }}
+cache.server.derivative.enabled = {{ getenv "CANTALOUPE_CACHE_SERVER_DERIVATIVE_ENABLED" }}
+cache.server.derivative = {{ getenv "CANTALOUPE_CACHE_SERVER_DERIVATIVE" }}
+cache.server.derivative.ttl_seconds = {{ getenv "CANTALOUPE_CACHE_SERVER_DERIVATIVE_TTL_SECONDS" }}
+cache.server.info.enabled = {{ getenv "CANTALOUPE_CACHE_SERVER_INFO_ENABLED" }}
+cache.server.purge_missing = {{ getenv "CANTALOUPE_CACHE_SERVER_PURGE_MISSING" }}
+cache.server.resolve_first = {{ getenv "CANTALOUPE_CACHE_SERVER_RESOLVE_FIRST" }}
+cache.server.worker.enabled = {{ getenv "CANTALOUPE_CACHE_SERVER_WORKER_ENABLED" }}
+cache.server.worker.interval = {{ getenv "CANTALOUPE_CACHE_SERVER_WORKER_INTERVAL" }}
 
 #----------------------------------------
 # FilesystemCache
 #----------------------------------------
 
-FilesystemCache.pathname = {{ getv "/filesystemcache/pathname" "/data" }}
-FilesystemCache.dir.depth = {{ getv "/filesystemcache/dir/depth" "3" }}
-FilesystemCache.dir.name_length = {{ getv "/filesystemcache/dir/name/length" "2" }}
+FilesystemCache.pathname = {{ getenv "CANTALOUPE_FILESYSTEMCACHE_PATHNAME" }}
+FilesystemCache.dir.depth = {{ getenv "CANTALOUPE_FILESYSTEMCACHE_DIR_DEPTH" }}
+FilesystemCache.dir.name_length = {{ getenv "CANTALOUPE_FILESYSTEMCACHE_DIR_NAME_LENGTH" }}
 
 #----------------------------------------
 # HeapCache
 #----------------------------------------
 
-HeapCache.target_size = {{ getv "/heapcache/target/size" "2G" }}
-HeapCache.persist = {{ getv "/heapcache/persist" "false" }}
-HeapCache.persist.filesystem.pathname = {{ getv "/heapcache/persist/filesystem/pathname" "/var/cache/cantaloupe/heap.cache" }}
+HeapCache.target_size = {{ getenv "CANTALOUPE_HEAPCACHE_TARGET_SIZE" }}
+HeapCache.persist = {{ getenv "CANTALOUPE_HEAPCACHE_PERSIST" }}
+HeapCache.persist.filesystem.pathname = {{ getenv "CANTALOUPE_HEAPCACHE_PERSIST_FILESYSTEM_PATHNAME" }}
 
 #----------------------------------------
 # JdbcCache
 #----------------------------------------
 
-JdbcCache.url = {{ getv "/jdbccache/url" "jdbc:postgresql://database:5432/cantaloupe" }}
-JdbcCache.user = {{ getv "/jdbccache/user" "admin" }}
-JdbcCache.password = {{ getv "/jdbccache/password" "password" }}
-JdbcCache.connection_timeout = {{ getv "/jdbccache/connection/timeout" "10" }}
-JdbcCache.derivative_image_table = {{ getv "/jdbccache/derivative/image/table" "derivative_cache" }}
-JdbcCache.info_table = {{ getv "/jdbccache/info/table" "info_cache" }}
+JdbcCache.url = {{ getenv "CANTALOUPE_JDBCCACHE_URL" }}
+JdbcCache.user = {{ getenv "CANTALOUPE_JDBCCACHE_USER" }}
+JdbcCache.password = {{ getenv "CANTALOUPE_JDBCCACHE_PASSWORD" }}
+JdbcCache.connection_timeout = {{ getenv "CANTALOUPE_JDBCCACHE_CONNECTION_TIMEOUT" }}
+JdbcCache.derivative_image_table = {{ getenv "CANTALOUPE_JDBCCACHE_DERIVATIVE_IMAGE_TABLE" }}
+JdbcCache.info_table = {{ getenv "CANTALOUPE_JDBCCACHE_INFO_TABLE" }}
 
 #----------------------------------------
 # AmazonS3Cache
 #----------------------------------------
 
-AmazonS3Cache.bucket.name = {{ getv "/amazons3cache/bucket/name" "" }}}
-AmazonS3Cache.bucket.region = {{ getv "/amazons3cache/bucket/region" "" }}}
-AmazonS3Cache.object_key_prefix = {{ getv "/amazons3cache/object/key/prefix" "" }}}
+AmazonS3Cache.bucket.name = {{ getenv "CANTALOUPE_AMAZONS3CACHE_BUCKET_NAME" }}
+AmazonS3Cache.bucket.region = {{ getenv "CANTALOUPE_AMAZONS3CACHE_BUCKET_REGION" }}
+AmazonS3Cache.object_key_prefix = {{ getenv "CANTALOUPE_AMAZONS3CACHE_OBJECT_KEY_PREFIX" }}
 
 #----------------------------------------
 # S3Cache
 #----------------------------------------
 
-S3Cache.endpoint = {{ getv "/s3cache/endpoint" "" }}
-S3Cache.access_key_id = {{ getv "/s3cache/access/key/id" "" }}
-S3Cache.secret_key = {{ getv "/s3cache/secret/key" "" }}}
-S3Cache.bucket.name = {{ getv "/s3cache/bucket/name" "" }}}
-S3Cache.bucket.region = {{ getv "/s3cache/bucket/region" "" }}}
-S3Cache.object_key_prefix = {{ getv "/s3cache/object/key/prefix" "" }}}
-S3Cache.max_connections = {{ getv "/s3cache/max/connections" "" }}}
+S3Cache.endpoint = {{ getenv "CANTALOUPE_S3CACHE_ENDPOINT" }}
+S3Cache.access_key_id = {{ getenv "CANTALOUPE_S3CACHE_ACCESS_KEY_ID" }}
+S3Cache.secret_key = {{ getenv "CANTALOUPE_S3CACHE_SECRET_KEY" }}
+S3Cache.bucket.name = {{ getenv "CANTALOUPE_S3CACHE_BUCKET_NAME" }}
+S3Cache.bucket.region = {{ getenv "CANTALOUPE_S3CACHE_BUCKET_REGION" }}
+S3Cache.object_key_prefix = {{ getenv "CANTALOUPE_S3CACHE_OBJECT_KEY_PREFIX" }}
+S3Cache.max_connections = {{ getenv "CANTALOUPE_S3CACHE_MAX_CONNECTIONS" }}
 
 
 #----------------------------------------
 # AzureStorageCache
 #----------------------------------------
 
-AzureStorageCache.account_name = {{ getv "/azurestoragecache/account/name" "" }}
-AzureStorageCache.account_key = {{ getv "/azurestoragecache/account/key" "" }}
-AzureStorageCache.container_name = {{ getv "/azurestoragecache/container/name" "" }}
-AzureStorageCache.object_key_prefix = {{ getv "/azurestoragecache/object/key/prefix" "" }}
+AzureStorageCache.account_name = {{ getenv "CANTALOUPE_AZURESTORAGECACHE_ACCOUNT_NAME" }}
+AzureStorageCache.account_key = {{ getenv "CANTALOUPE_AZURESTORAGECACHE_ACCOUNT_KEY" }}
+AzureStorageCache.container_name = {{ getenv "CANTALOUPE_AZURESTORAGECACHE_CONTAINER_NAME" }}
+AzureStorageCache.object_key_prefix = {{ getenv "CANTALOUPE_AZURESTORAGECACHE_OBJECT_KEY_PREFIX" }}
 
 #----------------------------------------
 # RedisCache
 #----------------------------------------
 
-RedisCache.host = {{ getv "/rediscache/host" "localhost" }}
-RedisCache.port = {{ getv "/rediscache/port" "6379" }}
-RedisCache.ssl = {{ getv "/rediscache/ssl" "false" }}
-RedisCache.password = {{ getv "/rediscache/password" "" }}
-RedisCache.database = {{ getv "/rediscache/database" "0" }}
+RedisCache.host = {{ getenv "CANTALOUPE_REDISCACHE_HOST" }}
+RedisCache.port = {{ getenv "CANTALOUPE_REDISCACHE_PORT" }}
+RedisCache.ssl = {{ getenv "CANTALOUPE_REDISCACHE_SSL" }}
+RedisCache.password = {{ getenv "CANTALOUPE_REDISCACHE_PASSWORD" }}
+RedisCache.database = {{ getenv "CANTALOUPE_REDISCACHE_DATABASE" }}
 
 #----------------------------------------
 # DynamoDBCache
 #----------------------------------------
 
-DynamoDBCache.endpoint = {{ getv "dynamodbcache/endpoint" "" }}
-DynamoDBCache.table.name = {{ getv "dynamodbcache/table/name" "CantaloupeDynamoDBCache" }}
-DynamoDBCache.access_key_id = {{ getv "dynamodbcache/access/key/id" "" }}
-DynamoDBCache.secret_key = {{ getv "dynamodbcache/sectre/key" "" }}
+DynamoDBCache.endpoint = {{ getenv "CANTALOUPEDYNAMODBCACHE_ENDPOINT" }}
+DynamoDBCache.table.name = {{ getenv "CANTALOUPEDYNAMODBCACHE_TABLE_NAME" }}
+DynamoDBCache.access_key_id = {{ getenv "CANTALOUPEDYNAMODBCACHE_ACCESS_KEY_ID" }}
+DynamoDBCache.secret_key = {{ getenv "CANTALOUPEDYNAMODBCACHE_SECTRE_KEY" }}
 
 ###########################################################################
 # OVERLAYS
 ###########################################################################
 
-overlays.enabled = {{ getv "/overlays/enabled" "false" }}
-overlays.strategy = {{ getv "/overlays/strategy" "BasicStrategy" }}
-overlays.BasicStrategy.type = {{ getv "/overlays/basicstrategy/type" "image" }}
-overlays.BasicStrategy.image = {{ getv "/overlays/basicstrategy/image" "/path/to/overlay.png" }}
-overlays.BasicStrategy.string = {{ getv "/overlays/basicstrategy/string" "Copyright. All rights reserved." }}
-overlays.BasicStrategy.string.font = {{ getv "/overlays/basicstrategy/string/font" "Helvetica" }}
-overlays.BasicStrategy.string.font.size = {{ getv "/overlays/basicstrategy/string/font/size" "24" }}
-overlays.BasicStrategy.string.font.min_size = {{ getv "/overlays/basicstrategy/string/font/min/size" "18" }}
-overlays.BasicStrategy.string.font.weight = {{ getv "/overlays/basicstrategy/string/font/weight" "1.0" }}
-overlays.BasicStrategy.string.glyph_spacing = {{ getv "/overlays/basicstrategy/string/glyph/spacing" "0.02" }}
-overlays.BasicStrategy.string.color = {{ getv "/overlays/basicstrategy/string/color" "white" }}
-overlays.BasicStrategy.string.stroke.color = {{ getv "/overlays/basicstrategy/string/stroke/color" "black" }}
-overlays.BasicStrategy.string.stroke.width = {{ getv "/overlays/basicstrategy/string/stroke/width" "1" }}
-overlays.BasicStrategy.string.background.color = {{ getv "/overlays/basicstrategy/string/background/color" "rgba(0, 0, 0, 100)" }}
-overlays.BasicStrategy.position = {{ getv "/overlays/basicstrategy/position" "bottom right" }}
-overlays.BasicStrategy.inset = {{ getv "/overlays/basicstrategy/inset" "10" }}
-overlays.BasicStrategy.output_width_threshold = {{ getv "/overlays/basicstrategy/output/width/threshold" "400" }}
-overlays.BasicStrategy.output_height_threshold = {{ getv "/overlays/basicstrategy/output/height/threshold" "300" }}
+overlays.enabled = {{ getenv "CANTALOUPE_OVERLAYS_ENABLED" }}
+overlays.strategy = {{ getenv "CANTALOUPE_OVERLAYS_STRATEGY" }}
+overlays.BasicStrategy.type = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_TYPE" }}
+overlays.BasicStrategy.image = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_IMAGE" }}
+overlays.BasicStrategy.string = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING" }}
+overlays.BasicStrategy.string.font = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_FONT" }}
+overlays.BasicStrategy.string.font.size = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_FONT_SIZE" }}
+overlays.BasicStrategy.string.font.min_size = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_FONT_MIN_SIZE" }}
+overlays.BasicStrategy.string.font.weight = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_FONT_WEIGHT" }}
+overlays.BasicStrategy.string.glyph_spacing = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_GLYPH_SPACING" }}
+overlays.BasicStrategy.string.color = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_COLOR" }}
+overlays.BasicStrategy.string.stroke.color = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_STROKE_COLOR" }}
+overlays.BasicStrategy.string.stroke.width = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_STROKE_WIDTH" }}
+overlays.BasicStrategy.string.background.color = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_STRING_BACKGROUND_COLOR" }}
+overlays.BasicStrategy.position = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_POSITION" }}
+overlays.BasicStrategy.inset = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_INSET" }}
+overlays.BasicStrategy.output_width_threshold = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_OUTPUT_WIDTH_THRESHOLD" }}
+overlays.BasicStrategy.output_height_threshold = {{ getenv "CANTALOUPE_OVERLAYS_BASICSTRATEGY_OUTPUT_HEIGHT_THRESHOLD" }}
 
 ###########################################################################
 # REDACTIONS
 ###########################################################################
 
-redaction.enabled = {{ getv "/redaction/enabled" "false" }}
+redaction.enabled = {{ getenv "CANTALOUPE_REDACTION_ENABLED" }}
 
 ###########################################################################
 # METADATA
 ###########################################################################
 
-metadata.preserve = {{ getv "/metadata/preserve" "false" }}
-metadata.respect_orientation = {{ getv "/metadata/respect/orientation" "false" }}
+metadata.preserve = {{ getenv "CANTALOUPE_METADATA_PRESERVE" }}
+metadata.respect_orientation = {{ getenv "CANTALOUPE_METADATA_RESPECT_ORIENTATION" }}
 
 ###########################################################################
 # LOGGING
@@ -336,50 +336,50 @@ metadata.respect_orientation = {{ getv "/metadata/respect/orientation" "false" }
 # Application Log
 #----------------------------------------
 
-log.application.level = {{ getv "/log/application/level" "debug" }}
-log.application.ConsoleAppender.enabled = {{ getv "/log/application/consoleappender/enabled" "false" }}
-log.application.ConsoleAppender.logstash.enabled = {{ getv "/log/application/consoleappender/logstash/enabled" "false" }}
-log.application.FileAppender.enabled = {{ getv "/log/application/fileappender/enabled" "false" }}
-log.application.FileAppender.logstash.enabled = {{ getv "/log/application/fileappender/logstash/enabled" "false" }}
-log.application.FileAppender.pathname = {{ getv "/log/application/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.application.log" }}
-log.application.RollingFileAppender.enabled = {{ getv "/log/application/rollingfileappender/enabled" "true" }}
-log.application.RollingFileAppender.logstash.enabled = {{ getv "/log/application/rollingfileappender/logstash/enabled" "false" }}
-log.application.RollingFileAppender.pathname = {{ getv "/log/application/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.application.log" }}
-log.application.RollingFileAppender.policy = {{ getv "/log/application/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
-log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/application/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.application-%d{yyyy-MM-dd}.log" }}
-log.application.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getv "/log/application/rollingfileappender/timebasedrollingpolicy/max/history" "30" }}
-log.application.SyslogAppender.enabled = {{ getv "/log/application/syslogappender/enabled" "false" }}
-log.application.SyslogAppender.host = {{ getv "/log/application/syslogappender/host" "" }}
-log.application.SyslogAppender.port = {{ getv "/log/application/syslogappender/port" "514" }}
-log.application.SyslogAppender.facility = {{ getv "/log/application/syslogappender/facility" "LOCAL0" }}
+log.application.level = {{ getenv "CANTALOUPE_LOG_APPLICATION_LEVEL" }}
+log.application.ConsoleAppender.enabled = {{ getenv "CANTALOUPE_LOG_APPLICATION_CONSOLEAPPENDER_ENABLED" }}
+log.application.ConsoleAppender.logstash.enabled = {{ getenv "CANTALOUPE_LOG_APPLICATION_CONSOLEAPPENDER_LOGSTASH_ENABLED" }}
+log.application.FileAppender.enabled = {{ getenv "CANTALOUPE_LOG_APPLICATION_FILEAPPENDER_ENABLED" }}
+log.application.FileAppender.logstash.enabled = {{ getenv "CANTALOUPE_LOG_APPLICATION_FILEAPPENDER_LOGSTASH_ENABLED" }}
+log.application.FileAppender.pathname = {{ getenv "CANTALOUPE_LOG_APPLICATION_FILEAPPENDER_PATHNAME" }}
+log.application.RollingFileAppender.enabled = {{ getenv "CANTALOUPE_LOG_APPLICATION_ROLLINGFILEAPPENDER_ENABLED" }}
+log.application.RollingFileAppender.logstash.enabled = {{ getenv "CANTALOUPE_LOG_APPLICATION_ROLLINGFILEAPPENDER_LOGSTASH_ENABLED" }}
+log.application.RollingFileAppender.pathname = {{ getenv "CANTALOUPE_LOG_APPLICATION_ROLLINGFILEAPPENDER_PATHNAME" }}
+log.application.RollingFileAppender.policy = {{ getenv "CANTALOUPE_LOG_APPLICATION_ROLLINGFILEAPPENDER_POLICY" }}
+log.application.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getenv "CANTALOUPE_LOG_APPLICATION_ROLLINGFILEAPPENDER_TIMEBASEDROLLINGPOLICY_FILENAME_PATTERN" }}
+log.application.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getenv "CANTALOUPE_LOG_APPLICATION_ROLLINGFILEAPPENDER_TIMEBASEDROLLINGPOLICY_MAX_HISTORY" }}
+log.application.SyslogAppender.enabled = {{ getenv "CANTALOUPE_LOG_APPLICATION_SYSLOGAPPENDER_ENABLED" }}
+log.application.SyslogAppender.host = {{ getenv "CANTALOUPE_LOG_APPLICATION_SYSLOGAPPENDER_HOST" }}
+log.application.SyslogAppender.port = {{ getenv "CANTALOUPE_LOG_APPLICATION_SYSLOGAPPENDER_PORT" }}
+log.application.SyslogAppender.facility = {{ getenv "CANTALOUPE_LOG_APPLICATION_SYSLOGAPPENDER_FACILITY" }}
 
 #----------------------------------------
 # Error Log
 #----------------------------------------
 
-log.error.FileAppender.enabled = {{ getv "/log/error/fileappender/enabled" "false" }}
-log.error.FileAppender.logstash.enabled = {{ getv "/log/error/fileappender/logstash/enabled" "false" }}
-log.error.FileAppender.pathname = {{ getv "/log/error/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.error.log" }}
-log.error.RollingFileAppender.enabled = {{ getv "/log/error/rollingfileappender/enabled" "true" }}
-log.error.RollingFileAppender.logstash.enabled = {{ getv "/log/error/rollingfileappender/logstash/enabled" "false" }}
-log.error.RollingFileAppender.pathname = {{ getv "/log/error/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.error.log" }}
-log.error.RollingFileAppender.policy = {{ getv "/log/error/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
-log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/error/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.error-%d{yyyy-MM-dd}.log" }}
-log.error.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getv "/log/error/rollingfileappender/timebasedrollingpolicy/max/history" "30" }}
+log.error.FileAppender.enabled = {{ getenv "CANTALOUPE_LOG_ERROR_FILEAPPENDER_ENABLED" }}
+log.error.FileAppender.logstash.enabled = {{ getenv "CANTALOUPE_LOG_ERROR_FILEAPPENDER_LOGSTASH_ENABLED" }}
+log.error.FileAppender.pathname = {{ getenv "CANTALOUPE_LOG_ERROR_FILEAPPENDER_PATHNAME" }}
+log.error.RollingFileAppender.enabled = {{ getenv "CANTALOUPE_LOG_ERROR_ROLLINGFILEAPPENDER_ENABLED" }}
+log.error.RollingFileAppender.logstash.enabled = {{ getenv "CANTALOUPE_LOG_ERROR_ROLLINGFILEAPPENDER_LOGSTASH_ENABLED" }}
+log.error.RollingFileAppender.pathname = {{ getenv "CANTALOUPE_LOG_ERROR_ROLLINGFILEAPPENDER_PATHNAME" }}
+log.error.RollingFileAppender.policy = {{ getenv "CANTALOUPE_LOG_ERROR_ROLLINGFILEAPPENDER_POLICY" }}
+log.error.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getenv "CANTALOUPE_LOG_ERROR_ROLLINGFILEAPPENDER_TIMEBASEDROLLINGPOLICY_FILENAME_PATTERN" }}
+log.error.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getenv "CANTALOUPE_LOG_ERROR_ROLLINGFILEAPPENDER_TIMEBASEDROLLINGPOLICY_MAX_HISTORY" }}
 
 #----------------------------------------
 # Access Log
 #----------------------------------------
 
-log.access.ConsoleAppender.enabled = {{ getv "/log/access/consoleappender/enabled" "false" }}
-log.access.FileAppender.enabled = {{ getv "/log/access/fileappender/enabled" "false" }}
-log.access.FileAppender.pathname = {{ getv "/log/access/fileappender/pathname" "/opt/tomcat/logs/cantaloupe.access.log" }}
-log.access.RollingFileAppender.enabled = {{ getv "/log/access/rollingfileappender/enabled" "true" }}
-log.access.RollingFileAppender.pathname = {{ getv "/log/access/rollingfileappender/pathname" "/opt/tomcat/logs/cantaloupe.access.log" }}
-log.access.RollingFileAppender.policy = {{ getv "/log/access/rollingfileappender/policy" "TimeBasedRollingPolicy" }}
-log.access.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getv "/log/access/rollingfileappender/timebasedrollingpolicy/filename/pattern" "/opt/tomcat/logs/cantaloupe.access-%d{yyyy-MM-dd}.log" }}
-log.access.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getv "/log/access/rollingfileappender/timebasedrollingpolicy/max/history" "30" }}
-log.access.SyslogAppender.enabled = {{ getv "/log/access/syslogappender/enabled" "false" }}
-log.access.SyslogAppender.host = {{ getv "/log/access/syslogappender/host" "" }}
-log.access.SyslogAppender.port = {{ getv "/log/access/syslogappender/port" "514" }}
-log.access.SyslogAppender.facility = {{ getv "/log/access/syslogappender/facility" "LOCAL0" }}
+log.access.ConsoleAppender.enabled = {{ getenv "CANTALOUPE_LOG_ACCESS_CONSOLEAPPENDER_ENABLED" }}
+log.access.FileAppender.enabled = {{ getenv "CANTALOUPE_LOG_ACCESS_FILEAPPENDER_ENABLED" }}
+log.access.FileAppender.pathname = {{ getenv "CANTALOUPE_LOG_ACCESS_FILEAPPENDER_PATHNAME" }}
+log.access.RollingFileAppender.enabled = {{ getenv "CANTALOUPE_LOG_ACCESS_ROLLINGFILEAPPENDER_ENABLED" }}
+log.access.RollingFileAppender.pathname = {{ getenv "CANTALOUPE_LOG_ACCESS_ROLLINGFILEAPPENDER_PATHNAME" }}
+log.access.RollingFileAppender.policy = {{ getenv "CANTALOUPE_LOG_ACCESS_ROLLINGFILEAPPENDER_POLICY" }}
+log.access.RollingFileAppender.TimeBasedRollingPolicy.filename_pattern = {{ getenv "CANTALOUPE_LOG_ACCESS_ROLLINGFILEAPPENDER_TIMEBASEDROLLINGPOLICY_FILENAME_PATTERN" }}
+log.access.RollingFileAppender.TimeBasedRollingPolicy.max_history = {{ getenv "CANTALOUPE_LOG_ACCESS_ROLLINGFILEAPPENDER_TIMEBASEDROLLINGPOLICY_MAX_HISTORY" }}
+log.access.SyslogAppender.enabled = {{ getenv "CANTALOUPE_LOG_ACCESS_SYSLOGAPPENDER_ENABLED" }}
+log.access.SyslogAppender.host = {{ getenv "CANTALOUPE_LOG_ACCESS_SYSLOGAPPENDER_HOST" }}
+log.access.SyslogAppender.port = {{ getenv "CANTALOUPE_LOG_ACCESS_SYSLOGAPPENDER_PORT" }}
+log.access.SyslogAppender.facility = {{ getenv "CANTALOUPE_LOG_ACCESS_SYSLOGAPPENDER_FACILITY" }}

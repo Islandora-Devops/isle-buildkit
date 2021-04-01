@@ -10,7 +10,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Etcd Key           | Default | Description                                                                                       |
+| Environment Variable | Confd Key           | Default | Description                                                                                       |
 | :------------------- | :----------------- | :------ | :------------------------------------------------------------------------------------------------ |
 | HOUDINI_LOG_LEVEL    | /houdini/log/level | debug   | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 

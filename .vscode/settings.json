@@ -12,5 +12,16 @@
         "*.xml.tmpl": "xml",
         "drush": "shellscript",
         "composer": "shellscript"
-    }
+    },
+    "cSpell.words": [
+        "MODESHAPE",
+        "POSTGRESQL",
+        "SIGTERM",
+        "binarystorage",
+        "catchable",
+        "classpath",
+        "elif",
+        "getenv",
+        "nativeplatform"
+    ]
 }

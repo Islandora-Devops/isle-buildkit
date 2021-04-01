@@ -8,43 +8,43 @@
         "cacheSize" : 10000
     },
     "storage" : {
-        {{ if eq (getv "/persistence/type" "file") "file" }}
+        {{ if eq (getenv "FCREPO_PERSISTENCE_TYPE") "file" }}
         "persistence": {
             "type": "file",
             "path" : "/data/objects"
         },
         {{ end }}
-        {{ if eq (getv "/persistence/type" "file") "mysql" }}
+        {{ if eq (getenv "FCREPO_PERSISTENCE_TYPE") "mysql" }}
         "persistence": {
             "type" : "db",
-            "connectionUrl": "jdbc:mysql://{{ getv "/db/host" "mariadb" }}:{{ getv "/db/port" "3306" }}/{{ getv "/db/name" "fcrepo" }}?createDatabaseIfNotExist=true",
+            "connectionUrl": "jdbc:mysql://{{ getenv "DB_MYSQL_HOST" }}:{{ getenv "DB_MYSQL_PORT" }}/{{ getenv "FCREPO_DB_NAME" }}?createDatabaseIfNotExist=true",
             "driver" : "com.mysql.jdbc.Driver",
-            "username" : "{{ getv "/db/user" "fcrepo" }}",
-            "password" : "{{ getv "/db/password" "password" }}"
+            "username" : "{{ getenv "FCREPO_DB_USER" }}",
+            "password" : "{{ getenv "FCREPO_DB_PASSWORD" }}"
         },
         {{ end }}
-        {{ if eq (getv "/persistence/type" "file") "postgresql" }}
+        {{ if eq (getenv "FCREPO_PERSISTENCE_TYPE") "postgresql" }}
         "persistence": {
             "type" : "db",
-            "connectionUrl": "jdbc:postgresql://{{ getv "/db/host" "postgresql" }}:{{ getv "/db/port" "5432" }}/{{ getv "/db/name" "fcrepo" }}?createDatabaseIfNotExist=true",
+            "connectionUrl": "jdbc:postgresql://{{ getenv "DB_POSTGRESQL_HOST" }}:{{ getenv "DB_POSTGRESQL_PORT" }}/{{ getenv "FCREPO_DB_NAME" }}?createDatabaseIfNotExist=true",
             "driver" : "org.postgresql.Driver",
-            "username" : "{{ getv "/db/user" "fcrepo" }}",
-            "password" : "{{ getv "/db/password" "password" }}"
+            "username" : "{{ getenv "FCREPO_DB_USER" }}",
+            "password" : "{{ getenv "FCREPO_DB_PASSWORD" }}"
         },
         {{ end }}
-        {{ if eq (getv "/binarystorage/type" "file") "file" }}
+        {{ if eq (getenv "FCREPO_BINARYSTORAGE_TYPE") "file" }}
         "binaryStorage" : {
             "type" : "file",
             "directory" : "/data/binaries",
             "minimumBinarySizeInBytes" : 4096
         }
         {{ end }}
-        {{ if eq (getv "/binarystorage/type" "file") "s3" }}
+        {{ if eq (getenv "FCREPO_BINARYSTORAGE_TYPE") "s3" }}
         "binaryStorage" : {
             "type" : "s3",
-            "username" : "{{ getv "/s3/user" }}",
-            "password" : "{{ getv "/s3/password" }}",
-            "bucketName" : "{{ getv "/s3/bucket" }}"
+            "username" : "{{ getenv "FCREPO_S3_USER" }}",
+            "password" : "{{ getenv "FCREPO_S3_PASSWORD" }}",
+            "bucketName" : "{{ getenv "FCREPO_S3_BUCKET" }}"
         }
         {{ end }}
     },

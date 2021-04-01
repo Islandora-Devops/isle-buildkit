@@ -1,24 +1,19 @@
-# syntax=docker/dockerfile:experimental
-FROM local/nginx:latest
+# syntax=docker/dockerfile:1.2.1
+ARG repository=local
+ARG tag=latest
+FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
-ARG COMMIT=85a8206a9ed1db302fdeb123f9d5391ef8aae001
+ARG COMMIT=ae9a35c88d2bdfd0343122a8b5b373d6368cc623
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
+RUN --mount=type=cache,id=crayfish-downloads,sharing=locked,target=/opt/downloads \
     git-clone-cached.sh \
         --url https://github.com/Islandora/Crayfish.git \
         --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
         --commit "${COMMIT}" \
-        --worktree /var/www/crayfish && \
-    mkdir /var/log/islandora && \
-    mkdir -p /opt/keys/jwt && \
-    chown nginx:nginx /var/log/islandora && \
-    chown nginx:nginx /opt/keys/jwt && \
-    chown -R nginx:nginx /var/www && \
-    cleanup.sh
+        --worktree /var/www/crayfish
 
-COPY /rootfs /
+FROM ${repository}/composer:${tag}
 
-STOPSIGNAL SIGWINCH
+COPY --from=download --chown=nginx:nginx /var/www /var/www
 
-EXPOSE 8000
+COPY rootfs /

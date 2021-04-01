@@ -15,14 +15,20 @@ s6-setuidgid mysql mysqld --skip-networking &
 MYSQLD_PID=$!
 
 # Wait for it to startup.
-until mysql --no-defaults --protocol=socket --user=root -e "SELECT 1" &> /dev/null; 
+until mysql --no-defaults --protocol=socket --user=${DB_ROOT_USER} -e "SELECT 1" &> /dev/null;
 do
 sleep 1
 done
 
 # Change the root users password.
-echo "Changing the root users password."
-mysql --no-defaults --protocol=socket --user=root < /var/run/islandora/set-root-user-password.sql
+echo "Changing the root users (${DB_ROOT_USER}) password."
+cat <<- EOF | mysql --no-defaults --protocol=socket --user=${DB_ROOT_USER}
+CREATE USER IF NOT EXISTS '${DB_ROOT_USER}'@'%';
+GRANT ALL PRIVILEGES ON *.* TO '${DB_ROOT_USER}'@'%' WITH GRANT OPTION;
+SET PASSWORD FOR '${DB_ROOT_USER}'@'localhost' = PASSWORD('${DB_ROOT_PASSWORD}');
+SET PASSWORD FOR '${DB_ROOT_USER}'@'%' = PASSWORD('${DB_ROOT_PASSWORD}');
+FLUSH PRIVILEGES;
+EOF
 
 # Stop the database.
 kill -s TERM ${MYSQLD_PID}
