@@ -11,6 +11,7 @@ RUN --mount=type=cache,id=download-apk,sharing=locked,from=cache,target=/var/cac
         git \
         gnupg \
         openssl \
+        patch \
         wget \
     && \
     echo '' > /root/.ash_history
