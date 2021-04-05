@@ -54,6 +54,22 @@
       "problemMatcher": []
     },
     {
+      "label": "PHPCPD Module",
+      "type": "shell",
+      "command": "phpcpd",
+      "args": [
+        "--suffix", 
+        "*.module,*.inc,*.test,*.php",
+        "${input:module}"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "PHPCS Current File",
       "type": "shell",
       "command": "phpcs",
@@ -61,6 +77,22 @@
         "--standard=/var/www/drupal/phpcs.xml",
         "-s",
         "${file}"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "PHPCS Module",
+      "type": "shell",
+      "command": "phpcs",
+      "args": [
+        "--standard=/var/www/drupal/phpcs.xml",
+        "-s",
+        "${input:module}"
       ],
       "group": "build",
       "presentation": {
@@ -123,6 +155,16 @@
         "command": "find * -maxdepth 0 -type d | egrep -v '(all|simpletest)' | sort",
         "cwd": "/var/www/drupal/web/sites",
         "description": "Select site"
+      }
+    },
+    {
+      "id": "module",
+      "type": "command",
+      "command": "shellCommand.execute",
+      "args": {
+        "command": "drush pm-list --field=path | sort -u | xargs -I{} echo $(drush drupal:directory)/{}",
+        "cwd": "/var/www/drupal",
+        "description": "Select Module/Theme"
       }
     }
   ]

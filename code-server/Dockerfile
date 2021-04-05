@@ -56,9 +56,10 @@ RUN --mount=type=cache,id=code-server-extensions,sharing=locked,from=cache,targe
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
 RUN --mount=type=cache,id=code-server-composer,sharing=locked,target=/root/.composer/cache \
-    composer global require "squizlabs/php_codesniffer" && \
+    composer global require "dealerdirect/phpcodesniffer-composer-installer" && \
     composer global require "drupal/coder" && \
-    composer global require "dealerdirect/phpcodesniffer-composer-installer"
+    composer global require "sebastian/phpcpd" && \
+    composer global require "squizlabs/php_codesniffer"
 
 FROM ${repository}/drupal:${tag}
 
