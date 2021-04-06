@@ -58,6 +58,5 @@ ENV \
     FCREPO_S3_PREFIX= 
 
 COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
-
 COPY rootfs /
 COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat
