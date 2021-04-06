@@ -1,0 +1,7 @@
+[template]
+src = "cron_config.yml.tmpl"
+dest = "/var/www/riprap/cron_config.yaml"
+uid = 100
+gid = 101
+mode = "0644"
+keys = [ "/" ]

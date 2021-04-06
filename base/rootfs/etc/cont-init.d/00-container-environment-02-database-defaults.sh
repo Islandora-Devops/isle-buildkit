@@ -20,8 +20,10 @@ case "${DB_DRIVER}" in
         DB_HOST=$(</var/run/s6/container_environment/DB_POSTGRESQL_HOST)
         DB_PORT=$(</var/run/s6/container_environment/DB_POSTGRESQL_PORT)
         ;;
+    sqlite)
+        ;;
     *)
-        echo "Only mysql or postgresql are supported values for DB_DRIVER." >&2
+        echo "Only MySQL / PostgreSQL / SQLite are supported values for DB_DRIVER." >&2
         exit 1
 esac
 

@@ -1,0 +1,40 @@
+# Riprap config file used by the crond service.
+#
+# Requires that the "Riprap resource list" View be enabled in
+# the Islandora instance. This View is bundled with the Islandora Riprap
+# module.
+#
+# This plugin is agnostic to which media have fixity event checks performed
+# on them. The filters in the "Riprap resource list" View determine that.
+# See the View's filter criteria GUI for examples.
+
+digest_command: '{{ getenv "RIPRAP_CONFIG_DIGEST_COMMAND" }}'
+drupal_baseurl: '{{ getenv "RIPRAP_CONFIG_DRUPAL_BASEURL" }}'
+drupal_content_types: {{ getenv "RIPRAP_CONFIG_DRUPAL_CONTENT_TYPES" }}
+drupal_file_fieldnames: {{ getenv "RIPRAP_CONFIG_DRUPAL_FILE_FIELDNAMES" }}
+drupal_media_auth: {{ getenv "RIPRAP_CONFIG_DRUPAL_MEDIA_AUTH" }}
+drupal_media_tags: {{ getenv "RIPRAP_CONFIG_DRUPAL_MEDIA_TAGS" }}
+drupal_password: '{{ getenv "RIPRAP_CONFIG_DRUPAL_PASSWORD" }}'
+drupal_user: '{{ getenv "RIPRAP_CONFIG_DRUPAL_USER" }}'
+email_from: '{{ getenv "RIPRAP_CONFIG_EMAIL_FROM" }}'
+email_to: '{{ getenv "RIPRAP_CONFIG_EMAIL_TO" }}'
+failures_log_path: '{{ getenv "RIPRAP_CONFIG_FAILURES_LOG_PATH" }}'
+fedoraapi_digest_header_leader_pattern: '{{ getenv "RIPRAP_CONFIG_FEDORAAPI_DIGEST_HEADER_LEADER_PATTERN" }}'
+fedoraapi_method: '{{ getenv "RIPRAP_CONFIG_FEDORAAPI_METHOD" }}'
+fixity_algorithm: '{{ getenv "RIPRAP_CONFIG_FIXITY_ALGORITHM" }}'
+gemini_auth_header: '{{ getenv "RIPRAP_CONFIG_GEMINI_AUTH_HEADER" }}'
+gemini_endpoint: '{{ getenv "RIPRAP_CONFIG_GEMINI_ENDPOINT" }}'
+jsonapi_authorization_headers: '{{ getenv "RIPRAP_CONFIG_JSONAPI_AUTHORIZATION_HEADERS" }}'
+jsonapi_pager_data_file_path: '{{ getenv "RIPRAP_CONFIG_JSONAPI_PAGER_DATA_FILE_PATH" }}'
+jsonapi_page_size: {{ getenv "RIPRAP_CONFIG_JSONAPI_PAGE_SIZE" }}
+max_resources: {{ getenv "RIPRAP_CONFIG_MAX_RESOURCES" }}
+output_csv_path: '{{ getenv "RIPRAP_CONFIG_OUTPUT_CSV_PATH" }}'
+plugins.fetchdigest: '{{ getv "/config/plugins.fetchdigest" (getenv "RIPRAP_CONFIG_PLUGINS_FETCHDIGEST") }}'
+plugins.fetchresourcelist: {{ getv "/config/plugins.fetchresourcelist" (getenv "RIPRAP_CONFIG_PLUGINS_FETCHRESOURCELIST") }}
+plugins.persist: '{{ getv "/config/plugins.persist" (getenv "RIPRAP_CONFIG_PLUGINS_PERSIST") }}'
+plugins.postcheck: {{ getv "/config/plugins.postcheck" (getenv "RIPRAP_CONFIG_PLUGINS_POSTCHECK") }}
+resource_dir_paths: {{ getenv "RIPRAP_CONFIG_RESOURCE_DIR_PATHS" }}
+resource_list_path: {{ getenv "RIPRAP_CONFIG_RESOURCE_LIST_PATH" }}
+thin: {{ getenv "RIPRAP_CONFIG_THIN" }}
+use_fedora_urls: {{ getenv "RIPRAP_CONFIG_USE_FEDORA_URLS" }}
+views_pager_data_file_path: '{{ getenv "RIPRAP_CONFIG_VIEWS_PAGER_DATA_FILE_PATH" }}'
