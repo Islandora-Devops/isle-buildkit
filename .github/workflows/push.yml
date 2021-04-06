@@ -7,7 +7,7 @@ jobs:
   build_and_test:
     name: Build Docker Images and Run Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     outputs:
       image-tag: ${{ steps.output-image-tag.outputs.image-tag }}
     defaults:
