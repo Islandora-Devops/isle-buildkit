@@ -14,16 +14,17 @@
         "composer": "shellscript"
     },
     "cSpell.words": [
+        "MODESHAPE",
+        "POSTGRESQL",
+        "SIGTERM",
         "binarystorage",
         "catchable",
         "classpath",
         "crond",
         "elif",
         "getenv",
-        "getenv",
-        "MODESHAPE",
         "nativeplatform",
-        "POSTGRESQL",
-        "SIGTERM"
+        "nocopy",
+        "xdebug"
     ]
 }
