@@ -8,6 +8,8 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.external.content.allowed=/opt/to
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.autoversioning.enabled=false"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.directory=file:///data/home/data/Activemq"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.configuration=file:///opt/tomcat/conf/activemq.xml"
+# Set timeout 
+export CATALINA_OPTS="${CATALINA_OPTS} -DconnectionTimeout=${FCREPO_CATALINA_TIMEOUT:=-1}"
 
 case "${DB_DRIVER}" in
     none) 
@@ -37,9 +39,6 @@ if [[ "${FCREPO_BINARYSTORAGE_TYPE}" == "file" ]]; then
   export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-fs"
 fi
 if [[ "${FCREPO_BINARYSTORAGE_TYPE}" == "s3" ]]; then
-  # Export AWS credentials
-  export AWS_ACCESS_KEY_ID=${FCREPO_S3_USER}
-  export AWS_SECRET_ACCESS_KEY=${FCREPO_S3_PASSWORD}
   # Enable S3 mode and set default options
-  export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-s3 -Dfcrepo.aws.region=${FCREPO_AWS_REGION} -Dfcrepo.ocfl.s3.bucket=${FCREPO_S3_BUCKET} -Dfcrepo.ocfl.s3.prefix=${FCREPO_S3_PREFIX}"
+  export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-s3 -Dfcrepo.aws.region=${FCREPO_AWS_REGION} -Dfcrepo.ocfl.s3.bucket=${FCREPO_S3_BUCKET} -Dfcrepo.ocfl.s3.prefix=${FCREPO_S3_PREFIX}" 
 fi
