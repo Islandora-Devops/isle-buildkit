@@ -137,6 +137,10 @@ function main {
     exit 1
   fi
 
+  # Reset stale cache data, which can cause exceptions if modules have been updated and are
+  # run against an obsolete cache.
+  drush -l "${site_url}" cr
+
   # Enter maintenance mode, run any database hooks from updated modules,
   # import the configuration, and perform any runtime configuration affected by
   # environment variables.

@@ -7,7 +7,7 @@ jobs:
   build:
     name: Build and Push Buildkit Docker Images
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     outputs:
       image-tag: ${{ steps.output-image-tag.outputs.image-tag }}
     defaults:
