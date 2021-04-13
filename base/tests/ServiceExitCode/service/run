@@ -1,5 +1,0 @@
-#!/usr/bin/with-contenv bash
-set -e
-
-# Exit code of service should be returned by the container.
-exit 11
