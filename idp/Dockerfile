@@ -12,6 +12,10 @@ RUN chmod 750 /usr/local/bin/run-jetty.sh
 RUN yum -y install gettext && \
     rm -rf /var/cache/yum
 
+RUN wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_linux_amd64 && \
+    chmod 755 /usr/local/bin/yq && \
+    echo "c4343783c3361495c0d6d1eb742bba7432aa65e13e9fb8d7e201d544bcf14246  /usr/local/bin/yq" | sha256sum -c
+
 COPY --from=base /usr/local/bin/confd /usr/local/bin
 
 COPY rootfs/ /
