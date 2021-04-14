@@ -5,10 +5,10 @@ FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 # https://getcomposer.org/download/
 RUN --mount=type=cache,id=download-downloads,sharing=locked,target=/opt/downloads \
-    COMPOSER_VERSION="2.0.4" && \
+    COMPOSER_VERSION="2.0.12" && \
     COMPOSER_FILE="composer.phar" && \
     COMPOSER_URL="https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}" && \
-    COMPOSER_SHA256="c3b2bc477429c923c69f7f9b137e06b2a93c6a1e192d40ffad1741ee5d54760d" && \
+    COMPOSER_SHA256="82ea8c1537cfaceb7e56f6004c7ccdf99ddafce7237c07374d920e635730a631" && \
     download.sh --url "${COMPOSER_URL}" --sha256 "${COMPOSER_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${COMPOSER_FILE}" /usr/bin/composer && \
     chmod a+x /usr/bin/composer
