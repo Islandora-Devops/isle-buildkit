@@ -33,6 +33,7 @@ RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/
         php7-xmlwriter \
         php7-xmlreader \
         php7-xsl \
+        php7-zip \
     && \
     cleanup.sh
 
