@@ -16,6 +16,7 @@ RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/
         php7-fpm \
         php7-gd \
         php7-iconv \
+        php7-intl \
         php7-json \
         php7-mbstring \
         php7-mysqli \
