@@ -36,7 +36,7 @@ ENV \
     MATOMO_USER_NAME=admin \
     MATOMO_USER_PASS='$2y$10$S38e7HPM9LI3aOIvcnRsfuMCm4ipNP572QsvbCK60upoHVJ61hMrS'
 
-COPY --from=download --chown=nginx:nginx /opt/matomo /opt/matomo
+COPY --from=download --chown=nginx:nginx /opt/matomo /var/www/matomo
 
 COPY rootfs /
 
