@@ -1,0 +1,30 @@
+;
+; This file configures XDebug when invoked by a web request.  CLI configuration is
+; controlled by the XDEBUG_CONFIG environment variable.
+;
+
+; Comment to disable this extension.
+zend_extension=/usr/lib/php7/modules/xdebug.so
+
+;https://xdebug.org/docs/install#mode
+xdebug.mode={{getenv "XDEBUG_MODE" "develop,debug,trace"}}
+
+;https://xdebug.org/docs/install#log
+xdebug.log={{getenv "XDEBUG_LOG" "/var/www/drupal/xdebug.log"}}
+
+;https://xdebug.org/docs/install#log_level
+xdebug.log_level={{getenv "XDEBUG_LOGLEVEL" "7"}}
+
+; Useful when debugging tests, set to "trigger"
+;https://xdebug.org/docs/all_settings#start_with_request
+xdebug.start_with_request={{getenv "XDEBUG_STARTWITHREQUEST" "no"}}
+
+; Host discovery
+
+;https://xdebug.org/docs/all_settings#discover_client_host
+;xdebug.client_host is used as a fallback if xdebug.discover_client_host is true
+xdebug.discover_client_host={{getenv "XDEBUG_DISCOVERCLIENTLOCALHOST" "false"}}
+
+;https://xdebug.org/docs/all_settings#client_host
+;used as a fallback if xdebug.discover_client_host=true
+xdebug.client_host={{getenv "XDEBUG_CLIENTHOST" "host.docker.internal"}}

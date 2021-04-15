@@ -1,0 +1,6 @@
+[template]
+src = "xdebug.ini.tmpl"
+dest = "/etc/php7/conf.d/xdebug.ini"
+uid = 0
+gid = 0
+mode = "0444"
