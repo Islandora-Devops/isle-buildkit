@@ -4,6 +4,7 @@ ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
 ARG COMMIT=2c8088235365c3c5bfff850ee82a28bbefe4f368
+ARG PROFILE_COMMIT=8d3ae73d1c43f76eaa59b8b0f846c12e8140cfe4
 
 # Islandora based Drupal install.
 RUN --mount=type=cache,id=demo-composer,sharing=locked,target=/root/.composer/cache \
@@ -16,6 +17,11 @@ RUN --mount=type=cache,id=demo-composer,sharing=locked,target=/root/.composer/ca
         --worktree /var/www/drupal && \
     cd /var/www/drupal && \
     composer install && \
+    git-clone-cached.sh \
+        --url https://github.com/islandora-devops/islandora_install_profile_demo.git \
+        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
+        --commit "${PROFILE_COMMIT}" \
+        --worktree /var/www/drupal/web/profiles/islandora_install_profile_demo && \
     # Set up libraries
     mkdir -p /var/www/drupal/web/libraries && \
     # PDF.js
