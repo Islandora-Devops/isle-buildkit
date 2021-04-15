@@ -39,5 +39,23 @@ MATOMO_SUBSITES=$(</var/run/s6/container_environment/MATOMO_SUBSITES)
                 ;;
             esac
         done
+        for FILE in /var/run/s6/container_environment/MATOMO_USER_*
+        do
+            DEFAULT_VAR=$(basename "${FILE}")
+            SUFFIX=${DEFAULT_VAR##MATOMO_}
+            VAR=MATOMO_SITE_${MATOMO_SITE}_${SUFFIX}
+            SITE=$(echo "${MATOMO_SITE}" | tr '[:upper:]' '[:lower:]')
+            KEY=$(echo "${VAR}" | tr '[:upper:]' '[:lower:]' | tr '_' '/')
+            # Some defaults are derived from the site name all others 
+            # can just use the same default values as the 'default' site.
+            case ${SUFFIX} in
+                USER_NAME)
+                    echo "${VAR}=\"{{ getv \"/${KEY}\" \"${SITE}_admin\" }}\""
+                ;;
+                *) # Use same default value as the 'default' site.
+                    echo "${VAR}=\"{{ getv \"/${KEY}\" (getenv \"${DEFAULT_VAR}\") }}\""
+                ;;
+            esac
+        done
     done
 } | /usr/local/bin/confd-import-environment.sh
