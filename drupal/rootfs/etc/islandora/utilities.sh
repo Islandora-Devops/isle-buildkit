@@ -246,6 +246,23 @@ function install_site {
         chmod a=rwx "${site_directory}/settings.php"
     fi
 
+    echo "--driver ${driver}"
+    echo "--host ${host}"
+    echo "--port ${port}"
+    echo "--dbuser ${user}"
+    echo "--dbpassword ${password}"
+    echo "--dbname ${db_name}"
+    echo "PROFILE: ${profile}"
+    echo "--account-mail=${account_email}"
+    echo "--account-name=${account_name}"
+    echo "--account-pass=${account_password}"
+    echo "--site-mail=${site_email}"
+    echo "--locale=${site_locale}"
+    echo "--site-name=${site_name}"
+    echo "--sites-subdir=${subdir}"
+    echo "USE_EXISTIG_CONFIG: ${use_existing_config_arg}"
+    echo "EVERYTHING ELSE: ${@}"
+
     /usr/local/bin/install-drupal-site.sh \
         --driver "${driver}" \
         --host "${host}" \
