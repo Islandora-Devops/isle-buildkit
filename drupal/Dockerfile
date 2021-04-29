@@ -1,9 +1,15 @@
 # syntax=docker/dockerfile:experimental
+FROM local/imagemagick:latest as imagemagick
+
 FROM local/nginx:latest
 
 RUN --mount=type=cache,target=/etc/cache/apk \
+    --mount=type=bind,from=imagemagick,source=/home/builder/packages/x86_64,target=/packages \
+    --mount=type=bind,from=imagemagick,source=/etc/apk/keys,target=/etc/apk/keys \
     apk-install.sh \
       patch && \
+    apk add --allow-untrusted /packages/imagemagick-*.apk && \
+    apk add potrace && \
     cleanup.sh
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
