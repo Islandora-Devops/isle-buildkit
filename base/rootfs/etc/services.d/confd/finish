@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv bash
-set -e
-
-s6-svscanctl -t /var/run/s6/services
