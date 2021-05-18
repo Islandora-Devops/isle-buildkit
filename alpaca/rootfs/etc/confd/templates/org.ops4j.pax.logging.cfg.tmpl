@@ -21,6 +21,7 @@ log4j.appender.camel.maxFileSize=1MB
 log4j.appender.camel.maxBackupIndex=10
 
 log4j.logger.org.apache.camel={{ getv "/logger/camel/level" "WARN" }}, camel
+log4j.additivity.org.apache.camel=false
 
 # Islandora Logger
 log4j.appender.islandora=org.apache.log4j.RollingFileAppender
@@ -32,3 +33,6 @@ log4j.appender.islandora.maxFileSize=1MB
 log4j.appender.islandora.maxBackupIndex=10
 
 log4j.logger.ca.islandora.camel={{ getv "/logger/islandora/level" "WARN" }}, islandora
+log4j.additivity.ca.islandora.camel=false
+log4j.logger.ca.islandora.alpaca={{ getv "/logger/islandora/level" "WARN" }}, islandora
+log4j.additivity.ca.islandora.alpaca=false
