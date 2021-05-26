@@ -374,7 +374,9 @@ function configure_islandora_module {
 
 # After enabling and importing features a number of configurations need to be updated.
 function configure_islandora_default_module {
-    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q islandora_defaults; then
+    if [[ ${DRUPAL_ENABLE_ISLANDORA_DEFAULTS} == "true" ]]; then
+        drush -l "${site_url}" -y en islandora_defaults
+    else
         echo "islandora_defaults is not installed.  Skipping configuration"
         return 0
     fi
