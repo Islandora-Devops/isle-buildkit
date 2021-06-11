@@ -1,3 +1,0 @@
-#!/usr/bin/with-contenv bash
-set -e 
-confd-render-templates.sh --continuous
