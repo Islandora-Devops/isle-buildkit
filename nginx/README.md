@@ -43,6 +43,10 @@ Requires `islandora/base` docker image to build. Please refer to the
 | PHP_MEMORY_LIMIT           | /php/memory/limit           | 128M    | Maximum amount of memory a script may consume                     |
 | PHP_POST_MAX_SIZE          | /php/post/max/size          | 8M      | Maximum size of POST data that PHP will accept                    |
 | PHP_UPLOAD_MAX_FILESIZE    | /php/upload/max/filesize    | 2M      | Maximum allowed size for uploaded files                           |
+| PHP_FPM_MAX_CHILDREN       | /php/fpm/max/children       | 5       | Maximum number of child processes (when using 'dynamic' pm)       |
+| PHP_FPM_START_SERVERS      | /php/fpm/start/servers      | 2       | The number of child processes created on startup (when using 'dynamic' pm) |
+| PHP_FPM_MIN_SPARE_SERVERS  | /php/fpm/min/spare/servers  | 1       | The desired minimum number of idle server processes (when using 'dynamic' pm) |
+| PHP_FPM_MAX_SPARE_SERVERS  | /php/fpm/max/spare/servers  | 3       | The desired maximum number of idle server processes (when using 'dynamic' pm) |
 
 [FPM Documentation]: https://www.php.net/manual/en/install.fpm.configuration.php
 [FPM Logging]: https://www.php.net/manual/en/install.fpm.configuration.php
