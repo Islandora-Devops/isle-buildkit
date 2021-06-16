@@ -37,16 +37,16 @@ Requires `islandora/base` docker image to build. Please refer to the
 | PHP_DEFAULT_SOCKET_TIMEOUT | /php/default/socket/timeout | 60      | Default timeout for socket based streams (seconds)                |
 | PHP_LOG_LEVEL              | /php/log/level              | notice  | Log level. Possible Values: alert, error, warning, notice, debug  |
 | PHP_LOG_LIMIT              | /php/log/limit              | 16384   | Log limit on number of characters in the single line              |
-| PHP_MAX_EXECUTION_TIME     | /php/max/execution/time     | 30      | Maximum execution time of each script, in seconds.  The value of this is aligned with the Nginx fastcgi parameter `fastcgi_read_timeout` and the PHP parameter `request_terminate_timeout`.  That is, setting  `/php/max/execution/time` will set `fastcgi_read_timeout` and `request_terminate_timeout` to the same values.|
+| PHP_MAX_EXECUTION_TIME     | -                           | 30      | Maximum execution time of each script, in seconds.  The value of this is aligned with the Nginx fastcgi parameter `fastcgi_read_timeout` and the PHP parameter `request_terminate_timeout`.  That is, setting  `/php/max/execution/time` will set `fastcgi_read_timeout` and `request_terminate_timeout` to the same values.|
 | PHP_MAX_FILE_UPLOADS       | /php/max/file/uploads       | 20      | Maximum number of files that can be uploaded via a single request |
 | PHP_MAX_INPUT_TIME         | /php/max/input/time         | 60      | Maximum amount of time each script may spend parsing request data |
 | PHP_MEMORY_LIMIT           | /php/memory/limit           | 128M    | Maximum amount of memory a script may consume                     |
 | PHP_POST_MAX_SIZE          | /php/post/max/size          | 8M      | Maximum size of POST data that PHP will accept                    |
 | PHP_UPLOAD_MAX_FILESIZE    | /php/upload/max/filesize    | 2M      | Maximum allowed size for uploaded files                           |
-| PHP_FPM_MAX_CHILDREN       | /php/fpm/max/children       | 5       | Maximum number of child processes (when using 'dynamic' pm)       |
-| PHP_FPM_START_SERVERS      | /php/fpm/start/servers      | 2       | The number of child processes created on startup (when using 'dynamic' pm) |
-| PHP_FPM_MIN_SPARE_SERVERS  | /php/fpm/min/spare/servers  | 1       | The desired minimum number of idle server processes (when using 'dynamic' pm) |
-| PHP_FPM_MAX_SPARE_SERVERS  | /php/fpm/max/spare/servers  | 3       | The desired maximum number of idle server processes (when using 'dynamic' pm) |
+| PHP_FPM_MAX_CHILDREN       | -                           | 5       | Maximum number of child processes (when using 'dynamic' pm)       |
+| PHP_FPM_START_SERVERS      | -                           | 2       | The number of child processes created on startup (when using 'dynamic' pm) |
+| PHP_FPM_MIN_SPARE_SERVERS  | -                           | 1       | The desired minimum number of idle server processes (when using 'dynamic' pm) |
+| PHP_FPM_MAX_SPARE_SERVERS  | -                           | 3       | The desired maximum number of idle server processes (when using 'dynamic' pm) |
 
 [FPM Documentation]: https://www.php.net/manual/en/install.fpm.configuration.php
 [FPM Logging]: https://www.php.net/manual/en/install.fpm.configuration.php

@@ -44,6 +44,7 @@ additional settings, volumes, ports, etc.
 | TOMCAT_ADMIN_ROLES                  | /tomcat/admin/roles                  | manager-gui | Comma separated list of roles the user has                                            |
 | TOMCAT_LOG_LEVEL                    | /tomcat/log/level                    | ALL         | Log level. Possible Values: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST or ALL |
 | TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE | /tomcat/manager/remote/address/valve | ^.*$        | Allows / blocks access to manager app to addresses which match this regex             |
+| TOMCAT_NGINX_PROXY_READ_TIMEOUT     | -                                    | 60          | Defines a timeout for reading a response from the proxied server, in seconds. |
 
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:

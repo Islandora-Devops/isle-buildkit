@@ -28,4 +28,10 @@ additional settings, volumes, ports, etc.
 | :------------------- | :--------------- | :-------- | :---------- |
 | JWT_ADMIN_TOKEN      | /jwt/admin/token | islandora | JWT Token   |
 
+### Timeout configuration
+
+| Environment Variable    | Etcd Key                 | Default           | Description                                                                                       |
+| :---------------------- | :----------------------- | :---------------- | :------------------------------------------------------------------------------------------------ |
+| PHP_MAX_EXECUTION_TIME  | -                        | 60                | The value of `PHP_MAX_EXECUTION_TIME` is used to set the Nginx `fastcgi_read_timeout` parameter   |
+
 [Crayfish]: https://github.com/Islandora/Crayfish/tree/main

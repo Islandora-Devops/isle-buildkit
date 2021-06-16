@@ -29,4 +29,10 @@ additional settings, volumes, ports, etc.
 | CRAYFITS_LOG_LEVEL      | /crayfits/log/level      | debug             | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 | CRAYFITS_WEBSERVICE_URI | /crayfits/webservice/uri | fits/fits/examine | The URL of the FITS servlet.                                                                      |
 
+### Timeout configuration
+
+| Environment Variable    | Etcd Key                 | Default           | Description                                                                                       |
+| :---------------------- | :----------------------- | :---------------- | :------------------------------------------------------------------------------------------------ |
+| PHP_MAX_EXECUTION_TIME  | -                        | 60                | The value of `PHP_MAX_EXECUTION_TIME` is used to set the Nginx `fastcgi_read_timeout` parameter   |
+
 [CrayFits]: https://github.com/roblib/CrayFits

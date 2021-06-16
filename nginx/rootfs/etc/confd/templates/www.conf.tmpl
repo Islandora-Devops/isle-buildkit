@@ -110,22 +110,22 @@ pm = dynamic
 ; forget to tweak pm.* to fit your needs.
 ; Note: Used when pm is set to 'static', 'dynamic' or 'ondemand'
 ; Note: This value is mandatory.
-pm.max_children = {{ getv "/php/fpm/max/children" "5" }}
+pm.max_children = {{ getenv "PHP_FPM_MAX_CHILDREN" "5" }}
 
 ; The number of child processes created on startup.
 ; Note: Used only when pm is set to 'dynamic'
 ; Default Value: min_spare_servers + (max_spare_servers - min_spare_servers) / 2
-pm.start_servers = {{ getv "/php/fpm/start/servers" "2" }}
+pm.start_servers = {{ getenv "PHP_FPM_START_SERVERS" "2" }}
 
 ; The desired minimum number of idle server processes.
 ; Note: Used only when pm is set to 'dynamic'
 ; Note: Mandatory when pm is set to 'dynamic'
-pm.min_spare_servers = {{ getv "/php/fpm/min/spare/servers" "1" }}
+pm.min_spare_servers = {{ getenv "PHP_FPM_MIN_SPARE_SERVERS" "1" }}
 
 ; The desired maximum number of idle server processes.
 ; Note: Used only when pm is set to 'dynamic'
 ; Note: Mandatory when pm is set to 'dynamic'
-pm.max_spare_servers = {{ getv "/php/fpm/max/spare/servers" "3" }}
+pm.max_spare_servers = {{ getenv "PHP_FPM_MAX_SPARE_SERVERS" "3" }}
 
 ; The number of seconds after which an idle process will be killed.
 ; Note: Used only when pm is set to 'ondemand'
@@ -337,7 +337,7 @@ pm.max_spare_servers = {{ getv "/php/fpm/max/spare/servers" "3" }}
 ; does not stop script execution for some reason. A value of '0' means 'off'.
 ; Available units: s(econds)(default), m(inutes), h(ours), or d(ays)
 ; Default Value: 0
-request_terminate_timeout = {{ getv "/php/max/execution/time" "0" }}
+request_terminate_timeout = {{ getenv "PHP_MAX_EXECUTION_TIME" "0" }}
 
 ; The timeout set by 'request_terminate_timeout' ini option is not engaged after
 ; application calls 'fastcgi_finish_request' or when application has finished and
