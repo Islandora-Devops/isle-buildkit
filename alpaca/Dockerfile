@@ -1,5 +1,19 @@
 # syntax=docker/dockerfile:experimental
+FROM local/java:latest as alpacabuild
+
+ENV ALPACA_REPO="https://github.com/jhu-idc/Alpaca"
+ENV ALPACA_BRANCH="Alpaca-1.0.3-jhu"
+
+RUN mkdir /build && \
+    cd /build && \
+    git clone -b ${ALPACA_BRANCH} ${ALPACA_REPO} . && \
+    cd /build && \
+    ./gradlew install
+
 FROM local/karaf:latest
+
+# Copy locally built Alpaca artifacts
+COPY --from=alpacabuild /root/.m2/repository /root/.m2/repository
 
 # Install common features and repos
 RUN bin/start && \

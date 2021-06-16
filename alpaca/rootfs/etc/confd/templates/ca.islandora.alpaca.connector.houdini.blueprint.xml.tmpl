@@ -11,6 +11,8 @@
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.houdini" update-strategy="reload" >
     <cm:default-properties>
       <cm:property name="error.maxRedeliveries" value="{{ getv "/houdini/redeliveries" "10" }}"/>
+      <cm:property name="error.redeliveryDelay" value="{{ getv "/houdini/redeliverydelay" "10000" }}"/>
+      <cm:property name="error.backoff" value="{{ getv "/houdini/redeliverybackoff" "1.0" }}"/>
       <cm:property name="in.stream" value="{{ getv "/houdini/queue" "broker:queue:islandora-connector-houdini" }}"/>
       <cm:property name="derivative.service.url" value="{{ getv "/houdini/service" "http://houdini:8000/convert" }}"/>
     </cm:default-properties>
@@ -18,8 +20,19 @@
 
   <reference id="broker" interface="org.apache.camel.Component" filter="(osgi.jndi.service.name=fcrepo/Broker)"/>
 
-  <bean id="http" class="org.apache.camel.component.http4.HttpComponent"/>
-  <bean id="https" class="org.apache.camel.component.http4.HttpComponent"/>
+  <bean id="requestConfigConfigurer" class="ca.islandora.alpaca.connector.derivative.RequestConfigConfigurer">
+    <property name="connectionRequestTimeoutMs" value="{{ getenv "ALPACA_HOUDINI_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000" }}"/>
+    <property name="connectTimeoutMs" value="{{ getenv "ALPACA_HOUDINI_HTTP_CONNECT_TIMEOUT_MS" "10000" }}"/>
+    <property name="socketTimeoutMs" value="{{ getenv "ALPACA_HOUDINI_HTTP_SOCKET_TIMEOUT_MS" "600000" }}"/>
+  </bean>
+
+  <bean id="http" class="org.apache.camel.component.http4.HttpComponent">
+    <property name="httpClientConfigurer" ref="requestConfigConfigurer"/>
+  </bean>
+
+  <bean id="https" class="org.apache.camel.component.http4.HttpComponent">
+    <property name="httpClientConfigurer" ref="requestConfigConfigurer"/>
+  </bean>
 
   <camelContext id="IslandoraConnectorHoudini" xmlns="http://camel.apache.org/schema/blueprint">
     <package>ca.islandora.alpaca.connector.derivative</package>

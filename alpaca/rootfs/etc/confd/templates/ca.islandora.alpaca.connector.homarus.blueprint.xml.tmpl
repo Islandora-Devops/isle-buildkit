@@ -11,6 +11,8 @@
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.homarus" update-strategy="reload" >
     <cm:default-properties>
       <cm:property name="error.maxRedeliveries" value="{{ getv "/homarus/redeliveries" "10" }}"/>
+      <cm:property name="error.redeliveryDelay" value="{{ getv "/homarus/redeliverydelay" "10000" }}"/>
+      <cm:property name="error.backoff" value="{{ getv "/homarus/redeliverybackoff" "1.0" }}"/>
       <cm:property name="in.stream" value="{{ getv "/homarus/queue" "broker:queue:islandora-connector-homarus" }}"/>
       <cm:property name="derivative.service.url" value="{{ getv "/homarus/service" "http://homarus:8000/convert" }}"/>
     </cm:default-properties>
@@ -18,8 +20,19 @@
 
   <reference id="broker" interface="org.apache.camel.Component" filter="(osgi.jndi.service.name=fcrepo/Broker)"/>
 
-  <bean id="http" class="org.apache.camel.component.http4.HttpComponent"/>
-  <bean id="https" class="org.apache.camel.component.http4.HttpComponent"/>
+  <bean id="requestConfigConfigurer" class="ca.islandora.alpaca.connector.derivative.RequestConfigConfigurer">
+    <property name="connectionRequestTimeoutMs" value="{{ getenv "ALPACA_HOMERUS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000" }}"/>
+    <property name="connectTimeoutMs" value="{{ getenv "ALPACA_HOMERUS_HTTP_CONNECT_TIMEOUT_MS" "10000" }}"/>
+    <property name="socketTimeoutMs" value="{{ getenv "ALPACA_HOMERUS_HTTP_SOCKET_TIMEOUT_MS" "600000" }}"/>
+  </bean>
+
+  <bean id="http" class="org.apache.camel.component.http4.HttpComponent">
+    <property name="httpClientConfigurer" ref="requestConfigConfigurer"/>
+  </bean>
+
+  <bean id="https" class="org.apache.camel.component.http4.HttpComponent">
+    <property name="httpClientConfigurer" ref="requestConfigConfigurer"/>
+  </bean>
 
   <camelContext id="IslandoraConnectorHomarus" xmlns="http://camel.apache.org/schema/blueprint">
     <package>ca.islandora.alpaca.connector.derivative</package>

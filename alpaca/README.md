@@ -61,6 +61,35 @@ additional settings, volumes, ports, etc.
 | ALPACA_OCR_QUEUE                           | /alpaca/ocr/queue                          | broker:queue:islandora-connector-ocr                 | ActiveMQ Queue to consume from                                                                                                                              |
 | ALPACA_OCR_REDELIVERIES                    | /alpaca/ocr/redeliveries                   | 10                                                   | Number of attempts to redeliver if an exception occurs                                                                                                      |
 | ALPACA_OCR_SERVICE                         | /alpaca/ocr/service                        | http://hypercube:8000                                | Url of micro-service                                                                                                                                        |
+## Timeout Settings
+
+| Environment Variable                              | Etcd key | Default Value | Description |
+|:---                                               |:---      |:---           |:---
+| ALPACA_FITS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS    | - | 10000  | Timeout for retrieving a connection from the connection pool |
+| ALPACA_FITS_HTTP_CONNECT_TIMEOUT_MS               | - | 10000  | Timeout making an HTTP connection                            |
+| ALPACA_FITS_HTTP_SOCKET_TIMEOUT_MS                | - | 600000 | Timeout reading data from a socket                           |
+| ALPACA_HOMERUS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS | - | 10000  | Timeout for retrieving a connection from the connection pool |
+| ALPACA_HOMERUS_HTTP_CONNECT_TIMEOUT_MS            | - | 10000  | Timeout making an HTTP connection                            |
+| ALPACA_HOMERUS_HTTP_SOCKET_TIMEOUT_MS             | - | 600000 | Timeout reading data from a socket                           |
+| ALPACA_HOUDINI_HTTP_CONNECTION_REQUEST_TIMEOUT_MS | - | 10000  | Timeout for retrieving a connection from the connection pool |
+| ALPACA_HOUDINI_HTTP_CONNECT_TIMEOUT_MS            | - | 10000  | Timeout making an HTTP connection                            |
+| ALPACA_HOUDINI_HTTP_SOCKET_TIMEOUT_MS             | - | 600000 | Timeout reading data from a socket                           |
+| ALPACA_OCR_HTTP_CONNECTION_REQUEST_TIMEOUT_MS     | - | 10000  | Timeout for retrieving a connection from the connection pool |
+| ALPACA_OCR_HTTP_CONNECT_TIMEOUT_MS                | - | 10000  | Timeout making an HTTP connection                            |
+| ALPACA_OCR_HTTP_SOCKET_TIMEOUT_MS                 | - | 600000 | Timeout reading data from a socket                           |
+
+## HTTP redelivery variables
+
+| Environment Variable                              | Etcd key | Default Value | Description |
+|:---                                               |:---      |:---           |:---
+| ALPACA_FITS_REDELIVERYDELAY                       | /fits/redeliverydelay | 10000  | Number of milliseconds before attempting to redeliver a JMS message to the microservice HTTP endpoint, due to, e.g. a timeout |
+| ALPACA_FITS_REDELIVERYBACKOFF                     | /fits/redeliverybackoff | 1.0    | Backoff factor applied to the redelivery delay |
+| ALPACA_HOMARUS_REDELIVERYDELAY                    | /homarus/redeliverydelay | 10000  | Number of milliseconds before attempting to redeliver a JMS message to the microservice HTTP endpoint, due to, e.g. a timeout |
+| ALPACA_HOMARUS_REDELIVERYBACKOFF                  | /homarus/redeliverybackoff | 1.0    | Backoff factor applied to the redelivery delay |
+| ALPACA_HOUDINI_REDELIVERYDELAY                    | /houdini/redeliverydelay | 10000  | Number of milliseconds before attempting to redeliver a JMS message to the microservice HTTP endpoint, due to, e.g. a timeout |
+| ALPACA_HOUDINI_REDELIVERYBACKOFF                  | /houdini/redeliverybackoff | 1.0    | Backoff factor applied to the redelivery delay |
+| ALPACA_OCR_HTTP_REDELIVERYDELAY                   | /ocr/redeliverydelay | 10000  | Number of milliseconds before attempting to redeliver a JMS message to the microservice HTTP endpoint, due to, e.g. a timeout |
+| ALPACA_OCR_HTTP_REDELIVERYBACKOFF                 | /ocr/redeliverybackoff | 1.0    | Backoff factor applied to the redelivery delay |
 
 ## Logs
 
