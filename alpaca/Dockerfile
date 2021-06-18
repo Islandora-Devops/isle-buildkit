@@ -35,19 +35,6 @@ RUN bin/start && \
     bin/stop && \
     rm -rf instances/*
 
-# Fcrepo indexing
-RUN bin/start && \
-    bin/client -r 10 -d 5  "feature:install islandora-indexing-fcrepo" && \
-    bin/stop && \
-    rm -rf instances/*
-
-# Triple indexing
-RUN bin/start && \
-    bin/client -r 10 -d 5  "feature:install fcrepo-indexing-triplestore" && \
-    bin/client -r 10 -d 5  "feature:install islandora-indexing-triplestore" && \
-    bin/stop && \
-    rm -rf instances/*
-
 RUN chown -R karaf:karaf /opt/karaf
 
 COPY rootfs /
