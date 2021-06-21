@@ -21,6 +21,7 @@ RUN --mount=type=cache,id=base-apk,sharing=locked,from=cache,target=/var/cache/a
         openssl \
         postgresql-client \
         wget \
+        util-linux \
     && \
     addgroup -g 2000 jwt && \
     echo '' > /root/.ash_history
