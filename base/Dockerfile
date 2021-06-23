@@ -28,8 +28,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     S6_SIG_SHA256="7e9c33f45bca1f89b3a1702175a4109e99c911e47ae9de62fbec013406db2b01" && \
     download.sh --url "${S6_URL}" --sha256 "${S6_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh --url "${S6_URL}.sig" --sha256 "${S6_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    gpg --keyserver hkp://pool.sks-keyservers.net --recv-key 2536CA16DF4FCDA2 && \
-    gpg "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}.sig" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}" -C / && \
     CONFD_VERSION="0.16.0" && \
     CONFD_URL="https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" && \

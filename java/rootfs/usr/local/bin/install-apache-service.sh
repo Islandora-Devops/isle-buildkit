@@ -92,8 +92,6 @@ function main {
     local install_directory=/opt/${NAME}
     local user=${NAME}
     local group=${NAME}
-    gpg --keyserver hkp://pool.sks-keyservers.net --recv-key ${KEY}
-    gpg --verify ${FILE}.asc ${FILE}
     mkdir ${install_directory}
     addgroup ${group} && \
     adduser --system --disabled-password --no-create-home --ingroup ${group} --shell /sbin/nologin --home ${install_directory} ${user}
