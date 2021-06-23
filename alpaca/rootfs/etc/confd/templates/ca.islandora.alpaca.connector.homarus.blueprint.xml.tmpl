@@ -15,10 +15,43 @@
       <cm:property name="error.backoff" value="{{ getv "/homarus/redeliverybackoff" "1.0" }}"/>
       <cm:property name="in.stream" value="{{ getv "/homarus/queue" "broker:queue:islandora-connector-homarus" }}"/>
       <cm:property name="derivative.service.url" value="{{ getv "/homarus/service" "http://homarus:8000/convert" }}"/>
+
+      <cm:property name="jms.brokerUrl" value="{{ getv "/homarus/activemq/url" (getenv "ALPACA_ACTIVEMQ_URL" "tcp://activemq:61616") }}"/>
+      <cm:property name="jms.username" value="{{ getv "/homarus/activemq/user" (getenv "ALPACA_ACTIVEMQ_USER" "") }}"/>
+      <cm:property name="jms.password" value="{{ getv "/homarus/activemq/password" (getenv "ALPACA_ACTIVEMQ_PASSWORD" "") }}"/>
+      <!-- before overriding these values, reading these articles is advised:
+          http://blog.christianposta.com/lesson-learned/lessons-learned-activemq-apache-camel-and-connection-pooling/
+          http://camel.apache.org/activemq.html#ActiveMQ-Usingconnectionpooling
+          In particular, the jms.consumers value should only be > 1 if the camel routes are all reading from queues.
+      -->
+      <cm:property name="jms.maxConnections" value="{{ getv "/homarus/activemq/jms/maxconnections" (getenv "ALPACA_ACTIVEMQ_JMS_MAXCONNECTIONS" "10") }}"/>
+      <cm:property name="jms.consumers" value="{{ getv "/homarus/activemq/jms/consumers" (getenv "ALPACA_ACTIVEMQ_JMS_CONSUMERS" "1") }}"/>
+      <cm:property name="jms.acknowledgementMode" value="{{ getv "/homarus/activemq/jms/acknowledgement/mode" (getenv "ALPACA_ACTIVEMQ_JMS_ACKNOWLEDGEMENT_MODE" "CLIENT_ACKNOWLEDGE") }}" />
     </cm:default-properties>
   </cm:property-placeholder>
 
-  <reference id="broker" interface="org.apache.camel.Component" filter="(osgi.jndi.service.name=fcrepo/Broker)"/>
+  <!-- configuration of activemq component -->
+  <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="${jms.brokerUrl}"/>
+    <property name="userName" value="${jms.username}"/>
+    <property name="password" value="${jms.password}"/>
+  </bean>
+
+  <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+        init-method="start" destroy-method="stop">
+    <property name="maxConnections" value="${jms.maxConnections}"/>
+    <property name="connectionFactory" ref="connectionFactory"/>
+  </bean>
+
+  <bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+    <property name="connectionFactory" ref="pooledConnectionFactory"/>
+    <property name="concurrentConsumers" value="${jms.consumers}"/>
+    <property name="acknowledgementModeName" value="${jms.acknowledgementMode}"/>
+  </bean>
+
+  <bean id="broker" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="configuration" ref="jmsConfig"/>
+  </bean>
 
   <bean id="requestConfigConfigurer" class="ca.islandora.alpaca.connector.derivative.RequestConfigConfigurer">
     <property name="connectionRequestTimeoutMs" value="{{ getenv "ALPACA_HOMERUS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000" }}"/>
