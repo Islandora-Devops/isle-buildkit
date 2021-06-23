@@ -10,9 +10,12 @@
 
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.ocr" update-strategy="reload" >
     <cm:default-properties>
-      <cm:property name="error.maxRedeliveries" value="{{ getv "/ocr/redeliveries" "10" }}"/>
-      <cm:property name="error.redeliveryDelay" value="{{ getv "/ocr/redeliverydelay" "10000" }}"/>
-      <cm:property name="error.backoff" value="{{ getv "/ocr/redeliverybackoff" "1.0" }}"/>
+      <cm:property name="error.maxRedeliveries" value="{{ getv "/ocr/redeliveries" (getenv "ALPACA_REDELIVERIES" "10") }}"/>
+      <cm:property name="error.redeliveryDelay" value="{{ getv "/ocr/redeliverydelay" (getenv "ALPACA_REDELIVERYDELAY" "10000") }}"/>
+      <cm:property name="error.backoff" value="{{ getv "/ocr/redeliverybackoff" (getenv "ALPACA_REDELIVERYBACKOFF" "1.0") }}"/>
+      <cm:property name="http.connectionRequestTimeoutMs" value="{{ getv "/ocr/http/connection/request/timeout/ms" (getenv "ALPACA_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000") }}"/>
+      <cm:property name="http.connectTimeoutMs" value="{{ getv "/ocr/http/connect/timeout/ms" (getenv "ALPACA_HTTP_CONNECT_TIMEOUT_MS" "10000") }}"/>
+      <cm:property name="http.socketTimeoutMs" value="{{ getv "/ocr/http/socket/timeout/ms" (getenv "ALPACA_HTTP_SOCKET_TIMEOUT_MS" "600000" ) }}"/>
       <cm:property name="in.stream" value="{{ getv "/ocr/queue" "broker:queue:islandora-connector-ocr" }}"/>
       <cm:property name="derivative.service.url" value="{{ getv "/ocr/service" "http://hypercube:8000" }}"/>
 
@@ -55,9 +58,9 @@
   </bean>
 
   <bean id="requestConfigConfigurer" class="ca.islandora.alpaca.connector.derivative.RequestConfigConfigurer">
-    <property name="connectionRequestTimeoutMs" value="{{ getenv "ALPACA_OCR_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000" }}"/>
-    <property name="connectTimeoutMs" value="{{ getenv "ALPACA_OCR_HTTP_CONNECT_TIMEOUT_MS" "10000" }}"/>
-    <property name="socketTimeoutMs" value="{{ getenv "ALPACA_OCR_HTTP_SOCKET_TIMEOUT_MS" "600000" }}"/>
+    <property name="connectionRequestTimeoutMs" value="${http.connectionRequestTimeoutMs}"/>
+    <property name="connectTimeoutMs" value="${http.connectTimeoutMs}"/>
+    <property name="socketTimeoutMs" value="${http.socketTimeoutMs}"/>
   </bean>
 
   <bean id="http" class="org.apache.camel.component.http4.HttpComponent">

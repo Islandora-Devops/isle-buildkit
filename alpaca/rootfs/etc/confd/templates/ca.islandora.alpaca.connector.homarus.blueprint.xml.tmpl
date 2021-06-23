@@ -10,9 +10,12 @@
 
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.homarus" update-strategy="reload" >
     <cm:default-properties>
-      <cm:property name="error.maxRedeliveries" value="{{ getv "/homarus/redeliveries" "10" }}"/>
-      <cm:property name="error.redeliveryDelay" value="{{ getv "/homarus/redeliverydelay" "10000" }}"/>
-      <cm:property name="error.backoff" value="{{ getv "/homarus/redeliverybackoff" "1.0" }}"/>
+      <cm:property name="error.maxRedeliveries" value="{{ getv "/homarus/redeliveries" (getenv "ALPACA_REDELIVERIES" "10") }}"/>
+      <cm:property name="error.redeliveryDelay" value="{{ getv "/homarus/redeliverydelay" (getenv "ALPACA_REDELIVERYDELAY" "10000") }}"/>
+      <cm:property name="error.backoff" value="{{ getv "/homarus/redeliverybackoff" (getenv "ALPACA_REDELIVERYBACKOFF" "1.0") }}"/>
+      <cm:property name="http.connectionRequestTimeoutMs" value="{{ getv "/homarus/http/connection/request/timeout/ms" (getenv "ALPACA_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000") }}"/>
+      <cm:property name="http.connectTimeoutMs" value="{{ getv "/homarus/http/connect/timeout/ms" (getenv "ALPACA_HTTP_CONNECT_TIMEOUT_MS" "10000") }}"/>
+      <cm:property name="http.socketTimeoutMs" value="{{ getv "/homarus/http/socket/timeout/ms" (getenv "ALPACA_HTTP_SOCKET_TIMEOUT_MS" "600000" ) }}"/>
       <cm:property name="in.stream" value="{{ getv "/homarus/queue" "broker:queue:islandora-connector-homarus" }}"/>
       <cm:property name="derivative.service.url" value="{{ getv "/homarus/service" "http://homarus:8000/convert" }}"/>
 
@@ -54,9 +57,9 @@
   </bean>
 
   <bean id="requestConfigConfigurer" class="ca.islandora.alpaca.connector.derivative.RequestConfigConfigurer">
-    <property name="connectionRequestTimeoutMs" value="{{ getenv "ALPACA_HOMERUS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000" }}"/>
-    <property name="connectTimeoutMs" value="{{ getenv "ALPACA_HOMERUS_HTTP_CONNECT_TIMEOUT_MS" "10000" }}"/>
-    <property name="socketTimeoutMs" value="{{ getenv "ALPACA_HOMERUS_HTTP_SOCKET_TIMEOUT_MS" "600000" }}"/>
+    <property name="connectionRequestTimeoutMs" value="${http.connectionRequestTimeoutMs}"/>
+    <property name="connectTimeoutMs" value="${http.connectTimeoutMs}"/>
+    <property name="socketTimeoutMs" value="${http.socketTimeoutMs}"/>
   </bean>
 
   <bean id="http" class="org.apache.camel.component.http4.HttpComponent">

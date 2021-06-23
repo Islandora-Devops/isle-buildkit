@@ -35,6 +35,12 @@ additional settings, volumes, ports, etc.
 | ALPACA_FCREPO_AUTH_PASSWORD                | /alpaca/fcrepo/auth/password               |                                                      | Password to authenticate with                                                                                                                               |
 | ALPACA_FCREPO_AUTH_USER                    | /alpaca/fcrepo/auth/user                   |                                                      | URL to authenticate against                                                                                                                                 |
 | ALPACA_FCREPO_URL                          | /alpaca/fcrepo/url                         | http://fcrepo/fcrepo/rest                            | The url of fcrepo rest API                                                                                                                                  |
+| ALPACA_REDELIVERIES                        | -                                          | 10                                                   | Number of attempts to redeliver if an exception occurs                                                                                                      |
+| ALPACA_REDELIVERYDELAY                     | -                                          | 10000                                                | Number of milliseconds before attempting to redeliver a JMS message to the microservice HTTP endpoint, due to, e.g. a timeout                               |
+| ALPACA_REDELIVERYBACKOFF                   | -                                          | 1.0                                                  | Backoff factor applied to the redelivery delay                                                                                                              |
+| ALPACA_HTTP_CONNECTION_REQUEST_TIMEOUT_MS  | -                                          | 10000                                                | Timeout for retrieving a connection from the connection pool                                                                                                |
+| ALPACA_HTTP_CONNECT_TIMEOUT_MS             | -                                          | 10000                                                | Timeout making an HTTP connection                                                                                                                           |
+| ALPACA_HTTP_SOCKET_TIMEOUT_MS              | -                                          | 600000                                               | Timeout reading data from a socket                                                                                                                          |                 
 | ALPACA_FITS_QUEUE                          | /alpaca/fits/queue                         | broker:queue:islandora-connector-fits                | ActiveMQ Queue to consume from                                                                                                                              |
 | ALPACA_FITS_REDELIVERIES                   | /alpaca/fits/redeliveries                  | 10                                                   | Number of attempts to redeliver if an exception occurs                                                                                                      |
 | ALPACA_FITS_SERVICE                        | /alpaca/fits/service                       | http://crayfits:8000                                 | Url of micro-service                                                                                                                                        |
@@ -68,18 +74,18 @@ additional settings, volumes, ports, etc.
 
 | Environment Variable                              | Etcd key | Default Value | Description |
 |:---                                               |:---      |:---           |:---
-| ALPACA_FITS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS    | - | 10000  | Timeout for retrieving a connection from the connection pool |
-| ALPACA_FITS_HTTP_CONNECT_TIMEOUT_MS               | - | 10000  | Timeout making an HTTP connection                            |
-| ALPACA_FITS_HTTP_SOCKET_TIMEOUT_MS                | - | 600000 | Timeout reading data from a socket                           |
-| ALPACA_HOMERUS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS | - | 10000  | Timeout for retrieving a connection from the connection pool |
-| ALPACA_HOMERUS_HTTP_CONNECT_TIMEOUT_MS            | - | 10000  | Timeout making an HTTP connection                            |
-| ALPACA_HOMERUS_HTTP_SOCKET_TIMEOUT_MS             | - | 600000 | Timeout reading data from a socket                           |
-| ALPACA_HOUDINI_HTTP_CONNECTION_REQUEST_TIMEOUT_MS | - | 10000  | Timeout for retrieving a connection from the connection pool |
-| ALPACA_HOUDINI_HTTP_CONNECT_TIMEOUT_MS            | - | 10000  | Timeout making an HTTP connection                            |
-| ALPACA_HOUDINI_HTTP_SOCKET_TIMEOUT_MS             | - | 600000 | Timeout reading data from a socket                           |
-| ALPACA_OCR_HTTP_CONNECTION_REQUEST_TIMEOUT_MS     | - | 10000  | Timeout for retrieving a connection from the connection pool |
-| ALPACA_OCR_HTTP_CONNECT_TIMEOUT_MS                | - | 10000  | Timeout making an HTTP connection                            |
-| ALPACA_OCR_HTTP_SOCKET_TIMEOUT_MS                 | - | 600000 | Timeout reading data from a socket                           |
+| ALPACA_FITS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS    | /alpaca/fits/http/connection/request/timeout/ms    | 10000  | Timeout for retrieving a connection from the connection pool |
+| ALPACA_FITS_HTTP_CONNECT_TIMEOUT_MS               | /alpaca/fits/http/connect/timeout/ms               | 10000  | Timeout making an HTTP connection                            |
+| ALPACA_FITS_HTTP_SOCKET_TIMEOUT_MS                | /alpaca/fits/http/socket/timeout/ms                | 600000 | Timeout reading data from a socket                           |
+| ALPACA_HOMERUS_HTTP_CONNECTION_REQUEST_TIMEOUT_MS | /alpaca/homerus/http/connection/request/timeout/ms | 10000  | Timeout for retrieving a connection from the connection pool |
+| ALPACA_HOMERUS_HTTP_CONNECT_TIMEOUT_MS            | /alpaca/homerus/http/connect/timeout/ms            | 10000  | Timeout making an HTTP connection                            |
+| ALPACA_HOMERUS_HTTP_SOCKET_TIMEOUT_MS             | /alpaca/homerus/http/socket/timeout/ms             | 600000 | Timeout reading data from a socket                           |
+| ALPACA_HOUDINI_HTTP_CONNECTION_REQUEST_TIMEOUT_MS | /alpaca/houdini/http/connection/request/timeout/ms | 10000  | Timeout for retrieving a connection from the connection pool |
+| ALPACA_HOUDINI_HTTP_CONNECT_TIMEOUT_MS            | /alpaca/houdini/http/connect/timeout/ms            | 10000  | Timeout making an HTTP connection                            |
+| ALPACA_HOUDINI_HTTP_SOCKET_TIMEOUT_MS             | /alpaca/houdini/http/socket/timeout/ms             | 600000 | Timeout reading data from a socket                           |
+| ALPACA_OCR_HTTP_CONNECTION_REQUEST_TIMEOUT_MS     | /alpaca/ocr/http/connection/request/timeout/ms     | 10000  | Timeout for retrieving a connection from the connection pool |
+| ALPACA_OCR_HTTP_CONNECT_TIMEOUT_MS                | /alpaca/ocr/http/connect/timeout/ms                | 10000  | Timeout making an HTTP connection                            |
+| ALPACA_OCR_HTTP_SOCKET_TIMEOUT_MS                 | /alpaca/ocr/http/socket/timeout/ms                 | 600000 | Timeout reading data from a socket                           |
 
 ## JMS Tuning Variables
 
