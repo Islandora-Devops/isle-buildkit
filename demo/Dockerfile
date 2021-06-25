@@ -3,7 +3,7 @@ ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
-ARG COMMIT=ed463a31f28d0263ef6793f8ef618bb557314340
+ARG COMMIT=a01ced45740a24f5c12c96a25f5efd174131a7a7
 
 # Islandora based Drupal install.
 RUN --mount=type=cache,id=demo-composer,sharing=locked,target=/root/.composer/cache \
