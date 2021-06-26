@@ -4,7 +4,7 @@ ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 RUN --mount=type=cache,id=fcrepo6-downloads,sharing=locked,target=/opt/downloads \
-    FCREPO_VERSION="6.0.0-beta-1" && \
+    FCREPO_VERSION="6.0.0-RC-2" && \
     FCREPO_FILE="fcrepo-webapp-${FCREPO_VERSION}.war" && \
     FCREPO_URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}" && \
     FCREPO_SHA256="33b855bb3d314eb5e4bee41e1c9991978015f8fde3d15d685ef812407b395d5b" && \
