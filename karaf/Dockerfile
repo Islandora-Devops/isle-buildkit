@@ -8,12 +8,9 @@ RUN --mount=type=cache,id=karaf-downloads,sharing=locked,target=/opt/downloads \
     KARAF_FILE="apache-karaf-${KARAF_VERSION}.tar.gz" && \
     KARAF_URL="https://archive.apache.org/dist/karaf/${KARAF_VERSION}/${KARAF_FILE}" && \
     KARAF_FILE_SHA256="67e555e3896fbe87d23ceec008898bb33133f36b48d7e5ede363c214a54e7d2a" && \
-    KARAF_SIG_SHA256="bba601fdcef14e0ac970244c27c2e8af91c58f5f9fbbab1d1b05293f331dbaf4" && \
     download.sh --url "${KARAF_URL}" --sha256 "${KARAF_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    download.sh --url "${KARAF_URL}.asc" --sha256 "${KARAF_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    install-apache-service.sh \
+    install-apache-service.sh -e \
         --name karaf \
-        --key "BFF2EE42C8282E76" \
         --file "${DOWNLOAD_CACHE_DIRECTORY}/${KARAF_FILE}" \
         demos \
     && \
