@@ -16,7 +16,6 @@ function usage() {
  
     OPTIONS:
        -n --name          The name of the services to install (used to create user/group and install directory).
-       -k --key           GPG Key used to verify the downloaded file.
        -f --file          The name of the file to download.
        -h --help          Show this help.
        -x --debug         Debug this script.
@@ -25,7 +24,6 @@ function usage() {
        Install ActiveMQ:
        $PROGNAME \\
                  --name "activemq" \\
-                 --key "62ED4DF0BACB8793" \\
                  --file "apache-activemq-5.14.5-bin.tar.gz" \\
                  examples webapps-demo docs
 EOF
@@ -39,7 +37,6 @@ function cmdline() {
         case "$arg" in
             # Translate --gnu-long-options to -g (short options)
             --name)       args="${args}-n ";;
-            --key)        args="${args}-k ";;
             --file)       args="${args}-f ";;
             --help)       args="${args}-h ";;
             --debug)      args="${args}-x ";;
@@ -52,14 +49,11 @@ function cmdline() {
     # Reset the positional parameters to the short options
     eval set -- $args
  
-    while getopts "n:k:f:hx" OPTION
+    while getopts "n:f:hx" OPTION
     do
         case $OPTION in
         n)
             readonly NAME=${OPTARG}
-            ;;
-        k)
-            readonly KEY=${OPTARG}
             ;;
         f)
             readonly FILE="${OPTARG}"
@@ -75,8 +69,8 @@ function cmdline() {
         esac
     done
 
-    if [[ -z $NAME || -z $KEY || -z $FILE ]]; then
-        echo "Missing one or more required options: --name --key --file"
+    if [[ -z $NAME || -z $FILE ]]; then
+        echo "Missing one or more required options: --name --file"
         exit 1
     fi
 
@@ -92,8 +86,6 @@ function main {
     local install_directory=/opt/${NAME}
     local user=${NAME}
     local group=${NAME}
-    gpg-receive-keys.sh --key ${KEY}
-    gpg --verify ${FILE}.asc ${FILE}
     install-service.sh --name "${NAME}" --file "${FILE}" ${REMOVE[@]}
 }
 main
