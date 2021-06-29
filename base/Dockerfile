@@ -35,19 +35,14 @@ RUN --mount=type=cache,id=base-downloads,sharing=locked,from=download,target=/op
     if [ "${TARGETARCH}" = "arm64" ]; then \
         S6_FILE="s6-overlay-aarch64.tar.gz"; \
         S6_SHA256="84f585a100b610124bb80e441ef2dc2d68ac2c345fd393d75a6293e0951ccfc5"; \
-        S6_SIG_SHA256="90b241a1a8e525c431fefcbbb0bbf90c5cc57b5496d718c441ac56265ede4817"; \
     fi; \
     if [ "${TARGETARCH}" = "amd64" ]; then \
         S6_FILE="s6-overlay-amd64.tar.gz"; \
         S6_SHA256="a7076cf205b331e9f8479bbb09d9df77dbb5cd8f7d12e9b74920902e0c16dd98"; \
-        S6_SIG_SHA256="a0f2e744893361fbf9958dca4b6df0363851dda5ce5e91dfe85e4c2a253541c7"; \
     fi; \
     S6_VERSION="2.2.0.3" && \
     S6_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/${S6_FILE}" && \
     download.sh --url "${S6_URL}" --sha256 "${S6_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    download.sh --url "${S6_URL}.sig" --sha256 "${S6_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    gpg-receive-keys.sh --key 2536CA16DF4FCDA2 && \
-    gpg "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}.sig" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}" -C /  && \
     echo '' > /root/.ash_history
 
