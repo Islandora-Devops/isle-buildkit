@@ -1,6 +1,6 @@
 [template]
 src = "fits-service.properties.tmpl"
-dest = "/opt/tomcat/conf/fit-service.properties"
+dest = "/opt/tomcat/conf/fits-service.properties"
 uid = 100
 gid = 1000
 mode = "0644"
