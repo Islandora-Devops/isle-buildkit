@@ -1,2 +1,4 @@
 http://drupal/
-{{ range gets "/fcrepo/allow/external/*" }}{{.Value}}{{ end }}
+{{- range gets "/fcrepo/allow/external/*" }}
+{{.Value}}
+{{- end }}
