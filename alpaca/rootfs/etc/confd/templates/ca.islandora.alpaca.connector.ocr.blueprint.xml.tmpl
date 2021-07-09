@@ -10,7 +10,7 @@
 
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.ocr" update-strategy="reload" >
     <cm:default-properties>
-      <cm:property name="error.maxRedeliveries" value="{{ getenv "ALPACA_OCR_SERVICE" }}"/>
+      <cm:property name="error.maxRedeliveries" value="{{ getenv "ALPACA_OCR_REDELIVERIES" }}"/>
       <cm:property name="in.stream" value="{{ getenv "ALPACA_OCR_QUEUE" }}"/>
       <cm:property name="derivative.service.url" value="{{ getenv "ALPACA_OCR_SERVICE" }}"/>
     </cm:default-properties>

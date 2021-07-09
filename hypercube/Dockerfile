@@ -25,6 +25,7 @@ RUN --mount=type=cache,id=hypercube-apk,sharing=locked,from=cache,target=/var/ca
         tesseract-ocr-data-jpn \
         tesseract-ocr-data-rus \
     && \
+    addgroup nginx jwt && \
     cleanup.sh
 
 ENV \
