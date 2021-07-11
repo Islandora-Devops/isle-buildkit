@@ -85,13 +85,21 @@ function update_site {
     local name=$(matomo_site_env "${site}" "NAME")
     local host=$(matomo_site_env "${site}" "HOST")
     local timezone=$(matomo_site_env "${site}" "TIMEZONE")
+    local user=$(matomo_site_env "${site}" "USER_NAME")
+    local password=$(matomo_site_env "${site}" "USER_PASS")
+    local email=$(matomo_site_env "${site}" "USER_EMAIL")
+    local token=$(echo "${user}-$(date +%s)" | md5sum | cut -f1 -d' ') # token must be an unique MD5.
     cat <<- EOF | execute-sql-file.sh
 USE ${MATOMO_DB_NAME};
 
 SET @site = '${site}',
     @name = '${name}',
     @host = '${host}',
-    @timezone = '${timezone}';
+    @timezone = '${timezone}',
+    @user = '${user}',
+    @password = '${password}',
+    @email = '${email}',
+    @token = '${token}';
 
 -- Update or create row if 'site' already exists.
 -- Default values come from 'create-matomo-database.sql.tmpl'.
@@ -101,6 +109,22 @@ ON DUPLICATE KEY UPDATE
     name = @name,
     main_url = @host,
     timezone = @timezone;
+
+-- Update or create row if 'user' already exists.
+INSERT INTO matomo_user (login, password, alias, email, twofactor_secret, token_auth, superuser_access, date_registered, ts_password_modified)
+VALUES (@user, @password, @user, @email, '', @token, 0, NOW(), NOW())
+ON DUPLICATE KEY UPDATE
+    password = @password,
+    email = @email,
+    ts_password_modified = NOW();
+
+-- Update or create row for the admin user to 'access' the site.
+INSERT INTO matomo_access (login, idsite, access)
+SELECT @user, idsite, 'admin'
+FROM matomo_site
+WHERE name = @name
+ON DUPLICATE KEY UPDATE
+    idsite = matomo_site.idsite;
 EOF
 }
 
