@@ -4,10 +4,10 @@ ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 RUN --mount=type=cache,id=fcrepo6-downloads,sharing=locked,target=/opt/downloads \
-    FCREPO_VERSION="6.0.0-beta-1" && \
+    FCREPO_VERSION="6.0.0-RC-2" && \
     FCREPO_FILE="fcrepo-webapp-${FCREPO_VERSION}.war" && \
     FCREPO_URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}" && \
-    FCREPO_SHA256="33b855bb3d314eb5e4bee41e1c9991978015f8fde3d15d685ef812407b395d5b" && \
+    FCREPO_SHA256="26274e336f53d1c9a9f17465595bfe421ad3d0fb582f417dde687a900ddf3c79" && \
     download.sh --url "${FCREPO_URL}" --sha256 "${FCREPO_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-war-into-tomcat.sh --name "fcrepo" --file "${DOWNLOAD_CACHE_DIRECTORY}/${FCREPO_FILE}" && \
     SYN_VERSION="1.1.0" && \
@@ -50,9 +50,13 @@ ENV \
     FCREPO_DB_USER=fcrepo \
     FCREPO_DISABLE_SYN=false \
     FCREPO_PERSISTENCE_TYPE=file \
-    FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin
+    FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin \
+    FCREPO_S3_BUCKET= \
+    FCREPO_S3_PASSWORD= \
+    FCREPO_S3_USER= \
+    FCREPO_AWS_REGION=us-east-1 \
+    FCREPO_S3_PREFIX= 
 
 COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
-
 COPY rootfs /
 COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat

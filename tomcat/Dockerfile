@@ -8,12 +8,9 @@ RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads 
     TOMCAT_FILE="apache-tomcat-${TOMCAT_VERSION}.tar.gz" && \
     TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE}" && \
     TOMCAT_FILE_SHA256="321de5b18a48ec09d2963d9faba4bfeafc7dd2203d80a2ef7e7a20b159e2120a" && \
-    TOMCAT_SIG_SHA256="40cdb1433a3e080b26a9e791409fb3840364150b2f4594e19b3f7d0c97f7c736" && \
     download.sh --url "${TOMCAT_URL}" --sha256 "${TOMCAT_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    download.sh --url "${TOMCAT_URL}.asc" --sha256 "${TOMCAT_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-apache-service.sh \
         --name tomcat \
-        --key "A9C5DF4D22E99998D9875A5110C01C5A2F6059E7" \
         --file "${DOWNLOAD_CACHE_DIRECTORY}/${TOMCAT_FILE}" \
         webapps/docs webapps/examples
 
