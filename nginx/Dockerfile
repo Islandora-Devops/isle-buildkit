@@ -28,6 +28,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-ldap \
         php7-mbstring \
         php7-sqlite3 \
+        php7-zip \
         php7-yaml \
     && \
     cleanup.sh
