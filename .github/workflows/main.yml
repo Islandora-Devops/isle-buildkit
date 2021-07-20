@@ -7,7 +7,7 @@ jobs:
   build:
     name: Build and Push Buildkit Docker Images
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     outputs:
       image-tag: ${{ steps.output-image-tag.outputs.image-tag }}
     defaults:
@@ -50,7 +50,7 @@ jobs:
     name: Run idc-isle-dc Tests
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     defaults:
       run:
         working-directory: isle-dc
