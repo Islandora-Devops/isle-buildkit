@@ -4,10 +4,10 @@ ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 RUN --mount=type=cache,id=fcrepo6-downloads,sharing=locked,target=/opt/downloads \
-    FCREPO_VERSION="6.0.0-RC-2" && \
+    FCREPO_VERSION="6.0.0" && \
     FCREPO_FILE="fcrepo-webapp-${FCREPO_VERSION}.war" && \
     FCREPO_URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}" && \
-    FCREPO_SHA256="26274e336f53d1c9a9f17465595bfe421ad3d0fb582f417dde687a900ddf3c79" && \
+    FCREPO_SHA256="08f173101f5943c0590ecc15f494b2a68e5e6a985be3fe79c80ec886dc9557b2" && \
     download.sh --url "${FCREPO_URL}" --sha256 "${FCREPO_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-war-into-tomcat.sh --name "fcrepo" --file "${DOWNLOAD_CACHE_DIRECTORY}/${FCREPO_FILE}" && \
     SYN_VERSION="1.1.0" && \
