@@ -109,6 +109,7 @@ server {
         fastcgi_param PATH_INFO $fastcgi_path_info;
         fastcgi_param QUERY_STRING $query_string;
         fastcgi_intercept_errors on;
+        fastcgi_read_timeout {{ getenv "PHP_MAX_EXECUTION_TIME" "60" }};
         # PHP 7 socket location.
         fastcgi_pass unix:/var/run/php-fpm7/php-fpm7.sock;
 
