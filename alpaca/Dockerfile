@@ -51,12 +51,15 @@ ENV \
     ALPACA_FITS_QUEUE=broker:queue:islandora-connector-fits \
     ALPACA_FITS_REDELIVERIES=10 \
     ALPACA_FITS_SERVICE=http://crayfits:8000 \
+    ALPACA_FITS_TIMEOUT=10000 \
     ALPACA_HOMARUS_QUEUE=broker:queue:islandora-connector-homarus \
     ALPACA_HOMARUS_REDELIVERIES=10 \
     ALPACA_HOMARUS_SERVICE=http://homarus:8000/convert \
+    ALPACA_HOMARUS_TIMEOUT=10000 \
     ALPACA_HOUDINI_QUEUE=broker:queue:islandora-connector-houdini \
     ALPACA_HOUDINI_REDELIVERIES=10 \
     ALPACA_HOUDINI_SERVICE=http://houdini:8000/convert \
+    ALPACA_HOUDINI_TIMEOUT=10000 \
     ALPACA_HTTP_TOKEN=islandora \
     ALPACA_INDEXING_MILLINER_URL=http://milliner:8000 \
     ALPACA_INDEXING_REDELIVERIES=10 \
@@ -77,6 +80,7 @@ ENV \
     ALPACA_OCR_QUEUE=broker:queue:islandora-connector-ocr \
     ALPACA_OCR_REDELIVERIES=10 \
     ALPACA_OCR_SERVICE=http://hypercube:8000 \
+    ALPACA_OCR_TIMEOUT=10000 \
     JAVA_OPTS="-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx8g"
 
 COPY --from=download --chown=karaf:karaf /opt/karaf /opt/karaf
