@@ -3,9 +3,12 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 jobs:
   build:
-    name: Build and Push Buildkit Docker Images
+    name: Build and Push Docker Images
     runs-on: ubuntu-latest
     timeout-minutes: 120
     outputs:
@@ -46,9 +49,24 @@ jobs:
       id: output-image-tag
       # Set the image tag, same used by the isle-gradle-docker-plugin
       run: echo ::set-output name=image-tag::$(git describe --tags --always --first-parent)
-  test:
-    name: Run idc-isle-dc Tests
-    needs: build
+  isle-dc-head:
+    name: Establish idc-isle-dc commit hash used for tests
+    runs-on: ubuntu-latest
+    outputs:
+      commit: ${{ steps.establish-head.outputs.commit }}
+    steps:
+      - name: Checkout idc-isle-dc
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: jhu-idc/idc-isle-dc
+      - name: Establish idc-isle-dc HEAD ref
+        id: establish-head
+        run: echo "::set-output name=commit::$(git log -1 --format='%H')"
+      - run: echo "Using idc-isle-dc ref ${{ steps.establish-head.outputs.commit }} for tests"
+  static:
+    name: Create Drupal Static Image
+    needs: [ build, isle-dc-head ]
     runs-on: ubuntu-latest
     timeout-minutes: 120
     defaults:
@@ -60,6 +78,7 @@ jobs:
         with:
           fetch-depth: 0
           repository: jhu-idc/idc-isle-dc
+          ref: ${{ needs.isle-dc-head.outputs.commit }}
           path: isle-dc
       - name: Set image tag
         run: |
@@ -67,18 +86,79 @@ jobs:
           sed -i.bak -e 's@^TAG.*$@TAG=${{needs.build.outputs.image-tag}}@' .env
           grep TAG .env
       - name: Make static image
-        run: make static-docker-compose.yml
-      - name: Run smoke tests
-        run: make up test
+        run: make static-docker-compose.yml up
+      - name: Drush test
+        run: docker-compose exec -T drupal drush -d status
+      - name: Export image
+        run: make static-drupal-image-export
+      - uses: actions/upload-artifact@v2
+        with:
+          name: drupal-image
+          path: isle-dc/images
+  test-matrix:
+    name: Generate idc-isle-dc test matrix
+    needs: isle-dc-head
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.excludes-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout idc-isle-dc
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: jhu-idc/idc-isle-dc
+          ref: ${{ needs.isle-dc-head.outputs.commit }}
+      - name: Generate Test Matrix
+        id: test-matrix
+        uses: jhu-idc/idc-matrixgen@1.0.0
+      - name: Exclude nightly jobs
+        id: excludes-matrix
+        uses: jhu-idc/idc-matrixgen@1.0.0
+        with:
+          glob: '*nightly*.sh'
+          exclude: true
+          matrix: ${{ steps.test-matrix.outputs.matrix }}
+      - name: Dump Test Matrix
+        env:
+          MATRIX: ${{ steps.excludes-matrix.outputs.matrix }}
+        run: echo ${MATRIX}
+  test:
+    name: Run idc-isle-dc tests
+    runs-on: ubuntu-latest
+    needs: [ build, static, test-matrix, isle-dc-head ]
+    strategy:
+      matrix: ${{ fromJSON(needs.test-matrix.outputs.matrix) }}
+      fail-fast: false
+    steps:
+      - name: Checkout idc-isle-dc
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          repository: jhu-idc/idc-isle-dc
+          ref: ${{ needs.isle-dc-head.outputs.commit }}
+      - name: Set image tag
+        run: |
+          echo "Using image tag ${{needs.build.outputs.image-tag}}"
+          sed -i.bak -e 's@^TAG.*$@TAG=${{needs.build.outputs.image-tag}}@' .env
+          grep TAG .env
+      - name: Download Drupal Image
+        uses: actions/download-artifact@v2
+        with:
+          name: drupal-image
+          path: images
+      - name: Load Drupal Image
+        run: docker load < images/static-drupal.tar
+      - name: Run ${{ matrix.test }}
+        run: make up test test=${{ matrix.test }}
       - name: Capture Logs
         if: failure()
         run: |
           mkdir -p end-to-end/reports
-          docker-compose logs drupal > end-to-end/reports/docker-drupal.log
-          docker-compose logs > end-to-end/reports/docker-allcontainers.log
+          docker-compose logs drupal 2>&1 | tee end-to-end/reports/${{ matrix.test }}/docker-drupal.log
+          docker-compose logs 2>&1 | tee end-to-end/reports/${{ matrix.test }}/docker-allcontainers.log
       - name: Upload Logs
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: end-to-end-reports
-          path: isle-dc/end-to-end/reports
+          name: reports-${{matrix.test}}
+          path: end-to-end/reports
