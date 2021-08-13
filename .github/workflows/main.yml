@@ -1,5 +1,5 @@
 name: CI
-on: 
+on:
   push:
     branches:
       - main
@@ -7,66 +7,109 @@ on:
     branches:
       - main
 jobs:
-  build:
-    name: Build and Push Docker Images
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    outputs:
-      image-tag: ${{ steps.output-image-tag.outputs.image-tag }}
-    defaults:
-      run:
-        working-directory: buildkit
-    steps:
-    - name: Checkout idc-isle-buildkit
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        path: buildkit
-    - name: Setup Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: 8
-    - name: Setup Gradle Cache
-      uses: actions/cache@v1
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-    - name: Log in to Docker Hub
-      run: docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
-    - name: Enable buildkit
-      shell: bash
-      run: |
-        echo '{"experimental": "enabled"}' > ~/.docker/config.json
-    - name: Build Docker images
-      # N.B. when projects are excluded from building (e.g '-x <project>:build'), they also need to be excluded from pushing, below (e.g. '-x <project>:push')
-      run: ./gradlew --console plain build '-Prepository=${{ secrets.REPOSITORY }}' -x demo:build -x matomo:build -x recast:build -x milliner:build -x postgresql:build -x fcrepo:build -x blazegraph:build
-    - name: Push Docker images
-      # N.B. when projects are excluded from building (e.g '-x <project>:build') above, they also need to be excluded from pushing (e.g. '-x <project>:push')
-      run: ./gradlew --console plain push '-Prepository=${{ secrets.REPOSITORY }}' '-PregistryUrl=${{ secrets.REGISTRY_URL }}' '-PregistryUsername=${{ secrets.REGISTRY_USER }}' '-PregistryPassword=${{ secrets.REGISTRY_PASS }}' -x demo:push -x matomo:push -x recast:push -x milliner:push -x postgresql:push -x fcrepo:push -x blazegraph:push
-    - name: Output image tag
-      id: output-image-tag
-      # Set the image tag, same used by the isle-gradle-docker-plugin
-      run: echo ::set-output name=image-tag::$(git describe --tags --always --first-parent)
-  isle-dc-head:
-    name: Establish idc-isle-dc commit hash used for tests
+  setup:
+    name: Set up
     runs-on: ubuntu-latest
     outputs:
-      commit: ${{ steps.establish-head.outputs.commit }}
+      image-tag: ${{ steps.image-tag.outputs.tag }}
+      build-date: ${{ steps.build-date.outputs.builddate }}
+      ci-url: ${{ steps.ci-url.outputs.ciurl }}
+      isledc-commit: ${{ steps.establish-isledc-head.outputs.isledc-commit }}
+      buildkit-commit: ${{ steps.establish-buildkit-head.outputs.buildkit-commit }}
     steps:
       - name: Checkout idc-isle-dc
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           repository: jhu-idc/idc-isle-dc
+          path: idc-isle-dc
       - name: Establish idc-isle-dc HEAD ref
-        id: establish-head
-        run: echo "::set-output name=commit::$(git log -1 --format='%H')"
-      - run: echo "Using idc-isle-dc ref ${{ steps.establish-head.outputs.commit }} for tests"
+        id: establish-isledc-head
+        working-directory: idc-isle-dc
+        run: echo "::set-output name=isledc-commit::$(git log -1 --format='%H')"
+      - run: echo "Using idc-isle-dc ref ${{ steps.establish-isledc-head.outputs.isledc-commit }} for tests"
+      - name: Checkout idc-isle-buildkit
+        uses: actions/checkout@v2
+        with:
+          # Required for generating the Docker image tag
+          fetch-depth: 0
+          path: buildkit
+      - name: Establish idc-buildkit HEAD ref
+        id: establish-buildkit-head
+        working-directory: buildkit
+        run: echo "::set-output name=buildkit-commit::$(git log -1 --format='%H')"
+      - run: echo "Using idc-buildkit ref ${{ steps.establish-buildkit-head.outputs.buildkit-commit }} for images"
+      - name: Generate Docker image tag
+        working-directory: buildkit
+        id: image-tag
+        run: echo "::set-output name=tag::$(git describe --tags --always --first-parent)"
+      - run: echo "Using buildkit image tag ${{ steps.image-tag.outputs.tag }}"
+      - name: Generate build datetime
+        id: build-date
+        run: echo "::set-output name=builddate::$(jq -rn 'now|todateiso8601')"
+      - name: Generate CI url
+        id: ci-url
+        run: echo "::set-output name=ciurl::$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+  build:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    needs: setup
+    strategy:
+      matrix:
+        image-name:
+          - activemq
+          - alpaca
+          - cantaloupe
+          - crayfish
+          - crayfits
+          - drupal
+          - drupal-dev
+          - fits
+          - homarus
+          - houdini
+          - hypercube
+          - idp
+          - ldap
+          - mariadb
+          - solr
+    steps:
+      - name: Checkout idc-isle-buildkit
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.setup.outputs.buildkit-commit }}
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Enable buildkit
+        shell: bash
+        run: |
+          echo '{"experimental": "enabled"}' > ~/.docker/config.json
+      - name: Build & Push Image
+        run: ./gradlew --console plain -PregistryUrl=${{ secrets.REGISTRY_URL }} -PregistryUsername=${{ secrets.REGISTRY_USER }} -PregistryPassword=${{ secrets.REGISTRY_PASS }} -Prepository=${{ secrets.REPOSITORY }} ${{ matrix.image-name }}:push
+      - name: Label Image
+        run: |
+          echo "FROM ${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}}" | \
+          docker build -t ${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}} \
+            --label org.opencontainers.image.title="idc-isle-buildkit ${{matrix.image-name}}"\
+            --label org.opencontainers.image.description="IDC ${{matrix.image-name}} image" \
+            --label org.opencontainers.image.url=${{github.event.repository.url}}/tree/${{github.event.repository.default_branch}}/${{matrix.image-name}} \
+            --label org.opencontainers.image.source=${{github.event.repository.url}} \
+            --label org.opencontainers.image.version=${{needs.setup.outputs.image-tag}} \
+            --label org.opencontainers.image.created=${{needs.setup.outputs.build-date}} \
+            --label org.opencontainers.image.revision=${{github.sha}} \
+            --label org.opencontainers.image.licenses=MIT \
+            --label org.opencontainers.image.ref.name=${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}} \
+            --label ci.url=${{needs.setup.outputs.ci-url}} \
+            -
+          docker inspect -f "{{json .Config.Labels }}" ${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}}
+          docker history ${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}}
+          docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
+          docker push ${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}}
   static:
     name: Create Drupal Static Image
-    needs: [ build, isle-dc-head ]
+    needs: [ setup, build ]
     runs-on: ubuntu-latest
     timeout-minutes: 120
     defaults:
@@ -76,14 +119,13 @@ jobs:
       - name: Checkout idc-isle-dc
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           repository: jhu-idc/idc-isle-dc
-          ref: ${{ needs.isle-dc-head.outputs.commit }}
+          ref: ${{ needs.setup.outputs.isledc-commit }}
           path: isle-dc
       - name: Set image tag
         run: |
-          echo "Using image tag ${{needs.build.outputs.image-tag}}"
-          sed -i.bak -e 's@^TAG.*$@TAG=${{needs.build.outputs.image-tag}}@' .env
+          echo "Using image tag ${{needs.setup.outputs.image-tag}}"
+          sed -i.bak -e 's@^TAG.*$@TAG=${{needs.setup.outputs.image-tag}}@' .env
           grep TAG .env
       - name: Make static image
         run: make static-docker-compose.yml up
@@ -97,7 +139,7 @@ jobs:
           path: isle-dc/images
   test-matrix:
     name: Generate idc-isle-dc test matrix
-    needs: isle-dc-head
+    needs: setup
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.excludes-matrix.outputs.matrix }}
@@ -105,9 +147,8 @@ jobs:
       - name: Checkout idc-isle-dc
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           repository: jhu-idc/idc-isle-dc
-          ref: ${{ needs.isle-dc-head.outputs.commit }}
+          ref: ${{ needs.setup.outputs.isledc-commit }}
       - name: Generate Test Matrix
         id: test-matrix
         uses: jhu-idc/idc-matrixgen@1.0.0
@@ -125,7 +166,7 @@ jobs:
   test:
     name: Run idc-isle-dc tests
     runs-on: ubuntu-latest
-    needs: [ build, static, test-matrix, isle-dc-head ]
+    needs: [ build, static, test-matrix, setup ]
     strategy:
       matrix: ${{ fromJSON(needs.test-matrix.outputs.matrix) }}
       fail-fast: false
@@ -133,13 +174,12 @@ jobs:
       - name: Checkout idc-isle-dc
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           repository: jhu-idc/idc-isle-dc
-          ref: ${{ needs.isle-dc-head.outputs.commit }}
+          ref: ${{ needs.setup.outputs.isle-dccommit }}
       - name: Set image tag
         run: |
-          echo "Using image tag ${{needs.build.outputs.image-tag}}"
-          sed -i.bak -e 's@^TAG.*$@TAG=${{needs.build.outputs.image-tag}}@' .env
+          echo "Using image tag ${{needs.setup.outputs.image-tag}}"
+          sed -i.bak -e 's@^TAG.*$@TAG=${{needs.setup.outputs.image-tag}}@' .env
           grep TAG .env
       - name: Download Drupal Image
         uses: actions/download-artifact@v2
@@ -153,7 +193,7 @@ jobs:
       - name: Capture Logs
         if: failure()
         run: |
-          mkdir -p end-to-end/reports
+          mkdir -p end-to-end/reports/${{ matrix.test }}
           docker-compose logs drupal 2>&1 | tee end-to-end/reports/${{ matrix.test }}/docker-drupal.log
           docker-compose logs 2>&1 | tee end-to-end/reports/${{ matrix.test }}/docker-allcontainers.log
       - name: Upload Logs
