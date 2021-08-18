@@ -1070,7 +1070,15 @@ smtp_port = 25
 
 ; For Unix only.  You may supply arguments as well (default: "sendmail -t -i").
 ; http://php.net/sendmail-path
+{{ if getenv "DRUPAL_SMTP_ENABLE" "" }}
+{{ if getenv "DRUPAL_SMTP_VERBOSE" "" }}
+sendmail_path = "{{ getenv "DRUPAL_SMTP_MSA_BIN" "sendmail" }} -v -t -am{{ getenv "DRUPAL_SMTP_AUTH_MECH" "LOGIN" }} -au{{ getenv "DRUPAL_SMTP_AUTH_PRINCIPAL" }} -ap{{ getenv "DRUPAL_SMTP_AUTH_TOKEN" }} -f {{ getenv "DRUPAL_SMTP_FROM_ADDRESS" }} -H 'openssl s_client -quiet -{{ getenv "DRUPAL_SMTP_TLS_VERSION" "tls1_2" }} -starttls smtp -connect {{ getenv "DRUPAL_SMTP_RELAY_HOST" "email-smtp.us-east-1.amazonaws.com" }}:{{ getenv "DRUPAL_SMTP_RELAY_PORT" "587" }}'"
+{{ else }}
+sendmail_path = "{{ getenv "DRUPAL_SMTP_MSA_BIN" "sendmail" }}    -t -am{{ getenv "DRUPAL_SMTP_AUTH_MECH" "LOGIN" }} -au{{ getenv "DRUPAL_SMTP_AUTH_PRINCIPAL" }} -ap{{ getenv "DRUPAL_SMTP_AUTH_TOKEN" }} -f {{ getenv "DRUPAL_SMTP_FROM_ADDRESS" }} -H 'openssl s_client -quiet -{{ getenv "DRUPAL_SMTP_TLS_VERSION" "tls1_2" }} -starttls smtp -connect {{ getenv "DRUPAL_SMTP_RELAY_HOST" "email-smtp.us-east-1.amazonaws.com" }}:{{ getenv "DRUPAL_SMTP_RELAY_PORT" "587" }}'"
+{{ end }}
+{{ else }}
 ;sendmail_path =
+{{ end }}
 
 ; Force the addition of the specified parameters to be passed as extra parameters
 ; to the sendmail binary. These parameters will always replace the value of
