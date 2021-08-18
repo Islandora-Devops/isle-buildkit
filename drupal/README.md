@@ -66,4 +66,31 @@ to create an additional site:
 | DRUPAL_SITE_{SITE}_CONFIGDIR        | /drupal/site/{SITE}/configdir        |                         | Install using existing config files from directory |
 | DRUPAL_SITE_{SITE}_INSTALL          | /drupal/site/{SITE}/install          | true                    | Perform install if not already installed           |
 
+## Configuring SMTP
+Drupal must have the following environment variables preset at runtime in order to send email through an SMTP relay.  These variables configure PHP-related SMTP settings in `php.ini` (which is parameterized by `confd`).  The only dependency is on the OpenSSL binary, which must be present in the command path (it is, by default).
+
+Busybox sendmail is configured by default, and existing settings have been tested with GMail SMTP.  For example, to use GMail's SMTP relays, you would use the following values:
+* `DRUPAL_SMTP_ENABLE`: `true`
+* `DRUPAL_SMTP_AUTH_PRINCIPAL`: `<user>@gmail.com`
+* `DRUPAL_SMTP_AUTH_TOKEN`: `<gmail app token>`
+* `DRUPAL_SMTP_FROM_ADDRESS`: `webmaster@library.jhu.edu`
+* `DRUPAL_SMTP_RELAY_HOST`: `smtp.gmail.com`
+
+The default values for the remaining required variables suffice.
+
+## SMTP Environment Variables
+
+|Environment Variable        |Default Value                         |Description|
+|----------------------------|--------------------------------------|--------------------------------------|
+|`DRUPAL_SMTP_ENABLE`        |`` (the zero-length string)           |Determines whether SMTP is enabled or not.  Any non-empty value (e.g. `true`) may be used.  If the value is the zero-length string, none of the SMTP-related variables have affect| 
+|`DRUPAL_SMTP_VERBOSE`       |`` (the zero-length string)           |Logs entire SMTP exchanges with the relay.  Any non-empty value (e.g. `true`) may be used.  Useful for debugging but does echo sensitive information to the logs.|
+|`DRUPAL_SMTP_MSA_BIN`       |`sendmail`                            |(required) Path to Sendmail. By default the BusyBox sendmail wrapper is used.|
+|`DRUPAL_SMTP_AUTH_MECH`     |`LOGIN`                               |(required) The SMTP auth mechanism used.  Exactly one authentication mechanism must be defined.|
+|`DRUPAL_SMTP_AUTH_PRINCIPAL`|-                                     |(required) The SMTP user principal to authenticate as.  Since there is no default provided, this _must_ be defined.|
+|`DRUPAL_SMTP_AUTH_TOKEN`    |-                                     |(required) The SMTP authentication token to authenticate with.  Since there is no default provided, this _must_ be defined.
+|`DRUPAL_SMTP_FROM_ADDRESS`  |-                                     |(required) A trusted from address used by `MAIL FROM`.  Since there is no default provided, this _must_ be defined.|
+|`DRUPAL_SMTP_RELAY_HOST`    |`email-smtp.us-east-1.amazonaws.com`  |(required) The IP address or DNS name of the SMTP relay to use.|
+|`DRUPAL_SMTP_RELAY_PORT`    |`587`                                 |(required) The Mail Submission Port used by the SMTP relay.|
+|`DRUPAL_SMTP_TLS_VERSION`   |`tls1_3`                              |(required) The TLS version to use.  Valid values are determined by the OpenSSL library.  Example valid values are: `tls1`, `tls1_1`, `tls1_2`, `tls1_3`.
+
 [Drupal]: https://www.drupal.org/
