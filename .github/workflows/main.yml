@@ -90,12 +90,17 @@ jobs:
         run: ./gradlew --console plain -PregistryUrl=${{ secrets.REGISTRY_URL }} -PregistryUsername=${{ secrets.REGISTRY_USER }} -PregistryPassword=${{ secrets.REGISTRY_PASS }} -Prepository=${{ secrets.REPOSITORY }} ${{ matrix.image-name }}:push
       - name: Label Image
         run: |
+          if [ "${{github.event_name}}" == "pull_request" ] ; then
+            export IMAGE_DESC="IDC ${{matrix.image-name}} image (via idc-isle-buildkit PR head ${{ github.event.pull_request.head.sha }}, base ${{ github.event.pull_request.base.sha }}, merge ${{ github.sha }})"
+          else
+            export IMAGE_DESC="IDC ${{matrix.image-name}} image (via idc-isle-buildkit commit ${{ github.sha }})"
+          fi
           echo "FROM ${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}}" | \
           docker build -t ${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}} \
             --label org.opencontainers.image.title="idc-isle-buildkit ${{matrix.image-name}}"\
-            --label org.opencontainers.image.description="IDC ${{matrix.image-name}} image" \
-            --label org.opencontainers.image.url=${{github.event.repository.url}}/tree/${{github.event.repository.default_branch}}/${{matrix.image-name}} \
-            --label org.opencontainers.image.source=${{github.event.repository.url}} \
+            --label org.opencontainers.image.description="${IMAGE_DESC}" \
+            --label org.opencontainers.image.url=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/${{github.event.repository.default_branch}}/${{matrix.image-name}} \
+            --label org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY \
             --label org.opencontainers.image.version=${{needs.setup.outputs.image-tag}} \
             --label org.opencontainers.image.created=${{needs.setup.outputs.build-date}} \
             --label org.opencontainers.image.revision=${{github.sha}} \
@@ -133,32 +138,29 @@ jobs:
         run: docker-compose exec -T drupal drush -d status
       - name: Label static image
         run: |
-          export CI_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          echo "Using CI_URL: ${CI_URL}"
           if [ "${{github.event_name}}" == "pull_request" ] ; then
-            export IMAGE_DESC="IDC drupal-static image (via idc-isle-buildkit PR ${{ github.head_ref }})"
+            export IMAGE_DESC="IDC drupal-static image (via idc-isle-buildkit PR head ${{ github.event.pull_request.head.sha }}, base ${{ github.event.pull_request.base.sha }}, merge ${{ github.sha }})"
           else
-            export IMAGE_DESC="IDC drupal-static image (via idc-isle-buildkit ${{ github.sha }})"
+            export IMAGE_DESC="IDC drupal-static image (via idc-isle-buildkit commit ${{ github.sha }})"
           fi
-          echo "Using IMAGE_DESC: ${IMAGE_DESC}"
           export STATIC_TAG=$(docker images | grep ${{ secrets.REPOSITORY }}/drupal-static | awk '{print $2}')
           echo "FROM ${{ secrets.REPOSITORY }}/drupal-static:${STATIC_TAG}" | \
-          docker build -t ${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}} \
+          docker build -t ${{ secrets.REPOSITORY }}/drupal-static:${{needs.setup.outputs.image-tag}} \
             --label org.opencontainers.image.title="idc-isle-buildkit drupal-static" \
             --label org.opencontainers.image.description="${IMAGE_DESC}" \
-            --label org.opencontainers.image.url=${{github.event.repository.url}}/tree/${{github.event.repository.default_branch}}/drupal \
+            --label org.opencontainers.image.url=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/${{github.event.repository.default_branch}}/drupal \
             --label org.opencontainers.image.source="$(git remote get-url origin)" \
-            --label org.opencontainers.image.version=${{needs.build.outputs.image-tag}} \
+            --label org.opencontainers.image.version=${{needs.setup.outputs.image-tag}} \
             --label org.opencontainers.image.created="$(date)" \
             --label org.opencontainers.image.revision="$(git log -1 --format='%h')" \
             --label org.opencontainers.image.licenses=MIT \
-            --label org.opencontainers.image.ref.name=${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}} \
-            --label ci.url="${CI_URL}" \
+            --label org.opencontainers.image.ref.name=${{ secrets.REPOSITORY }}/drupal-static:${{needs.setup.outputs.image-tag}} \
+            --label ci.url="${{needs.setup.outputs.ci-url}}" \
             -
       - name: Push static image
         run: |
           docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
-          docker push ${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}}
+          docker push ${{ secrets.REPOSITORY }}/drupal-static:${{needs.setup.outputs.image-tag}}
   test-matrix:
     name: Generate idc-isle-dc test matrix
     needs: setup
@@ -205,9 +207,9 @@ jobs:
           grep TAG .env
       - name: Use Static Drupal Image
         run: |
-          echo "Pulling static image ${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}}"
+          echo "Pulling static image ${{ secrets.REPOSITORY }}/drupal-static:${{needs.setup.outputs.image-tag}}"
           docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}' && \
-          docker pull ${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}} && \
+          docker pull ${{ secrets.REPOSITORY }}/drupal-static:${{needs.setup.outputs.image-tag}} && \
           make static-docker-compose.yml
       - name: Run ${{ matrix.test }}
         run: make up test test=${{ matrix.test }}
@@ -223,3 +225,38 @@ jobs:
         with:
           name: reports-${{matrix.test}}
           path: end-to-end/reports
+  image-locations:
+    name: Comment with image locations
+    if: ${{github.event_name}} == "pull_request"
+    runs-on: ubuntu-latest
+    needs: [ build, static, test-matrix, setup, test ]
+    steps:
+      - name: Generate idc-isle-dc commit url
+        id: isledc-commit-url
+        run: echo "::set-output name=isledc-commit-url::$GITHUB_SERVER_URL/jhu-idc/idc-isle-dc/tree/${{needs.setup.outputs.isledc-commit}}"
+      - name: Create comment with image tags
+        run: |
+          cat << 'EOF' > image.md
+          #### Images for idc-isle-buildkit commit `${{github.event.pull_request.head.sha}}`
+          * Buildkit images were built from idc-isle-buildkit head `${{github.head_ref}}` (`${{github.event.pull_request.head.sha}}`)
+            * Base ref: `${{github.base_ref}}` (`${{github.event.pull_request.base.sha}}`)
+            * Merge ref: `${{github.sha}}`
+          * All images have been pushed to `${{ secrets.REPOSITORY }}` with tag `${{needs.setup.outputs.image-tag}}`
+          * `drupal-static` was built from [idc-isle-dc commit `${{needs.setup.outputs.isledc-commit}}`](${{steps.isledc-commit-url.outputs.isledc-commit-url}})
+          * Workflow logs for these images may be viewed [here](${{needs.setup.outputs.ci-url}})
+
+          Example docker pull command:
+          ```
+          docker pull ${{ secrets.REPOSITORY }}/drupal-static:${{needs.setup.outputs.image-tag}}
+          ```
+          EOF
+      - name: Add failure warning
+        if: failure()
+        run: |
+          echo -e "> **Warning**: idc-isle-dc [tests failed](${{needs.setup.outputs.ci-url}}), so the images may not be useful for testing.\n\n$(cat image.md)" > image.md
+      - name: Post comment
+        uses: machine-learning-apps/pr-comment@1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: image.md
