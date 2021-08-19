@@ -108,7 +108,7 @@ jobs:
           docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
           docker push ${{ secrets.REPOSITORY }}/${{matrix.image-name}}:${{needs.setup.outputs.image-tag}}
   static:
-    name: Create Drupal Static Image
+    name: Create and Push Drupal Static Image
     needs: [ setup, build ]
     runs-on: ubuntu-latest
     timeout-minutes: 120
@@ -131,12 +131,34 @@ jobs:
         run: make static-docker-compose.yml up
       - name: Drush test
         run: docker-compose exec -T drupal drush -d status
-      - name: Export image
-        run: make static-drupal-image-export
-      - uses: actions/upload-artifact@v2
-        with:
-          name: drupal-image
-          path: isle-dc/images
+      - name: Label static image
+        run: |
+          export CI_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "Using CI_URL: ${CI_URL}"
+          if [ "${{github.event_name}}" == "pull_request" ] ; then
+            export IMAGE_DESC="IDC drupal-static image (via idc-isle-buildkit PR ${{ github.head_ref }})"
+          else
+            export IMAGE_DESC="IDC drupal-static image (via idc-isle-buildkit ${{ github.sha }})"
+          fi
+          echo "Using IMAGE_DESC: ${IMAGE_DESC}"
+          export STATIC_TAG=$(docker images | grep ${{ secrets.REPOSITORY }}/drupal-static | awk '{print $2}')
+          echo "FROM ${{ secrets.REPOSITORY }}/drupal-static:${STATIC_TAG}" | \
+          docker build -t ${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}} \
+            --label org.opencontainers.image.title="idc-isle-buildkit drupal-static" \
+            --label org.opencontainers.image.description="${IMAGE_DESC}" \
+            --label org.opencontainers.image.url=${{github.event.repository.url}}/tree/${{github.event.repository.default_branch}}/drupal \
+            --label org.opencontainers.image.source="$(git remote get-url origin)" \
+            --label org.opencontainers.image.version=${{needs.build.outputs.image-tag}} \
+            --label org.opencontainers.image.created="$(date)" \
+            --label org.opencontainers.image.revision="$(git log -1 --format='%h')" \
+            --label org.opencontainers.image.licenses=MIT \
+            --label org.opencontainers.image.ref.name=${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}} \
+            --label ci.url="${CI_URL}" \
+            -
+      - name: Push static image
+        run: |
+          docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}'
+          docker push ${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}}
   test-matrix:
     name: Generate idc-isle-dc test matrix
     needs: setup
@@ -181,13 +203,12 @@ jobs:
           echo "Using image tag ${{needs.setup.outputs.image-tag}}"
           sed -i.bak -e 's@^TAG.*$@TAG=${{needs.setup.outputs.image-tag}}@' .env
           grep TAG .env
-      - name: Download Drupal Image
-        uses: actions/download-artifact@v2
-        with:
-          name: drupal-image
-          path: images
-      - name: Load Drupal Image
-        run: docker load < images/static-drupal.tar
+      - name: Use Static Drupal Image
+        run: |
+          echo "Pulling static image ${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}}"
+          docker login -u '${{ secrets.REGISTRY_USER }}' -p '${{ secrets.REGISTRY_PASS }}' '${{ secrets.REGISTRY_URL }}' && \
+          docker pull ${{ secrets.REPOSITORY }}/drupal-static:${{needs.build.outputs.image-tag}} && \
+          make static-docker-compose.yml
       - name: Run ${{ matrix.test }}
         run: make up test test=${{ matrix.test }}
       - name: Capture Logs
