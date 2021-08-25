@@ -22,6 +22,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-tokenizer \
         php7-xml \
         php7-xmlwriter \
+        php7-xmlreader \
         php7-xsl \
         php7-fileinfo \
         php7-pdo_sqlite \
