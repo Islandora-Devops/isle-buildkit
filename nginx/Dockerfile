@@ -6,6 +6,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk-install.sh \
         composer \
         nginx \
+        gnu-libiconv \
         php7 \
         php7-ctype \
         php7-curl \
@@ -38,6 +39,8 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-zip \
     && \
     cleanup.sh
+
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
 COPY rootfs /
 
