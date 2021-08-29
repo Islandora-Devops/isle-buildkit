@@ -1,4 +1,5 @@
+#!/bin/sh
 #!/usr/bin/execlineb -P
 # -*- mode: sh -*-
 # vi: set ft=sh:
-/usr/sbin/php-fpm7
+with-contenv /usr/sbin/php-fpm7
