@@ -3,9 +3,9 @@ FROM local/base:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
     --mount=type=cache,target=/etc/cache/apk \ 
-    apk add composer --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main && \
     apk-install.sh \
         nginx \
+        composer \
         gnu-libiconv \
         php7 \
         php7-ctype \
@@ -38,6 +38,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-yaml \
         php7-zip \
     && \
+    composer self-update --2 && \
     cleanup.sh
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
