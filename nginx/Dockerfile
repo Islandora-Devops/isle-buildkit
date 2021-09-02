@@ -3,8 +3,8 @@ FROM local/base:latest
 
 RUN --mount=type=cache,target=/var/cache/apk \ 
     --mount=type=cache,target=/etc/cache/apk \ 
+    apk add composer --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main && \
     apk-install.sh \
-        composer \
         nginx \
         gnu-libiconv \
         php7 \
