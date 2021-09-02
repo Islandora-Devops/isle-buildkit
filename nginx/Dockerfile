@@ -4,8 +4,8 @@ FROM local/base:latest
 RUN --mount=type=cache,target=/var/cache/apk \ 
     --mount=type=cache,target=/etc/cache/apk \ 
     apk-install.sh \
-        nginx \
         composer \
+        nginx \
         gnu-libiconv \
         php7 \
         php7-ctype \
