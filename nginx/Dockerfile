@@ -38,6 +38,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         php7-yaml \
         php7-zip \
     && \
+    composer self-update --2 && \
     cleanup.sh
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
