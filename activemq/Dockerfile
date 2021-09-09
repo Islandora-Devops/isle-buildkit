@@ -3,11 +3,11 @@ FROM local/java:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    ACTIVEMQ_VERSION="5.16.1" && \
+    ACTIVEMQ_VERSION="5.16.3" && \
     ACTIVEMQ_FILE="apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz" && \
     ACTIVEMQ_URL="https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ_FILE}" && \
-    ACTIVEMQ_FILE_SHA256="43d3f3a890bffae85c6f1002e9cf950fcc1fd17f3f5e55dc3b85d39d09e2e323" && \
-    ACTIVEMQ_SIG_SHA256="e3c88ec044bc50a30da64f2beb7b7b937ca8bcdcba82d06df94e3e04ec9893c1" && \
+    ACTIVEMQ_FILE_SHA256="1846da2985ec64253ecc41a54f1477731eb4750fe840a9dd9fdfee88e5c94252" && \
+    ACTIVEMQ_SIG_SHA256="ba60843a12fd74424d4ec62752e888b0b58fecd53c63f1497f8ea0cb6ef5d457" && \
     download.sh --url "${ACTIVEMQ_URL}" --sha256 "${ACTIVEMQ_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh --url "${ACTIVEMQ_URL}.asc" --sha256 "${ACTIVEMQ_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-apache-service.sh \
