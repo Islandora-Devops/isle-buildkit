@@ -3,11 +3,11 @@ FROM local/java:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    SOLR_VERSION="8.8.0" && \
+    SOLR_VERSION="8.9.0" && \
     SOLR_FILE="solr-${SOLR_VERSION}.tgz" && \
     SOLR_URL="https://archive.apache.org/dist/lucene/solr/${SOLR_VERSION}/${SOLR_FILE}" && \
-    SOLR_FILE_SHA256="7318752d1d30fa2ef839eb3d2df0f2bdb2709d304aa4870b02b33b91e945b054" && \
-    SOLR_SIG_SHA256="4577e5ac15f87a5c110471520d7b829826e95224da2648b762abbc718b3c5da6" && \
+    SOLR_FILE_SHA256="c9c970e0603318eac1ca5bae24e9a85e917d012266159237e572e636c5a3da62" && \
+    SOLR_SIG_SHA256="7edba1222681a2c9593b602f5e2d3c3b6b0a8d81f227008c55b63cc913fc3b80" && \
     download.sh --url "${SOLR_URL}" --sha256 "${SOLR_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh --url "${SOLR_URL}.asc" --sha256 "${SOLR_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-apache-service.sh \
