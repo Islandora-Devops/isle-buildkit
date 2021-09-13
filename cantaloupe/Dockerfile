@@ -12,10 +12,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    CANTALOUPE_VERSION="4.1.7" && \
+    CANTALOUPE_VERSION="4.1.9" && \
     CANTALOUPE_FILE="cantaloupe-${CANTALOUPE_VERSION}.zip" && \
     CANTALOUPE_URL="https://github.com/medusa-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/${CANTALOUPE_FILE}" && \
-    CANTALOUPE_SHA256="2450463f97c0df8451aa5577b837cc6a9f303d86e356a9441a7c63c7c0b3bcf7" && \
+    CANTALOUPE_SHA256="9ce253e758f319c4d2123de5babc01772da84d6f817552fcb05fbd51b08d090a" && \
     download.sh --url "${CANTALOUPE_URL}" --sha256 "${CANTALOUPE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     unzip "${DOWNLOAD_CACHE_DIRECTORY}/${CANTALOUPE_FILE}" -d /tmp && \
     CANTALOUPE_UNPACKED="${CANTALOUPE_FILE%.zip}" && \
