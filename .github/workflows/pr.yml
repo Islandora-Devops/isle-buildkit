@@ -22,7 +22,11 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-    - name: Build/Test Docker images
+    - name: Build Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build test -PisCI=true --info
+        arguments: build -PisCI=true --info
+    - name: Test Docker images
+      uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: test -PisCI=true --info --no-parallel
