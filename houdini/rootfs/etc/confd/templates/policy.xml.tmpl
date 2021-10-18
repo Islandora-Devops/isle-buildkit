@@ -1,0 +1,26 @@
+<policymap>
+  <!-- temporary path must be a preexisting writable directory -->
+  <policy domain="resource" name="temporary-path" value="/tmp"/>
+  <policy domain="resource" name="memory" value="2GiB"/>
+  <policy domain="resource" name="list-length" value="32"/>
+  <policy domain="resource" name="map" value="4GiB"/>
+  <policy domain="resource" name="disk" value="2GiB"/>
+  <policy domain="resource" name="file" value="768"/>
+  <policy domain="resource" name="thread" value="2"/>
+  <policy domain="resource" name="time" value="7200"/>
+  <policy domain="coder" rights="none" pattern="EPHEMERAL" />
+  <policy domain="coder" rights="none" pattern="URL" />
+  <policy domain="coder" rights="none" pattern="HTTPS" />
+  <policy domain="coder" rights="none" pattern="MVG" />
+  <policy domain="coder" rights="none" pattern="MSL" />
+  <policy domain="coder" rights="none" pattern="TEXT" />
+  <policy domain="coder" rights="none" pattern="SHOW" />
+  <policy domain="coder" rights="none" pattern="WIN" />
+  <policy domain="coder" rights="none" pattern="PLT" />
+  <policy domain="path" rights="none" pattern="@*" />
+  <!-- disable ghostscript format types -->
+  <policy domain="coder" rights="read|write" pattern="PS" />
+  <policy domain="coder" rights="read|write" pattern="EPS" />
+  <policy domain="coder" rights="read|write" pattern="PDF" />
+  <policy domain="coder" rights="read|write" pattern="XPS" />
+</policymap>
