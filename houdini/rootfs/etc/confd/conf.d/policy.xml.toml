@@ -1,0 +1,7 @@
+[template]
+src = "policy.xml.tmpl"
+dest = "/etc/ImageMagick-7/policy.xml"
+uid = 100
+gid = 101
+mode = "0644"
+keys = [ "/" ]
