@@ -5,7 +5,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=imagemagick
 _pkgname=ImageMagick
-pkgver=7.1.0.6
+pkgver=7.1.0.10
 pkgrel=0
 _pkgver=${pkgver%.*}-${pkgver##*.}
 _abiver=7
@@ -198,5 +198,5 @@ _perlmagick_doc() {
 	make -j1 DESTDIR="$subpkgdir" doc_vendor_install
 }
 
-sha512sums="83c49dfb8ac4cc8b201abc337e8de1397181b6e9846e7a9039520134c3a8e0e0111effeb94babecdab570c8da35f6c102227940f36c95262d7d6708202e4c40b ImageMagick-7.1.0-6.tar.gz
+sha512sums="c3ce9368815f723c5093006ee88c7fbcb86c18c93b8d43364c0366b54e11ee1e95e49f6ab9c15b422194eb7c24df92e374eed9159c086256755f997a03347e86 ImageMagick-7.1.0-10.tar.gz
 58afb2da075a6208b6a990ff297b3a827d260687c3355198a8b4d987e1596c0b0cd78aff6f0be0e1896e537fbe44a3d467473183f5f149664ea6e6fb3d3291a9  disable-avaraging-tests.patch"
