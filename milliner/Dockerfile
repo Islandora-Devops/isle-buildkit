@@ -17,7 +17,7 @@ ENV \
     MILLINER_FEDORA6=false \
     MILLINER_LOG_LEVEL=debug
 
-COPY --from=crayfish /etc/nginx/http.d/default.conf /etc/nginx/http.d/default.conf
+COPY --from=crayfish /etc/confd /etc/confd
 COPY --from=crayfish --chown=nginx:nginx /var/www /var/www
 
 COPY rootfs /

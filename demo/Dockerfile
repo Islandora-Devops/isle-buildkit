@@ -58,6 +58,6 @@ RUN --mount=type=cache,id=demo-composer,sharing=locked,target=/root/.composer/ca
     mkdir -p /var/www/drupal/web/sites/default/files/library-definitions && \
     cp /var/www/drupal/web/modules/contrib/openseadragon/openseadragon.json /var/www/drupal/web/sites/default/files/library-definitions
 
-FROM ${repository}/drupal:${tag}
+FROM ${repository}/drupal:${tag} AS drupal
 
 COPY --from=composer --chown=nginx:nginx /var/www /var/www

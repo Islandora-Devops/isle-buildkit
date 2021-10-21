@@ -15,6 +15,18 @@ server {
 
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
+
+        fastcgi_read_timeout {{ getenv "NGINX_FASTCGI_READ_TIMEOUT" }};
+        fastcgi_send_timeout {{ getenv "NGINX_FASTCGI_SEND_TIMEOUT" }};
+        fastcgi_connect_timeout {{ getenv "NGINX_FASTCGI_CONNECT_TIMEOUT" }};
+        proxy_read_timeout {{ getenv "NGINX_PROXY_READ_TIMEOUT" }};
+        proxy_send_timeout {{ getenv "NGINX_PROXY_SEND_TIMEOUT" }};
+        proxy_connect_timeout {{ getenv "NGINX_PROXY_CONNECT_TIMEOUT" }};
+        send_timeout {{ getenv "NGINX_SEND_TIMEOUT" }};
+        keepalive_timeout {{ getenv "NGINX_KEEPALIVE_TIMEOUT" }};
+        client_body_timeout {{ getenv "NGINX_CLIENT_BODY_TIMEOUT" }};
+        lingering_timeout {{ getenv "NGINX_LINGERING_TIMEOUT" }};
+
         # Prevents URIs that include the front controller. This will 404:
         # http://domain.tld/index.php/some-path
         # Remove the internal directive to allow URIs like this
