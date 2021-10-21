@@ -1,0 +1,7 @@
+[template]
+src = "drupal.fpm.conf.tmpl"
+dest = "/etc/nginx/shared/drupal.fpm.conf"
+uid = 100
+gid = 101
+mode = "0644"
+keys = [ "/" ]

@@ -32,7 +32,7 @@ ENV \
     HYPERCUBE_FCREPO_URL=fcrepo/fcrepo/rest \
     HYPERCUBE_LOG_LEVEL=debug
 
-COPY --from=crayfish /etc/nginx/http.d/default.conf /etc/nginx/http.d/default.conf
+COPY --from=crayfish /etc/confd /etc/confd
 COPY --from=crayfish --chown=nginx:nginx /var/www /var/www
 
 COPY rootfs /
