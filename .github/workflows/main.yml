@@ -227,7 +227,7 @@ jobs:
           path: end-to-end/reports
   image-locations:
     name: Comment with image locations
-    if: ${{github.event_name}} == "pull_request"
+    if: ${{github.event_name == 'pull_request'}}
     runs-on: ubuntu-latest
     needs: [ build, static, test-matrix, setup, test ]
     steps:
