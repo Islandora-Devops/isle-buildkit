@@ -337,7 +337,7 @@ pm.max_spare_servers = {{ getenv "PHP_FPM_MAX_SPARE_SERVERS" "3" }}
 ; does not stop script execution for some reason. A value of '0' means 'off'.
 ; Available units: s(econds)(default), m(inutes), h(ours), or d(ays)
 ; Default Value: 0
-request_terminate_timeout = {{ getenv "PHP_MAX_EXECUTION_TIME" "0" }}
+request_terminate_timeout = {{ getenv "PHP_REQUEST_TERMINATE_TIMEOUT" "3600" }}
 
 ; The timeout set by 'request_terminate_timeout' ini option is not engaged after
 ; application calls 'fastcgi_finish_request' or when application has finished and
