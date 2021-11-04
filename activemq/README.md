@@ -47,6 +47,9 @@ additional settings, volumes, ports, etc.
 | ACTIVEMQ_WEB_ADMIN_NAME     | /activemq/web/admin/name     | admin    | See [WebConsole]: jetty-realm.properties |
 | ACTIVEMQ_WEB_ADMIN_PASSWORD | /activemq/web/admin/password | password | See [WebConsole]: jetty-realm.properties |
 | ACTIVEMQ_WEB_ADMIN_ROLES    | /activemq/web/admin/roles    | admin    | See [WebConsole]: jetty-realm.properties |
+| ACTIVEMQ_WEB_HOST    | /activemq/web/host     | 127.0.0.1 | Host the admin console will bind to, use 0.0.0.0 for any |
+| ACTIVEMQ_WEB_PORT    | /activemq/web/iport    | 8161 | Admin console port |
+
 
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:
