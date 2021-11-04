@@ -133,7 +133,7 @@ jobs:
           sed -i.bak -e 's@^TAG.*$@TAG=${{needs.setup.outputs.image-tag}}@' .env
           grep TAG .env
       - name: Make static image
-        run: make static-docker-compose.yml up
+        run: make static-docker-compose.yml up || { docker-compose logs drupal && exit 1; }
       - name: Drush test
         run: docker-compose exec -T drupal drush -d status
       - name: Label static image

@@ -77,7 +77,7 @@ log_limit = {{ getv "php/log/limit" "16384" }}
 ; Available units: s(econds), m(inutes), h(ours), or d(ays)
 ; Default Unit: seconds
 ; Default Value: 0
-;process_control_timeout = 0
+process_control_timeout = {{ getenv "PHP_PROCESS_CONTROL_TIMEOUT" "3600" }}
 
 ; The maximum number of processes FPM will fork. This has been designed to control
 ; the global number of processes when using dynamic PM within a lot of pools.

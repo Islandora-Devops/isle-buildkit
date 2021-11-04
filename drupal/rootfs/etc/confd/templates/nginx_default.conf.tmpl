@@ -109,9 +109,20 @@ server {
         fastcgi_param PATH_INFO $fastcgi_path_info;
         fastcgi_param QUERY_STRING $query_string;
         fastcgi_intercept_errors on;
-        fastcgi_read_timeout {{ getenv "PHP_MAX_EXECUTION_TIME" "60" }};
         # PHP 7 socket location.
         fastcgi_pass unix:/var/run/php-fpm7/php-fpm7.sock;
+
+        # _all_ the timeouts
+        fastcgi_read_timeout {{ getenv "NGINX_FASTCGI_READ_TIMEOUT" "3600" }};
+        fastcgi_send_timeout {{ getenv "NGINX_FASTCGI_SEND_TIMEOUT" "3600" }};
+        fastcgi_connect_timeout {{ getenv "NGINX_FASTCGI_CONNECT_TIMEOUT" "3600" }};
+        proxy_read_timeout {{ getenv "NGINX_PROXY_READ_TIMEOUT" "3600" }};
+        proxy_send_timeout {{ getenv "NGINX_PROXY_SEND_TIMEOUT" "3600" }};
+        proxy_connect_timeout {{ getenv "NGINX_PROXY_CONNECT_TIMEOUT" "3600" }};
+        send_timeout {{ getenv "NGINX_SEND_TIMEOUT" "3600" }};
+        keepalive_timeout {{ getenv "NGINX_KEEPALIVE_TIMEOUT" "3600" }};
+        client_body_timeout {{ getenv "NGINX_CLIENT_BODY_TIMEOUT" "3600" }};
+        lingering_timeout {{ getenv "NGINX_LINGERING_TIMEOUT" "3600" }};
 
         # Workaround for infinitely increasing http header size due to link rels whenever 
         # linked entities are added to Drupal metadata
