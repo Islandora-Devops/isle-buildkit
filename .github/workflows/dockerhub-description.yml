@@ -58,7 +58,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USER }}
         password: ${{ secrets.REGISTRY_PASS }}
         repository: ${{ secrets.REPOSITORY }}/cantaloupe
-        readme-filepath: ./cantaloupe/README.md
+        readme-filepath: ./cantaloupe/README.dockerhub.md
 
     - name: Code-Server - Update Docker Hub Description
       uses: peter-evans/dockerhub-description@v2
