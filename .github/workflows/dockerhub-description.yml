@@ -12,6 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Fix Relative Paths
+      run: |
+        find . -maxdepth 2 -mindepth 2 -type f -name "README*.md" -exec sed -i 's/](\.\.\/\([^/]*\).*)/](.\/\1)/g' {} \; 
+
     - name: ABuild - Update Docker Hub Description
       uses: peter-evans/dockerhub-description@v2
       with:
