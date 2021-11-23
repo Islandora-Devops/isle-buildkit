@@ -3,11 +3,11 @@ FROM local/java:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    TOMCAT_VERSION="9.0.41" && \
+    TOMCAT_VERSION="9.0.55" && \
     TOMCAT_FILE="apache-tomcat-${TOMCAT_VERSION}.tar.gz" && \
     TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE}" && \
-    TOMCAT_FILE_SHA256="6a5fc1f79f002f25480e3a50daa1fb16fdb2f0a969bc2f806c88bc550002cf71" && \
-    TOMCAT_SIG_SHA256="2bf8fe2b4a993b799a8ea6018bda46f05a00ba9931bf904c97b3e912e30d0b69" && \
+    TOMCAT_FILE_SHA256="63e37ced106daf9b7d1516d1d4e230593c7ff2e1021effe91bc552a751469181" && \
+    TOMCAT_SIG_SHA256="1b9969648b2848822443f594187bfe45594944eef20c28ea3c49d7f0d6c18dfe" && \
     download.sh --url "${TOMCAT_URL}" --sha256 "${TOMCAT_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh --url "${TOMCAT_URL}.asc" --sha256 "${TOMCAT_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-apache-service.sh \
