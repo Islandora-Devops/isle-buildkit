@@ -18,8 +18,19 @@
 
   <reference id="broker" interface="org.apache.camel.Component" filter="(osgi.jndi.service.name=fcrepo/Broker)"/>
 
-  <bean id="http" class="org.apache.camel.component.http4.HttpComponent"/>
-  <bean id="https" class="org.apache.camel.component.http4.HttpComponent"/>
+  <bean id="requestConfigConfigurer" class="ca.islandora.alpaca.connector.derivative.RequestConfigConfigurer">
+    <property name="connectionRequestTimeoutMs" value="{{ getenv "ALPACA_HOUDINI_TIMEOUT" }}"/>
+    <property name="connectTimeoutMs" value="{{ getenv "ALPACA_HOUDINI_TIMEOUT" }}"/>
+    <property name="socketTimeoutMs" value="{{ getenv "ALPACA_HOUDINI_TIMEOUT" }}"/>
+  </bean>
+
+  <bean id="http" class="org.apache.camel.component.http4.HttpComponent">
+    <property name="httpClientConfigurer" ref="requestConfigConfigurer"/>
+  </bean>
+
+  <bean id="https" class="org.apache.camel.component.http4.HttpComponent">
+    <property name="httpClientConfigurer" ref="requestConfigConfigurer"/>
+  </bean>
 
   <camelContext id="IslandoraConnectorHoudini" xmlns="http://camel.apache.org/schema/blueprint">
     <package>ca.islandora.alpaca.connector.derivative</package>
