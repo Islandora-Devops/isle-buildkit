@@ -37,7 +37,23 @@
     <!--
         The <broker> element is used to configure the ActiveMQ broker.
     -->
-    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" dataDirectory="${activemq.data}">
+    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" dataDirectory="${activemq.data}" schedulerSupport="true">
+
+        <plugins>
+            <redeliveryPlugin fallbackToDeadLetter="true"
+                              sendToDlqIfMaxRetriesExceeded="true">
+                <redeliveryPolicyMap>
+                    <redeliveryPolicyMap>
+                        <defaultEntry>
+                            <!-- the policy for all destinations -->
+                            <redeliveryPolicy maximumRedeliveries="5"
+                                              initialRedeliveryDelay="5000"
+                                              redeliveryDelay="60000"/>
+                        </defaultEntry>
+                    </redeliveryPolicyMap>
+                </redeliveryPolicyMap>
+            </redeliveryPlugin>
+        </plugins>
 
         <destinationPolicy>
             <policyMap>
