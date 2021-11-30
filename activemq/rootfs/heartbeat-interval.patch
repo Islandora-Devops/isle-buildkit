@@ -1,0 +1,89 @@
+diff --git a/activemq-stomp/src/main/java/org/apache/activemq/transport/stomp/ProtocolConverter.java b/activemq-stomp/src/main/java/org/apache/activemq/transport/stomp/ProtocolConverter.java
+index b25860bf6..98aa60cee 100644
+--- a/activemq-stomp/src/main/java/org/apache/activemq/transport/stomp/ProtocolConverter.java
++++ b/activemq-stomp/src/main/java/org/apache/activemq/transport/stomp/ProtocolConverter.java
+@@ -971,8 +971,8 @@ public class ProtocolConverter {
+             try {
+                 StompInactivityMonitor monitor = this.stompTransport.getInactivityMonitor();
+                 monitor.setReadCheckTime((long) (hbReadInterval * hbGracePeriodMultiplier));
+-                monitor.setInitialDelayTime(Math.min(hbReadInterval, hbWriteInterval));
+-                monitor.setWriteCheckTime(hbWriteInterval);
++                monitor.setInitialDelayTime(Math.min(hbReadInterval, workaroundHbWriteInterval(hbWriteInterval)));
++                monitor.setWriteCheckTime(workaroundHbWriteInterval(hbWriteInterval));
+                 monitor.startMonitoring();
+             } catch(Exception ex) {
+                 hbReadInterval = 0;
+@@ -985,6 +985,19 @@ public class ProtocolConverter {
+         }
+     }
+
++    // The InactivityMonitor may send heartbeats half as often as requested, so
++    // work around that by asking for twice as often.
++    //
++    // The InactivityMonitor behaves that way because it checks periodically
++    // whether a write has been sent since the last check:
++    // |-------------------|-------------------|
++    //        ^                                ^
++    //        |                                |
++    //   activity here          means no heartbeat until here
++    protected static long workaroundHbWriteInterval(long hbWriteInterval) {
++        return hbWriteInterval / 2;
++    }
++
+     protected void sendReceipt(StompFrame command) {
+         final String receiptId = command.getHeaders().get(Stomp.Headers.RECEIPT_REQUESTED);
+         if (receiptId != null) {
+diff --git a/activemq-stomp/src/test/java/org/apache/activemq/transport/stomp/StompInactivityMonitorTest.java b/activemq-stomp/src/test/java/org/apache/activemq/transport/stomp/StompInactivityMonitorTest.java
+index 20f4ed9c0..76bc17b1d 100644
+--- a/activemq-stomp/src/test/java/org/apache/activemq/transport/stomp/StompInactivityMonitorTest.java
++++ b/activemq-stomp/src/test/java/org/apache/activemq/transport/stomp/StompInactivityMonitorTest.java
+@@ -91,6 +91,49 @@ public class StompInactivityMonitorTest extends StompTestSupport {
+         assertTrue(response.startsWith("RECEIPT"));
+     }
+
++    // For JIRA ticket AMQ-4710
++    //
++    // Sometimes STOMP heartbeats were sent too infrequently. This test checks
++    // for that. We have to do that with a low-level Socket connection because
++    // the heartbeats don't give rise to frames.
++    @Test(timeout = 2000)
++    public void testWriteHeartbeat() throws Exception {
++        Socket socket = createSocket();
++
++        String connectFrame = "STOMP\n" +
++            "login:system\n" +
++            "passcode:manager\n" +
++            "accept-version:1.1\n" +
++            "heart-beat:0,100\n" +
++            "host:localhost\n" +
++            "\n" + Stomp.NULL;
++
++        byte[] buffer = new byte[4096];
++        socket.getOutputStream().write(connectFrame.getBytes());
++        long read = socket.getInputStream().read(buffer);
++        LOG.info("initial read: " + new String(buffer, 0, (int)read));
++        // Sometimes we read the keepalive before the CONNECTED response. There
++        // must be a race somewhere. If that happens, just try to read the
++        // CONNECTED frame again.
++        if (read == 1) {
++            read = socket.getInputStream().read(buffer);
++            LOG.info("initial retry read: " + new String(buffer, 0, (int)read));
++        }
++
++        // Wait for a few heartbeats.
++        for (int i = 0; i < 4; i += 1) {
++            long startTime = System.currentTimeMillis();
++            read = socket.getInputStream().read(buffer);
++            long endTime = System.currentTimeMillis();
++            LOG.info("heartbeat read: " + new String(buffer, 0, (int)read));
++            long delay = endTime - startTime;
++            assertTrue("Should have received a keepalive newline", read >= 1);
++            assertTrue("Should have received a keepalive newline", buffer[0] == '\n');
++            assertTrue("Should have waited a reasonable length of time for keepalive, not " + delay + "ms",
++                    delay < 140);
++        }
++    }
++
+     @Override
+     protected boolean isUseTcpConnector() {
+         return !transportScheme.contains("nio") && !transportScheme.contains("ssl");

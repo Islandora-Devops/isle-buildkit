@@ -74,7 +74,7 @@
                 <policyEntry queue=">">
                   <deadLetterStrategy>
                       <!-- ActiveMQ.DLQ will keep persistent, undelivered messages for one week -->
-                      <sharedDeadLetterStrategy expiration="604800000" processExpired="true" />
+                      <sharedDeadLetterStrategy expiration="604800000" processExpired="true" processNonPersistent="true" />
                   </deadLetterStrategy>
                 </policyEntry>
               </policyEntries>
