@@ -49,6 +49,12 @@ additional settings, volumes, ports, etc.
 | ACTIVEMQ_WEB_ADMIN_ROLES    | /activemq/web/admin/roles    | admin    | See [WebConsole]: jetty-realm.properties |
 | ACTIVEMQ_WEB_HOST    | /activemq/web/host     | 127.0.0.1 | Host the admin console will bind to, use 0.0.0.0 for any |
 | ACTIVEMQ_WEB_PORT    | /activemq/web/iport    | 8161 | Admin console port |
+| ACTIVEMQ_REDELIVERY_MAX_ATTEMPTS | /activemq/redelivery/max/attempts | 1 | Total number of attempts to redeliver a message before routing it to the DLQ |
+| ACTIVEMQ_REDELIVERY_INITIAL_DELAY_MS | /activemq/redelivery/initial/delay/ms | 60000 | Delay before attempting the first redelivery |
+| ACTIVEMQ_REDELIVERY_DELAY_MS | /activemq/redelivery/delay/ms | 60000 | Delay between subsequent redelivery attempts |
+| ACTIVEMQ_DLQ_EXPIRATION_MS | /activemq/dlq/expiration/ms | 604800000 | Lifetime of a message in the DLQ, after which it is deleted |
+| ACTIVEMQ_DLQ_PROCESS_EXPIRED | /activemq/dlq/process/expired | true | Whether undelivered, expired messages are **routed to** the DLQ.  If 'true', undelivered, expired messages will be sent to the DLQ and kept for ${ACTIVEMQ_DLQ_EXPIRATION_MS} milliseconds before being deleted. If 'false', undelivered, expired messages will be deleted, bypassing the DLQ.  | 
+| ACTIVEMQ_DLQ_PROCESS_NON_PERSISTENT | /activemq/dlq/process/non/persistent | true | Whether undelivered, non-persistent are **routed to** the DLQ.  If 'true', undeliverable, non-persistent messages will be routed to the DLQ and kept for ${ACTIVEMQ_DLQ_EXPIRATION_MS} milliseconds before being deleted.  If 'false', undeliverable, non-persistent messages will be deleted. |
 
 
 Additional users/groups/etc can be defined by adding more environment variables,

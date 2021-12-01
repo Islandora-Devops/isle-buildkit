@@ -46,9 +46,9 @@
                     <redeliveryPolicyMap>
                         <defaultEntry>
                             <!-- the policy for all destinations -->
-                            <redeliveryPolicy maximumRedeliveries="5"
-                                              initialRedeliveryDelay="5000"
-                                              redeliveryDelay="60000"/>
+                            <redeliveryPolicy maximumRedeliveries="{{ getv "/redelivery/max/attempts" "1" }}"
+                                              initialRedeliveryDelay="{{ getv "/redelivery/initial/delay/ms" "60000" }}"
+                                              redeliveryDelay="{{ getv "/redelivery/delay/ms" "60000" }}"/>
                         </defaultEntry>
                     </redeliveryPolicyMap>
                 </redeliveryPolicyMap>
@@ -74,7 +74,7 @@
                 <policyEntry queue=">">
                   <deadLetterStrategy>
                       <!-- ActiveMQ.DLQ will keep persistent, undelivered messages for one week -->
-                      <sharedDeadLetterStrategy expiration="604800000" processExpired="true" processNonPersistent="true" />
+                      <sharedDeadLetterStrategy expiration="{{ getv "/dlq/expiration/ms" "604800000" }}" processExpired="{{ getv "/dlq/process/expired" "true" }}" processNonPersistent="{{ getv "/dlq/process/non/persistent" "true" }}" />
                   </deadLetterStrategy>
                 </policyEntry>
               </policyEntries>

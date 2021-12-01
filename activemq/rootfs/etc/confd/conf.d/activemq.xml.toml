@@ -4,3 +4,4 @@ dest = "/opt/activemq/conf/activemq.xml"
 uid = 100
 gid = 1000
 mode = "0640"
+keys = [ "/dlq", "/redelivery" ]
