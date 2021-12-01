@@ -41,6 +41,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     composer self-update --2 && \
     cleanup.sh
 
+RUN apk add gnu-libiconv=1.15-r3 --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ --allow-untrusted
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
 COPY rootfs /
