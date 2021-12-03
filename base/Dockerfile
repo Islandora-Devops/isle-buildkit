@@ -19,6 +19,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         netcat-openbsd \
         openssl \
         postgresql-client \
+        sudo \
         wget \
     && \
     S6_VERSION="1.22.1.0" && \
