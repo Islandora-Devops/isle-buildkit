@@ -113,13 +113,13 @@
           <systemUsage>
             <systemUsage>
                 <memoryUsage>
-                    <memoryUsage percentOfJvmHeap="70" />
+                    <memoryUsage percentOfJvmHeap="{{ getv "/system/usage/jvm/heap/percent" "70" }}" />
                 </memoryUsage>
                 <storeUsage>
-                    <storeUsage limit="100 gb"/>
+                    <storeUsage limit="{{ getv "/system/usage/durable/storage/limit" "100 gb"}}" />
                 </storeUsage>
                 <tempUsage>
-                    <tempUsage limit="50 gb"/>
+                    <tempUsage limit="{{ getv "/system/usage/temp/storage/limit" "18 gb"}}" />
                 </tempUsage>
             </systemUsage>
         </systemUsage>

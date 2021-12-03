@@ -55,6 +55,9 @@ additional settings, volumes, ports, etc.
 | ACTIVEMQ_DLQ_EXPIRATION_MS | /activemq/dlq/expiration/ms | 604800000 | Lifetime of a message in the DLQ, after which it is deleted |
 | ACTIVEMQ_DLQ_PROCESS_EXPIRED | /activemq/dlq/process/expired | true | Whether undelivered, expired messages are **routed to** the DLQ.  If 'true', undelivered, expired messages will be sent to the DLQ and kept for ${ACTIVEMQ_DLQ_EXPIRATION_MS} milliseconds before being deleted. If 'false', undelivered, expired messages will be deleted, bypassing the DLQ.  | 
 | ACTIVEMQ_DLQ_PROCESS_NON_PERSISTENT | /activemq/dlq/process/non/persistent | true | Whether undelivered, non-persistent are **routed to** the DLQ.  If 'true', undeliverable, non-persistent messages will be routed to the DLQ and kept for ${ACTIVEMQ_DLQ_EXPIRATION_MS} milliseconds before being deleted.  If 'false', undeliverable, non-persistent messages will be deleted. |
+| ACTIVEMQ_SYSTEM_USAGE_JVM_HEAP_PERCENTAGE | /system/usage/jvm/heap/percent | 70 | |
+| ACTIVEMQ_SYSTEM_USAGE_DURABLE_STORAGE_LIMIT | /system/usage/durable/storage/limit | `100 gb` | |
+| ACTIVEMQ_SYSTEM_USAGE_TEMP_STORAGE_LIMIT | /system/usage/temp/storage/limit | `18 gb` | |
 
 
 Additional users/groups/etc can be defined by adding more environment variables,
