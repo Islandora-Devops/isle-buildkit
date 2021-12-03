@@ -75,8 +75,8 @@ function cmdline() {
         esac
     done
 
-    if [[ -z $NAME || -z $KEY || -z $FILE ]]; then
-        echo "Missing one or more required options: --name --key --file"
+    if [[ -z $NAME || -z $FILE ]]; then
+        echo "Missing one or more required options: --name --file"
         exit 1
     fi
 

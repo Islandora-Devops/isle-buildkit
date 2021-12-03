@@ -1,23 +1,49 @@
 # syntax=docker/dockerfile:experimental
+FROM local/java:latest as builder
+
+COPY rootfs/heartbeat-interval.patch /
+
+RUN ACTIVEMQ_VERSION="5.16.3" && \
+    ACTIVEMQ_GIT_REPO="https://github.com/apache/activemq" && \
+    ACTIVEMQ_GIT_TAG="activemq-${ACTIVEMQ_VERSION}" && \
+    mkdir -p /opt/builds && \
+    cd /opt/builds && \
+    git clone --depth 1 -b ${ACTIVEMQ_GIT_TAG} ${ACTIVEMQ_GIT_REPO} && \
+    cd activemq
+
+WORKDIR /opt/builds/activemq
+
+# patch activemq-stomp
+RUN patch -p1 < /heartbeat-interval.patch
+
+# build activemq-stomp so the artifact is in the local maven repository.  build activemq-web-console so the classes are
+# available in activemq-web-console/target for the assembly to pick up.  the remaining artifacts will be downloaded from
+# maven central during assembly
+RUN cd activemq-stomp && \
+    mvn install -DskipTests && \
+    cd ../activemq-web-console && \
+    mvn package -DskipTests
+
+# assemble the binary; will use the locally built activemq-stomp artifact, and pick up activemq-web-console/target.
+RUN cd /opt/builds/activemq/assembly && \
+    mvn assembly:single@unix-bin -DskipTests
+
 FROM local/java:latest
 
-RUN --mount=id=downloads,type=cache,target=/opt/downloads \
-    DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    ACTIVEMQ_VERSION="5.16.3" && \
-    ACTIVEMQ_FILE="apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz" && \
-    ACTIVEMQ_URL="https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ_FILE}" && \
-    ACTIVEMQ_FILE_SHA256="1846da2985ec64253ecc41a54f1477731eb4750fe840a9dd9fdfee88e5c94252" && \
-    ACTIVEMQ_SIG_SHA256="ba60843a12fd74424d4ec62752e888b0b58fecd53c63f1497f8ea0cb6ef5d457" && \
-    download.sh --url "${ACTIVEMQ_URL}" --sha256 "${ACTIVEMQ_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    download.sh --url "${ACTIVEMQ_URL}.asc" --sha256 "${ACTIVEMQ_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    install-apache-service.sh \
-        --name activemq \
-        --key "1AA8CF92D409A73393D0B736BFF2EE42C8282E76" \
-        --file "${DOWNLOAD_CACHE_DIRECTORY}/${ACTIVEMQ_FILE}" \
-        examples webapps-demo docs
+RUN mkdir -p /opt/downloads
+
+COPY --from=builder /opt/builds/activemq/assembly/target/apache-activemq-5.16.3-bin.tar.gz /opt/downloads
+
+# install-apache-service.sh modified to not require a signed artifact
+RUN install-apache-service.sh \
+      --name activemq \
+      --file /opt/downloads/apache-activemq-5.16.3-bin.tar.gz \
+    examples webapps-demo docs
 
 WORKDIR /opt/activemq
 
 EXPOSE 61616 5672 61613 1883 61614 8161
 
 COPY rootfs /
+
+RUN chown -R activemq:activemq /opt/activemq

@@ -7,6 +7,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk-install.sh \
         openjdk8 \
         maven \
+        patch \
     && \
     cleanup.sh
 
