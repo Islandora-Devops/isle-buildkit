@@ -13,6 +13,7 @@
       <cm:property name="error.maxRedeliveries" value="{{ getv "/houdini/redeliveries" (getenv "ALPACA_REDELIVERIES" "10") }}"/>
       <cm:property name="error.redeliveryDelay" value="{{ getv "/houdini/redeliverydelay" (getenv "ALPACA_REDELIVERYDELAY" "10000") }}"/>
       <cm:property name="error.backoff" value="{{ getv "/houdini/redeliverybackoff" (getenv "ALPACA_REDELIVERYBACKOFF" "1.0") }}"/>
+      <cm:property name="error.dlq" value="{{ getv "/houdini/dlq" (getenv "ALPACA_DLQ" "broker:queue:ActiveMQ.DLQ") }}"/>
       <cm:property name="http.connectionRequestTimeoutMs" value="{{ getv "/houdini/http/connection/request/timeout/ms" (getenv "ALPACA_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000") }}"/>
       <cm:property name="http.connectTimeoutMs" value="{{ getv "/houdini/http/connect/timeout/ms" (getenv "ALPACA_HTTP_CONNECT_TIMEOUT_MS" "10000") }}"/>
       <cm:property name="http.socketTimeoutMs" value="{{ getv "/houdini/http/socket/timeout/ms" (getenv "ALPACA_HTTP_SOCKET_TIMEOUT_MS" "600000" ) }}"/>

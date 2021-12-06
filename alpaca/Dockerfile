@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:experimental
 FROM local/java:latest as alpacabuild
 
-ENV ALPACA_REPO="https://github.com/jhu-idc/Alpaca"
-ENV ALPACA_BRANCH=Alpaca-1.0.3-jhu
+ENV ALPACA_REPO="https://github.com/emetsger/Alpaca"
+ENV ALPACA_BRANCH=dlq
 # Typically ALPACA_COMMIT should reference the tip of the Alpaca-1.0.3-jhu branch.
 # Using commit hashes ensures that no commits are pulled inadvertantly, and requires
 # a commit to the buildkit repo to advance Alpaca.
-ENV ALPACA_COMMIT=4c23ae95e75ced89e0da272c5b0dae85604fcee7
+ENV ALPACA_COMMIT=3256c2078178ed5d282397ceaefc10ce438929b9
 
 RUN mkdir /build && \
     cd /build && \
