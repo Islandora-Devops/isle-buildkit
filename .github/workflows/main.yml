@@ -62,6 +62,7 @@ jobs:
           - cantaloupe
           - crayfish
           - crayfits
+          - dlq
           - drupal
           - drupal-dev
           - fits
