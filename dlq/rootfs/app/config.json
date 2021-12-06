@@ -1,0 +1,10 @@
+{
+  "stomp-logger": {
+    "order": 10,
+    "handler-type": "StompLoggerHandler"
+  },
+  "jwt-logger": {
+    "order": 20,
+    "handler-type": "JWTLoggingHandler"
+  }
+}
