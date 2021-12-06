@@ -312,7 +312,7 @@ function update_settings_php {
     fi
 
     # Allow modifications to settings.php
-    if [ -f "${site_directory}/settings.php" ]; then
+    if [ -f "${site_directory}/settings.php" ] && [ ! -w "${site_directory}/settings.php" ]; then
         previous_owner_group=$(stat -c "%u:%g" "${site_directory}/settings.php")
         chown 100:101 "${site_directory}/settings.php"
         chmod a=rwx "${site_directory}/settings.php"
