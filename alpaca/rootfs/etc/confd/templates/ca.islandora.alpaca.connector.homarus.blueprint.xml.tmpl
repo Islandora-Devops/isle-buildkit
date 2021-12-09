@@ -13,6 +13,7 @@
       <cm:property name="error.maxRedeliveries" value="{{ getv "/homarus/redeliveries" (getenv "ALPACA_REDELIVERIES" "10") }}"/>
       <cm:property name="error.redeliveryDelay" value="{{ getv "/homarus/redeliverydelay" (getenv "ALPACA_REDELIVERYDELAY" "10000") }}"/>
       <cm:property name="error.backoff" value="{{ getv "/homarus/redeliverybackoff" (getenv "ALPACA_REDELIVERYBACKOFF" "1.0") }}"/>
+      <cm:property name="error.dlq" value="{{ getv "/homarus/dlq" (getenv "ALPACA_DLQ" "broker:queue:ActiveMQ.DLQ") }}"/>
       <cm:property name="http.connectionRequestTimeoutMs" value="{{ getv "/homarus/http/connection/request/timeout/ms" (getenv "ALPACA_HTTP_CONNECTION_REQUEST_TIMEOUT_MS" "10000") }}"/>
       <cm:property name="http.connectTimeoutMs" value="{{ getv "/homarus/http/connect/timeout/ms" (getenv "ALPACA_HTTP_CONNECT_TIMEOUT_MS" "10000") }}"/>
       <cm:property name="http.socketTimeoutMs" value="{{ getv "/homarus/http/socket/timeout/ms" (getenv "ALPACA_HTTP_SOCKET_TIMEOUT_MS" "600000" ) }}"/>
