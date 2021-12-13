@@ -23,7 +23,8 @@
 ## Introduction
 
 This repository provides a number of docker images which can be used to build an
-Islandora 8 site.
+Islandora 8 site. On commit, these images are automatically pushed to 
+[Docker Hub](https://hub.docker.com/u/islandora) via Github Actions.
 
 ## Requirements
 
