@@ -22,8 +22,11 @@
 
 ## Introduction
 
-This repository provides a number of Docker images which are consumed [isle-dc]
-and can be used by other Docker orchestration tools such as Swarm / Kubernetes.
+This repository provides a number of docker images which can be used to build an
+Islandora 8 site. On commit, these images are automatically pushed to 
+[Docker Hub](https://hub.docker.com/u/islandora) via Github Actions. Which are 
+consumed by [isle-dc] and can be used by other Docker orchestration tools such 
+as Swarm / Kubernetes.
 
 It is **not** meant as a starting point for new users or those unfamiliar with
 Docker, or basic server adminstration.
