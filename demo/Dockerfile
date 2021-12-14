@@ -3,14 +3,14 @@ ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
-ARG COMMIT=67b8e87ddd5c5b5a01522aaf3129ad4c661cb76d
+ARG COMMIT=4012e56a5c88b0a9a3686f1e51cd4f4da5ff13e4
 
 # Islandora based Drupal install.
 RUN --mount=type=cache,id=demo-composer,sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=demo-downloads,sharing=locked,target=/opt/downloads \
     # Get the Drupal codebase
     git-clone-cached.sh \
-        --url https://github.com/dannylamb/islandora-sandbox.git \
+        --url https://github.com/Islandora-Devops/islandora-sandbox.git \
         --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
         --commit "${COMMIT}" \
         --worktree /var/www/drupal && \
