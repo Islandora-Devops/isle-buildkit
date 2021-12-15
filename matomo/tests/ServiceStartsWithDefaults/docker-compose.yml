@@ -1,0 +1,20 @@
+# file: docker-compose.yml
+#
+# Tests that the base values for database environment variables can be
+# overridden by prefixing them.
+# 
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+version: "3.8"
+services:
+  mariadb:
+    image: ${MYSQL_IMAGE:-local/mariadb:latest}
+  matomo:
+    image: ${BASE_IMAGE:-local/matomo:latest}
+    environment:
+      # Testing without traefik, so we do not have SSL.
+      MATOMO_FORCE_SSL: 0
+      MATOMO_ASSUME_SECURE_PROTOCOL: 0
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+# Make sure we stay alive long enough to receive the signal.
+exec sleep 100000

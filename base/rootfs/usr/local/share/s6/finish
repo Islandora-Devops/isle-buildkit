@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -e
+
+readonly SERVICE_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" &> /dev/null && pwd )"
+readonly SERVICE=$(basename ${SERVICE_DIR})
+
+# Handles exit codes / signals to ensure the container exits with the expected
+# value. Meant to be sourced in /etc/service.d/*/finish scripts.
+# See https://skarnet.org/software/s6/s6-supervise.html
+
+# Process received a non-catchable signal (i.e. SIGINT). s6 sets the exit
+# code to >= 256 and expects the user to inspect the signal value instead.
+# Though it is possible for the service to recieve a signal directly and exit
+# with a exit code that indicates it exited due to receiving a signal.
+if test ${1} -gt 255; then
+    readonly EXIT_CODE=$(s6-expr 128 + ${2})
+    readonly SIGNAL=${2}
+elif test ${1} -gt 128; then
+    readonly EXIT_CODE=${1}
+    readonly SIGNAL=$(s6-expr ${1} - 128)
+else
+    readonly EXIT_CODE=${1}
+fi
+
+echo "[services.d] service ${SERVICE} finish: executing..." >&2
+
+# Report the exit code / signal and exit.
+if test -z "$SIGNAL"; then
+    echo ${EXIT_CODE} > /var/run/s6/env-stage3/S6_STAGE2_EXITED
+    echo "[services.d] service ${SERVICE} exiting with exit code: ${EXIT_CODE}" >&2
+else
+    if test ${SIGNAL} -eq 15; then
+        # Process received a SIGTERM. Shutdown gracefully and do not set exit code.
+        echo "[services.d] service ${SERVICE} received SIGTERM exiting gracefully" >&2
+    else
+        echo ${EXIT_CODE} > /var/run/s6/env-stage3/S6_STAGE2_EXITED
+        echo "[services.d] service ${SERVICE} received signal: ${SIGNAL}, exiting with exit code: ${EXIT_CODE}" >&2
+    fi
+fi
+
+# Regardless take down all other services.
+s6-svscanctl -t /var/run/s6/services 2>/dev/null

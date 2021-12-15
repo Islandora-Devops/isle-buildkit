@@ -33,7 +33,9 @@ RUN mkdir -p /data && \
 
 ENV \
     FCREPO_ACTIVEMQ_BROKER=tcp://activemq:61616 \
+    FCREPO_ACTIVEMQ_QUEUE_ENABLE=false \
     FCREPO_ACTIVEMQ_QUEUE=fedora \
+    FCREPO_ACTIVEMQ_TOPIC_ENABLE=true \
     FCREPO_ACTIVEMQ_TOPIC=fedora \
     FCREPO_BINARYSTORAGE_TYPE=file \
     FCREPO_DB_NAME=fcrepo \

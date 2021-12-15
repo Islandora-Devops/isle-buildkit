@@ -95,6 +95,6 @@ function main {
             ;;
     esac
 
-    confd ${args} "${OPTIONS[@]}"
+    exec confd ${args} "${OPTIONS[@]}"
 }
 main

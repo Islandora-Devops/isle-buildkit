@@ -10,7 +10,7 @@
 
   <cm:property-placeholder id="properties" persistent-id="ca.islandora.alpaca.connector.ocr" update-strategy="reload" >
     <cm:default-properties>
-      <cm:property name="error.maxRedeliveries" value="{{ getenv "ALPACA_OCR_SERVICE" }}"/>
+      <cm:property name="error.maxRedeliveries" value="{{ getenv "ALPACA_OCR_REDELIVERIES" }}"/>
       <cm:property name="in.stream" value="{{ getenv "ALPACA_OCR_QUEUE" }}"/>
       <cm:property name="derivative.service.url" value="{{ getenv "ALPACA_OCR_SERVICE" }}"/>
     </cm:default-properties>
@@ -18,8 +18,19 @@
 
   <reference id="broker" interface="org.apache.camel.Component" filter="(osgi.jndi.service.name=fcrepo/Broker)"/>
 
-  <bean id="http" class="org.apache.camel.component.http4.HttpComponent"/>
-  <bean id="https" class="org.apache.camel.component.http4.HttpComponent"/>
+  <bean id="requestConfigConfigurer" class="ca.islandora.alpaca.connector.derivative.RequestConfigConfigurer">
+    <property name="connectionRequestTimeoutMs" value="{{ getenv "ALPACA_OCR_TIMEOUT" }}"/>
+    <property name="connectTimeoutMs" value="{{ getenv "ALPACA_OCR_TIMEOUT" }}"/>
+    <property name="socketTimeoutMs" value="{{ getenv "ALPACA_OCR_TIMEOUT" }}"/>
+  </bean>
+
+  <bean id="http" class="org.apache.camel.component.http4.HttpComponent">
+    <property name="httpClientConfigurer" ref="requestConfigConfigurer"/>
+  </bean>
+
+  <bean id="https" class="org.apache.camel.component.http4.HttpComponent">
+    <property name="httpClientConfigurer" ref="requestConfigConfigurer"/>
+  </bean>
 
   <camelContext id="IslandoraConnectorOCR" xmlns="http://camel.apache.org/schema/blueprint">
     <package>ca.islandora.alpaca.connector.derivative</package>

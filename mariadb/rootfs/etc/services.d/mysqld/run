@@ -1,5 +1,3 @@
-#!/usr/bin/execlineb -P
-# -*- mode: sh -*-
-# vi: set ft=sh:
-s6-setuidgid mysql
-mysqld --user mysql
+#!/usr/bin/env bash
+set -e
+exec s6-setuidgid mysql mysqld --user mysql

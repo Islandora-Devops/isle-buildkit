@@ -155,15 +155,18 @@ function installed {
 
 function main {
     cmdline ${ARGS}
-
+    local protocol=mysql
     if installed; then
         echo "Site already is installed."
         return 0
+    fi
+    if [[ "${DRIVER}" == "postgresql" ]]; then
+        protocol=pgsql
     fi
     echo "Installing site."
     drush \
         -n \
         si ${DRUSH_ARGS} \
-        --db-url="${DRIVER}://${DB_USER}:${DB_PASSWORD}@${HOST}:${PORT}/${DB_NAME}"
+        --db-url="${protocol}://${DB_USER}:${DB_PASSWORD}@${HOST}:${PORT}/${DB_NAME}"
 }
 main

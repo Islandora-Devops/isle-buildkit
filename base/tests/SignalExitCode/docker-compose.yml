@@ -1,0 +1,11 @@
+# file: docker-compose.yml
+#
+# Tests that when a service exits, it's exit code is used as the return exit code for the container.
+version: "3.8"
+services:
+  base:
+    image: ${BASE_IMAGE:-local/base:latest}
+    command: "/test.sh"
+    volumes:
+      - ./service:/etc/services.d/test
+      - ./test.sh:/test.sh

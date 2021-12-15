@@ -1,0 +1,26 @@
+#!/usr/bin/with-contenv bash
+
+source /usr/local/share/isle/utilities.sh
+
+function count {
+    cat <<EOF | execute-sql-file.sh --database "${DB_NAME}" -- -XAt
+SELECT COUNT(*) as count FROM fixity_check_event;
+EOF
+}
+
+# Perform check-fixity (ingests from CSV).
+check-fixity.sh "--settings=/var/www/riprap/cron_config.yaml"
+
+# Query the database to determine if the expected number of checks occured.
+rows=$(count)
+
+# Check if results meet expectations.
+if [[ "${rows}" != "3" ]]; then
+    echo "Failed to created the expected number of rows: ${rows}!=3."
+    exit 1
+else
+    echo "Created the expected number of rows."
+fi
+
+# All tests were successful
+exit 0

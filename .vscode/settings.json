@@ -20,8 +20,11 @@
         "binarystorage",
         "catchable",
         "classpath",
+        "crond",
         "elif",
         "getenv",
-        "nativeplatform"
+        "nativeplatform",
+        "nocopy",
+        "xdebug"
     ]
 }

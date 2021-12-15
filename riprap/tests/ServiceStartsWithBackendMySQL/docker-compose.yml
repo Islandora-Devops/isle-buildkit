@@ -1,0 +1,13 @@
+# file: docker-compose.yml
+version: "3.8"
+services:
+  mariadb:
+    image: ${MYSQL_IMAGE:-local/mariadb:latest}
+  riprap:
+    environment:
+      RIPRAP_DB_DRIVER: mysql
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${BASE_IMAGE:-local/riprap:latest}

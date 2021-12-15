@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+{
+    # Make sure we stay alive long enough to receive the signal.
+    sleep 1000
+    exit 0
+}&
+echo "[services.d] Send SIGTERM to test service." >&2
+s6-svc -t /var/run/s6/services/test
+wait

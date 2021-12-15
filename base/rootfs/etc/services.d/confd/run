@@ -3,5 +3,5 @@ set -e
 
 # Only run the service if explicitly told to do so.
 if [[ "${CONFD_ENABLE_SERVICE}" == "true" ]]; then
-  confd-render-templates.sh -- -interval ${CONFD_POLLING_INTERVAL}
+  exec confd-render-templates.sh -- -interval ${CONFD_POLLING_INTERVAL}
 fi

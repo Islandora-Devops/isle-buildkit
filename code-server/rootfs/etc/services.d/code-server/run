@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+set -e
+export PASSWORD=${CODE_SERVER_PASSWORD}
+exec s6-setuidgid nginx \
+        /usr/local/bin/code-server \
+        --auth ${CODE_SERVER_AUTHENTICATION} \
+        --bind-addr 0.0.0.0:8443 \
+        --config /opt/code-server/config.yaml \
+        --user-data-dir /opt/code-server/data \
+        --extensions-dir /opt/code-server/extensions \
+        --disable-telemetry \
+        --disable-update-check \
+        /var/www/drupal
