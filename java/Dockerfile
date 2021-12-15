@@ -12,5 +12,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     cleanup.sh
 
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm
+ENV LOG4J_FORMAT_MSG_NO_LOOKUPS="true"
 
 COPY rootfs /
