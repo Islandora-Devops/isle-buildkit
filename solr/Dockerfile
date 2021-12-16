@@ -3,11 +3,11 @@ FROM local/java:latest
 
 RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     DOWNLOAD_CACHE_DIRECTORY="/opt/downloads" && \
-    SOLR_VERSION="8.11.0" && \
+    SOLR_VERSION="8.11.1" && \
     SOLR_FILE="solr-${SOLR_VERSION}.tgz" && \
-    SOLR_URL="https://archive.apache.org/dist/lucene/solr/${SOLR_VERSION}/${SOLR_FILE}" && \
-    SOLR_FILE_SHA256="ba69bffc624e5c1e35b3b2e0929d82f2ba7871d7ba5941f202c2b97945eb730c" && \
-    SOLR_SIG_SHA256="0094e460e88f9915124760a7b607c08e4c733fe61bed25754adaf625fc6bdc73" && \
+    SOLR_URL="https://dlcdn.apache.org/lucene/solr/${SOLR_VERSION}/${SOLR_FILE}" && \
+    SOLR_FILE_SHA256="9ec540cbd8e45f3d15a6b615a22939f5e6242ca81099951a47d3c082c79866a9" && \
+    SOLR_SIG_SHA256="6a1eca93d0d0a80647cb60063f5e46347350b03a0f75b6a662d1b0a4746dabba" && \
     download.sh --url "${SOLR_URL}" --sha256 "${SOLR_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh --url "${SOLR_URL}.asc" --sha256 "${SOLR_SIG_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-apache-service.sh \
