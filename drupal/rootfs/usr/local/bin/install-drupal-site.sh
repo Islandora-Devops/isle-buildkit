@@ -164,7 +164,6 @@ function main {
         protocol=pgsql
     fi
     echo "Installing site."
-    echo "-n si ${DRUSH_ARGS} --db-url=${protocol}://${DB_USER}:${DB_PASSWORD}@${HOST}:${PORT}/${DB_NAME}"
     drush \
         -n \
         si ${DRUSH_ARGS} \
