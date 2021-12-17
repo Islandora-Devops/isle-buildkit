@@ -23,7 +23,19 @@
 ## Introduction
 
 This repository provides a number of docker images which can be used to build an
-Islandora 8 site.
+Islandora 8 site. On commit, these images are automatically pushed to 
+[Docker Hub](https://hub.docker.com/u/islandora) via Github Actions. Which are 
+consumed by [isle-dc] and can be used by other Docker orchestration tools such 
+as Swarm / Kubernetes.
+
+It is **not** meant as a starting point for new users or those unfamiliar with
+Docker, or basic server adminstration.
+
+If you are looking to use islandora please read the
+[official documentation](https://islandora.github.io/documentation/) and use
+either [isle-dc] to deploy via Docker or the
+[islandora-playbook](https://github.com/Islandora-Devops/islandora-playbook) to
+deploy via Ansible.
 
 ## Requirements
 
@@ -140,7 +152,7 @@ redeployed with the latest changes while you develop automatically.
 ## Running
 
 There is no method for running the containers in `isle-buildkit`, instead please
-refer to <https://github.com/Islandora-Devops/isle-dc>.
+refer to [isle-dc].
 
 ## Docker Images
 
@@ -434,3 +446,4 @@ failed to solve with frontend dockerfile.v0: failed to solve with frontend gatew
 using the [Overlay2] filesystem with Docker.
 
 [Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver
+[isle-dc]: https://github.com/Islandora-Devops/isle-dc
