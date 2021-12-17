@@ -29,27 +29,27 @@ RUN --mount=type=cache,id=demo-composer,sharing=locked,target=/root/.composer/ca
     # Views Slideshow Dependencies
     ## jquery.cycle 
     JQUERY_CYCLE_FILE="jquery.cycle.all.js" && \
-    JQUERY_CYCLE_URL="https://malsup.github.io/${JQUERY_CYCLE_FILE}" && \
+    JQUERY_CYCLE_URL="https://raw.githubusercontent.com/malsup/cycle/db79722719a8a5a8b93fb5d5970d7296ff6bd8bc/${JQUERY_CYCLE_FILE}" && \
     JQUERY_CYCLE_SHA256="58b44d975e1e1f0664d0fb8ab5b2918d08e9497324a021aa93de5894cdb586d4" && \
     mkdir -p /var/www/drupal/web/libraries/jquery.cycle && \
     download.sh --url "${JQUERY_CYCLE_URL}" --sha256 "${JQUERY_CYCLE_SHA256}" /var/www/drupal/web/libraries/jquery.cycle && \
     ## jquery.hoverIntent
     JQUERY_HOVER_INTENT_FILE="jquery.hoverIntent.js" && \
-    JQUERY_HOVER_INTENT_URL="https://raw.githubusercontent.com/briancherne/jquery-hoverIntent/master/${JQUERY_HOVER_INTENT_FILE}" && \
+    JQUERY_HOVER_INTENT_URL="https://raw.githubusercontent.com/briancherne/jquery-hoverIntent/60f430c1391ceba429e6a856955a9dbab1d6036d/${JQUERY_HOVER_INTENT_FILE}" && \
     JQUERY_HOVER_INTENT_SHA256="65f5f7e1298fe71f10290f4068df30b38a5df0106d6feb63210ddabcc67c3e59" && \
     download.sh --url "${JQUERY_HOVER_INTENT_URL}" --sha256 "${JQUERY_HOVER_INTENT_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     mkdir -p /var/www/drupal/web/libraries/jquery.hoverIntent && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${JQUERY_HOVER_INTENT_FILE}" /var/www/drupal/web/libraries/jquery.hoverIntent && \
     ## jquery.pause
     JQUERY_PAUSE_FILE="jquery.pause.js" && \
-    JQUERY_PAUSE_URL="https://raw.githubusercontent.com/tobia/Pause/master/${JQUERY_PAUSE_FILE}" && \
+    JQUERY_PAUSE_URL="https://raw.githubusercontent.com/tobia/Pause/bd9c80f16695cbbd5eb9feec87adce19183aaa74/${JQUERY_PAUSE_FILE}" && \
     JQUERY_PAUSE_SHA256="39505a2a9fe36fce5b987f6804723d323ac86d0ed7220a5c12094f1d698fce33" && \
     download.sh --url "${JQUERY_PAUSE_URL}" --sha256 "${JQUERY_PAUSE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     mkdir -p /var/www/drupal/web/libraries/jquery.pause && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${JQUERY_PAUSE_FILE}" /var/www/drupal/web/libraries/jquery.pause && \
     ## json2
     JSON2_FILE="jquery.pause.js" && \
-    JSON2_URL="https://raw.githubusercontent.com/tobia/Pause/master/${JSON2_FILE}" && \
+    JSON2_URL="https://raw.githubusercontent.com/tobia/Pause/bd9c80f16695cbbd5eb9feec87adce19183aaa74/${JSON2_FILE}" && \
     JSON2_SHA256="39505a2a9fe36fce5b987f6804723d323ac86d0ed7220a5c12094f1d698fce33" && \
     download.sh --url "${JSON2_URL}" --sha256 "${JSON2_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     mkdir -p /var/www/drupal/web/libraries/json2 && \
