@@ -29,6 +29,10 @@ RUN --mount=type=cache,id=drupal-apk,sharing=locked,from=cache,target=/var/cache
     addgroup nginx jwt && \
     cleanup.sh
 
+RUN mkdir -p /var/www/drupal/config/sync && \
+    chown -R nginx /var/www/drupal/config/sync && \
+    chmod -R 775 /var/www/drupal/config/sync
+
 ENV \
     DRUPAL_DEFAULT_ACCOUNT_EMAIL=webmaster@localhost.com \
     DRUPAL_DEFAULT_ACCOUNT_NAME=admin \
