@@ -2,11 +2,11 @@
 FROM local/java:latest as alpacabuild
 
 ENV ALPACA_REPO="https://github.com/jhu-idc/Alpaca"
-ENV ALPACA_BRANCH=dlq
+ENV ALPACA_BRANCH=Alpaca-1.0.3-jhu
 # Typically ALPACA_COMMIT should reference the tip of the Alpaca-1.0.3-jhu branch.
 # Using commit hashes ensures that no commits are pulled inadvertantly, and requires
 # a commit to the buildkit repo to advance Alpaca.
-ENV ALPACA_COMMIT=3400a8bd5127018e4fe75a5cae40e1df646ea3c5
+ENV ALPACA_COMMIT=e75e057ab159c375f7ee9c0e5f033779f034e419
 
 RUN mkdir /build && \
     cd /build && \
