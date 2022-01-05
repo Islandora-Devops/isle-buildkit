@@ -30,7 +30,6 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     chmod -R g+rw /opt/tomcat/logs && \
     chmod -R g+rw /opt/tomcat/temp && \
     chmod -R g+rw /opt/tomcat/work && \
-    chmod -R g+rw /opt/tomcat/webapps && \
-    addgroup tomcat tty
+    chmod -R g+rw /opt/tomcat/webapps
 
 COPY rootfs /
