@@ -284,6 +284,43 @@ function fedora_url {
     fi
 }
 
+
+# Allow modifications to settings.php by changing ownership and perms
+function allow_settings_modifications {
+    local site="${1}"; shift
+    local drupal_root=$(drush drupal:directory)
+    local subdir=$(drupal_site_env "${site}" "SUBDIR")
+    local site_directory=$(realpath "${drupal_root}/sites/${subdir}")
+
+    # send debug output stderr because call captures output from this function
+    #>&2 echo "adjusting ownership of ${site_directory}/settings.php"  
+    if [ -f "${site_directory}/settings.php" ]; then
+        previous_owner_group=$(stat -c "%u:%g" "${site_directory}/settings.php")
+        chown 100:101 "${site_directory}/settings.php"
+        chmod a=rwx "${site_directory}/settings.php"
+    fi
+    if [ ! -z "${previous_owner_group}" ]; then
+        echo ${previous_owner_group}
+    fi
+}
+
+# Restore ownership of settings.php so that it is readable/writable outside of docker
+function restore_settings_ownership {
+    local site="${1}"; shift
+    local previous_owner_group="${1}"; shift
+    local drupal_root=$(drush drupal:directory)
+    local subdir=$(drupal_site_env "${site}" "SUBDIR")
+    local site_directory=$(realpath "${drupal_root}/sites/${subdir}")
+
+    # Restore owner/group to previous value
+    if [ ! -z "${previous_owner_group}" ]; then
+        #echo "restoring ${site_directory}/settings.php"
+        #echo "previous_owner_group ${previous_owner_group}"
+        chown "${previous_owner_group}" "${site_directory}/settings.php"
+    fi
+}
+
+
 # Regenerate / Update settings.php
 function update_settings_php {
     local site="${1}"; shift
@@ -311,11 +348,7 @@ function update_settings_php {
     fi
 
     # Allow modifications to settings.php
-    if [ -f "${site_directory}/settings.php" ]; then
-        previous_owner_group=$(stat -c "%u:%g" "${site_directory}/settings.php")
-        chown 100:101 "${site_directory}/settings.php"
-        chmod a=rwx "${site_directory}/settings.php"
-    fi
+    local previous_owner_group=$(allow_settings_modifications ${site})
 
     drush -l "${site_url}" islandora:settings:create-settings-if-missing
     drush -l "${site_url}" islandora:settings:set-hash-salt "${salt}"
@@ -336,9 +369,7 @@ function update_settings_php {
     fi
 
     # Restore owner/group to previous value
-    if [ ! -z "${previous_owner_group}" ]; then
-        chown "${previous_owner_group}" "${site_directory}/settings.php"
-    fi
+    restore_settings_ownership ${site} ${previous_owner_group}
 
     # Restrict access to settings.php
     chmod 444 "${site_directory}/settings.php"
