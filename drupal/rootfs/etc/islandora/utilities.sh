@@ -292,7 +292,7 @@ function allow_settings_modifications {
     local subdir=$(drupal_site_env "${site}" "SUBDIR")
     local site_directory=$(realpath "${drupal_root}/sites/${subdir}")
 
-    # send debug output stderr because call captures output from this function
+    # send debug output to stderr because the caller typically captures output from this function.
     #>&2 echo "adjusting ownership of ${site_directory}/settings.php"  
     if [ -f "${site_directory}/settings.php" ]; then
         previous_owner_group=$(stat -c "%u:%g" "${site_directory}/settings.php")
