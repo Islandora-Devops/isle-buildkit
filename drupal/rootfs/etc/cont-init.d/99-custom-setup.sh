@@ -142,8 +142,12 @@ function main {
     exit 1
   fi
 
+
+  # Rename the default drupal admin user
+  drush sql-query "UPDATE users_field_data SET name='${DRUPAL_DEFAULT_ACCOUNT_NAME}' WHERE uid=1";
+
   # Set the admin password based on env vars
-  drush -l "${site_url}" user-password admin "${DRUPAL_DEFAULT_ACCOUNT_PASSWORD}";
+  drush -l "${site_url}" user-password "${DRUPAL_DEFAULT_ACCOUNT_NAME}" "${DRUPAL_DEFAULT_ACCOUNT_PASSWORD}";
 
   # Reset stale cache data, which can cause exceptions if modules have been updated and are
   # run against an obsolete cache.
