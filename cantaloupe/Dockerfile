@@ -23,6 +23,13 @@ RUN --mount=id=downloads,type=cache,target=/opt/downloads \
     rm -fr "/tmp/${CANTALOUPE_UNPACKED}" && \
     mkdir /data && \
     chown tomcat:tomcat /data && \
-    chown -R tomcat:tomcat /opt/tomcat
+    chown -R root:tomcat /opt/tomcat && \
+    chown -R tomcat:tomcat /opt/tomcat/conf && \
+    chown -R tomcat:tomcat /opt/tomcat/logs && \
+    chmod -R g+r /opt/tomcat && \
+    chmod -R g+rw /opt/tomcat/logs && \
+    chmod -R g+rw /opt/tomcat/temp && \
+    chmod -R g+rw /opt/tomcat/work && \
+    chmod -R g+rw /opt/tomcat/webapps
 
 COPY rootfs /
