@@ -312,12 +312,14 @@ function restore_settings_ownership {
     local subdir=$(drupal_site_env "${site}" "SUBDIR")
     local site_directory=$(realpath "${drupal_root}/sites/${subdir}")
 
-    # Restore owner/group to previous value
+    # Restore owner/group to previous value.  
+    # When the codebase is bind-mounted, this ensures the file remains readable/writable by the host user.
     if [ ! -z "${previous_owner_group}" ]; then
-        #echo "restoring ${site_directory}/settings.php"
-        #echo "previous_owner_group ${previous_owner_group}"
         chown "${previous_owner_group}" "${site_directory}/settings.php"
     fi
+
+    # Restrict access to settings.php
+    chmod 444 "${site_directory}/settings.php"
 }
 
 
@@ -370,9 +372,6 @@ function update_settings_php {
 
     # Restore owner/group to previous value
     restore_settings_ownership ${site} ${previous_owner_group}
-
-    # Restrict access to settings.php
-    chmod 444 "${site_directory}/settings.php"
 }
 
 # Enable module and apply configuration.
