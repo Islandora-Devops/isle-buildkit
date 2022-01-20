@@ -144,7 +144,7 @@ function main {
 
 
   # Rename the default drupal admin user
-  drush sql-query "UPDATE users_field_data SET name='${DRUPAL_DEFAULT_ACCOUNT_NAME}' WHERE uid=1";
+  drush sql-query "use ${DRUPAL_DEFAULT_DB_NAME}; UPDATE users_field_data SET name='${DRUPAL_DEFAULT_ACCOUNT_NAME}' WHERE uid=1";
 
   # Set the admin password based on env vars
   drush -l "${site_url}" user-password "${DRUPAL_DEFAULT_ACCOUNT_NAME}" "${DRUPAL_DEFAULT_ACCOUNT_PASSWORD}";
