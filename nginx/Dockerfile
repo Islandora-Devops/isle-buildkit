@@ -18,6 +18,7 @@ RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/
         php7-iconv \
         php7-intl \
         php7-json \
+        php7-ldap \
         php7-mbstring \
         php7-mysqli \
         php7-opcache \
@@ -30,8 +31,8 @@ RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/
         php7-simplexml \
         php7-tokenizer \
         php7-xml \
-        php7-xmlwriter \
         php7-xmlreader \
+        php7-xmlwriter \
         php7-xsl \
         php7-zip \
     && \
