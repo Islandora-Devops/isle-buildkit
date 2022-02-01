@@ -456,7 +456,10 @@ function generate_solr_config {
 
     mkdir -p "/tmp/${core}" || true
     chmod a+rwx "/tmp/${core}"
-    drush -l "${site_url}" -y search-api-solr:get-server-config default_solr_server "/tmp/${core}/solr_config.zip" 7.1
+    if ! drush -l "${site_url}" -y search-api-solr:get-server-config default_solr_server "/tmp/${core}/solr_config.zip" 7.1; then
+        echo -e "\n\nERROR: Could not generate SOLR config.zip!\nIn Drupal, check Configuration -> Search API -> SOLR Server, and use the\n"+ Get config.zip" option which should give you information into the actual error.\n\n"
+        return 1
+    fi
     mkdir -p "${dest}/conf" || true
     mkdir -p "${dest}/data" || true
     unzip -o "/tmp/${core}/solr_config.zip" -d "${dest}/conf"
@@ -486,7 +489,7 @@ function create_solr_core_with_default_config {
     fi
 
     local site="${1}"; shift
-    generate_solr_config "${site}"
+    generate_solr_config "${site}" || return 1
     create_solr_core "${site}"
 }
 
