@@ -13,7 +13,7 @@ RUN --mount=type=cache,id=riprap-composer,sharing=locked,target=/root/.composer/
         --worktree /var/www/riprap && \
     composer install -d /var/www/riprap --no-dev
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/nginx:${tag}
 
 EXPOSE 8000

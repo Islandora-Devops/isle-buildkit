@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/base:${tag}
 
 EXPOSE 5432

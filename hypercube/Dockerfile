@@ -7,7 +7,7 @@ RUN --mount=type=cache,id=hypercube-composer,sharing=locked,target=/root/.compos
     composer install -d /var/www/crayfish/Hypercube && \
     ln -s /var/www/crayfish/Hypercube/src /var/www/html
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/nginx:${tag}
 
 EXPOSE 8000

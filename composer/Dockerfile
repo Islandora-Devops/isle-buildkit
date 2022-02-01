@@ -13,7 +13,7 @@ RUN --mount=type=cache,id=download-downloads,sharing=locked,target=/opt/download
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${COMPOSER_FILE}" /usr/bin/composer && \
     chmod a+x /usr/bin/composer
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/download:${tag}
 
 # Install packages and tools that allow for basic downloads.

@@ -14,7 +14,7 @@ RUN --mount=type=cache,id=cantaloupe-downloads,sharing=locked,target=/opt/downlo
     install-war-into-tomcat.sh --name "cantaloupe" --file "/tmp/${CANTALOUPE_UNPACKED}/${CANTALOUPE_UNPACKED}.war" && \
     rm -fr "/tmp/${CANTALOUPE_UNPACKED}"
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/tomcat:${tag}
 
 COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat

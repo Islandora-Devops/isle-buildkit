@@ -1,8 +1,16 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
+FROM node:fermium-alpine3.15 as node
 FROM ${repository}/abuild:${tag} AS build
+
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/share /usr/local/share
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+COPY --from=node /opt /opt
 
 # g++, make, python are only required to build native dependencies via node-gyp.
 # spdlog is required for building / using xdebug extension.
@@ -14,8 +22,7 @@ RUN --mount=type=cache,id=code-server-apk,sharing=locked,from=cache,target=/var/
         nghttp2-dev \
         python3 \
         spdlog \
-        sudo \
-        yarn
+        sudo
 
 # `node-gyp` must be installed before anything else. This is unfortuante, but
 # make sure the version here matches the exact version in:
@@ -83,7 +90,6 @@ RUN --mount=type=cache,id=code-server-drupal-apk,sharing=locked,from=cache,targe
         htop \
         php7-pecl-xdebug \
         spdlog \
-        yarn \
         sudo \
         unison \
         parallel \
@@ -104,6 +110,12 @@ ENV \
 COPY --from=composer --chown=nginx:nginx /root/.composer /var/lib/nginx/.composer
 COPY --from=build --chown=nginx:nginx /opt/code-server /opt/code-server
 COPY --from=build /usr/local/share/.config/yarn /usr/local/share/.config/yarn
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/share /usr/local/share
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+COPY --from=node /opt /opt
 
 COPY rootfs /
 

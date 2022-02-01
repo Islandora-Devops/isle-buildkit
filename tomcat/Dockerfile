@@ -14,7 +14,7 @@ RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads 
         --file "${DOWNLOAD_CACHE_DIRECTORY}/${TOMCAT_FILE}" \
         webapps/docs webapps/examples
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/java:${tag}
 
 EXPOSE 8080

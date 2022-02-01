@@ -2,8 +2,8 @@
 ARG repository=local
 ARG tag=latest
 FROM ${repository}/download:${tag} AS download
-FROM alpine:3.13.2 AS cache
-FROM alpine:3.13.2
+FROM alpine:3.15.0 AS cache
+FROM alpine:3.15.0
 
 ENV DOWNLOAD_CACHE_DIRECTORY=/opt/downloads
 

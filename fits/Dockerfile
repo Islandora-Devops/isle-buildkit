@@ -24,7 +24,7 @@ RUN --mount=type=cache,id=fits-downloads,sharing=locked,target=/opt/downloads \
         /opt/fits/tools/file_utility_windows \
         /opt/fits/tools/mediainfo
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/tomcat:${tag}
 
 COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat

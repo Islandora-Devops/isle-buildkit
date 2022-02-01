@@ -12,7 +12,7 @@ RUN --mount=type=cache,id=drupal-downloads,sharing=locked,target=/opt/downloads 
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${DRUSH_FILE}" /usr/bin/drush && \
     chmod a+x /usr/bin/drush
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/nginx:${tag}
 
 EXPOSE 80

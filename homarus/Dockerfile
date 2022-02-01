@@ -7,7 +7,7 @@ RUN --mount=type=cache,id=homarus-composer,sharing=locked,target=/root/.composer
     composer install -d /var/www/crayfish/Homarus && \
     ln -s /var/www/crayfish/Homarus/src /var/www/html
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:3.15.0 AS cache
 FROM ${repository}/nginx:${tag}
 
 EXPOSE 8000
