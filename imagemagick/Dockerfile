@@ -6,8 +6,6 @@ FROM ${repository}/abuild:${tag} AS build
 
 RUN --mount=type=cache,id=imagemagick-apk,sharing=locked,from=cache,target=/var/cache/apk \
     apk add \
-        libheif-dev \
-        libwebp-dev \
         chrpath \
         fftw-dev \
         fontconfig-dev \
@@ -16,10 +14,12 @@ RUN --mount=type=cache,id=imagemagick-apk,sharing=locked,from=cache,target=/var/
         ghostscript-fonts \
         graphviz \
         lcms2-dev \
+        libheif-dev \
         libjpeg-turbo-dev \
         libpng-dev \
         librsvg-dev \
         libtool \
+        libwebp-dev \
         libwmf-dev \
         libx11-dev \
         libxext-dev \
