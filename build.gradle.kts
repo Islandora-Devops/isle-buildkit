@@ -1,3 +1,3 @@
 plugins {
-  id("com.github.nigelgbanks.IsleDocker") version "0.7"
+  id("com.github.nigelgbanks.IsleDocker") version "0.8"
 }
