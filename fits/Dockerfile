@@ -24,8 +24,41 @@ RUN --mount=type=cache,id=fits-downloads,sharing=locked,target=/opt/downloads \
         /opt/fits/tools/file_utility_windows \
         /opt/fits/tools/mediainfo
 
+FROM ${repository}/abuild:${tag} AS build
+
+RUN --mount=type=cache,id=imagemagick-apk,sharing=locked,from=cache,target=/var/cache/apk \
+    apk add \
+        apache-ant \
+        autoconf \
+        automake \
+        libffi-dev \
+        libtool \
+        openjdk8
+
+COPY /build /build
+
+WORKDIR /build
+
+RUN chown -R builder /build
+
+USER builder
+
+RUN export PACKAGER="Nigel Banks <nigel.g.banks@gmail.com>" && \
+    abuild-keygen -ain && \
+    abuild-apk update && \
+    abuild
+
+USER root
+
+RUN cp -r /home/builder/packages/* /packages
+
 FROM alpine:3.15.0 AS cache
 FROM ${repository}/tomcat:${tag}
+
+RUN --mount=type=bind,from=build,source=/packages,target=/packages \
+    --mount=type=bind,from=build,source=/etc/apk/keys,target=/etc/apk/keys \
+    apk add /packages/java-jna-*.apk && \
+    cleanup.sh
 
 COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
 COPY --from=download --chown=tomcat:tomcat /opt/fits /opt/fits
@@ -35,7 +68,6 @@ COPY --from=download --chown=tomcat:tomcat /opt/fits /opt/fits
 RUN --mount=type=cache,id=fits-apk,sharing=locked,from=cache,target=/var/cache/apk \
     apk add \
         file \
-        java-jna \
         libmediainfo \
         libzen \
         perl \
