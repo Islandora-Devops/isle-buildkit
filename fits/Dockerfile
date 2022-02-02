@@ -24,6 +24,7 @@ RUN --mount=type=cache,id=fits-downloads,sharing=locked,target=/opt/downloads \
         /opt/fits/tools/file_utility_windows \
         /opt/fits/tools/mediainfo
 
+# Onces this https://gitlab.alpinelinux.org/alpine/aports/-/issues/13495 is resolved we can remove this build step.
 FROM ${repository}/abuild:${tag} AS build
 
 RUN --mount=type=cache,id=imagemagick-apk,sharing=locked,from=cache,target=/var/cache/apk \
