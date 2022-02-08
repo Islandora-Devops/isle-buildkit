@@ -18,6 +18,7 @@ RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/
         php7-iconv \
         php7-intl \
         php7-json \
+        php7-ldap \
         php7-mbstring \
         php7-mysqli \
         php7-opcache \
@@ -30,8 +31,8 @@ RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/
         php7-simplexml \
         php7-tokenizer \
         php7-xml \
-        php7-xmlwriter \
         php7-xmlreader \
+        php7-xmlwriter \
         php7-xsl \
         php7-zip \
     && \
@@ -58,6 +59,7 @@ ENV \
     PHP_MAX_EXECUTION_TIME=30 \
     PHP_MAX_FILE_UPLOADS=20 \
     PHP_MAX_INPUT_TIME=60 \
+    PHP_MAX_INPUT_VARS=3000 \
     PHP_MEMORY_LIMIT=256M \
     PHP_POST_MAX_SIZE=128M \
     PHP_PROCESS_CONTROL_TIMEOUT=60 \

@@ -284,6 +284,45 @@ function fedora_url {
     fi
 }
 
+
+# Allow modifications to settings.php by changing ownership and perms
+function allow_settings_modifications {
+    local site="${1}"; shift
+    local drupal_root=$(drush drupal:directory)
+    local subdir=$(drupal_site_env "${site}" "SUBDIR")
+    local site_directory=$(realpath "${drupal_root}/sites/${subdir}")
+
+    # send debug output to stderr because the caller typically captures output from this function.
+    #>&2 echo "adjusting ownership of ${site_directory}/settings.php"  
+    if [ -f "${site_directory}/settings.php" ]; then
+        previous_owner_group=$(stat -c "%u:%g" "${site_directory}/settings.php")
+        chown 100:101 "${site_directory}/settings.php"
+        chmod a=rwx "${site_directory}/settings.php"
+    fi
+    if [ ! -z "${previous_owner_group}" ]; then
+        echo ${previous_owner_group}
+    fi
+}
+
+# Restore ownership of settings.php so that it is readable/writable outside of docker
+function restore_settings_ownership {
+    local site="${1}"; shift
+    local previous_owner_group="${1}"; shift
+    local drupal_root=$(drush drupal:directory)
+    local subdir=$(drupal_site_env "${site}" "SUBDIR")
+    local site_directory=$(realpath "${drupal_root}/sites/${subdir}")
+
+    # Restore owner/group to previous value.  
+    # When the codebase is bind-mounted, this ensures the file remains readable/writable by the host user.
+    if [ ! -z "${previous_owner_group}" ]; then
+        chown "${previous_owner_group}" "${site_directory}/settings.php"
+    fi
+
+    # Restrict access to settings.php
+    chmod 444 "${site_directory}/settings.php"
+}
+
+
 # Regenerate / Update settings.php
 function update_settings_php {
     local site="${1}"; shift
@@ -311,11 +350,7 @@ function update_settings_php {
     fi
 
     # Allow modifications to settings.php
-    if [ -f "${site_directory}/settings.php" ]; then
-        previous_owner_group=$(stat -c "%u:%g" "${site_directory}/settings.php")
-        chown 100:101 "${site_directory}/settings.php"
-        chmod a=rwx "${site_directory}/settings.php"
-    fi
+    local previous_owner_group=$(allow_settings_modifications ${site})
 
     drush -l "${site_url}" islandora:settings:create-settings-if-missing
     drush -l "${site_url}" islandora:settings:set-hash-salt "${salt}"
@@ -336,12 +371,7 @@ function update_settings_php {
     fi
 
     # Restore owner/group to previous value
-    if [ ! -z "${previous_owner_group}" ]; then
-        chown "${previous_owner_group}" "${site_directory}/settings.php"
-    fi
-
-    # Restrict access to settings.php
-    chmod 444 "${site_directory}/settings.php"
+    restore_settings_ownership ${site} ${previous_owner_group}
 }
 
 # Enable module and apply configuration.
@@ -426,7 +456,10 @@ function generate_solr_config {
 
     mkdir -p "/tmp/${core}" || true
     chmod a+rwx "/tmp/${core}"
-    drush -l "${site_url}" -y search-api-solr:get-server-config default_solr_server "/tmp/${core}/solr_config.zip" 7.1
+    if ! drush -l "${site_url}" -y search-api-solr:get-server-config default_solr_server "/tmp/${core}/solr_config.zip" 7.1; then
+        echo -e "\n\nERROR: Could not generate SOLR config.zip!\nIn Drupal, check Configuration -> Search API -> SOLR Server, and use the\n"+ Get config.zip" option which should give you information into the actual error.\n\n"
+        return 1
+    fi
     mkdir -p "${dest}/conf" || true
     mkdir -p "${dest}/data" || true
     unzip -o "/tmp/${core}/solr_config.zip" -d "${dest}/conf"
@@ -456,7 +489,7 @@ function create_solr_core_with_default_config {
     fi
 
     local site="${1}"; shift
-    generate_solr_config "${site}"
+    generate_solr_config "${site}" || return 1
     create_solr_core "${site}"
 }
 
