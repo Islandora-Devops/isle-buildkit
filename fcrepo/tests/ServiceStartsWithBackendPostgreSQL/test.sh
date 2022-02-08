@@ -14,7 +14,7 @@ wait_20x http://localhost:8080/fcrepo/rest
 # Add some content.
 old_count=$(count)
 echo "Old Count: ${old_count}"
-object=$(curl --fail -X POST -H "Authorization: Bearer islandora" -H "Content-Type:text/plain" "http://localhost/fcrepo/rest" 2>/dev/null)
+object=$(curl --fail -X POST -H "Authorization: Bearer islandora" -H "Content-Type:text/plain" "http://localhost:8080/fcrepo/rest" 2>/dev/null)
 echo "Create Object: $object"
 
 # Check that the database has been modified.
