@@ -372,6 +372,11 @@ function update_settings_php {
         echo '$content_directories["sync"] = "/var/www/drupal/content/sync";' >> ${site_directory}/settings.php
     fi
 
+    if ! grep -q 'global \$content_directories;' ${site_directory}/settings.php; then
+        echo 'global $content_directories;' >> ${site_directory}/settings.php
+        echo '$content_directories["sync"] = "/var/www/drupal/content/sync";' >> ${site_directory}/settings.php
+    fi
+
     drush -l "${site_url}" islandora:settings:create-settings-if-missing
     drush -l "${site_url}" islandora:settings:set-hash-salt "${salt}"
     drush -l "${site_url}" islandora:settings:set-flystem-fedora-url "${fedora_url}"
