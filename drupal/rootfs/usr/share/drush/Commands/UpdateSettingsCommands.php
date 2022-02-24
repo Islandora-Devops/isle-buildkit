@@ -34,7 +34,13 @@ class UpdateSettingsCommands extends DrushCommands
     $settings_file = $this->getSettingFilePath();
     $fs = new Filesystem();
     if (!$fs->exists($settings_file)) {
+      // After drush site-install has been run it is possible for the default
+      // directory to be non-writable by anyone.
+      $site_directory = dirname($settings_file);
+      $prev = fileperms($site_directory);
+      $fs->chmod($site_directory, 0775);
       $fs->copy(DRUPAL_ROOT . '/sites/default/default.settings.php', $settings_file);
+      $fs->chmod($site_directory, $prev);
     }
   }
 
