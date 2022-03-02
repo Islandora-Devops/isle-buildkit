@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 RUN --mount=type=cache,id=fits-downloads,sharing=locked,target=/opt/downloads \
@@ -53,7 +54,7 @@ USER root
 
 RUN cp -r /home/builder/packages/* /packages
 
-FROM alpine:3.15.0 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/tomcat:${tag}
 
 RUN --mount=type=bind,from=build,source=/packages,target=/packages \

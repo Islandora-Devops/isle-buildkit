@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/java:${tag} AS download
 
 RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads \
@@ -14,7 +15,7 @@ RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads 
         --file "${DOWNLOAD_CACHE_DIRECTORY}/${TOMCAT_FILE}" \
         webapps/docs webapps/examples
 
-FROM alpine:3.15.0 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/java:${tag}
 
 EXPOSE 8080

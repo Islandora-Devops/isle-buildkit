@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
-FROM alpine:3.15.0 AS cache
+ARG alpine=3.15.0
+FROM alpine:${alpine} AS cache
 FROM ${repository}/abuild:${tag} AS build
 
 RUN --mount=type=cache,id=imagemagick-apk,sharing=locked,from=cache,target=/var/cache/apk \
@@ -44,7 +45,7 @@ RUN export PACKAGER="Nigel Banks <nigel.g.banks@gmail.com>" && \
     abuild-apk update && \
     abuild
 
-FROM alpine:3.15.0
+FROM alpine:${alpine}
 
 COPY --from=build /etc/apk/keys /etc/apk/keys
 COPY --from=build /home/builder/packages/*/ /packages

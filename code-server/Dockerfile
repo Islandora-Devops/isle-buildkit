@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
-FROM alpine:3.15.0 AS cache
+ARG alpine=3.15.0
+FROM alpine:${alpine} AS cache
 FROM node:fermium-alpine3.15 as node
 FROM ${repository}/abuild:${tag} AS build
 

@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
 RUN --mount=type=cache,id=riprap-composer,sharing=locked,target=/root/.composer/cache \
@@ -13,7 +14,7 @@ RUN --mount=type=cache,id=riprap-composer,sharing=locked,target=/root/.composer/
         --worktree /var/www/riprap && \
     composer install -d /var/www/riprap --no-dev
 
-FROM alpine:3.15.0 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/nginx:${tag}
 
 EXPOSE 8000

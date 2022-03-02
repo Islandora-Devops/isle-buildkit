@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download 
 
 # https://getcomposer.org/download/
@@ -13,7 +14,7 @@ RUN --mount=type=cache,id=download-downloads,sharing=locked,target=/opt/download
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${COMPOSER_FILE}" /usr/bin/composer && \
     chmod a+x /usr/bin/composer
 
-FROM alpine:3.15.0 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/download:${tag}
 
 # Install packages and tools that allow for basic downloads.

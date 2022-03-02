@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 RUN --mount=type=cache,id=cantaloupe-downloads,sharing=locked,target=/opt/downloads \
@@ -14,7 +15,7 @@ RUN --mount=type=cache,id=cantaloupe-downloads,sharing=locked,target=/opt/downlo
     install-war-into-tomcat.sh --name "cantaloupe" --file "/tmp/${CANTALOUPE_UNPACKED}/${CANTALOUPE_UNPACKED}.war" && \
     rm -fr "/tmp/${CANTALOUPE_UNPACKED}"
 
-FROM alpine:3.15.0 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/tomcat:${tag}
 
 COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat

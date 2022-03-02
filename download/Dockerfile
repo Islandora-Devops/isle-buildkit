@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
-FROM alpine:3.15.0 AS cache
-FROM alpine:3.15.0
+ARG alpine=3.15.0
+FROM alpine:${alpine} AS cache
+FROM alpine:${alpine}
 
 # Install packages and tools that allow for basic downloads.
 RUN --mount=type=cache,id=download-apk,sharing=locked,from=cache,target=/var/cache/apk \
