@@ -23,11 +23,6 @@ COPY --from=download /etc/group /etc/group
 COPY --from=download /etc/passwd /etc/passwd
 COPY --from=download /etc/shadow /etc/shadow
 
-# Install reverse proxy to redirect from 80 to 8080.
-RUN --mount=type=cache,id=tomcat-apk,sharing=locked,from=cache,target=/var/cache/apk \
-    apk add nginx && \
-    cleanup.sh
-
 ENV \
     TOMCAT_ADMIN_NAME=admin \
     TOMCAT_ADMIN_PASSWORD=password \
@@ -35,20 +30,7 @@ ENV \
     TOMCAT_CATALINA_OPTS= \
     TOMCAT_JAVA_OPTS= \
     TOMCAT_LOG_LEVEL=ALL \
-    TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE=^.*$ \
-    TOMCAT_NGINX_CLIENT_BODY_TIMEOUT=60 \
-    TOMCAT_NGINX_CLIENT_MAX_BODY_SIZE=0 \
-    TOMCAT_NGINX_CLIENT_MAX_BODY_SIZE=0 \
-    TOMCAT_NGINX_ERROR_LOG_LEVEL=warn \
-    TOMCAT_NGINX_FASTCGI_CONNECT_TIMEOUT=60s \
-    TOMCAT_NGINX_FASTCGI_READ_TIMEOUT=60s \
-    TOMCAT_NGINX_FASTCGI_SEND_TIMEOUT=60s \
-    TOMCAT_NGINX_KEEPALIVE_TIMEOUT=75s \
-    TOMCAT_NGINX_LINGERING_TIMEOUT=5s \
-    TOMCAT_NGINX_PROXY_CONNECT_TIMEOUT=60s \
-    TOMCAT_NGINX_PROXY_READ_TIMEOUT=60s \
-    TOMCAT_NGINX_PROXY_SEND_TIMEOUT=60s \
-    TOMCAT_NGINX_SEND_TIMEOUT=60s
+    TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE=^.*$
 
 COPY --from=download /opt /opt
 

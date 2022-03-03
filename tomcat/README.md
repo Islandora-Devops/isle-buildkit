@@ -9,7 +9,7 @@ to view the manager webapp on <http://localhost:80/manager/html/>.
 
 ```bash
 docker run --rm -ti \
-    -p 80:80 \
+    -p 8080:8080 \
     islandora/tomcat
 ```
 
