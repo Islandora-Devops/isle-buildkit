@@ -40,6 +40,33 @@ http {
         # error code 413. Set to 0 to disable. Default is '1m'.
         client_max_body_size {{ getenv "NGINX_CLIENT_MAX_BODY_SIZE" }};
 
+        # Defines a timeout for reading client request body. The timeout is
+        # set only for a period between two successive read operations, not for
+        # the transmission of the whole request body. If a client does not
+        # transmit anything within this time, the request is terminated with the
+        # 408 (Request Time-out) error.
+        client_body_timeout {{ getenv "NGINX_CLIENT_BODY_TIMEOUT" }};
+
+        # Sets a timeout for transmitting a response to the client. The timeout
+        # is set only between two successive write operations, not for the
+        # transmission of the whole response. If the client does not receive
+        # anything within this time, the connection is closed.
+        send_timeout {{ getenv "NGINX_SEND_TIMEOUT" }};
+
+        # The first parameter sets a timeout during which a keep-alive client
+        # connection will stay open on the server side. The zero value disables
+        # keep-alive client connections. The optional second parameter sets a
+        # value in the “Keep-Alive: timeout=time” response header field. Two
+        # parameters may differ.
+        keepalive_timeout {{ getenv "NGINX_KEEPALIVE_TIMEOUT" }};
+
+        # When lingering_close is in effect, this directive specifies the maximum
+        # waiting time for more client data to arrive. If data are not received
+        # during this time, the connection is closed. Otherwise, the data are
+        # read and ignored, and nginx starts waiting for more data again. The
+        # “wait-read-ignore” cycle is repeated, but no longer than specified by
+        # the lingering_time directive.
+        lingering_timeout {{ getenv "NGINX_LINGERING_TIMEOUT" }};
 
         # Sendfile copies data between one FD and other from within the kernel,
         # which is more efficient than read() + write(). Default is off.
@@ -48,7 +75,6 @@ http {
         # Causes nginx to attempt to send its HTTP response head in one packet,
         # instead of using partial frames. Default is 'off'.
         tcp_nopush on;
-
 
         # Enables the specified protocols. Default is TLSv1 TLSv1.1 TLSv1.2.
         # TIP: If you're not obligated to support ancient clients, remove TLSv1.1.
@@ -73,13 +99,44 @@ http {
         # Disable TLS session tickets (they are insecure). Default is 'on'.
         ssl_session_tickets off;
 
-
         # Enable gzipping of responses.
         #gzip on;
 
         # Set the Vary HTTP header as defined in the RFC 2616. Default is 'off'.
         gzip_vary on;
 
+        # Defines a timeout for establishing a connection with a FastCGI server.
+        # It should be noted that this timeout cannot usually exceed 75 seconds.
+        fastcgi_connect_timeout {{ getenv "NGINX_FASTCGI_CONNECT_TIMEOUT" }};
+
+        # Defines a timeout for reading a response from the FastCGI server. The
+        # timeout is set only between two successive read operations, not for the
+        # transmission of the whole response. If the FastCGI server does not
+        # transmit anything within this time, the connection is closed.
+        fastcgi_read_timeout {{ getenv "NGINX_FASTCGI_READ_TIMEOUT" }};
+
+        # Sets a timeout for transmitting a request to the FastCGI server. The
+        # timeout is set only between two successive write operations, not for
+        # the transmission of the whole request. If the FastCGI server does not
+        # receive anything within this time, the connection is closed.
+        fastcgi_send_timeout {{ getenv "NGINX_FASTCGI_SEND_TIMEOUT" }};
+
+        # Defines a timeout for establishing a connection with a proxied server.
+        # It should be noted that this timeout cannot usually exceed 75 seconds.
+        proxy_connect_timeout {{ getenv "NGINX_PROXY_CONNECT_TIMEOUT" }};
+
+        # Defines a timeout for reading a response from the proxied server. The
+        # timeout is set only between two successive read operations, not for the
+        # transmission of the whole response. If the proxied server does not
+        # transmit anything within this time, the connection is closed.
+        proxy_read_timeout {{ getenv "NGINX_PROXY_READ_TIMEOUT" }};
+
+
+        # Sets a timeout for transmitting a request to the proxied server. The
+        # timeout is set only between two successive write operations, not for
+        # the transmission of the whole request. If the proxied server does not
+        # receive anything within this time, the connection is closed.
+        proxy_send_timeout {{ getenv "NGINX_PROXY_SEND_TIMEOUT" }};
 
         # Helper variable for proxying websockets.
         map $http_upgrade $connection_upgrade {
@@ -94,7 +151,7 @@ http {
                         '"$http_user_agent" "$http_x_forwarded_for"';
 
         # Sets the path, format, and configuration for a buffered log write.
-       access_log /dev/stdout main;
+        access_log /dev/stdout main;
 
 
         # Includes virtual hosts configs.

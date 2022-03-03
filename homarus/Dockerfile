@@ -19,7 +19,7 @@ RUN --mount=type=cache,id=homarus-apk,sharing=locked,from=cache,target=/var/cach
 
 ENV HOMARUS_LOG_LEVEL=debug
 
-COPY --from=crayfish /etc/confd /etc/confd
+COPY --from=crayfish /etc/nginx/http.d/default.conf /etc/nginx/http.d/default.conf
 COPY --from=crayfish --chown=nginx:nginx /var/www /var/www
 
 COPY rootfs /
