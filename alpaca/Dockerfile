@@ -72,7 +72,7 @@ ENV \
     ALPACA_INDEXING_STREAM_TRIPLESTORE_DELETE=broker:queue:islandora-indexing-triplestore-delete \
     ALPACA_INDEXING_STREAM_TRIPLESTORE_INDEX=broker:queue:islandora-indexing-triplestore-index \
     ALPACA_INDEXING_STREAM_TRIPLESTORE_REINDEX=broker:queue:triplestore.reindex \
-    ALPACA_INDEXING_URL=http://blazegraph/bigdata/namespace/islandora/sparql \
+    ALPACA_INDEXING_URL=http://blazegraph:8080/bigdata/namespace/islandora/sparql \
     ALPACA_LOGGER_CAMEL_LEVEL=WARN \
     ALPACA_LOGGER_ISLANDORA_LEVEL=WARN \
     ALPACA_LOGGER_ROOT_LEVEL=WARN \
