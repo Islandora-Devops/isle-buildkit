@@ -106,6 +106,22 @@ function configure_openseadragon_local {
   drush -l "${site_url}" -y config-set --input-format=yaml islandora_iiif.settings iiif_server "${cantaloupe_url}"
 }
 
+function configure_mail {
+  local site="${1}"; shift
+  local site_url=$(drupal_site_env "${site}" "SITE_URL")
+
+  drush -l "${site_url}" -y config:set system.site mail "${DRUPAL_SMTP_FROM_ADDRESS}"
+
+  drush -l "${site_url}" -y config:delete contact.form.collection_contact recipients
+  drush -l "${site_url}" -y config:set contact.form.collection_contact recipients.0 "${DRUPAL_DEFAULT_EMAIL}"
+  
+  drush -l "${site_url}" -y config:delete contact.form.repository_item_contact recipients
+  drush -l "${site_url}" -y config:set contact.form.repository_item_contact recipients.0 "${DRUPAL_DEFAULT_EMAIL}"
+
+  drush -l "${site_url}" -y config:delete contact.form.feedback recipients
+  drush -l "${site_url}" -y config:set contact.form.feedback recipients.0 "${DRUPAL_DEFAULT_EMAIL}"
+}
+
 function perform_runtime_config {
   local site="${1}"
 
@@ -113,6 +129,7 @@ function perform_runtime_config {
   configure_islandora_module_local "${site}"
   configure_islandora_default_module_local "${site}"
   configure_openseadragon_local "${site}"
+  configure_mail "${site}"
 
   # Settings like the hash / flystem can be affected by environment variables at runtime.
   update_settings_php "${site}"
