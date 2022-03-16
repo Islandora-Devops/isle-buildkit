@@ -17,9 +17,17 @@ RUN --mount=type=cache,id=code-server-apk,sharing=locked,from=cache,target=/var/
         sudo \
         yarn
 
+# `node-gyp` must be installed before anything else. This is unfortuante, but
+# make sure the version here matches the exact version in:
+# `rootfs/usr/local/share/.config/yarn/global/package.json`
 RUN --mount=type=cache,id=code-server-yarn,sharing=locked,from=cache,target=/usr/local/share/.cache/yarn \
-    yarn global add node-gyp bower grunt-cli && \
-    JOBS=max yarn global add code-server spdlog
+    yarn global add node-gyp@9.0.0
+
+COPY rootfs/usr/local/share/.config/yarn/global /usr/local/share/.config/yarn/global
+
+RUN --mount=type=cache,id=code-server-yarn,sharing=locked,from=cache,target=/usr/local/share/.cache/yarn \
+    cd /usr/local/share/.config/yarn/global && \
+    JOBS=max yarn install
 
 SHELL ["/bin/bash", "-c"]
 
@@ -55,11 +63,11 @@ RUN --mount=type=cache,id=code-server-extensions,sharing=locked,from=cache,targe
 
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
+COPY rootfs/root/.composer /root/.composer
+
 RUN --mount=type=cache,id=code-server-composer,sharing=locked,target=/root/.composer/cache \
-    composer global require "dealerdirect/phpcodesniffer-composer-installer" && \
-    composer global require "drupal/coder" && \
-    composer global require "sebastian/phpcpd" && \
-    composer global require "squizlabs/php_codesniffer"
+    cd /root/.composer && \
+    composer install -n 
 
 FROM ${repository}/drupal:${tag}
 
@@ -93,9 +101,7 @@ ENV \
     CODE_SERVER_PASSWORD=password \
     XDEBUG_FLAGS="-d xdebug.mode=develop,debug"
 
-COPY --from=composer --chown=nginx:nginx /root/.composer/composer.json /var/lib/nginx/.composer/composer.json
-COPY --from=composer --chown=nginx:nginx /root/.composer/composer.lock /var/lib/nginx/.composer/composer.lock
-COPY --from=composer --chown=nginx:nginx /root/.composer/vendor /var/lib/nginx/.composer/vendor
+COPY --from=composer --chown=nginx:nginx /root/.composer /var/lib/nginx/.composer
 COPY --from=build --chown=nginx:nginx /opt/code-server /opt/code-server
 COPY --from=build /usr/local/share/.config/yarn /usr/local/share/.config/yarn
 

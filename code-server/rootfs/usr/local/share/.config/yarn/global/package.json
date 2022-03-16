@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "bower": "^1.8.14",
+    "code-server": "^4.1.0",
+    "grunt-cli": "^1.4.3",
+    "node-gyp": "9.0.0",
+    "spdlog": "^0.13.6"
+  }
+}
