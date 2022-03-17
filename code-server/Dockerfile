@@ -35,7 +35,7 @@ SHELL ["/bin/bash", "-c"]
 RUN --mount=type=bind,source=/extensions,target=/extensions \
     for extension in /extensions/*.vsix; \
     do \
-        code-server \
+        /usr/local/share/.config/yarn/global/node_modules/.bin/code-server \
             --config /opt/code-server/config.yaml \
             --user-data-dir /opt/code-server/data \
             --extensions-dir /opt/code-server/extensions \
@@ -49,11 +49,11 @@ RUN --mount=type=cache,id=code-server-extensions,sharing=locked,from=cache,targe
         bmewburn.vscode-intelephense-client \
         felixfbecker.php-debug \
         streetsidesoftware.code-spell-checker \
-        whatwedo.twig \
+        mblode.twig-language-2 \
     ) && \
     for extension in "${EXTENSIONS[@]}"; \
     do \
-        code-server \
+        /usr/local/share/.config/yarn/global/node_modules/.bin/code-server \
             --config /opt/code-server/config.yaml \
             --user-data-dir /opt/code-server/data \
             --extensions-dir /opt/code-server/extensions \
