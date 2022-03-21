@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="ecs">
-  <description>ECS PHP CodeSniffer configuration.</description>
+<ruleset name="drupal">
+  <description>CodeSniffer configuration</description>
+  <arg name="extensions" value="php,inc,module,install,info,test,profile,theme,css,js"/>
+  <arg name="report" value="full"/>
+  <arg value="p"/>
+  <config name="installed_paths" value="../../drupal/coder/coder_sniffer/Drupal,../../drupal/coder/coder_sniffer/DrupalPractice,../../slevomat/coding-standard/SlevomatCodingStandard" />
   <file>web/modules/custom</file>
   <file>web/themes/custom</file>
   <!-- Exclude Core files. -->
@@ -9,12 +13,14 @@
   <exclude-pattern>web/includes</exclude-pattern>
   <exclude-pattern>web/misc</exclude-pattern>
   <exclude-pattern>web/libraries</exclude-pattern>
-  <arg name="extensions" value="php,module,inc,install,test,profile,theme,css,info,txt,md,yml"/>
+  <!-- Exclude unsupported file types. -->
+  <exclude-pattern>*.gif</exclude-pattern>
+  <exclude-pattern>*.less</exclude-pattern>
+  <exclude-pattern>*.png</exclude-pattern>
+  <!-- Minified files don't have to comply with coding standards. -->
+  <exclude-pattern>*.min.css</exclude-pattern>
+  <exclude-pattern>*.min.js</exclude-pattern>
   <rule ref="Generic.PHP.Syntax"/>
-  <rule ref="/var/lib/nginx/.composer/vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml"/>
-  <rule ref="/var/lib/nginx/.composer/vendor/drupal/coder/coder_sniffer/DrupalPractice/ruleset.xml"/>
-  <rule ref="Drupal.Files.TxtFileLineLength.TooLong">
-    <!-- Need more than 80 characters for embeeded source code examples in README.md. -->
-    <exclude-pattern>/var/www/drupal/web/modules/custom/lyrasis_module/modules/feature_migrate_fedora/README.md</exclude-pattern>
-  </rule>
+  <rule ref="Drupal" />
+  <rule ref="DrupalPractice" />
 </ruleset>
