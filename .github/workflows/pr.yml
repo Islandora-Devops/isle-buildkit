@@ -1,32 +1,32 @@
 name: Build and Test Pull Requests
-on: 
+on:
   pull_request:
     branches:
       - main
 jobs:
   build:
-    name: Build and Test PR 
+    name: Build and Test PR
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: 8
-    - name: Setup Gradle Cache
-      uses: actions/cache@v1
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-    - name: Build/Test Docker images
-      uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: build test grype -PisCI=true --info
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Grype Reports
-        path: build/**/*-grype.*
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Setup Gradle Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Build/Test Docker images
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: build test grype -PisCI=true --info
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Grype Reports
+          path: build/**/*-grype.*
