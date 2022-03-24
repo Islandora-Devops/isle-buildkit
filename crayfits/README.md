@@ -22,6 +22,6 @@ additional settings, volumes, ports, etc.
 | Environment Variable    | Confd Key                 | Default           | Description                                                                                       |
 | :---------------------- | :----------------------- | :---------------- | :------------------------------------------------------------------------------------------------ |
 | CRAYFITS_LOG_LEVEL      | /crayfits/log/level      | debug             | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
-| CRAYFITS_WEBSERVICE_URI | /crayfits/webservice/uri | fits/fits/examine | The URL of the FITS servlet.                                                                      |
+| CRAYFITS_WEBSERVICE_URI | /crayfits/webservice/uri | fits:8080/fits/examine | The URL of the FITS servlet.                                                                      |
 
 [CrayFits]: https://github.com/roblib/CrayFits
