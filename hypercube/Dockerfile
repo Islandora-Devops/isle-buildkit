@@ -1,13 +1,14 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/crayfish:${tag} AS crayfish
 
 RUN --mount=type=cache,id=hypercube-composer,sharing=locked,target=/root/.composer/cache \
     composer install -d /var/www/crayfish/Hypercube && \
     ln -s /var/www/crayfish/Hypercube/src /var/www/html
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/nginx:${tag}
 
 EXPOSE 8000

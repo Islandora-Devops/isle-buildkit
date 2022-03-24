@@ -1,20 +1,21 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/java:${tag} AS download
 
 RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads \
-    TOMCAT_VERSION="9.0.34" && \
+    TOMCAT_VERSION="9.0.58" && \
     TOMCAT_FILE="apache-tomcat-${TOMCAT_VERSION}.tar.gz" && \
     TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE}" && \
-    TOMCAT_FILE_SHA256="321de5b18a48ec09d2963d9faba4bfeafc7dd2203d80a2ef7e7a20b159e2120a" && \
+    TOMCAT_FILE_SHA256="a7895a9f425dd57fba5a1e8685d43754d3ecfe05de80e93bfd245ca8313cc7c1" && \
     download.sh --url "${TOMCAT_URL}" --sha256 "${TOMCAT_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-apache-service.sh \
         --name tomcat \
         --file "${DOWNLOAD_CACHE_DIRECTORY}/${TOMCAT_FILE}" \
         webapps/docs webapps/examples
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/java:${tag}
 
 EXPOSE 8080

@@ -31,4 +31,8 @@ jobs:
     - name: Build/Test/Push Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build test '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.push=true -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64 -PisCI=true --info
+        arguments: build test grype '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.push=true -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64 -PisCI=true --info
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Grype Reports
+        path: build/**/*-grype.*

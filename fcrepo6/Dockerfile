@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:experimental
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 RUN --mount=type=cache,id=fcrepo6-downloads,sharing=locked,target=/opt/downloads \
@@ -30,7 +31,7 @@ RUN --mount=type=cache,id=fcrepo6-downloads,sharing=locked,target=/opt/downloads
     download.sh --url "${UPGRADE_UTILS_URL}" --sha256 "${UPGRADE_UTILS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${UPGRADE_UTILS_FILE}" /opt/tomcat
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/tomcat:${tag}
 
 # Install packages and tools required by all downstream images.

@@ -25,4 +25,8 @@ jobs:
     - name: Build/Test Docker images
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build test -PisCI=true --info
+        arguments: build test grype -PisCI=true --info
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Grype Reports
+        path: build/**/*-grype.*

@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1.2.1
 ARG repository=local
 ARG tag=latest
+ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 RUN --mount=type=cache,id=drupal-downloads,sharing=locked,target=/opt/downloads \
@@ -12,7 +13,7 @@ RUN --mount=type=cache,id=drupal-downloads,sharing=locked,target=/opt/downloads 
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${DRUSH_FILE}" /usr/bin/drush && \
     chmod a+x /usr/bin/drush
 
-FROM alpine:3.13.2 AS cache
+FROM alpine:${alpine} AS cache
 FROM ${repository}/nginx:${tag}
 
 EXPOSE 80
