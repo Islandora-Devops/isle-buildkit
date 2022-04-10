@@ -75,6 +75,8 @@ function main {
     addgroup ${group}
     # Users that run services should permit login / do not require passwords.
     adduser --system --disabled-password --no-create-home --ingroup ${group} --shell /sbin/nologin --home ${install_directory} ${user}
+    # User also needs to be a member of tty to write directly to /dev/stdout, etc.
+    addgroup ${user} tty
     chown ${user}:${group} ${install_directory}
 }
 main
