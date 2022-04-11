@@ -2,7 +2,7 @@
 export JAVA_OPTS="${TOMCAT_JAVA_OPTS}"
 export CATALINA_OPTS="${TOMCAT_CATALINA_OPTS}"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.home=/data/home"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.velocity.runtime.log=/opt/tomcat/logs/velocity.log"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.velocity.runtime.log=/dev/stdout"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.jms.baseUrl=http://${HOSTNAME}/fcrepo/rest"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.external.content.allowed=/opt/tomcat/conf/allowed-external-content.txt"
 export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.autoversioning.enabled=false"
