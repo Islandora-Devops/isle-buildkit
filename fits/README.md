@@ -19,18 +19,15 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable         | Confd Key                      | Default | Description                                                                                                          |
+| Environment Variable         | Confd Key                     | Default | Description                                                                                                          |
 | :--------------------------- | :---------------------------- | :------ | :------------------------------------------------------------------------------------------------------------------- |
 | FITS_MAX_IN_MEMORY_FILE_SIZE | /fits/max/in/memory/file/size | 4       | Maximum size of an uploaded size kept in memory in MiB. Otherwise temporarily persisted to disk.                     |
 | FITS_MAX_OBJECTS_IN_POOL     | /fits/max/objects/in/pool     | 5       | Number of objects in FITSServlet object pool.                                                                        |
 | FITS_MAX_REQUEST_SIZE        | /fits/max/request/size        | 2000    | Maximum size of HTTP Request object in MiB. Must be equal to or larger than the value for /fits/max/upload/file/size |
 | FITS_MAX_UPLOAD_FILE_SIZE    | /fits/max/upload/file/size    | 2000    | Maximum allowable size of uploaded file in MiB.                                                                      |
+| FITS_SERVICE_LOG_LEVEL       | /activemq/log/level           | INFO    | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL                                       |
 
 ## Logs
-
-| Path                              | Description |
-| :-------------------------------- | :---------- |
-| /opt/tomcat/logs/fits-service.log |             |
 
 [Fits Documentation]: https://wiki.lyrasis.org/display/FF
 [Fits]: https://github.com/fits4/fits4
