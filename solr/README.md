@@ -17,6 +17,12 @@ Requires `islandora/java` docker image to build. Please refer to the
 [Java Image README](../java/README.md) for additional information including
 additional settings, volumes, ports, etc.
 
+## Settings
+
+| Environment Variable | Confd Key       | Default | Description                                                                    |
+| :------------------- | :-------------- | :------ | :----------------------------------------------------------------------------- |
+| SOLR_LOG_LEVEL       | /solr/log/level | INFO    | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+
 ## Ports
 
 | Port | Description |
@@ -31,9 +37,7 @@ additional settings, volumes, ports, etc.
 
 ## Logs
 
-| Path                           | Description    |
-| :----------------------------- | :------------- |
-| /opt/solr/server/logs/solr.log | [Solr Logging] |
+- [Solr Logging]
 
 [Solr Documentation]: https://lucene.apache.org/solr/guide/7_1/
 [Solr Logging]: https://lucene.apache.org/solr/guide/7_1/configuring-logging.html
