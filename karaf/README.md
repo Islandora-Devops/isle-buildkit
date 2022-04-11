@@ -37,7 +37,7 @@ Requires `islandora/karaf` docker image to build.
 
 ## Settings
 
-| Environment Variable | Confd Key              | Default  | Description         |
+| Environment Variable | Confd Key             | Default  | Description         |
 | :------------------- | :-------------------- | :------- | :------------------ |
 | KARAF_ADMIN_NAME     | /karaf/admin/name     | admin    | Admin user name     |
 | KARAF_ADMIN_PASSWORD | /karaf/admin/password | password | Admin user password |
@@ -45,7 +45,7 @@ Requires `islandora/karaf` docker image to build.
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:
 
-| Environment Variable       | Confd Key                    | Description                      |
+| Environment Variable       | Confd Key                   | Description                      |
 | :------------------------- | :-------------------------- | :------------------------------- |
 | KARAF_USER_{USER}_NAME     | /karaf/user/{USER}/name     | See [Security]: users.properties |
 | KARAF_USER_{USER}_PASSWORD | /karaf/user/{USER}/password | See [Security]: users.properties |
@@ -57,9 +57,7 @@ following the above conventions:
 
 ## Logs
 
-| Path                          | Description |
-| :---------------------------- | :---------- |
-| /opt/karaf/data/log/karaf.log | [Karaf Log] |
+- [Karaf Log]
 
 [JMX]: https://karaf.apache.org/manual/latest/#_monitoring_and_management_using_jmx
 [Karaf Directory Structure]: https://karaf.apache.org/manual/latest/#_directory_structure

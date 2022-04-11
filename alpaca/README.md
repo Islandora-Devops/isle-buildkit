@@ -23,7 +23,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable                       | Confd Key                                   | Default                                              | Description                                                                                                                                                 |
+| Environment Variable                       | Confd Key                                  | Default                                              | Description                                                                                                                                                 |
 | :----------------------------------------- | :----------------------------------------- | :--------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ALPACA_ACTIVEMQ_PASSWORD                   | /alpaca/activemq/password                  | password                                             | Password to authenticate with                                                                                                                               |
 | ALPACA_ACTIVEMQ_URL                        | /alpaca/activemq/url                       | tcp://broker:61616                                   | The url for connecting to the ActiveMQ broker, shared by all components                                                                                     |
@@ -60,13 +60,6 @@ additional settings, volumes, ports, etc.
 | ALPACA_OCR_QUEUE                           | /alpaca/ocr/queue                          | broker:queue:islandora-connector-ocr                 | ActiveMQ Queue to consume from                                                                                                                              |
 | ALPACA_OCR_REDELIVERIES                    | /alpaca/ocr/redeliveries                   | 10                                                   | Number of attempts to redeliver if an exception occurs                                                                                                      |
 | ALPACA_OCR_SERVICE                         | /alpaca/ocr/service                        | http://hypercube:8000                                | Url of micro-service                                                                                                                                        |
-
-## Logs
-
-| Path                              | Description   |
-| :-------------------------------- | :------------ |
-| /opt/karaf/data/log/camel.log     | Camel Log     |
-| /opt/karaf/data/log/islandora.log | Islandora Log |
 
 [Alpaca Documentation]: https://islandora.github.io/documentation/
 [Alpaca]: https://github.com/Islandora/Alpaca
