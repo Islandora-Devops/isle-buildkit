@@ -56,14 +56,7 @@ function setup_persistence_backend {
     esac
 }
 
-# Change log files to redirect to stdout/stderr
-function redirect_logs_to_stdout { 
-    ln -sf /dev/stdout /opt/tomcat/logs/velocity.log
-    chown tomcat:tomcat /opt/tomcat/logs/velocity.log
-}
-
 function main {
-    redirect_logs_to_stdout
     setup_persistence_backend
     # When bind mounting we need to ensure that we
     # actually can write to the folder.
