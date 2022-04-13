@@ -246,6 +246,21 @@ function install_site {
         chmod a=rwx "${site_directory}/settings.php"
     fi
 
+    echo "--driver ${driver}"
+    echo "--host ${host}"
+    echo "--port ${port}"
+    echo "--dbuser ${user}"
+    echo "--dbname ${db_name}"
+    echo "PROFILE: ${profile}"
+    echo "--account-mail=${account_email}"
+    echo "--account-name=${account_name}"
+    echo "--site-mail=${site_email}"
+    echo "--locale=${site_locale}"
+    echo "--site-name=${site_name}"
+    echo "--sites-subdir=${subdir}"
+    echo "USE_EXISTIG_CONFIG: ${use_existing_config_arg}"
+    echo "EVERYTHING ELSE: ${@}"
+
     /usr/local/bin/install-drupal-site.sh \
         --driver "${driver}" \
         --host "${host}" \
@@ -351,6 +366,16 @@ function update_settings_php {
 
     # Allow modifications to settings.php
     local previous_owner_group=$(allow_settings_modifications ${site})
+
+    if ! grep -q 'global \$content_directories;' ${site_directory}/settings.php; then
+        echo 'global $content_directories;' >> ${site_directory}/settings.php
+        echo '$content_directories["sync"] = "/var/www/drupal/content/sync";' >> ${site_directory}/settings.php
+    fi
+
+    if ! grep -q 'global \$content_directories;' ${site_directory}/settings.php; then
+        echo 'global $content_directories;' >> ${site_directory}/settings.php
+        echo '$content_directories["sync"] = "/var/www/drupal/content/sync";' >> ${site_directory}/settings.php
+    fi
 
     drush -l "${site_url}" islandora:settings:create-settings-if-missing
     drush -l "${site_url}" islandora:settings:set-hash-salt "${salt}"
