@@ -18,6 +18,10 @@ FROM ${repository}/java:${tag}
 
 EXPOSE 8983
 
+# Defaults environment variables to be overloaded.
+ENV \
+    SOLR_LOG_LEVEL=INFO
+
 COPY --from=download /etc/group /etc/group
 COPY --from=download /etc/passwd /etc/passwd
 COPY --from=download /etc/shadow /etc/shadow

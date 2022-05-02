@@ -37,7 +37,7 @@ additional settings, volumes, ports, etc.
 | TOMCAT_ADMIN_ROLES                  | /tomcat/admin/roles                  | manager-gui | Comma separated list of roles the user has                                            |
 | TOMCAT_CATALINA_OPTS                | /tomcat/catalina/opts                |             |                                                                                       |
 | TOMCAT_JAVA_OPTS                    | /tomcat/java/opts                    |             |                                                                                       |
-| TOMCAT_LOG_LEVEL                    | /tomcat/log/level                    | ALL         | Log level. Possible Values: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST or ALL |
+| TOMCAT_LOG_LEVEL                    | /tomcat/log/level                    | INFO        | Log level. Possible Values: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST or ALL |
 | TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE | /tomcat/manager/remote/address/valve | ^.*$        | Allows / blocks access to manager app to addresses which match this regex             |
 
 Additional users/groups/etc can be defined by adding more environment variables,

@@ -23,15 +23,5 @@ additional settings, volumes, ports, etc.
 | :---- | :--------------------------- |
 | /data | Location of the backing file |
 
-## Logs
-
-| Path                               | Description |
-| :--------------------------------- | :---------- |
-| /opt/tomcat/logs/rules.log         |             |
-| /opt/tomcat/logs/queryLog.csv      |             |
-| /opt/tomcat/logs/queryRunState.log |             |
-| /opt/tomcat/logs/solutions.csv     |             |
-| /opt/tomcat/logs/sparql.txt        |             |
-
 [Blazegraph Documentation]: https://github.com/blazegraph/database/wiki/About_Blazegraph
 [Blazegraph]: https://blazegraph.com/
