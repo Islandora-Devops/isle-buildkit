@@ -557,7 +557,7 @@ function configure_openseadragon  {
 function import_islandora_migrations {
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
-    drush -l "${site_url}" -y --userid=1 migrate:import --group=islandora
+    drush -l "${site_url}" -y --userid=1 migrate:import islandora_defaults_tags,islandora_tags
 }
 
 # Enable module and apply configuration.
