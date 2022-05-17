@@ -3,7 +3,7 @@ ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
-ARG COMMIT=2.0.0
+ARG COMMIT=13c056c7b43bfb69d26269b3acf10fd5723583ac
 
 RUN --mount=type=cache,id=crayfish-downloads,sharing=locked,target=/opt/downloads \
     git-clone-cached.sh \
