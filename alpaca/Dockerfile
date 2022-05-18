@@ -47,7 +47,7 @@ ENV \
     ALPACA_FCREPO_AUTH_HOST= \
     ALPACA_FCREPO_AUTH_PASSWORD= \
     ALPACA_FCREPO_AUTH_USER= \
-    ALPACA_FCREPO_URL=http://fcrepo/fcrepo/rest \
+    ALPACA_FCREPO_URL=http://fcrepo:8080/fcrepo/rest \
     ALPACA_FITS_QUEUE=broker:queue:islandora-connector-fits \
     ALPACA_FITS_REDELIVERIES=10 \
     ALPACA_FITS_SERVICE=http://crayfits:8000 \
