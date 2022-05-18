@@ -43,7 +43,7 @@ Requires `islandora/karaf` docker image to build.
 | KARAF_ADMIN_PASSWORD | /karaf/admin/password | password | Admin user password |
 
 Additional users/groups/etc can be defined by adding more environment variables,
-following the above conventions:
+following the conventions listed below:
 
 | Environment Variable       | Confd Key                   | Description                      |
 | :------------------------- | :-------------------------- | :------------------------------- |
