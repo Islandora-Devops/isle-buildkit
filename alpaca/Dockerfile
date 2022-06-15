@@ -41,6 +41,8 @@ RUN chown -R karaf:karaf /opt/karaf
 FROM ${repository}/karaf:${tag}
 
 ENV \
+    ALPACA_ACTIVEMQ_CONNECTIONS=10 \
+    ALPACA_ACTIVEMQ_CONSUMERS=1 \
     ALPACA_ACTIVEMQ_PASSWORD=password \
     ALPACA_ACTIVEMQ_URL=tcp://activemq:61616 \
     ALPACA_ACTIVEMQ_USER=admin \
