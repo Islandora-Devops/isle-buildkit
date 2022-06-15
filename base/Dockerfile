@@ -56,13 +56,15 @@ ENTRYPOINT [ "/init" ]
 LABEL License="MIT License"
 
 ENV \
+    CERTIFICATE_AUTHORITY=/usr/local/share/ca-certificates/rootCA.pem \
+    CERTIFICATE=/usr/local/share/ca-certificates/cert.pem \
     CONFD_BACKEND=env \
     CONFD_ENABLE_SERVICE=false \
     CONFD_LOG_LEVEL=error \
     CONFD_POLLING_INTERVAL=30 \
     ETCD_CONNECTION_TIMEOUT=10 \
-    ETCD_PORT=2379 \
     ETCD_HOST=etcd \
+    ETCD_PORT=2379 \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_CMD_WAIT_FOR_SERVICE=1 \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=30000 \

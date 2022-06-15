@@ -16,15 +16,17 @@ Requires `alpine`
 The following environment variables cannot be provided by [confd] as they drive
 it's configuration, they must be set on each container as environment variables.
 
-| Environment Variable    | Default | Description                                                                       |
-| :---------------------- | :------ | :-------------------------------------------------------------------------------- |
-| CONFD_BACKEND           | env     | The backend to use for `confd` only `env`, and `etcd` are supported at the moment |
-| CONFD_ENABLE_SERVICE    | false   | If `true` confd will run continuously rather than just on startup.                |
-| CONFD_LOG_LEVEL         | error   | The log level to use when executing `confd`                                       |
-| CONFD_POLLING_INTERVAL  | 30      | Time in seconds between runs of `confd` when enabled as a service                 |
-| ETCD_CONNECTION_TIMEOUT | 0       | Timeout to wait for a connection to etcd                                          |
-| ETCD_HOST               | etcd    | The host where etcd, can be found                                                 |
-| ETCD_PORT               | 2379    | The port where etcd can be accessed                                               |
+| Environment Variable    | Default                                     | Description                                                                                             |
+| :---------------------- | :------------------------------------------ | :------------------------------------------------------------------------------------------------------ |
+| CERTIFICATE             | /usr/local/share/ca-certificates/cert.pem   | Allows for bind mounted development certificates to registered with the system so that curl, etc works. |
+| CERTIFICATE_AUTHORITY   | /usr/local/share/ca-certificates/rootCA.pem | Allows for bind mounted development certificate authority to registered with the java.                  |
+| CONFD_BACKEND           | env                                         | The backend to use for `confd` only `env`, and `etcd` are supported at the moment                       |
+| CONFD_ENABLE_SERVICE    | false                                       | If `true` confd will run continuously rather than just on startup.                                      |
+| CONFD_LOG_LEVEL         | error                                       | The log level to use when executing `confd`                                                             |
+| CONFD_POLLING_INTERVAL  | 30                                          | Time in seconds between runs of `confd` when enabled as a service                                       |
+| ETCD_CONNECTION_TIMEOUT | 0                                           | Timeout to wait for a connection to etcd                                                                |
+| ETCD_HOST               | etcd                                        | The host where etcd, can be found                                                                       |
+| ETCD_PORT               | 2379                                        | The port where etcd can be accessed                                                                     |
 
 Users do not require [etcd] to run the containers, environment variables can be
 used instead for simplicity.
