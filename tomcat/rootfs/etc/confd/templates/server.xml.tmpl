@@ -168,6 +168,11 @@
                pattern="%h %l %u %t &quot;%r&quot; %s %b"
                rotatable="false"/>
 
+        <Valve className="org.apache.catalina.valves.RemoteIpValve" 
+               remoteIpHeader="x-forwarded-for" 
+               proxiesHeader="x-forwarded-by" 
+               protocolHeader="x-forwarded-proto" />
+
       </Host>
     </Engine>
   </Service>
