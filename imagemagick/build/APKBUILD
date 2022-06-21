@@ -47,7 +47,7 @@ checkdepends="freetype fontconfig ghostscript ghostscript-fonts lcms2 graphviz"
 subpackages="
 	$pkgname-libs
 	"
-source="https://download.imagemagick.org/ImageMagick/download/releases/ImageMagick-$_pkgver.tar.xz"
+source="https://imagemagick.org/archive/releases/ImageMagick-$_pkgver.tar.xz"
 builddir="$srcdir/$_pkgname-$_pkgver"
 
 # secfixes:
