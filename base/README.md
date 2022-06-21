@@ -16,20 +16,55 @@ Requires `alpine`
 The following environment variables cannot be provided by [confd] as they drive
 it's configuration, they must be set on each container as environment variables.
 
-| Environment Variable    | Default                                     | Description                                                                                             |
-| :---------------------- | :------------------------------------------ | :------------------------------------------------------------------------------------------------------ |
-| CERTIFICATE             | /usr/local/share/ca-certificates/cert.pem   | Allows for bind mounted development certificates to registered with the system so that curl, etc works. |
-| CERTIFICATE_AUTHORITY   | /usr/local/share/ca-certificates/rootCA.pem | Allows for bind mounted development certificate authority to registered with the java.                  |
-| CONFD_BACKEND           | env                                         | The backend to use for `confd` only `env`, and `etcd` are supported at the moment                       |
-| CONFD_ENABLE_SERVICE    | false                                       | If `true` confd will run continuously rather than just on startup.                                      |
-| CONFD_LOG_LEVEL         | error                                       | The log level to use when executing `confd`                                                             |
-| CONFD_POLLING_INTERVAL  | 30                                          | Time in seconds between runs of `confd` when enabled as a service                                       |
-| ETCD_CONNECTION_TIMEOUT | 0                                           | Timeout to wait for a connection to etcd                                                                |
-| ETCD_HOST               | etcd                                        | The host where etcd, can be found                                                                       |
-| ETCD_PORT               | 2379                                        | The port where etcd can be accessed                                                                     |
+| Environment Variable    | Default | Description                                                                       |
+| :---------------------- | :------ | :-------------------------------------------------------------------------------- |
+| CONFD_BACKEND           | env     | The backend to use for `confd` only `env`, and `etcd` are supported at the moment |
+| CONFD_ENABLE_SERVICE    | false   | If `true` confd will run continuously rather than just on startup.                |
+| CONFD_LOG_LEVEL         | error   | The log level to use when executing `confd`                                       |
+| CONFD_POLLING_INTERVAL  | 30      | Time in seconds between runs of `confd` when enabled as a service                 |
+| ETCD_CONNECTION_TIMEOUT | 0       | Timeout to wait for a connection to etcd                                          |
+| ETCD_HOST               | etcd    | The host where etcd, can be found                                                 |
+| ETCD_PORT               | 2379    | The port where etcd can be accessed                                               |
 
 Users do not require [etcd] to run the containers, environment variables can be
 used instead for simplicity.
+
+### Certificate Settings
+
+If using development certificates for local development, they can be made
+available within the containers using the following environment variables.
+
+| Environment Variable | Default | Description                                                                                                                                                  |
+| :------------------- | :------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CERT_PUBLIC_KEY      |         | Primarily used for development. If provided the certificate will be registered inside of the container such that curl, etc accepts the certificate as valid. |
+| CERT_AUTHORITY       |         | Primarily used for development. If provided the authority is registered with the java, so that requests originating from Java accept the public certificate. |
+
+For example if generating certificates locally with [mkcert] for local
+development, and using `islandora.dev` as the primary domain.
+
+> N.B `islandora.dev` just redirects back to `127.0.0.1`.
+
+```bash
+mkcert -install
+mkcert \
+  -cert-file cert.pem \
+  -key-file privkey.pem \
+  "*.islandora.dev" \
+  "islandora.dev" \
+  "localhost" \
+  "127.0.0.1" \
+  "::1"
+```
+
+This will generate `cert.pem` which can be use as `CERT_PUBLIC_KEY` and
+`rootCA.pem` can be used for `CERT_AUTHORITY`. `rootCA.pem` can be found at the
+path printed by using the command `mkcert -CAROOT`.
+
+Now requests originating within the container will accept the development
+certificate as geniune.
+
+> N.B. This is not required for production sites or certificates that are
+> publically available.
 
 ### JWT Settings
 
@@ -90,5 +125,6 @@ and `DB_MYSQL_PORT` variables will be used when connecting to the backend.
 [confd]: https://github.com/kelseyhightower/confd
 [etcd]: https://github.com/etcd-io/etcd
 [JWT Authentication]: https://islandora.github.io/documentation/technical-documentation/jwt/
+[mkcert]: https://github.com/FiloSottile/mkcert
 [s6 overlay]: https://github.com/just-containers/s6-overlay
 [Syn]: https://github.com/Islandora/Syn
