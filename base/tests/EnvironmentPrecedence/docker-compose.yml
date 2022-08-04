@@ -20,6 +20,7 @@ services:
     environment:
       ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
       ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_UNSUPPORTED_ARCH: arm64
     volumes:
       - ./populate-etcd.sh:/populate-etcd.sh
     # etcd will be the confd backend and as such is #1 on the precedence list.
