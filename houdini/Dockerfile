@@ -19,7 +19,7 @@ RUN --mount=type=bind,from=imagemagick,source=/packages,target=/packages \
     addgroup nginx jwt && \
     cleanup.sh
 
-ENV HOUDINI_LOG_LEVEL=debug
+ENV HOUDINI_LOG_LEVEL=info
 
 COPY --from=crayfish /etc/nginx/http.d/default.conf /etc/nginx/http.d/default.conf
 COPY --from=crayfish --chown=nginx:nginx /var/www /var/www

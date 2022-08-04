@@ -25,7 +25,7 @@ RUN mkdir -p /var/log/islandora && \
     cleanup.sh
 
 ENV \
-    CRAYFITS_LOG_LEVEL=debug \
+    CRAYFITS_LOG_LEVEL=info \
     CRAYFITS_WEBSERVICE_URI=fits:8080/fits/examine
 
 COPY --from=composer --chown=nginx:nginx /var/www /var/www

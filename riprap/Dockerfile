@@ -35,7 +35,7 @@ ENV \
     RIPRAP_DB_NAME=riprap \
     RIPRAP_DB_PASSWORD=password \
     RIPRAP_DB_USER=riprap \
-    RIPRAP_LOG_LEVEL=debug \
+    RIPRAP_LOG_LEVEL=info \
     RIPRAP_MAILER_URL=null://localhost \
     RIPRAP_TRUSTED_HOSTS="" \
     RIPRAP_TRUSTED_PROXIES=""
