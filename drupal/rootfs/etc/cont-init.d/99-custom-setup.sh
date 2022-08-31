@@ -149,8 +149,12 @@ function main {
   # Install Composer modules if necessary.
   if [ -n "${DRUPAL_INSTANCE}" ] && [ "${DRUPAL_INSTANCE}" != "dev" ] ;
   then
+    # 9.4 Temp fix
+    COMPOSER_MEMORY_LIMIT=-1 composer config repositories.islandora/chullo '{"type": "git", "url": "https://github.com/Islandora/chullo.git", "reference": "a7c1e051eab2a5077eaf5db2649201fa775c5a02", "name": "islandora/chullo","version": "dev-dev"}'
     COMPOSER_MEMORY_LIMIT=-1 composer install 
   else
+    # 9.4 Temp fix
+    COMPOSER_MEMORY_LIMIT=-1 composer config repositories.islandora/chullo '{"type": "git", "url": "https://github.com/Islandora/chullo.git", "reference": "a7c1e051eab2a5077eaf5db2649201fa775c5a02", "name": "islandora/chullo","version": "dev-dev"}'
     COMPOSER_MEMORY_LIMIT=-1 composer install --prefer-install=auto
   fi
 
