@@ -3,9 +3,9 @@ ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
-ARG SOLR_VERSION="7.1.0"
-ARG SOLR_FILE_SHA256="5cd25cc2634e47efbb529658d6ddd406a7cd1b211affa26563a28db2d80b8133"
-
+ENV SOLR_VERSION="8.11.2"
+ENV SOLR_FILE_SHA256="54d6ebd392942f0798a60d50a910e26794b2c344ee97c2d9b50e678a7066d3a6"
+    
 RUN --mount=type=cache,id=solr-downloads,sharing=locked,target=/opt/downloads \
     SOLR_FILE="solr-${SOLR_VERSION}.tgz" && \
     SOLR_URL="https://archive.apache.org/dist/lucene/solr/${SOLR_VERSION}/${SOLR_FILE}" && \
