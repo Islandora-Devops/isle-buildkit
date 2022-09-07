@@ -47,6 +47,7 @@ additional settings, volumes, ports, etc.
 [Solr]: https://lucene.apache.org/solr/
 
 ## Changing versions
+
 There is 3 values you need to update/change the version. 
 1. Solr version: found at [archive.apache.org](https://archive.apache.org/dist/lucene/solr)
 1. SOLR_KEYS: Generated using GPG and the acs file
