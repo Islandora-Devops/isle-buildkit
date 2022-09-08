@@ -48,29 +48,23 @@ additional settings, volumes, ports, etc.
 
 ## Changing versions
 
-There is 3 values you need to update/change the version. 
+There is 2 values you need to update/change the version. 
 
 1. Solr version: found at [archive.apache.org](https://archive.apache.org/dist/lucene/solr)
-1. SOLR_KEYS: Generated using GPG and the acs file
 1. SOLR_FILE_SHA256: sha256sum of the tgz file
 
 ```dockerfile
 ARG SOLR_VERSION="8.11.2"
-ARG SOLR_KEYS="86EDB9C33B8517228E88A8F93E48C0C6EF362B9E"
 ARG SOLR_FILE_SHA256="54d6ebd392942f0798a60d50a910e26794b2c344ee97c2d9b50e678a7066d3a6"
 ```
 
-Go to [archive.apache.org](https://archive.apache.org/dist/lucene/solr) and find the version you want. There will be several file but the ones to use have the following naming convention.
+Go to [archive.apache.org](https://archive.apache.org/dist/lucene/solr) and find the version you want. There will be several files but the one to use have the following naming convention.
 
 * solr-${SOLR_VERSION}.tgz
-* solr-${SOLR_VERSION}.tgz.asc
 
 Download the two files and run and replace the _1.1.1_ with the version you have.
 
 ```bash
-# This outputs the value to use for $SOLR_KEYS.
-gpg solr-1.1.1.tgz.asc
-
 # This outputs the value to use for $SOLR_FILE_SHA256.
 sha256sum solr-1.1.1.tgz
 ```
