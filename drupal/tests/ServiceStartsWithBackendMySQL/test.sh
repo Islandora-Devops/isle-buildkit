@@ -4,7 +4,7 @@ source /usr/local/share/isle/utilities.sh
 
 # Install basic Drupal
 rm -fr /var/www/drupal/*
-composer create-project drupal/recommended-project:^9.1 \
+composer create-project drupal/recommended-project:^9.4 \
         --prefer-dist \
         --no-interaction \
         --stability stable \
@@ -12,7 +12,7 @@ composer create-project drupal/recommended-project:^9.1 \
         -- /var/www/drupal
 
 # Install Drush.
-(cd /var/www/drupal && composer require drush/drush:^10.0)
+(cd /var/www/drupal && composer require drush/drush:^11.0)
 
 # Install actual site.
 source /etc/islandora/utilities.sh
