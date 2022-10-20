@@ -20,7 +20,10 @@ EXPOSE 8983
 
 # Defaults environment variables to be overloaded.
 ENV \
-    SOLR_LOG_LEVEL=INFO
+    SOLR_JAVA_OPTS= \
+    SOLR_JETTY_OPTS= \
+    SOLR_LOG_LEVEL=INFO \
+    SOLR_MEMORY=512m
 
 COPY --from=download /etc/group /etc/group
 COPY --from=download /etc/passwd /etc/passwd
