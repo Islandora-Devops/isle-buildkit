@@ -19,9 +19,12 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Confd Key       | Default | Description                                                                    |
-| :------------------- | :-------------- | :------ | :----------------------------------------------------------------------------- |
-| SOLR_LOG_LEVEL       | /solr/log/level | INFO    | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+| Environment Variable | Confd Key        | Default | Description                                                                    |
+| :------------------- | :--------------- | :------ | :----------------------------------------------------------------------------- |
+| SOLR_JAVA_OPTS       | /solr/java/opts  |         | Additional parameters to pass to the JVM when starting Solr                    |
+| SOLR_JETTY_OPTS      | /solr/jetty/opts |         | Additional parameters to pass to Jetty when starting Solr.                     |
+| SOLR_LOG_LEVEL       | /solr/log/level  | INFO    | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+| SOLR_MEMORY          | /solr/memory     | 512m    | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
 
 ## Ports
 
