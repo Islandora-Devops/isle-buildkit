@@ -4,11 +4,12 @@ ARG tag=latest
 ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
+ARG CANTALOUPE_VERSION="4.1.5"
+ARG CANTALOUPE_SHA256="a117061727f1de1c0f514659ec537c080a7f540199643244d1c9cbb50d73027d"
+
 RUN --mount=type=cache,id=cantaloupe-downloads,sharing=locked,target=/opt/downloads \
-    CANTALOUPE_VERSION="4.1.5" && \
     CANTALOUPE_FILE="cantaloupe-${CANTALOUPE_VERSION}.zip" && \
     CANTALOUPE_URL="https://github.com/medusa-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/${CANTALOUPE_FILE}" && \
-    CANTALOUPE_SHA256="a117061727f1de1c0f514659ec537c080a7f540199643244d1c9cbb50d73027d" && \
     download.sh --url "${CANTALOUPE_URL}" --sha256 "${CANTALOUPE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     unzip "${DOWNLOAD_CACHE_DIRECTORY}/${CANTALOUPE_FILE}" -d /tmp && \
     CANTALOUPE_UNPACKED="${CANTALOUPE_FILE%.zip}" && \

@@ -3,11 +3,12 @@ ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/karaf:${tag} AS download
 
+ARG ALPACA_VERSION=1.0.5
+ARG ACTIVEMQ_VERSION=5.15.0
+ARG CAMEL_VERSION=2.20.4
+
 # Install common features and repos
 RUN bin/start && \
-    ALPACA_VERSION=1.0.5 && \
-    ACTIVEMQ_VERSION=5.15.0 && \
-    CAMEL_VERSION=2.20.4 && \
     bin/client -r 10 -d 5  "feature:repo-add mvn:ca.islandora.alpaca/islandora-karaf/${ALPACA_VERSION}/xml/features" && \
     bin/client -r 10 -d 5  "feature:repo-add mvn:org.apache.activemq/activemq-karaf/${ACTIVEMQ_VERSION}/xml/features" && \
     bin/client -r 10 -d 5  "feature:repo-add mvn:org.apache.camel.karaf/apache-camel/${CAMEL_VERSION}/xml/features" && \

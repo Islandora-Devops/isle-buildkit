@@ -3,11 +3,12 @@ ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
+ARG MATOMO_VERSION="3.13.5"
+ARG MATOMO_FILE_SHA256="b9af7dabc6e727762cef58cecd16de7bc75886f8dacc910070632d83a44c2aad"
+
 RUN --mount=type=cache,id=matomo-downloads,sharing=locked,target=/opt/downloads \
-    MATOMO_VERSION="3.13.5" && \
     MATOMO_FILE="matomo-${MATOMO_VERSION}.tar.gz" && \
     MATOMO_URL="https://builds.matomo.org/${MATOMO_FILE}" && \
-    MATOMO_FILE_SHA256="b9af7dabc6e727762cef58cecd16de7bc75886f8dacc910070632d83a44c2aad" && \
     download.sh --url "${MATOMO_URL}" --sha256 "${MATOMO_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${MATOMO_FILE}" -C /opt && \
     rm "/opt/How to install Matomo.html"
