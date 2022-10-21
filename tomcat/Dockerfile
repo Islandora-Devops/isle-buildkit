@@ -4,11 +4,12 @@ ARG tag=latest
 ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/java:${tag} AS download
 
+ARG TOMCAT_VERSION="9.0.58"
+ARG TOMCAT_FILE_SHA256="a7895a9f425dd57fba5a1e8685d43754d3ecfe05de80e93bfd245ca8313cc7c1"
+
 RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads \
-    TOMCAT_VERSION="9.0.58" && \
     TOMCAT_FILE="apache-tomcat-${TOMCAT_VERSION}.tar.gz" && \
     TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE}" && \
-    TOMCAT_FILE_SHA256="a7895a9f425dd57fba5a1e8685d43754d3ecfe05de80e93bfd245ca8313cc7c1" && \
     download.sh --url "${TOMCAT_URL}" --sha256 "${TOMCAT_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-apache-service.sh \
         --name tomcat \

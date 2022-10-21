@@ -4,11 +4,12 @@ ARG tag=latest
 ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
+ARG DRUSH_VERSION="0.6.0"
+ARG DRUSH_SHA256="c3f32a800a2f18470b0010cd71c49e49ef5c087f8131eecfe9b686dc1f3f3d4e"
+
 RUN --mount=type=cache,id=drupal-downloads,sharing=locked,target=/opt/downloads \
-    DRUSH_VERSION="0.6.0" && \
     DRUSH_FILE="drush.phar" && \
     DRUSH_URL="https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_VERSION}/${DRUSH_FILE}" && \
-    DRUSH_SHA256="c3f32a800a2f18470b0010cd71c49e49ef5c087f8131eecfe9b686dc1f3f3d4e" && \
     download.sh --url "${DRUSH_URL}" --sha256 "${DRUSH_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/${DRUSH_FILE}" /usr/bin/drush && \
     chmod a+x /usr/bin/drush

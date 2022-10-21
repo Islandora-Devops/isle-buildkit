@@ -4,17 +4,18 @@ ARG tag=latest
 ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
+ARG FITSSERVLET_VERSION="1.2.3"
+ARG FITSSERVLET_SHA256="e98450a1617c491976966a307da8b9c783c83e9e1a79bca9dbd9bc6c9a7226cd"
+ARG FITS_VERSION="1.5.5"
+ARG FITS_SHA256="48be7ad9f27d9cc0b52c63f1aea1a3814e1b6996ca4e8467e77772c187ac955c"
+
 RUN --mount=type=cache,id=fits-downloads,sharing=locked,target=/opt/downloads \
-    FITSSERVLET_VERSION="1.2.3" && \
     FITSSERVLET_FILE="fits-service-${FITSSERVLET_VERSION}.war" && \
     FITSSERVLET_URL="https://github.com/harvard-lts/FITSservlet/releases/download/${FITSSERVLET_VERSION}/${FITSSERVLET_FILE}" && \
-    FITSSERVLET_SHA256="e98450a1617c491976966a307da8b9c783c83e9e1a79bca9dbd9bc6c9a7226cd" && \
     download.sh --url "${FITSSERVLET_URL}" --sha256 "${FITSSERVLET_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-war-into-tomcat.sh --name "fits" --file "${DOWNLOAD_CACHE_DIRECTORY}/${FITSSERVLET_FILE}" && \
-    FITS_VERSION="1.5.5" && \
     FITS_FILE="fits-${FITS_VERSION}.zip" && \
     FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}" && \
-    FITS_SHA256="48be7ad9f27d9cc0b52c63f1aea1a3814e1b6996ca4e8467e77772c187ac955c" && \
     mkdir /opt/fits && \
     download.sh --url "${FITS_URL}" --sha256 "${FITS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     unzip "${DOWNLOAD_CACHE_DIRECTORY}/${FITS_FILE}" -d /opt/fits && \

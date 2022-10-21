@@ -31,17 +31,20 @@ ARG TARGETARCH
 
 COPY --from=download /usr/local/bin/*.sh /usr/local/bin
 
+ARG S6_VERSION="2.2.0.3"
+ARG S6_AMD64_SHA256="a7076cf205b331e9f8479bbb09d9df77dbb5cd8f7d12e9b74920902e0c16dd98"
+ARG S6_ARM64_SHA256="84f585a100b610124bb80e441ef2dc2d68ac2c345fd393d75a6293e0951ccfc5"
+
 # Install s6
 RUN --mount=type=cache,id=base-downloads,sharing=locked,from=download,target=/opt/downloads \
     if [ "${TARGETARCH}" = "arm64" ]; then \
         S6_FILE="s6-overlay-aarch64.tar.gz"; \
-        S6_SHA256="84f585a100b610124bb80e441ef2dc2d68ac2c345fd393d75a6293e0951ccfc5"; \
+        S6_SHA256="${S6_ARM64_SHA256}"; \
     fi; \
     if [ "${TARGETARCH}" = "amd64" ]; then \
         S6_FILE="s6-overlay-amd64.tar.gz"; \
-        S6_SHA256="a7076cf205b331e9f8479bbb09d9df77dbb5cd8f7d12e9b74920902e0c16dd98"; \
+        S6_SHA256="${S6_AMD64_SHA256}"; \
     fi; \
-    S6_VERSION="2.2.0.3" && \
     S6_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/${S6_FILE}" && \
     download.sh --url "${S6_URL}" --sha256 "${S6_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}" -C /  && \

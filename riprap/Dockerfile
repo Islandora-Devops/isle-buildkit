@@ -4,9 +4,10 @@ ARG tag=latest
 ARG alpine=3.15.0
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
+ARG COMMIT="7d7cae2d09dec20caa3c3f5752434af32401819e"
+
 RUN --mount=type=cache,id=riprap-composer,sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=riprap-downloads,sharing=locked,target=/opt/downloads \
-    COMMIT=7d7cae2d09dec20caa3c3f5752434af32401819e && \
     git-clone-cached.sh \
         --url https://github.com/mjordan/riprap.git \
         --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \

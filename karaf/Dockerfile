@@ -3,11 +3,12 @@ ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
+ARG KARAF_VERSION="4.0.8"
+ARG KARAF_FILE_SHA256="67e555e3896fbe87d23ceec008898bb33133f36b48d7e5ede363c214a54e7d2a"
+
 RUN --mount=type=cache,id=karaf-downloads,sharing=locked,target=/opt/downloads \
-    KARAF_VERSION="4.0.8" && \
     KARAF_FILE="apache-karaf-${KARAF_VERSION}.tar.gz" && \
     KARAF_URL="https://archive.apache.org/dist/karaf/${KARAF_VERSION}/${KARAF_FILE}" && \
-    KARAF_FILE_SHA256="67e555e3896fbe87d23ceec008898bb33133f36b48d7e5ede363c214a54e7d2a" && \
     download.sh --url "${KARAF_URL}" --sha256 "${KARAF_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     install-apache-service.sh -e \
         --name karaf \
