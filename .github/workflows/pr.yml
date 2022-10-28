@@ -6,10 +6,7 @@ on:
 jobs:
   build:
     name: Build and Test PR
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
       - name: Checkout
