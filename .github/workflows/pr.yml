@@ -25,7 +25,7 @@ jobs:
       - name: Build/Test Docker images
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build test grype -PisCI=true --add-cpes-if-none --info
+          arguments: build test grype -PisCI=true --info
       - uses: actions/upload-artifact@v2
         with:
           name: Grype Reports
