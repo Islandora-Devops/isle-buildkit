@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
@@ -33,4 +35,4 @@ jobs:
       - name: Build/Push/Test Docker images
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.push=true -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64 -PisCI=true --info
+          arguments: build test '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.push=true -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64,linux/arm/v7 -PisCI=true --info
