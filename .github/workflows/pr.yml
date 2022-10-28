@@ -6,7 +6,10 @@ on:
 jobs:
   build:
     name: Build and Test PR
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 360
     steps:
       - name: Checkout
@@ -23,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build/Test Docker images
-        uses: eskatos/gradle-command-action@v1
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: build test grype -PisCI=true --info
       - uses: actions/upload-artifact@v2
