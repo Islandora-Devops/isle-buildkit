@@ -427,13 +427,12 @@ function configure_islandora_module {
     drush -l "${site_url}" -y user:role:add fedoraadmin admin
 }
 
-# After enabling and importing features a number of configurations need to be updated.
+# Configure Solr port and host.
 function configure_islandora_default_module {
-    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q islandora_defaults; then
-        echo "islandora_defaults is not installed.  Skipping configuration"
+    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q search_api; then
+        echo "Search API is not installed.  Skipping configuration"
         return 0
     fi
-
     local site="${1}"; shift
     local site_url=$(drupal_site_env "${site}" "SITE_URL")
     local host=$(drupal_site_env "${site}" "SOLR_HOST")
