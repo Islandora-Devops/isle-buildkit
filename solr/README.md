@@ -1,6 +1,6 @@
 # Solr
 
-Docker image for [Solr] version 7.1.0.
+Docker image for [Solr] version 8.11.2.
 
 Please refer to the [Solr Documentation] for more in-depth information.
 
@@ -45,3 +45,26 @@ additional settings, volumes, ports, etc.
 [Solr Documentation]: https://lucene.apache.org/solr/guide/7_1/
 [Solr Logging]: https://lucene.apache.org/solr/guide/7_1/configuring-logging.html
 [Solr]: https://lucene.apache.org/solr/
+
+## Changing versions
+
+There is 2 values you need to update/change the version. 
+
+1. Solr version: found at [archive.apache.org](https://archive.apache.org/dist/lucene/solr)
+1. SOLR_FILE_SHA256: sha256sum of the tgz file
+
+```dockerfile
+ARG SOLR_VERSION="8.11.2"
+ARG SOLR_FILE_SHA256="54d6ebd392942f0798a60d50a910e26794b2c344ee97c2d9b50e678a7066d3a6"
+```
+
+Go to [archive.apache.org](https://archive.apache.org/dist/lucene/solr) and find the version you want. There will be several files but the one to use have the following naming convention.
+
+* solr-${SOLR_VERSION}.tgz
+
+Download the two files and run and replace the _1.1.1_ with the version you have.
+
+```bash
+# This outputs the value to use for $SOLR_FILE_SHA256.
+sha256sum solr-1.1.1.tgz
+```
