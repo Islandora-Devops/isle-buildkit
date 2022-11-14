@@ -3,6 +3,8 @@ hypercube:
   # path to the convert executable
   tesseract_executable: tesseract
   pdftotext_executable: pdftotext
+fedora_resource:
+  base_url: {{ getenv "HYPERCUBE_FCREPO_URL" }}
 log:
   # Valid log levels are:
   # debug, info, notice, warning, error, critical, alert, emergency, none
