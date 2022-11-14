@@ -29,7 +29,8 @@ RUN --mount=type=cache,id=hypercube-apk,sharing=locked,from=cache,target=/var/ca
     addgroup nginx jwt && \
     cleanup.sh
 
-ENV HYPERCUBE_LOG_LEVEL=info
+ENV HYPERCUBE_FCREPO_URL=fcrepo/fcrepo/rest \
+    HYPERCUBE_LOG_LEVEL=info
 
 COPY --from=crayfish /etc/nginx/http.d/default.conf /etc/nginx/http.d/default.conf
 COPY --from=crayfish --chown=nginx:nginx /var/www /var/www
