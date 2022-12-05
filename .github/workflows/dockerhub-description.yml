@@ -112,14 +112,6 @@ jobs:
           repository: ${{ secrets.REPOSITORY }}/drupal
           readme-filepath: ./drupal/README.md
 
-      - name: Fcrepo - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASS }}
-          repository: ${{ secrets.REPOSITORY }}/fcrepo
-          readme-filepath: ./fcrepo/README.md
-
       - name: Fcrepo6 - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
         with:
