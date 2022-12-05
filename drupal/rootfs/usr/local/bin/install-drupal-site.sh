@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+ARGS=("$@")
+PROGNAME=$(basename "$0")
+readonly ARGS PROGNAME
 
 function usage {
-    cat <<- EOF
+    cat <<-EOF
     usage: $PROGNAME options [DRUSH_ARGS]
 
     Install a Drupal site with the given [DRUSH_ARGS].
@@ -36,30 +37,30 @@ EOF
 
 function cmdline {
     local arg=
-    for arg
-    do
+    for arg; do
         local delim=""
         case "$arg" in
-            # Translate --gnu-long-options to -g (short options)
-            --driver)      args="${args}-a ";;
-            --host)        args="${args}-b ";;
-            --port)        args="${args}-c ";;
-            --db-user)     args="${args}-d ";;
-            --db-password) args="${args}-e ";;
-            --db-name)     args="${args}-f ";;
-            --help)        args="${args}-h ";;
-            --debug)       args="${args}-x ";;
-            # Pass through anything else
-            *) [[ "${arg:0:1}" == "-" ]] || delim="\""
-               args="${args}${delim}${arg}${delim} ";;
+        # Translate --gnu-long-options to -g (short options)
+        --driver) args="${args}-a " ;;
+        --host) args="${args}-b " ;;
+        --port) args="${args}-c " ;;
+        --db-user) args="${args}-d " ;;
+        --db-password) args="${args}-e " ;;
+        --db-name) args="${args}-f " ;;
+        --help) args="${args}-h " ;;
+        --debug) args="${args}-x " ;;
+        # Pass through anything else
+        *)
+            [[ "${arg:0:1}" == "-" ]] || delim="\""
+            args="${args}${delim}${arg}${delim} "
+            ;;
         esac
     done
 
     # Reset the positional parameters to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
-    while getopts "a:b:c:d:e:f:hx" OPTION
-    do
+    while getopts "a:b:c:d:e:f:hx" OPTION; do
         case $OPTION in
         a)
             readonly DRIVER=${OPTARG}
@@ -84,8 +85,12 @@ function cmdline {
             exit 0
             ;;
         x)
-            readonly DEBUG='-x'
             set -x
+            ;;
+        *)
+            echo "Invalid Option: $OPTION" >&2
+            usage
+            exit 1
             ;;
         esac
     done
@@ -96,8 +101,8 @@ function cmdline {
     fi
 
     # All remaning parameters are passed to 'drush site-install'.
-    shift $((OPTIND-1))
-    readonly DRUSH_ARGS="$@"
+    shift $((OPTIND - 1))
+    readonly DRUSH_ARGS=("$@")
 
     return 0
 }
@@ -113,7 +118,7 @@ function execute_sql_file {
 }
 
 function mysql_count_query {
-    cat <<- EOF
+    cat <<-EOF
 SELECT COUNT(DISTINCT table_name)
 FROM information_schema.columns
 WHERE table_schema = '${DB_NAME}';
@@ -125,7 +130,7 @@ function mysql_count {
 }
 
 function postgresql_count_query {
-    cat <<- EOF
+    cat <<-EOF
 SELECT count(*)
 FROM information_schema.tables
 WHERE table_schema = 'public';
@@ -133,28 +138,29 @@ EOF
 }
 
 function postgresql_count {
-    execute_sql_file --database ${DB_NAME} <(postgresql_count_query) -- -t 2>/dev/null
+    execute_sql_file --database "${DB_NAME}" <(postgresql_count_query) -- -t 2>/dev/null
 }
 
 # Check the number of tables to determine if it has already been installed.
 function installed {
     local count=
     case "${DRIVER}" in
-        mysql)
-            count=$(mysql_count)
-            ;;
-        postgresql)
-            count=$(postgresql_count)
-            ;;
-        *)
-            echo "Only MySQL/PostgresSQL databases are supported for now." >&2
-            exit 1
+    mysql)
+        count=$(mysql_count)
+        ;;
+    postgresql)
+        count=$(postgresql_count)
+        ;;
+    *)
+        echo "Only MySQL/PostgresSQL databases are supported for now." >&2
+        exit 1
+        ;;
     esac
     [[ $count -ne 0 ]]
 }
 
 function main {
-    cmdline ${ARGS}
+    cmdline "${ARGS[@]}"
     local protocol=mysql
     if installed; then
         echo "Site already is installed."
@@ -166,7 +172,7 @@ function main {
     echo "Installing site."
     drush \
         -n \
-        si ${DRUSH_ARGS} \
+        si "${DRUSH_ARGS[@]}" \
         --db-url="${protocol}://${DB_USER}:${DB_PASSWORD}@${HOST}:${PORT}/${DB_NAME}"
 }
 main

@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 ARG CANTALOUPE_VERSION="4.1.5"
@@ -19,8 +19,6 @@ RUN --mount=type=cache,id=cantaloupe-downloads,sharing=locked,target=/opt/downlo
 FROM alpine:${alpine} AS cache
 FROM ${repository}/tomcat:${tag}
 
-COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
-
 # Opted for OpenJPG over Kakadu but that could be changed.
 # For reference see: https://cantaloupe-project.github.io/manual/3.3/processors.html
 RUN --mount=type=cache,id=cantaloupe-apk,sharing=locked,from=cache,target=/var/cache/apk \
@@ -29,8 +27,6 @@ RUN --mount=type=cache,id=cantaloupe-apk,sharing=locked,from=cache,target=/var/c
         imagemagick \
         openjpeg-tools \
     && \
-    mkdir /data && \
-    chown tomcat:tomcat /data && \
     cleanup.sh
 
 ENV \
@@ -262,5 +258,8 @@ ENV \
     CANTALOUPE_SOURCE_STATIC="HttpSource" \
     CANTALOUPE_TEMP_PATHNAME=
 
-COPY rootfs /
-COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat
+COPY --link --from=download /opt/tomcat /opt/tomcat
+
+COPY --link rootfs /
+
+RUN chown tomcat:tomcat -R /opt/tomcat

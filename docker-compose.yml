@@ -1,0 +1,346 @@
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+  secrets:
+    - source: CERT_PUBLIC_KEY
+    - source: CERT_PRIVATE_KEY
+    - source: CERT_AUTHORITY
+
+x-traefik-https-redirect-middleware: &traefik-https-redirect-middleware
+  traefik.enable: true
+  traefik.http.middlewares.https-redirect.redirectscheme.permanent: true
+  traefik.http.middlewares.https-redirect.redirectscheme.scheme: https
+
+x-traefik-https-redirect: &traefik-https-redirect https-redirect
+
+networks:
+  default:
+
+volumes:
+  activemq-data: {}
+  blazegraph-data: {}
+  cantaloupe-data: {}
+  code-server-data: {}
+  drupal-private-files: {}
+  drupal-public-files: {}
+  drupal-root: {}
+  drupal-solr-config: {}
+  fcrepo-data: {}
+  mariadb-data: {}
+  matomo-data: {}
+  solr-data: {}
+
+secrets:
+  CERT_PUBLIC_KEY:
+    file: ./build/certs/cert.pem
+  CERT_PRIVATE_KEY:
+    file: ./build/certs/privkey.pem
+  CERT_AUTHORITY:
+    file: ./build/certs/rootCA.pem
+
+services:
+  alpaca:
+    <<: *common
+    image: ${REPOSITORY:-local}/alpaca:${TAG:-latest}
+    environment:
+      # Increase the throughput of consumption from the queue.
+      ALPACA_ACTIVEMQ_CONNECTIONS: 100
+      ALPACA_ACTIVEMQ_CONSUMERS: 10
+  crayfits:
+    <<: *common
+    image: ${REPOSITORY:-local}/crayfits:${TAG:-latest}
+  fits:
+    <<: *common
+    image: ${REPOSITORY:-local}/fits:${TAG:-latest}
+  homarus:
+    <<: *common
+    image: ${REPOSITORY:-local}/homarus:${TAG:-latest}
+  houdini:
+    <<: *common
+    image: ${REPOSITORY:-local}/houdini:${TAG:-latest}
+  hypercube:
+    <<: *common
+    image: ${REPOSITORY:-local}/hypercube:${TAG:-latest}
+  mariadb:
+    <<: *common
+    image: ${REPOSITORY:-local}/mariadb:${TAG:-latest}
+    volumes:
+      - mariadb-data:/var/lib/mysql:rw
+  milliner:
+    <<: *common
+    image: ${REPOSITORY:-local}/milliner:${TAG:-latest}
+  activemq:
+    <<: *common
+    image: ${REPOSITORY:-local}/activemq:${TAG:-latest}
+    labels:
+      <<: *traefik-https-redirect-middleware
+      traefik.http.routers.activemq_http.entrypoints: http
+      traefik.http.routers.activemq_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.activemq_http.rule: &traefik-host-activemq Host(`activemq.islandora.dev`)
+      traefik.http.routers.activemq_http.service: activemq
+      traefik.http.routers.activemq_https.entrypoints: https
+      traefik.http.routers.activemq_https.rule: *traefik-host-activemq
+      traefik.http.routers.activemq_https.tls: true
+      traefik.http.services.activemq.loadbalancer.server.port: 8161
+      traefik.subdomain: activemq
+    volumes:
+      - activemq-data:/opt/activemq/data:rw
+  blazegraph:
+    <<: *common
+    image: ${REPOSITORY:-local}/blazegraph:${TAG:-latest}
+    labels:
+      <<: *traefik-https-redirect-middleware
+      traefik.http.routers.blazegraph_http.entrypoints: http
+      traefik.http.routers.blazegraph_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.blazegraph_http.rule: &traefik-host-blazegraph Host(`blazegraph.islandora.dev`)
+      traefik.http.routers.blazegraph_http.service: blazegraph
+      traefik.http.routers.blazegraph_https.entrypoints: https
+      traefik.http.routers.blazegraph_https.rule: *traefik-host-blazegraph
+      traefik.http.routers.blazegraph_https.tls: true
+      traefik.http.services.blazegraph.loadbalancer.server.port: 8080
+    volumes:
+      - blazegraph-data:/data:rw
+  cantaloupe:
+    <<: *common
+    image: ${REPOSITORY:-local}/cantaloupe:${TAG:-latest}
+    labels:
+      <<: *traefik-https-redirect-middleware
+      traefik.http.routers.cantaloupe_http.entrypoints: http
+      traefik.http.routers.cantaloupe_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.cantaloupe_http.rule: &traefik-host-cantaloupe Host(`islandora.dev`) && PathPrefix(`/cantaloupe`)
+      traefik.http.routers.cantaloupe_http.service: cantaloupe
+      traefik.http.routers.cantaloupe_https.entrypoints: https
+      traefik.http.routers.cantaloupe_https.rule: *traefik-host-cantaloupe
+      traefik.http.routers.cantaloupe_https.tls: true
+      traefik.http.services.cantaloupe.loadbalancer.server.port: 8080
+    volumes:
+      - cantaloupe-data:/data:rw
+  drupal:
+    <<: *common
+    image: ${REPOSITORY:-local}/test:${TAG:-latest}
+    environment: &drupal-environment
+      # Keep this in sync with "islandora.drupal.properties" in the helm chart.
+      DRUPAL_DEFAULT_BROKER_URL: "tcp://activemq:61613"
+      DRUPAL_DEFAULT_CANTALOUPE_URL: "https://islandora.dev/cantaloupe/iiif/2"
+      DRUPAL_DEFAULT_CONFIGDIR: "/var/www/drupal/config/sync"
+      DRUPAL_DEFAULT_FCREPO_HOST: "fcrepo"
+      DRUPAL_DEFAULT_FCREPO_PORT: 8080
+      DRUPAL_DEFAULT_FCREPO_URL: "https://fcrepo.islandora.dev/fcrepo/rest/"
+      DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG: "true"
+      DRUPAL_DEFAULT_MATOMO_URL: "https://islandora.dev/matomo/"
+      DRUPAL_DEFAULT_NAME: "Islandora Digital Collections"
+      DRUPAL_DEFAULT_PROFILE: "minimal"
+      DRUPAL_DEFAULT_SITE_URL: "islandora.dev"
+      DRUPAL_DEFAULT_SOLR_CORE: "default"
+      DRUPAL_DRUSH_URI: "https://islandora.dev" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
+    volumes:
+      # Allow code-server to serve Drupal / override it.
+      - &drupal-root
+        type: volume
+        source: drupal-root
+        target: /var/www/drupal
+      - &drupal-public-files
+        type: volume
+        source: drupal-public-files
+        target: /var/www/drupal/web/sites/default/files
+      - &drupal-private-files
+        type: volume
+        source: drupal-private-files
+        target: /var/www/drupal/private
+      - &drupal-custom-modules ./test/rootfs/var/www/drupal/web/modules/custom/sample_content:/var/www/drupal/web/modules/custom/sample_content:rw
+      - drupal-solr-config:/opt/solr/server/solr/default:ro
+  ide:
+    <<: *common
+    image: ${REPOSITORY}/code-server:${TAG}
+    labels:
+      <<: *traefik-https-redirect-middleware
+      # All Drupal traefik is routed through the IDE so that XDebug can be
+      # easily used.
+      traefik.http.routers.drupal_http.entrypoints: http
+      traefik.http.routers.drupal_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.drupal_http.rule: &traefik-host-drupal Host(`islandora.dev`)
+      traefik.http.routers.drupal_http.service: drupal
+      traefik.http.routers.drupal_https.entrypoints: https
+      traefik.http.routers.drupal_https.rule: *traefik-host-drupal
+      traefik.http.routers.drupal_https.service: drupal
+      traefik.http.routers.drupal_https.tls: true
+      traefik.http.services.drupal.loadbalancer.server.port: 80
+      traefik.http.routers.ide_http.entrypoints: http
+      traefik.http.routers.ide_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.ide_http.rule: &traefik-host-ide Host(`ide.islandora.dev`)
+      traefik.http.routers.ide_http.service: ide
+      traefik.http.routers.ide_https.entrypoints: https
+      traefik.http.routers.ide_https.rule: *traefik-host-ide
+      traefik.http.routers.ide_https.service: ide
+      traefik.http.routers.ide_https.tls: true
+      traefik.http.services.ide.loadbalancer.server.port: 8443
+      traefik.tcp.routers.ssh.entrypoints: ssh
+      traefik.tcp.routers.ssh.rule: HostSNI(`*`)
+      traefik.tcp.routers.ssh.service: ssh
+      traefik.tcp.services.ssh.loadbalancer.server.port: 22
+
+    environment:
+      <<: *drupal-environment
+      # Allow XDebug to be used with Drush as well.
+      # Use the following command in the IDE shell to enable it:
+      # export XDEBUG_SESSION=1
+      DRUSH_ALLOW_XDEBUG: 1
+      XDEBUG_MODE: debug
+      # Do not request a password for accessing the IDE.
+      CODE_SERVER_AUTHENTICATION: none
+      # Bump up time outs to allow for debugging.
+      NGINX_CLIENT_BODY_TIMEOUT: 600s
+      NGINX_FASTCGI_CONNECT_TIMEOUT: 600s
+      NGINX_FASTCGI_READ_TIMEOUT: 1200s
+      NGINX_FASTCGI_SEND_TIMEOUT: 600s
+      NGINX_KEEPALIVE_TIMEOUT: 750s
+      NGINX_LINGERING_TIMEOUT: 50s
+      NGINX_PROXY_CONNECT_TIMEOUT: 600s
+      NGINX_PROXY_READ_TIMEOUT: 600s
+      NGINX_PROXY_SEND_TIMEOUT: 600s
+      NGINX_SEND_TIMEOUT: 600s
+      PHP_DEFAULT_SOCKET_TIMEOUT: 600
+      PHP_MAX_EXECUTION_TIME: 300
+      PHP_MAX_INPUT_TIME: 600
+      PHP_PROCESS_CONTROL_TIMEOUT: 600
+      PHP_REQUEST_TERMINATE_TIMEOUT: 600
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Mount and serve contents of Drupal site.
+      - <<: *drupal-root
+        volume:
+          nocopy: true
+      # Mount and serve Drupal public files.
+      - <<: *drupal-public-files
+        volume:
+          nocopy: true
+      # Mount and serve Drupal private files.
+      - <<: *drupal-private-files
+        volume:
+          nocopy: true
+      # Volumes for code-server cache.
+      - type: volume
+        source: code-server-data
+        target: /opt/code-server/data
+      - *drupal-custom-modules
+    # Ensure drupal mounts the shared volumes first.
+    depends_on:
+      - drupal
+  fcrepo:
+    <<: *common
+    image: ${REPOSITORY}/fcrepo6:${TAG}
+    environment:
+      FCREPO_ALLOW_EXTERNAL_DEFAULT: "http://default/"
+      FCREPO_ALLOW_EXTERNAL_DRUPAL: "https://islandora.dev/"
+    labels:
+      <<: *traefik-https-redirect-middleware
+      # Due to weird logic in `fcrepo/static/js/common.js`, do not use https
+      # as it assumes it always needs to append /fcr:metadata to every request
+      # breaking the links. Though for files we do want that page to be accessed
+      # so check for a file extension.
+      traefik.http.middlewares.fcrepo-strip-suffix.replacepathregex.regex: "^(.*/fcrepo/rest/[^.]*)/fcr:metadata$$"
+      traefik.http.middlewares.fcrepo-strip-suffix.replacepathregex.replacement: "$$1"
+      traefik.http.routers.fcrepo_http.entrypoints: http
+      traefik.http.routers.fcrepo_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.fcrepo_http.rule: &traefik-host-fcrepo Host(`fcrepo.islandora.dev`)
+      traefik.http.routers.fcrepo_http.service: fcrepo
+      traefik.http.routers.fcrepo_https.entrypoints: https
+      traefik.http.routers.fcrepo_https.middlewares: fcrepo-strip-suffix
+      traefik.http.routers.fcrepo_https.rule: *traefik-host-fcrepo
+      traefik.http.routers.fcrepo_https.tls: true
+      traefik.http.services.fcrepo.loadbalancer.server.port: 8080
+    volumes:
+      - fcrepo-data:/data:rw
+  matomo:
+    <<: *common
+    image: ${REPOSITORY:-local}/matomo:${TAG:-latest}
+    labels:
+      <<: *traefik-https-redirect-middleware
+      traefik.http.middlewares.matomo-custom-request-headers.headers.customrequestheaders.X-Forwarded-Uri: /matomo
+      traefik.http.middlewares.matomo-append-slash.redirectregex.regex: ^(https?://[^/]+/matomo)$$
+      traefik.http.middlewares.matomo-append-slash.redirectregex.replacement: $${1}/
+      traefik.http.middlewares.matomo-strip-prefix.stripprefix.prefixes: /matomo
+      traefik.http.middlewares.matomo.chain.middlewares: matomo-append-slash,matomo-strip-prefix,matomo-custom-request-headers
+      traefik.http.routers.matomo_http.entrypoints: http
+      traefik.http.routers.matomo_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.matomo_http.rule: &traefik-host-matomo Host(`islandora.dev`) && PathPrefix(`/matomo`)
+      traefik.http.routers.matomo_http.service: matomo
+      traefik.http.routers.matomo_https.entrypoints: https
+      traefik.http.routers.matomo_https.middlewares: matomo
+      traefik.http.routers.matomo_https.rule: *traefik-host-matomo
+      traefik.http.routers.matomo_https.tls: true
+      traefik.http.services.matomo.loadbalancer.server.port: 80
+    environment:
+      MATOMO_DEFAULT_HOST: "https://islandora.dev"
+    volumes:
+      - matomo-data:/var/www/matomo:rw
+  solr:
+    <<: *common
+    image: ${REPOSITORY:-local}/solr:${TAG:-latest}
+    labels:
+      <<: *traefik-https-redirect-middleware
+      traefik.http.routers.solr_http.entrypoints: http
+      traefik.http.routers.solr_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.solr_http.rule: &traefik-host-solr Host(`solr.islandora.dev`)
+      traefik.http.routers.solr_http.service: solr
+      traefik.http.routers.solr_https.entrypoints: https
+      traefik.http.routers.solr_https.rule: *traefik-host-solr
+      traefik.http.routers.solr_https.tls: true
+      traefik.http.services.solr.loadbalancer.server.port: 8983
+    volumes:
+      - solr-data:/data:rw
+      - type: volume
+        source: drupal-solr-config
+        target: /opt/solr/server/solr/default
+        volume:
+          nocopy: true
+  traefik:
+    <<: *common
+    image: traefik:v2.8.3
+    command: >-
+      --api.insecure=true
+      --api.dashboard=true
+      --api.debug=true
+      --entryPoints.http.address=:80
+      --entryPoints.https.address=:443
+      --entryPoints.ssh.address=:22
+      --providers.file.filename=/etc/traefik/tls.yml
+      --providers.docker=true
+      --providers.docker.network=default
+      --providers.docker.exposedByDefault=false
+      '--providers.docker.defaultRule=Host(`{{index .Labels "com.docker.compose.service" }}.islandora.dev`)'
+    labels:
+      <<: *traefik-https-redirect-middleware
+      traefik.http.routers.traefik_http.entrypoints: http
+      traefik.http.routers.traefik_http.middlewares: *traefik-https-redirect
+      traefik.http.routers.traefik_http.service: traefik
+      traefik.http.routers.traefik_https.entrypoints: https
+      traefik.http.routers.traefik_https.tls: true
+      traefik.http.services.traefik.loadbalancer.server.port: 8080
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2222:22"
+    volumes:
+      - ./build/certs:/etc/ssl/traefik:rw
+      - ./tls.yml:/etc/traefik/tls.yml:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      default:
+        aliases:
+          # Allow services to connect on the same name/port as the outside.
+          - blazegraph.islandora.dev
+          - fcrepo.islandora.dev
+          - islandora.dev
+          - solr.islandora.dev
+    depends_on:
+      # Sometimes traefik doesn't pick up on new containers so make sure they are started before traefik.
+      - activemq
+      - blazegraph
+      - drupal
+      - fcrepo
+      - solr
+      - ide

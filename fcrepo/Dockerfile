@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
@@ -50,7 +50,8 @@ ENV \
     FCREPO_S3_USER= \
     FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin
 
-COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
+COPY --link --from=download /opt/tomcat /opt/tomcat
 
-COPY rootfs /
-COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat
+COPY --link rootfs /
+
+RUN chown -R tomcat:tomcat /opt/tomcat

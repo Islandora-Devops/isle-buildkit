@@ -1,6 +1,7 @@
 import java.time.Duration.ofMinutes
-import tasks.tests.DockerComposeTest
+import plugins.TestPlugin.DockerComposeUp
 
-tasks.register<DockerComposeTest>("test") {
+tasks.named<DockerComposeUp>("test") {
+    // This test requires more time that normal.
     timeout.convention(ofMinutes(10))
 }

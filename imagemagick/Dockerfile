@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM alpine:${alpine} AS cache
 FROM ${repository}/abuild:${tag} AS build
 
@@ -32,7 +32,7 @@ RUN --mount=type=cache,id=imagemagick-apk,sharing=locked,from=cache,target=/var/
         tiff-dev \
         zlib-dev
 
-COPY /build /build
+COPY --link /build /build
 
 WORKDIR /build
 
@@ -47,5 +47,5 @@ RUN export PACKAGER="Nigel Banks <nigel.g.banks@gmail.com>" && \
 
 FROM alpine:${alpine}
 
-COPY --from=build /etc/apk/keys /etc/apk/keys
-COPY --from=build /home/builder/packages/*/ /packages
+COPY --link --from=build /etc/apk/keys /etc/apk/keys
+COPY --link --from=build /home/builder/packages/*/ /packages

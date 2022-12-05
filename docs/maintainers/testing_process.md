@@ -5,7 +5,7 @@ When testing isle-buildkit image releases or possible changes, a tester can:
 * clone down the latest `isle-dc` to their local laptop / workstation
   * `git clone https://github.com/Islandora-Devops/isle-dc.git`
 
-* Look up the last commit hash in the PR on the isle-buildkit Github.com PR page. 
+* Look up the last commit hash in the PR on the isle-buildkit Github.com PR page.
   * In this example - we'll be using this PR [Allow containers to run without allocating a tty.](https://github.com/Islandora-Devops/isle-buildkit/commits/issue-174) and the value `79de15828971c10894c3cdf14eec431434c457ea` which is both the commit hash and the resulting [Docker image](https://hub.docker.com/u/islandora) / tag needed for testing.
   * In the image below one would click the overlapping squares icon to copy the full SHA of the commit.
 

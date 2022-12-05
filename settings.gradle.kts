@@ -15,7 +15,7 @@ rootProject.projectDir
             // Add any sub-folders that container project files as well.
             tests
                 .walk()
-                .filter { it.isDirectory && it.resolve("build.gradle.kts").exists() }
+                .filter { it.isDirectory && (it.resolve("build.gradle.kts").exists() || it.resolve("docker-compose.yml").exists())}
                 .forEach {
                     include(it.relativeTo(rootProject.projectDir).path.replace("/", ":"))
                 }

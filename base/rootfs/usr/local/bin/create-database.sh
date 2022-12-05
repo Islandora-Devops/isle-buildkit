@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+ARGS=("$@")
+PROGNAME=$(basename "$0")
+readonly ARGS PROGNAME
 
 function usage() {
-    cat <<- EOF
+    cat <<-EOF
     usage: $PROGNAME options FILE
 
     With no FILE, or when FILE is -, read standard input.
@@ -53,30 +54,30 @@ function fallback {
 
 function cmdline {
     local arg=
-    for arg
-    do
+    for arg; do
         local delim=""
         case "$arg" in
-            # Translate --gnu-long-options to -g (short options)
-            --driver)      args="${args}-a ";;
-            --host)        args="${args}-b ";;
-            --port)        args="${args}-c ";;
-            --user)        args="${args}-d ";;
-            --password)    args="${args}-e ";;
-            --database)    args="${args}-f ";;
-            --help)        args="${args}-h ";;
-            --debug)       args="${args}-x ";;
-            # Pass through anything else
-            *) [[ "${arg:0:1}" == "-" ]] || delim="\""
-               args="${args}${delim}${arg}${delim} ";;
+        # Translate --gnu-long-options to -g (short options)
+        --driver) args="${args}-a " ;;
+        --host) args="${args}-b " ;;
+        --port) args="${args}-c " ;;
+        --user) args="${args}-d " ;;
+        --password) args="${args}-e " ;;
+        --database) args="${args}-f " ;;
+        --help) args="${args}-h " ;;
+        --debug) args="${args}-x " ;;
+        # Pass through anything else
+        *)
+            [[ "${arg:0:1}" == "-" ]] || delim="\""
+            args="${args}${delim}${arg}${delim} "
+            ;;
         esac
     done
 
     # Reset the positional parameters to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
-    while getopts "a:b:c:d:e:f:hx" OPTION
-    do
+    while getopts "a:b:c:d:e:f:hx" OPTION; do
         case $OPTION in
         a)
             readonly DRIVER=${OPTARG}
@@ -101,8 +102,12 @@ function cmdline {
             exit 0
             ;;
         x)
-            readonly DEBUG='-x'
             set -x
+            ;;
+        *)
+            echo "Invalid Option: $OPTION" >&2
+            usage
+            exit 1
             ;;
         esac
     done
@@ -131,7 +136,7 @@ function cmdline {
         readonly PORT=${DB_PORT}
     fi
 
-    shift $((OPTIND-1))
+    shift $((OPTIND - 1))
 
     # Allow either passing in a file/pipe or reading from stdin by specifiying "-" or
     # ommiting completely.
@@ -175,17 +180,18 @@ function mysql_create_database {
 }
 
 function main {
-    cmdline ${ARGS}
+    cmdline "${ARGS[@]}"
     case "${DRIVER}" in
-        mysql)
-            mysql_create_database
-            ;;
-        postgresql)
-            postgresql_create_database
-            ;;
-        *)
-            echo "Only MySQL/PostgresSQL databases are supported for now." >&2
-            exit 1
+    mysql)
+        mysql_create_database
+        ;;
+    postgresql)
+        postgresql_create_database
+        ;;
+    *)
+        echo "Only MySQL/PostgresSQL databases are supported for now." >&2
+        exit 1
+        ;;
     esac
 }
 main

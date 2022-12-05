@@ -1,22 +1,20 @@
-@file:Suppress("UnstableApiUsage")
+import plugins.TestPlugin.DockerCompose
+import tasks.DockerPull
 
-import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
-import java.io.ByteArrayOutputStream
-import java.time.Duration.ofSeconds
-import tasks.DockerCompose
-import java.lang.RuntimeException
+val pull by tasks.registering(DockerPull::class) {
+    image.set("gcr.io/etcd-development/etcd:v3.5.6")
+}
 
-tasks.register<DockerCompose>("test") {
-    val arch = DefaultNativePlatform.getCurrentArchitecture()!!
-    timeout.convention(ofSeconds(30))
-    environment.put("ETCD_TAG", if (arch.isArm) "gcr.io/etcd-development/etcd:v3.4.15-arm64" else "gcr.io/etcd-development/etcd:v3.4.15")
-    doFirst {
-        setUp()
-        // Populate etcd before starting other containers.
-        up("-d", "etcd")
-        exec("-T", "etcd", "sh", "/populate-etcd.sh")
-        up( "--abort-on-container-exit") // Run test.sh as a CMD service and blocking until completion or failure.
-        tearDown()
-        checkExitCodes(0L)
+tasks.named<DockerCompose>("setUp") {
+    doLast {
+        project.exec {
+            commandLine = baseArguments + listOf("up", "-d", "etcd")
+            workingDir = project.projectDir
+        }
+        project.exec {
+            commandLine = baseArguments + listOf("exec", "-T", "etcd", "sh", "/populate-etcd.sh")
+            workingDir = project.projectDir
+        }
     }
+    dependsOn(pull)
 }

@@ -1,5 +1,7 @@
-#!/usr/bin/with-contenv bash
+#!/command/with-contenv bash
+# shellcheck shell=bash
 
+# shellcheck disable=SC1091
 source /usr/local/share/isle/utilities.sh
 
 # Perform check-fixity (ingests from CSV).
@@ -10,7 +12,7 @@ test -e /var/www/riprap/var/data.db
 
 # Query the database to determine if the expected number of checks occured.
 rows=$(
-cat <<'EOF' | php -f /dev/stdin
+    cat <<'EOF' | php -f /dev/stdin
 <?php
 $db  = new PDO('sqlite:/var/www/riprap/var/data.db');
 $sql = "SELECT COUNT(*) as count FROM fixity_check_event";

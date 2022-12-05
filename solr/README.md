@@ -48,7 +48,7 @@ additional settings, volumes, ports, etc.
 
 ## Changing versions
 
-There is 2 values you need to update/change the version. 
+There is 2 values you need to update/change the version.
 
 1. Solr version: found at [archive.apache.org](https://archive.apache.org/dist/lucene/solr)
 1. SOLR_FILE_SHA256: sha256sum of the tgz file

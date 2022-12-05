@@ -1,17 +1,20 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
-ARG COMMIT=6e95f2f325c910b254a2b7bd1cedf25b17874d30
+# Use a lock file for reproducible builds, always update it when updating the commit above.
+ARG COMMIT=4c3721173e8ded0cab4da673c9987ad6cb0548c9
+COPY --link rootfs/var/www/crayfits/composer.lock /tmp/composer.lock
 
 RUN --mount=type=cache,id=crayfits-downloads,sharing=locked,target=/opt/downloads \
     --mount=type=cache,id=crayfish-composer,sharing=locked,target=/root/.composer/cache \
     git-clone-cached.sh \
-        --url https://github.com/roblib/CrayFits.git \
+        --url https://github.com/nigelgbanks/CrayFits.git \
         --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
         --commit "${COMMIT}" \
         --worktree /var/www/crayfits && \
+    mv /tmp/composer.lock /var/www/crayfits/composer.lock && \
     composer install -d /var/www/crayfits
 
 FROM ${repository}/nginx:${tag}
@@ -28,8 +31,10 @@ ENV \
     CRAYFITS_LOG_LEVEL=info \
     CRAYFITS_WEBSERVICE_URI=fits:8080/fits/examine
 
-COPY --from=composer --chown=nginx:nginx /var/www /var/www
-
-COPY rootfs /
-
 WORKDIR /var/www/crayfits
+
+COPY --link --from=composer /var/www /var/www
+
+COPY --link rootfs /
+
+RUN chown -R nginx:nginx /var/www

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+# Wait for PID file to exist.
+while ! test -f /run/nginx/nginx.pid; do sleep 1; done
+
+# Wait for PHP-FPM to report it has started.
+s6-svwait -U /run/service/fpm
+
+# Block until PHP-FPM is confirmed to be working.
+while ! curl -L --silent --output --fail 'http://localhost/status' --output /dev/null; do sleep 1; done

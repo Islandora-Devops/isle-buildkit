@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+ARGS=("$@")
+PROGNAME=$(basename "$0")
+readonly ARGS PROGNAME
 
 trap 'cleanup $?' EXIT
 function cleanup() {
@@ -15,7 +16,7 @@ function cleanup() {
 function usage() {
     cat <<-EOF
     usage: $PROGNAME options [FILE]...
- 
+
     Does a git clone utilizing the Buildkit caching mechanism.
 
     OPTIONS:
@@ -26,7 +27,7 @@ function usage() {
        -s --strip         Remove the git repo as well as any files passed as parameters to save space.
        -h --help          Show this help.
        -x --debug         Debug this script.
- 
+
     Examples:
        Clone repository:
        $PROGNAME \\
@@ -73,7 +74,7 @@ function cmdline() {
     done
 
     # Reset the positional parameters to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
     while getopts "u:d:c:w:shx" OPTION; do
         case $OPTION in
@@ -94,13 +95,18 @@ function cmdline() {
             exit 0
             ;;
         x)
-            readonly DEBUG='-x'
             set -x
+            ;;
+        *)
+            echo "Invalid Option: $OPTION" >&2
+            usage
+            exit 1
             ;;
         esac
     done
 
-    readonly REPOSITORY=$(basename ${WORKTREE})
+    REPOSITORY=$(basename "${WORKTREE}")
+    readonly REPOSITORY
 
     if [[ -z $URL || -z $CACHE_DIRECTORY || -z $COMMIT || -z $WORKTREE ]]; then
         echo "Missing one or more required options: --url --cache-dir --commit --worktree" >&2
@@ -115,29 +121,30 @@ function cmdline() {
 }
 
 function remove_cache() {
-    rm -fr ${CACHE_DIRECTORY}/${REPOSITORY}
-    rm -fr ${WORKTREE}
+    rm -fr "${CACHE_DIRECTORY:?}/${REPOSITORY:?}"
+    rm -fr "${WORKTREE:?}"
 }
 
 function update_cache() {
-    git clone --mirror ${URL} ${CACHE_DIRECTORY}/${REPOSITORY} || true
-    git clone ${CACHE_DIRECTORY}/${REPOSITORY} ${WORKTREE}
-    git -C ${WORKTREE} fetch --all
+    git clone --mirror "${URL}" "${CACHE_DIRECTORY:?}/${REPOSITORY:?}" || true
+    git clone --shallow-submodules --recurse-submodules --jobs "$(nproc)" "${CACHE_DIRECTORY:?}/${REPOSITORY:?}" "${WORKTREE}"
+    git -C "${WORKTREE}" fetch --all
 }
 
 function checkout() {
-    git -C ${WORKTREE} reset --hard ${COMMIT}
+    git -C "${WORKTREE}" reset --hard "${COMMIT}"
+    git -C "${WORKTREE}" submodule update --init --recursive
 }
 
 function main() {
-    cmdline ${ARGS}
+    cmdline "${ARGS[@]}"
     update_cache
     # Attempt twice in case the history of the cache has become invalid.
     checkout || (remove_cache && update_cache && checkout)
     if [[ -z $STRIP ]]; then
-        rm -fr ${WORKTREE}/.git
+        rm -fr "${WORKTREE:?}/.git"
         for i in "${REMOVE[@]}"; do
-            rm -fr "${WORKTREE}/${i}"
+            rm -fr "${WORKTREE:?}/${i}"
         done
     fi
 }

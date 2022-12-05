@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-set -e
-exec s6-setuidgid karaf /opt/karaf/bin/karaf server

@@ -2,8 +2,7 @@
 
 # Wait for etcd to start
 while true; do
-    etcdctl endpoint status >/dev/null 2>&1 
-    if [ "$?" -eq "0" ]; then
+    if etcdctl endpoint status >/dev/null 2>&1; then
         break
     fi
     sleep 1

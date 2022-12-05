@@ -10,8 +10,9 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Confd Key           | Default | Description                                                                                       |
-| :------------------- | :----------------- | :------ | :------------------------------------------------------------------------------------------------ |
-| HOMARUS_LOG_LEVEL    | /homarus/log/level | debug   | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
+| Environment Variable | Confd Key           | Default                        | Description                                                                                       |
+| :------------------- | :------------------ | :----------------------------- | :------------------------------------------------------------------------------------------------ |
+| HOMARUS_FCREPO_URL   | /homarus/fcrepo/url | http://fcrepo:8080/fcrepo/rest | Fcrepo Rest API URL                                                                               |
+| HOMARUS_LOG_LEVEL    | /homarus/log/level  | info                           | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
 [Homarus]: https://github.com/Islandora/Crayfish/tree/main/Homarus

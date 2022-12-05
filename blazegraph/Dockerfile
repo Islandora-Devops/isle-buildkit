@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
@@ -14,10 +14,8 @@ RUN --mount=type=cache,id=blazegraph-downloads,sharing=locked,target=/opt/downlo
 
 FROM ${repository}/tomcat:${tag}
 
-RUN mkdir /data && \
-    chown tomcat:tomcat /data
+COPY --link --from=download /opt/tomcat /opt/tomcat
 
-COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
+COPY --link rootfs /
 
-COPY rootfs /
-COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat
+RUN chown -R tomcat:tomcat /opt/tomcat

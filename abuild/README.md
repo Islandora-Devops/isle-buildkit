@@ -20,7 +20,7 @@ Define a docker file that:
 3. Run `abuild` to build the package using `APKBUILD`.
 
 ```dockerfile
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 FROM islandora/abuild:latest
 
 # Include packages required for building the package (not necessarily the ones require for running).

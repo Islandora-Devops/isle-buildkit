@@ -1,0 +1,11 @@
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+services:
+  base:
+    <<: *common
+    image: ${BASE_IMAGE:-islandora.dev/base:latest}

@@ -1,0 +1,98 @@
+# file: docker-compose.yml
+#
+# Tests the following:
+# - Site starts.
+# - Derivatives get created.
+# - Content is index in Solr.
+# - Content is index in Fedora.
+# - Matomo is installed?
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+volumes:
+  drupal-solr-config: {}
+
+services:
+  alpaca:
+    <<: *common
+    image: ${ALPACA_IMAGE:-islandora.dev/alpaca:latest}
+    environment:
+      # Increase the throughput of consumption from the queue.
+      ALPACA_ACTIVEMQ_CONNECTIONS: 100
+      ALPACA_ACTIVEMQ_CONSUMERS: 10
+    depends_on:
+      - activemq
+  crayfits:
+    <<: *common
+    image: ${CRAYFITS_IMAGE:-islandora.dev/crayfits:latest}
+  fits:
+    <<: *common
+    image: ${FITS_IMAGE:-islandora.dev/fits:latest}
+  homarus:
+    <<: *common
+    image: ${HOMARUS_IMAGE:-islandora.dev/homarus:latest}
+  houdini:
+    <<: *common
+    image: ${HOUDINI_IMAGE:-islandora.dev/houdini:latest}
+  hypercube:
+    <<: *common
+    image: ${HYPERCUBE_IMAGE:-islandora.dev/hypercube:latest}
+  mariadb:
+    <<: *common
+    image: ${MARIADB_IMAGE:-islandora.dev/mariadb:latest}
+  milliner:
+    <<: *common
+    image: ${MILLINER_IMAGE:-islandora.dev/milliner:latest}
+  activemq:
+    <<: *common
+    image: ${ACTIVEMQ_IMAGE:-islandora.dev/activemq:latest}
+  blazegraph:
+    <<: *common
+    image: ${BLAZEGRAPH_IMAGE:-islandora.dev/blazegraph:latest}
+  cantaloupe:
+    <<: *common
+    image: ${CANTALOUPE_IMAGE:-islandora.dev/cantaloupe:latest}
+  test:
+    <<: *common
+    image: ${TEST_IMAGE:-islandora.dev/test:latest}
+    environment:
+      # Keep this in sync with "islandora.drupal.properties" in the helm chart.
+      DRUPAL_DEFAULT_BROKER_URL: "tcp://activemq:61613"
+      DRUPAL_DEFAULT_CANTALOUPE_URL: "http://test/cantaloupe/iiif/2"
+      DRUPAL_DEFAULT_CONFIGDIR: "/var/www/drupal/config/sync"
+      DRUPAL_DEFAULT_FCREPO_HOST: "fcrepo"
+      DRUPAL_DEFAULT_FCREPO_PORT: 8080
+      DRUPAL_DEFAULT_FCREPO_URL: "http://fcrepo:8080/fcrepo/rest/"
+      DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG: "true"
+      DRUPAL_DEFAULT_MATOMO_URL: "http://test/matomo/"
+      DRUPAL_DEFAULT_NAME: "Islandora Digital Collections"
+      DRUPAL_DEFAULT_PROFILE: "minimal"
+      DRUPAL_DEFAULT_SITE_URL: "test"
+      DRUPAL_DEFAULT_SOLR_CORE: "default"
+      DRUPAL_DRUSH_URI: "http://test" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
+      DRUPAL_ENABLE_HTTPS: false
+    volumes:
+      - drupal-solr-config:/opt/solr/server/solr/default:ro
+      - ./test.sh:/test.sh # Test to run.
+    command: /test.sh # Run test and exit.
+  fcrepo:
+    <<: *common
+    image: ${FCREPO6_IMAGE:-islandora.dev/fcrepo6:latest}
+    environment:
+      FCREPO_ALLOW_EXTERNAL_DEFAULT: "http://default/"
+      FCREPO_ALLOW_EXTERNAL_DRUPAL: "http://test/"
+    depends_on:
+      - activemq
+  solr:
+    <<: *common
+    image: ${SOLR_IMAGE:-islandora.dev/solr:latest}
+    volumes:
+      - type: volume
+        source: drupal-solr-config
+        target: /opt/solr/server/solr/default
+        volume:
+          nocopy: true

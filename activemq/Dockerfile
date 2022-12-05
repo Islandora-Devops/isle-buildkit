@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
@@ -29,11 +29,13 @@ ENV \
     ACTIVEMQ_WEB_ADMIN_PASSWORD=password \
     ACTIVEMQ_WEB_ADMIN_ROLES=admin
 
-COPY --from=download /etc/group /etc/group
-COPY --from=download /etc/passwd /etc/passwd
-COPY --from=download /etc/shadow /etc/shadow
-COPY --from=download --chown=activemq:activemq /opt/activemq /opt/activemq
-
-COPY rootfs /
-
 WORKDIR /opt/activemq
+
+COPY --link --from=download /etc/group /etc/group
+COPY --link --from=download /etc/passwd /etc/passwd
+COPY --link --from=download /etc/shadow /etc/shadow
+COPY --link --from=download /opt/activemq /opt/activemq
+
+COPY --link rootfs /
+
+RUN chown -R activemq:activemq /opt/activemq

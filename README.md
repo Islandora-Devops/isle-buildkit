@@ -9,6 +9,7 @@
   - [Build All Images](#build-all-images)
   - [Build Specific Image](#build-specific-image)
   - [Building Continuously](#building-continuously)
+- [Testing](#testing)
 - [Running](#running)
 - [Docker Images](#docker-images)
 - [Design Considerations](#design-considerations)
@@ -23,26 +24,23 @@
 ## Introduction
 
 This repository provides a number of docker images which can be used to build an
-Islandora 8 site. On commit, these images are automatically pushed to 
-[Docker Hub](https://hub.docker.com/u/islandora) via Github Actions. Which are 
-consumed by [isle-dc] and can be used by other Docker orchestration tools such 
-as Swarm / Kubernetes.
+Islandora site. On commit, these images are automatically pushed to
+[Docker Hub] via Github Actions. Which are consumed by [isle-dc] and can be used
+by other Docker orchestration tools such as Swarm / Kubernetes.
 
 It is **not** meant as a starting point for new users or those unfamiliar with
-Docker, or basic server adminstration.
+Docker, or basic server administration.
 
-If you are looking to use islandora please read the
-[official documentation](https://islandora.github.io/documentation/) and use
-either [isle-dc] to deploy via Docker or the
-[islandora-playbook](https://github.com/Islandora-Devops/islandora-playbook) to
-deploy via Ansible.
+If you are looking to use islandora please read the [official documentation] and
+use either [isle-dc] or the [Isle Site Template] to deploy via [Docker] or the
+[islandora-playbook] to deploy via [Ansible].
 
 ## Requirements
 
 To build the Docker images using the provided Gradle build scripts requires:
 
 - [Docker 19.03+](https://docs.docker.com/get-docker/)
-- [OpenJDK or Oracle JDK 8+](https://www.java.com/en/download/)
+- [OpenJDK or Oracle JDK 11+](https://www.java.com/en/download/)
 
 That being said the images themselves are compatible with older versions of
 Docker.
@@ -98,18 +96,18 @@ base:build - Creates Docker image.
 ```
 
 In Gradle each Project maps onto a folder in the file system path where it is
-delimited by ``:`` instead of ``/`` (Unix) or ``\`` (Windows).
+delimited by `:` instead of `/` (Unix) or `\` (Windows).
 
-The root project ``:`` can be omitted.
+The root project `:` can be omitted.
 
-So if you want to run a particular task ``taskname`` that resided in the project
-folder ``project/subproject`` you would specify it like so:
+So if you want to run a particular task `taskname` that resided in the project
+folder `project/subproject` you would specify it like so:
 
 ```bash
 ./gradlew :project:subproject:taskname
 ```
 
-To get more verbose output from Gradle use the ``--info`` argument like so:
+To get more verbose output from Gradle use the `--info` argument like so:
 
 ```bash
 ./gradlew :PROJECT:TASK --info
@@ -128,7 +126,7 @@ The following will build all the images in the correct order.
 ### Build Specific Image
 
 To build a specific image and it's dependencies, for example
-``islandora/tomcat``, you can use the following:
+`islandora/tomcat`, you can use the following:
 
 ```bash
 ./gradlew tomcat:build
@@ -137,80 +135,136 @@ To build a specific image and it's dependencies, for example
 ### Building Continuously
 
 It is often helpful to build continuously where-in any change you make to any of
-the Dockerfiles or other project files, will automatically trigger the building
-of that image and any downstream dependencies. To do this add the
-``--continuous`` flag like so:
+the `Dockerfile` files or other project files, will automatically trigger the
+building of that image and any downstream dependencies. To do this add the
+`--continuous` flag like so:
 
 ```bash
 ./gradlew build --continuous
 ```
 
-When this is combined with the use of ``watchtower`` and
-``restart: unless-stopped`` in a ``docker-compose.yml`` file. Images will be
-redeployed with the latest changes while you develop automatically.
+## Testing
+
+There are a number of automated tests that are included in this repository which
+can be found in the `tests` folders of each docker image project.
+
+To run these tests use the following command:
+
+```bash
+./gradlew test
+```
+
+To manually test changes in a functioning environment use the command:
+
+```bash
+./gradlew up
+```
+
+This will bring up the environment based on [islandora-starter-site]. When
+completed a message will print like so:
+
+```
+For all services the credentials are:
+
+Username: admin
+Password: password
+
+The following services can be reached at the given URLs:
+
+ActiveMQ: https://activemq.islandora.dev/
+Blazegraph: https://blazegraph.islandora.dev/bigdata/
+Drupal: https://islandora.dev/
+Fedora: https://fcrepo.islandora.dev/fcrepo/rest/
+Matomo: https://islandora.dev/matomo/index.php
+Solr: https://solr.islandora.dev/solr/#/
+Traefik: https://traefik.islandora.dev/dashboard/#/
+```
+
+To destroy this environment use the following command:
+
+```bash
+./gradlew down
+```
+
+The two commands can be used at once to ensure you are starting from a clean
+environment:
+
+```bash
+./gradlew down up
+```
 
 ## Running
 
-There is no method for running the containers in `isle-buildkit`, instead please
-refer to [isle-dc].
+While `isle-buildkit` does provide a [test environment](#testing), it is not
+meant for development on Islandora or as production environment. Instead please
+refer to [isle-dc], or the [Isle Site Template], for how to build your own
+Islandora site.
 
 ## Docker Images
 
 The following docker images are provided:
 
-- [abuild](./abuild/README.md)
-- [activemq](./activemq/README.md)
-- [alpaca](./alpaca/README.md)
-- [base](./base/README.md)
-- [blazegraph](./blazegraph/README.md)
-- [cantaloupe](./cantaloupe/README.md)
-- [crayfish](./crayfish/README.md)
-- [crayfits](./crayfits/README.md)
-- [demo](./demo/README.md)
-- [drupal](./drupal/README.md)
-- [fcrepo](./fcrepo/README.md)
-- [fits](./fits/README.md)
-- [handle](./handle/README.md)
-- [homarus](./homarus/README.md)
-- [houdini](./houdini/README.md)
-- [hypercube](./hypercube/README.md)
-- [imagemagick](./imagemagick/README.md)
-- [java](./java/README.md)
-- [karaf](./karaf/README.md)
-- [mariadb](./mariadb/README.md)
-- [matomo](./matomo/README.md)
-- [milliner](./milliner/README.md)
-- [nginx](./nginx/README.md)
-- [postgresql](./postgresql/README.md)
-- [recast](./recast/README.md)
-- [solr](./solr/README.md)
-- [tomcat](./tomcat/README.md)
+- [abuild]
+- [activemq]
+- [alpaca]
+- [base]
+- [blazegraph]
+- [cantaloupe]
+- [crayfish]
+- [crayfits]
+- [drupal]
+- [fcrepo]
+- [fcrepo6]
+- [fits]
+- [handle]
+- [homarus]
+- [houdini]
+- [hypercube]
+- [imagemagick]
+- [java]
+- [karaf]
+- [mariadb]
+- [matomo]
+- [milliner]
+- [nginx]
+- [postgresql]
+- [recast]
+- [ripgrep]
+- [solr]
+- [test]
+- [tomcat]
 
 Many are intermediate images used to build other images in the list, for example
-[java](./java/README.md). Please see the README of each image to find out what
-settings, and ports, are exposed and what functionality it provides.
+[java](./java/README.md). Please see the `README.md` of each image to find out
+what settings, and ports, are exposed and what functionality it provides, as
+well as how to update it to the latest releases.
 
 ## Design Considerations
 
 All of the images build by this project are derived from the
-[Alpine Docker Image](https://hub.docker.com/_/alpine) which is a Linux
-distribution built around ``musl`` ``libc`` and ``BusyBox``. The image is only 5
-MB in size and has access to a package repository. It has been chosen for its
-small size, and ease of generating custom packages (as is done in the
-[imagemagick](./imagemagick/README.md) image).
+[Alpine Docker Image] which is a Linux distribution built around [musl libc] and
+[BusyBox].
 
-The [base](./base/README.md) image includes two tools essential to the
-functioning of all the images.
+> N.B. While [musl libc] is of general higher quality vs. [glibc], it is less
+> commonly used and many libraries have come to depend on the undefined behavior
+> of [glibc] so in some of our images we patch in [glibc] to ensure their
+> correct function.
 
-- [Confd](https://github.com/kelseyhightower/confd) - Configuration Management
-- [S6 Overlay](https://github.com/just-containers/s6-overlay) - Process Manager
-  / Initialization system.
+The image is only `5MB` in size and has access to a package repository. It has
+been chosen for its small size, and ease of generating custom packages (as is
+done in the [imagemagick] image).
+
+The [base] image includes two tools essential to the functioning of all the
+images.
+
+- [Confd]: Configuration Management
+- [S6 Overlay]: Process Manager / Initialization system
 
 ### Confd
 
-``confd`` is used for all Configuration Management, it is how images are
+`confd` is used for all Configuration Management, it is how images are
 customized on startup and during runtime. For each Docker image there will be a
-folder ``rootfs/etc/confd`` that has the following layout:
+folder `rootfs/etc/confd` that has the following layout:
 
 ```bash
 ./rootfs/etc/confd
@@ -220,14 +274,14 @@ folder ``rootfs/etc/confd`` that has the following layout:
     └── file.ext.tmpl
 ```
 
-The ``file.ext.toml`` and ``file.ext.tmpl`` work as a pair. The ``toml`` file
-defines where the template will be render to and who owns it, and the ``tmpl``
-file being the template in question. Ideally these files should match the same
-name of the file they are generating minus the ``toml`` or ``tmpl`` suffix. This
-is to make their discovery easier.
+The `file.ext.toml` and `file.ext.tmpl` work as a pair. The `toml` file
+defines where the template will be render to and who owns it. The `tmpl` file
+being the template in question. Ideally these files should match the same name
+of the file they are generating minus the `toml` or `tmpl` suffix. This is
+to make their discovery easier.
 
-Additionally in the ``base`` image there is ``confd.toml`` which sets defaults
-such a the ``log-level``:
+Additionally in the `base` image there is `confd.toml` which sets defaults
+such a the `log-level`:
 
 ```toml
 backend = "env"
@@ -237,12 +291,12 @@ interval = 600
 noop = false
 ```
 
-``confd`` is also the source of all truth when it comes to configuration. We
+`confd` is also the source of all truth when it comes to configuration. We
 have established a order of precedence in which environment variables at runtime
 are defined.
 
 1. Confd backend (highest)
-2. Secrets kept in `/run/secrets` (Except when using ``Kubernetes``)
+2. Secrets kept in `/run/secrets` (Except when using `Kubernetes`)
 3. Environment variables passed into the container
 4. Environment variables defined in Dockerfile(s)
 5. Environment variables defined in the `/etc/defaults` directory (lowest only used for multiline variables, such as JWT)
@@ -252,61 +306,73 @@ list.
 
 > N.B. `/etc/defaults` and the environment variables declared in the
 > Dockerfile(s) used to create the image are **required** to define all
-> environment variables used by scripts and ``confd`` templates. If not
+> environment variables used by scripts and `confd` templates. If not
 > specified in either of those locations the environment variables will not be
-> available even if its defined at a **higher** level i.e. ``confd``.
+> available even if its defined at a **higher** level i.e. `confd`.
 
 The logic which enforces these rules is performed in
-[00-container-environment-00-init.sh](./base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh)
+[container-environment.sh](base/rootfs/etc/s6-overlay/scripts/container-environment.sh)
 
 > N.B Some containers derive environment variables dynamically from other
 > environment variables. In these cases they are expected to provided an
-> additional startup script prefixed with ``00-container-environment-01-*.sh``
-> so that the variables are defined before ``confd`` is used to render
+> additional `oneshot` services that must be executed before the `confd-oneshot`
+> so that the variables are defined before `confd` is used to render
 > templates.
 
-By either using the command ``with-contenv`` or starting a script with
-``#!/usr/bin/with-contenv bash`` the environment defined will follow the order
-of precedence above. Additionally Within ``confd`` templates it is **required**
-to use `getenv` function for fetching data.
+By either using the command `with-contenv` or starting a script with
+`#!/command/with-contenv bash` the environment defined will follow the order
+of precedence above. Additionally Within `confd` templates it is **required**
+to use `getenv` function for fetching data, as the *final* value is written to
+the container environment.
 
 ### S6 Overlay
 
-From this tool we only really take advantage of two features:
+[S6 Overlay] is the process supervisor we use in all the containers. It ensures
+initialization happens in the correct order and services start in the correct
+order (e.g. `fpm-php` starts prior to `nginx`, etc).
 
-- Initialization scripts (*found in ``rootfs/etc/cont-init.d``*)
-- Service scripts (*found in ``rootfs/etc/services.d``*)
+There are two types of services:
 
-Initialization scripts are run when the container is started and they execute in
-alphabetical order. So to control the execution order they are prefix with
-numbers.
+- `oneshot` Services: Short lived services, used to prepare the container prior to running services
+- `longrun` Services: Long lived services like Nginx
 
-One initialization script ``01-confd-render-templates.sh`` is shared by all the
-images. It does a first past render of the ``confd`` templates so subsequent
-scripts can run. The rest of the scripts do the minimal steps required to get
-the container into a ready state before the Service scripts start.
+Both types of services can have dependencies on one another, which indicates the
+order in which they are executed. `oneshot` services are run to **completion**
+before their dependent services are executed. `longrun` services are meant to
+run indefinitely, if for some reason one fails the container will stop and exit
+with the code of the failed service (provided a `finish` script is provided).
 
-The services scripts have the following structure:
+The `longrun` services have the following structure:
 
 ```bash
-./rootfs/etc/services.d
+./rootfs/etc/s6-overlay/s6-rc.d
 └── SERVICE_NAME
+    ├── dependencies.d
+    │   └── base
     ├── finish
-    └── run
+    ├── run
+    └── type
 ```
 
-The ``run`` script is responsible for starting the service in the
-**foreground**. The ``finish`` script can perform any cleanup necessary before
+The `run` script is responsible for starting the service in the
+**foreground**. The `finish` script can perform any cleanup necessary before
 stopping the service, but in general it is used to kill the container, like so:
 
 ```bash
-s6-svscanctl -t /var/run/s6/services
+/run/s6/basedir/bin/halt
 ```
 
-There are only a few Service scripts:
+To declare dependencies between services, just add an empty file with the
+services name in it's `dependencies.d` folder.
+
+For scripts we want to run at startup run we must register them. This can be
+done by placing an empty file named for the service in
+`./rootfs/etc/s6-overlay/s6-rc.d/user/contents.d`.
+
+There are only a few `longrun` services:
 
 - activemq
-- confd
+- confd (optional, not enabled by default)
 - fpm
 - karaf
 - mysqld
@@ -314,9 +380,38 @@ There are only a few Service scripts:
 - solr
 - tomcat
 
-Of these only ``confd`` can be configured to run in every container, it
-periodically listens for changes in it's configured backend (e.g. ``etcd`` or
-``environment variables``) and will re-render the templates upon any change.
+Of these only `confd` can be configured to run in every container, it
+periodically listens for changes in it's configured backend (e.g. `etcd` or
+`environment variables`) and will re-render the templates upon any change (see
+it's [README.md](./base/README.md), for more information).
+
+`oneshot` services are pretty much the same, except they use they `up` and
+`down` instead of `run` and `finish`.
+
+Additionally `up` is an [execline] script and does not support `bash`. So we
+typically just call out to a `bash` script instead, which by convention can be
+found in `./rootfs/etc/s6-overlay/scripts`.
+
+One `oneshot` service is of particular interest to **all** the containers. The
+`ready` service, which does not do anything in and of itself. It is meant as a
+placeholder that other services can rely on to ensure that typical actions have
+been performed, such as the configuration of environment variables, the
+rendering of templates and so on.
+
+> N.B. **All** `longrun` services should have a dependency on the `ready`
+> service.
+
+If you need to wait until a service to be ready for use, use the following
+command:
+
+```bash
+# Wait for PHP-FPM to report it has started.
+s6-svwait -U /run/service/fpm
+```
+
+> N.B. This requires the service to make use of
+> [notification-fd](https://skarnet.org/software/s6/notifywhenup.html), which at
+> the time of writing is only implemented for `nginx` and `php-fpm`
 
 ### Image Hierarchy
 
@@ -336,33 +431,36 @@ are arranged in a hierarchy, that roughly follows below:
     │       ├── blazegraph
     │       ├── cantaloupe
     │       ├── fcrepo
+    │       ├── fcrepo6
     │       └── fits
     ├── mariadb
+    ├── postgresql
     └── nginx
         ├── crayfish
         │   ├── homarus
         │   ├── houdini (consumes "imagemagick" as well during its build stage)
         │   ├── hypercube
         │   ├── milliner
-        │   └── recast
+        │   ├── recast
+        │   └── riprap
         ├── crayfits
         ├── drupal
-        │   └── demo
+        │   └── test
         └── matomo
 ```
 
-[abuild](./abuild/README.md) and [imagemagick](./imagemagick/README.md) stand
-outside of the hierarchy as they are use only to build packages that are
-consumed by other images during their build stage.
+[abuild], [download], [composer], and [imagemagick] stand outside of the
+hierarchy as they are use only to build packages that are consumed by other
+images during their build stage.
 
 ### Folder Layout
 
 To make reasoning about what files go where each image follows the same
 filesystem layout for copying files into the image.
 
-A folder called ``rootfs`` maps directly onto the linux filesystem of the final
-image. So for example ``rootfs/etc/islandora/configs`` will be
-``/etc/islandora/configs`` in the generated image.
+A folder called `rootfs` maps directly onto the linux filesystem of the final
+image. So for example `rootfs/etc/islandora/configs` will be
+`/etc/islandora/configs` in the generated image.
 
 ### Build System
 
@@ -374,9 +472,9 @@ that the projects cannot be nested, though that use case does not really apply.
 
 The dependencies are resolved by parsing the Dockerfile and looking for:
 
-- ``FROM``statements
-- ``--mount=type=bind`` statements
-- ``COPY --from`` statements
+- `FROM` statements
+- `--mount=type=bind` statements
+- `COPY --from` statements
 
 As they are capable of referring to other images.
 
@@ -389,6 +487,7 @@ argument.
 For example:
 
 ```Dockerfile
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
 FROM ${repository}/base:${tag}
@@ -396,38 +495,25 @@ FROM ${repository}/base:${tag}
 
 ## Design Constraints
 
-To be able to support a wide variety of backends for ``confd``, as well as
-orchestration tools, all calls **must use getenv for the default
-value**. With the exception of keys that do not get used unless defined like
-``DRUPAL_SITE_{SITE}_NAME``. This means the whatever backend for configuration,
-wether it be ``etcd``, ``consul``, or ``environment variables``, containers can
+To be able to support a wide variety of backends for `confd`, as well as
+orchestration tools, all calls **must use** `getenv` for the default value. With
+the exception of keys that do not get used unless defined like
+`DRUPAL_SITE_{SITE}_NAME`. This means the whatever backend for configuration,
+wether it be `etcd`, `consul`, or `environment variables`, containers can
 successfully start without any other container present. Additionally it ensure
 that the order of precedence for configuration settings.
 
 This does not completely remove dependencies between containers, for example,
-when the [demo](../docker/demo/README.md) starts it requires a running
-[fcrepo](../docker/fcrepo/README.md) to be able to ingest nodes created by
-``islandora_default`` features. In these cases an initialization script can
-block until another container is available or a timeout has been reached. For
-example:
+when the [fcrepo6] starts it requires a running database like [mariadb] to be
+able to start. In these cases an `oneshot` service can block until another
+container is available or a timeout has been reached. For example:
 
 ```bash
-local fcrepo_url=
-
-# Indexing fails if port 80 is given explicitly.
-if [[ "${DRUPAL_DEFAULT_FCREPO_PORT}" == "80" ]]; then
-    fcrepo_url="http://${DRUPAL_DEFAULT_FCREPO_HOST}/fcrepo/rest/"
+# Need access to database to start wait up to 5 minutes (i.e 300 seconds).
+if timeout 300 wait-for-open-port.sh "${DB_HOST}" "${DB_PORT}" ; then
+    echo "Database Found"
 else
-    fcrepo_url="http://${DRUPAL_DEFAULT_FCREPO_HOST}:${DRUPAL_DEFAULT_FCREPO_PORT}/fcrepo/rest/"
-fi
-
-#...
-
-# Need access to Solr before we can actually import the right config.
-if timeout 300 wait-for-open-port.sh "${DRUPAL_DEFAULT_FCREPO_HOST}" "${DRUPAL_DEFAULT_FCREPO_PORT}" ; then
-    echo "Fcrepo Found"
-else
-    echo "Could not connect to Fcrepo"
+    echo "Could not connect to Database"
     exit 1
 fi
 ```
@@ -439,11 +525,82 @@ This allows container to start up in any order, and to be orchestrated by any to
 **Question:** I'm getting the following error when building:
 
 ```bash
-failed to solve with frontend dockerfile.v0: failed to solve with frontend gateway.v0: runc did not terminate successfully: context canceled
+failed to solve with frontend dockerfile.v0: failed to solve with frontend
+gateway.v0: runc did not terminate successfully: context canceled
 ```
 
 **Answer:** If possible upgrade Docker to the latest version, and switch to
 using the [Overlay2] filesystem with Docker.
 
-[Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver
+
+**Question:** I'm getting the following error when running many tests at once:
+
+```bash
+ERROR: could not find an available, non-overlapping IPv4 address pool among the
+defaults to assign to the network
+```
+**Answer:** By default Docker only allows **31** concurrent bridge networks to
+be created, but you can change this in your `/etc/docker/daemon.json` file by
+adding the following, and restarting `Docker`:
+
+```json
+{
+  "default-address-pools" : [
+    {
+      "base" : "172.17.0.0/12",
+      "size" : 20
+    },
+    {
+      "base" : "192.168.0.0/16",
+      "size" : 24
+    }
+  ]
+}
+```
+
+[abuild]: ./abuild/README.md
+[activemq]: ./activemq/README.md
+[alpaca]: ./alpaca/README.md
+[base]: ./base/README.md
+[blazegraph]: ./blazegraph/README.md
+[cantaloupe]: ./cantaloupe/README.md
+[crayfish]: ./crayfish/README.md
+[crayfits]: ./crayfits/README.md
+[drupal]: ./drupal/README.md
+[fcrepo]: ./fcrepo/README.md
+[fcrepo6]: ./fcrepo6/README.md
+[fits]: ./fits/README.md
+[handle]: ./handle/README.md
+[homarus]: ./homarus/README.md
+[houdini]: ./houdini/README.md
+[hypercube]: ./hypercube/README.md
+[imagemagick]: ./imagemagick/README.md
+[java]: ./java/README.md
+[karaf]: ./karaf/README.md
+[mariadb]: ./mariadb/README.md
+[matomo]: ./matomo/README.md
+[milliner]: ./milliner/README.md
+[nginx]: ./nginx/README.md
+[postgresql]: ./postgresql/README.md
+[recast]: ./recast/README.md
+[ripgrep]: ./ripgrep/README.md
+[solr]: ./solr/README.md
+[test]: ./test/README.md
+[tomcat]: ./tomcat/README.md
+
+[Alpine Docker Image]: https://hub.docker.com/_/alpine
+[Ansible]: https://docs.ansible.com/ansible/latest/user_guide/index.html#getting-started
+[BusyBox]: https://busybox.net/
+[Confd]: https://github.com/kelseyhightower/confd
+[Docker Hub]: https://hub.docker.com/u/islandora
+[Docker]: https://docs.docker.com/get-started/
+[execline]: https://skarnet.org/software/execline/index.html
+[glibc]: https://www.gnu.org/software/libc/
+[islandora-playbook]: https://github.com/Islandora-Devops/islandora-playbook
+[islandora-starter-site]: https://github.com/Islandora/islandora-starter-site
+[Isle Site Template]: https://github.com/Islandora-Devops/isle-site-template
 [isle-dc]: https://github.com/Islandora-Devops/isle-dc
+[musl libc]: https://musl.libc.org/
+[official documentation]: https://islandora.github.io/documentation/
+[Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver
+[S6 Overlay]: https://github.com/just-containers/s6-overlay

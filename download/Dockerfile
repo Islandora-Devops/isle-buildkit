@@ -1,5 +1,5 @@
-# syntax=docker/dockerfile:1.2.1
-ARG alpine=3.15.0
+# syntax=docker/dockerfile:1.4.3
+ARG alpine=3.16.2
 FROM alpine:${alpine} AS cache
 FROM alpine:${alpine}
 
@@ -20,4 +20,4 @@ RUN --mount=type=cache,id=download-apk,sharing=locked,from=cache,target=/var/cac
 ENV DOWNLOAD_CACHE_DIRECTORY=/opt/downloads \
     TERM=xterm
 
-COPY rootfs /
+COPY --link rootfs /

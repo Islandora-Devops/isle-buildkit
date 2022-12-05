@@ -23,20 +23,19 @@ metrics for.
 
 ### Confd Settings
 
-| Environment Variable          | Confd Key                      | Default                                                      | Description                                                     |
-| :---------------------------- | :----------------------------- | :----------------------------------------------------------- | :-------------------------------------------------------------- |
-| MATOMO_ASSUME_SECURE_PROTOCOL | /matomo/assume/secure/protocol | 1                                                            | <https://matomo.org/faq/how-to-install/faq_98/>                 |
-| MATOMO_DEFAULT_HOST           | /matomo/default/host           | islandora.traefik.me                                         | The URL of the default site for which to gather metrics for     |
-| MATOMO_DEFAULT_NAME           | /matomo/default/name           | Islandora                                                    | The name of the default site                                    |
-| MATOMO_DEFAULT_TIMEZONE       | /matomo/default/timezone       | America/Halifax                                              | The timezone where the default site is hosted                   |
-| MATOMO_FORCE_SSL              | /matomo/force/ssl              | 1                                                            | <https://matomo.org/faq/how-to/faq_91/>                         |
-| MATOMO_PROXY_CLIENT_HEADERS   | /matomo/proxy/client/headers   | HTTP_X_FORWARDED_FOR                                         | <https://matomo.org/faq/how-to-install/faq_98/>                 |
-| MATOMO_PROXY_HOST_HEADERS     | /matomo/proxy/host/headers     | HTTP_X_FORWARDED_HOST                                        | <https://matomo.org/faq/how-to-install/faq_98/>                 |
-| MATOMO_PROXY_URI_HEADER       | /matomo/proxy/uri/header       | 1                                                            | <https://matomo.org/faq/how-to-install/faq_98/>                 |
-| MATOMO_SALT                   | /matomo/salt                   | 5a472390550bd59e4428a41aa472137b                             | Used to generate hashes.                                        |
-| MATOMO_USER_EMAIL             | /matomo/user/email             | admin@example.org                                            | The matomo administrator email                                  |
-| MATOMO_USER_NAME              | /matomo/user/name              | admin                                                        | The matomo administrator user                                   |
-| MATOMO_USER_PASS              | /matomo/user/pass              | $2y$10$S38e7HPM9LI3aOIvcnRsfuMCm4ipNP572QsvbCK60upoHVJ61hMrS | The matomo administrator's password (See how to generate below) |
+| Environment Variable          | Confd Key                      | Default                      | Description                                                     |
+| :---------------------------- | :----------------------------- | :--------------------------- | :-------------------------------------------------------------- |
+| MATOMO_ASSUME_SECURE_PROTOCOL | /matomo/assume/secure/protocol | 1                            | <https://matomo.org/faq/how-to-install/faq_98/>                 |
+| MATOMO_DEFAULT_HOST           | /matomo/default/host           | https://islandora.traefik.me | The URL of the default site for which to gather metrics for     |
+| MATOMO_DEFAULT_NAME           | /matomo/default/name           | Islandora                    | The name of the default site                                    |
+| MATOMO_DEFAULT_TIMEZONE       | /matomo/default/timezone       | America/Halifax              | The timezone where the default site is hosted                   |
+| MATOMO_FORCE_SSL              | /matomo/force/ssl              | 1                            | <https://matomo.org/faq/how-to/faq_91/>                         |
+| MATOMO_PROXY_CLIENT_HEADERS   | /matomo/proxy/client/headers   | HTTP_X_FORWARDED_FOR         | <https://matomo.org/faq/how-to-install/faq_98/>                 |
+| MATOMO_PROXY_HOST_HEADERS     | /matomo/proxy/host/headers     | HTTP_X_FORWARDED_HOST        | <https://matomo.org/faq/how-to-install/faq_98/>                 |
+| MATOMO_PROXY_URI_HEADER       | /matomo/proxy/uri/header       | 1                            | <https://matomo.org/faq/how-to-install/faq_98/>                 |
+| MATOMO_USER_EMAIL             | /matomo/user/email             | admin@example.org            | The matomo administrator email                                  |
+| MATOMO_USER_NAME              | /matomo/user/name              | admin                        | The matomo administrator user                                   |
+| MATOMO_USER_PASS              | /matomo/user/pass              | password                     | The matomo administrator's password (See how to generate below) |
 
 To regenerate a the `MATOMO_USER_PASS` you must use the following snippet of
 [PHP](https://matomo.org/faq/how-to/faq_191/).

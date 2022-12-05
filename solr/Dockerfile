@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
 ARG alpine=3.15.0
@@ -28,15 +28,14 @@ ENV \
     SOLR_LOG_LEVEL=INFO \
     SOLR_MEMORY=512m
 
-COPY --from=download /etc/group /etc/group
-COPY --from=download /etc/passwd /etc/passwd
-COPY --from=download /etc/shadow /etc/shadow
-COPY --from=download --chown=solr:solr /opt/solr /opt/solr
-
-# Solr requires GNU ps.
-RUN --mount=type=cache,id=solr-apk,sharing=locked,from=cache,target=/var/cache/apk \
-    apk add procps
-
-COPY rootfs /
-
 WORKDIR /opt/solr
+
+COPY --link --from=download /etc/group /etc/group
+COPY --link --from=download /etc/passwd /etc/passwd
+COPY --link --from=download /etc/shadow /etc/shadow
+COPY --link --from=download /opt/solr /opt/solr
+
+COPY --link rootfs /
+
+RUN mkdir /opt/data && \
+    chown -R solr:solr /opt/solr /opt/data

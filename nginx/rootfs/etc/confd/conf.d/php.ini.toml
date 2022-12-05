@@ -1,6 +1,6 @@
 [template]
 src = "php.ini.tmpl"
-dest = "/etc/php7/php.ini"
+dest = "/etc/php81/php.ini"
 uid = 0
 gid = 0
 mode = "0644"

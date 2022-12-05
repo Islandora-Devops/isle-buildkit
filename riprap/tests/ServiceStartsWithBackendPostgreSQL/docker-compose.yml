@@ -2,7 +2,7 @@
 version: "3.8"
 services:
   postgresql:
-    image: ${MYSQL_IMAGE:-local/postgresql:latest}
+    image: ${POSTGRESQL_IMAGE:-islandora.dev/postgresql:latest}
   riprap:
     # Allow downstream container to override `DB` environment variables.
     environment:
@@ -11,4 +11,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-local/riprap:latest}
+    image: ${BASE_IMAGE:-islandora.dev/riprap:latest}

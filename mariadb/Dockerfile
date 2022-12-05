@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM alpine:${alpine} AS cache
 FROM ${repository}/base:${tag}
 
@@ -17,4 +17,4 @@ RUN --mount=type=cache,id=mariadb-apk,sharing=locked,from=cache,target=/var/cach
     chown -R mysql:mysql /var/lib/mysql-files && \
     cleanup.sh
 
-COPY rootfs /
+COPY --link rootfs /

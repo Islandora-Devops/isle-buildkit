@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
@@ -61,13 +61,15 @@ ENV \
     HANDLE_PERSISTENCE_TYPE=bdbje \
     HANDLE_TEMPLATE_NS_OVERRIDE=no
 
-COPY --from=download /etc/group /etc/group
-COPY --from=download /etc/passwd /etc/passwd
-COPY --from=download /etc/shadow /etc/shadow
-COPY --from=download --chown=handle:handle /opt/handle /opt/handle
-COPY --from=download --chown=handle:handle /opt/keys/handle /opt/keys/handle
-COPY --from=download --chown=handle:handle /var/handle /var/handle
-
-COPY rootfs /
-
 WORKDIR /var/handle
+
+COPY --link --from=download /etc/group /etc/group
+COPY --link --from=download /etc/passwd /etc/passwd
+COPY --link --from=download /etc/shadow /etc/shadow
+COPY --link --from=download /opt/handle /opt/handle
+COPY --link --from=download /opt/keys/handle /opt/keys/handle
+COPY --link --from=download /var/handle /var/handle
+
+COPY --link rootfs /
+
+RUN chown -R handle:handle /opt/handle /opt/keys/handle /var/handle

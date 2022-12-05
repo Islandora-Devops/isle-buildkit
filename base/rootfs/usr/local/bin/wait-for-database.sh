@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+ARGS=("$@")
+PROGNAME=$(basename "$0")
+readonly ARGS PROGNAME
 
 function usage {
-    cat <<- EOF
+    cat <<-EOF
     usage: $PROGNAME options
 
     Waits for an connection to an database as the given user, or until the
@@ -36,29 +37,29 @@ EOF
 
 function cmdline {
     local arg=
-    for arg
-    do
+    for arg; do
         local delim=""
         case "$arg" in
-            # Translate --gnu-long-options to -g (short options)
-            --driver)      args="${args}-a ";;
-            --host)        args="${args}-b ";;
-            --port)        args="${args}-c ";;
-            --user)        args="${args}-d ";;
-            --password)    args="${args}-e ";;
-            --help)        args="${args}-h ";;
-            --debug)       args="${args}-x ";;
-            # Pass through anything else
-            *) [[ "${arg:0:1}" == "-" ]] || delim="\""
-               args="${args}${delim}${arg}${delim} ";;
+        # Translate --gnu-long-options to -g (short options)
+        --driver) args="${args}-a " ;;
+        --host) args="${args}-b " ;;
+        --port) args="${args}-c " ;;
+        --user) args="${args}-d " ;;
+        --password) args="${args}-e " ;;
+        --help) args="${args}-h " ;;
+        --debug) args="${args}-x " ;;
+        # Pass through anything else
+        *)
+            [[ "${arg:0:1}" == "-" ]] || delim="\""
+            args="${args}${delim}${arg}${delim} "
+            ;;
         esac
     done
 
     # Reset the positional parameters to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
-    while getopts "a:b:c:d:e:hx" OPTION
-    do
+    while getopts "a:b:c:d:e:hx" OPTION; do
         case $OPTION in
         a)
             readonly DRIVER=${OPTARG}
@@ -80,8 +81,12 @@ function cmdline {
             exit 0
             ;;
         x)
-            readonly DEBUG='-x'
             set -x
+            ;;
+        *)
+            echo "Invalid Option: $OPTION" >&2
+            usage
+            exit 1
             ;;
         esac
     done
@@ -97,16 +102,16 @@ function cmdline {
 function wait_for_connection {
     local duration=${TIMEOUT:-300}
     echo "Waiting for up to ${duration} seconds to connect to Database ${HOST}:${PORT}" >&2
-    timeout ${duration} wait-for-open-port.sh ${HOST} ${PORT}
+    timeout "${duration}" wait-for-open-port.sh "${HOST}" "${PORT}"
 }
 
 function mysql_validate_credentials {
     mysqladmin \
         -s \
-        --user=${USER} \
-        --password=${PASSWORD} \
-        --host=${HOST} \
-        --port=${PORT} \
+        --user="${USER}" \
+        --password="${PASSWORD}" \
+        --host="${HOST}" \
+        --port="${PORT}" \
         --protocol=tcp \
         ping
 }
@@ -123,20 +128,21 @@ function postgresql_validate_credentials {
 function validate_credentials {
     echo "Validating Database credentials" >&2
     case "${DRIVER}" in
-        mysql)
-            mysql_validate_credentials
-            ;;
-        postgresql)
-            postgresql_validate_credentials
-            ;;
-        *)
-            echo "Only MySQL/PostgresSQL databases are supported for now." >&2
-            exit 1
+    mysql)
+        mysql_validate_credentials
+        ;;
+    postgresql)
+        postgresql_validate_credentials
+        ;;
+    *)
+        echo "Only MySQL/PostgresSQL databases are supported for now." >&2
+        exit 1
+        ;;
     esac
 }
 
 function main {
-    cmdline ${ARGS}
+    cmdline "${ARGS[@]}"
 
     if wait_for_connection; then
         echo "Database found" >&2

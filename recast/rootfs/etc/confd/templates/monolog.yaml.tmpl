@@ -1,0 +1,8 @@
+monolog:
+  handlers:
+    recast:
+      type: stream
+      path: "php://stderr"
+      # Valid log levels are:
+      # debug, info, notice, warning, error, critical, alert, emergency, none
+      level: {{ getenv "RECAST_LOG_LEVEL" }}

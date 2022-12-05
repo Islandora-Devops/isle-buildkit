@@ -1,0 +1,15 @@
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+services:
+  tomcat:
+    <<: *common
+    image: ${TOMCAT_IMAGE:-islandora.dev/tomcat:latest}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

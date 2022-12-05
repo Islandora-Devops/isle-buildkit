@@ -6,7 +6,7 @@
 version: "3.8"
 services:
   drupal:
-    image: ${DRUPAL_IMAGE:-local/drupal:latest}
+    image: ${DRUPAL_IMAGE:-islandora.dev/drupal:latest}
     environment:
       DRUPAL_DEFAULT_DB_DRIVER: postgresql
     volumes:
@@ -14,4 +14,4 @@ services:
     command:
       - bash # /test.sh # Run test and exit.
   postgresql:
-    image: ${MYSQL_IMAGE:-local/postgresql:latest}
+    image: ${MYSQL_IMAGE:-islandora.dev/postgresql:latest}

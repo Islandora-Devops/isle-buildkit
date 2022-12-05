@@ -1,0 +1,47 @@
+_meta:
+  version: '1.0'
+  entity_type: taxonomy_term
+  uuid: 4d551de2-b6d1-46d2-bcd0-ea263d065571
+  bundle: islandora_models
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  name:
+    -
+      value: Newspaper
+  description:
+    -
+      value: 'A special type of collection which only has Newspaper Issues for children.'
+      format: ''
+  weight:
+    -
+      value: 0
+  parent:
+    -
+      target_id: 0
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  content_translation_uid:
+    -
+      target_id: 1
+  content_translation_created:
+    -
+      value: 1667998710
+  field_external_uri:
+    -
+      uri: 'https://schema.org/Newspaper'
+      title: ''
+      options: {  }

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+
+mkdir -p /run/xdebug
+
+XDEBUG_FLAGS=$(</var/run/s6/container_environment/XDEBUG_FLAGS)
+
+exec /usr/sbin/php-fpm81 \
+	--pid /var/run/xdebug/php-fpm81.pid \
+	--prefix /var/run/xdebug \
+	--fpm-config /etc/php81/php-fpm.conf \
+	-d "php_admin_value[zend_extension]=xdebug.so" \
+	-d "zend_extension=xdebug.so" \
+	"${XDEBUG_FLAGS[@]}"

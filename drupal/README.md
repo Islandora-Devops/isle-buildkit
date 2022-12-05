@@ -21,6 +21,13 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
+### Network Settings
+
+| Environment Variable     | Confd Key                 | Default | Description                                                                        |
+| :----------------------- | :------------------------ | :------ | :--------------------------------------------------------------------------------- |
+| DRUPAL_ENABLE_HTTPS      | /drupal/enable/https      | true    | Inform PHP that `https` should be used.                                            |
+| DRUPAL_REVERSE_PROXY_IPS | /drupal/reverse/proxy/ips |         | Use the IP address for the host 'traefik' if found otherwise default to `0.0.0.0`. |
+
 ### Database Settings
 
 [Drupal] can make use of different database backends for storage. Please see the

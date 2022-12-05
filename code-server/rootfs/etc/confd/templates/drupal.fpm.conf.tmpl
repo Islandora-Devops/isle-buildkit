@@ -1,0 +1,40 @@
+# Allow for toggling between xdebug / production configured fpm.
+set $fpm php-fpm81;
+if ($cookie_XDEBUG_SESSION) {
+  set $fpm xdebug;
+}
+
+# In Drupal 8, we must also match new paths where the '.php' appears in
+# the middle, such as update.php/selection. The rule we use is strict,
+# and only allows this pattern with the update.php front controller.
+# This allows legacy path aliases in the form of
+# blog/index.php/legacy-path to continue to route to Drupal nodes. If
+# you do not have any paths like that, then you might prefer to use a
+# laxer rule, such as:
+#   location ~ \.php(/|$) {
+# The laxer rule will continue to work if Drupal uses this new URL
+# pattern with front controllers other than update.php in a future
+# release.
+location ~ '\.php$|^/update.php' {
+    fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
+    # Ensure the php file exists. Mitigates CVE-2019-11043
+    try_files $fastcgi_script_name =404;
+    # Security note: If you're running a version of PHP older than the
+    # latest 5.3, you should have "cgi.fix_pathinfo = 0;" in php.ini.
+    # See http://serverfault.com/q/627903/94922 for details.
+    include fastcgi_params;
+    # Block httpoxy attacks. See https://httpoxy.org/.
+    fastcgi_param HTTP_PROXY "";
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param QUERY_STRING $query_string;
+    {{ if eq (getenv "DRUPAL_ENABLE_HTTPS") "true" }}
+    fastcgi_param HTTPS on;
+    fastcgi_param HTTP_SCHEME https;
+    {{ end }}
+    fastcgi_intercept_errors on;
+    fastcgi_buffers 16 16k;
+    fastcgi_buffer_size 32k;
+    # PHP 8 socket location.
+    fastcgi_pass unix:/var/run/$fpm/php-fpm81.sock;
+}

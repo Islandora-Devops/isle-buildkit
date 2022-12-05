@@ -1,0 +1,49 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 4c1d613d-36b9-40a6-99a2-488ad9330c2a
+  bundle: islandora_object
+  default_langcode: en
+  depends:
+    25d9e1ec-0034-4adf-9a47-d93b36f9d63e: taxonomy_term
+    06f1735c-b84e-4ffa-bef6-da06e0ccecb1: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Sample Video'
+  created:
+    -
+      value: 1668001671
+  promote:
+    -
+      value: true
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_extent:
+    -
+      value: '1 item'
+  field_model:
+    -
+      entity: 25d9e1ec-0034-4adf-9a47-d93b36f9d63e
+  field_resource_type:
+    -
+      entity: 06f1735c-b84e-4ffa-bef6-da06e0ccecb1

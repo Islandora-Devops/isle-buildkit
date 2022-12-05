@@ -1,0 +1,15 @@
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+services:
+  code-server:
+    <<: *common
+    image: ${CODE_SERVER_IMAGE:-islandora.dev/code-server:latest}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

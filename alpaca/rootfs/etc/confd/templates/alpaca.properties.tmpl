@@ -1,0 +1,77 @@
+# Common options
+error.maxRedeliveries={{ getenv "ALPACA_MAX_REDELIVERIES" }}
+
+# The JMS connection URI, used for connecting to a local or remote ActiveMQ broker
+jms.brokerUrl={{ getenv "ALPACA_JMS_URL" }}
+
+# If authentication is enabled on the activemq broker, add appropriate values here
+jms.username={{ getenv "ALPACA_JMS_USER" }}
+jms.password={{ getenv "ALPACA_JMS_PASSWORD" }}
+
+# Set the number of conncurrent consumers and the max number of connections.
+# Overrides:
+# https://github.com/fcrepo-exts/fcrepo-camel-toolbox/blob/2080280e2454aabd4fb6bdf1f1cdf67017b1d3dc/fcrepo-service-activemq/src/main/resources/OSGI-INF/blueprint/blueprint.xml#L20-L21
+jms.concurrent-consumers={{ getenv "ALPACA_JMS_CONSUMERS" }}
+jms.connections={{ getenv "ALPACA_JMS_CONNECTIONS" }}
+jms.max-concurrent-consumers={{ getenv "ALPACA_JMS_MAX_CONSUMERS" }}
+
+# Custom Http client options
+# All timeouts in milliseconds
+request.configurer.enabled={{ getenv "ALPACA_CLIENT_CONFIGURER" }}
+request.timeout={{ getenv "ALPACA_CLIENT_REQUEST_TIMEOUT" }}
+connection.timeout={{ getenv "ALPACA_CLIENT_CONNECTION_TIMEOUT" }}
+socket.timeout={{ getenv "ALPACA_CLIENT_SOCKET_TIMEOUT" }}
+
+# Additional HTTP endpoint options, these can be for Camel or to be sent to the baseUrl or service.url
+http.additional_options={{ getenv "ALPACA_CLIENT_ADDITIONAL_OPTIONS" }}
+
+# Fedora indexer options
+fcrepo.indexer.enabled={{ getenv "ALPACA_FCREPO_INDEXER_ENABLED" }}
+fcrepo.indexer.node={{ getenv "ALPACA_FCREPO_INDEXER_QUEUE_NODE" }}
+fcrepo.indexer.delete={{ getenv "ALPACA_FCREPO_INDEXER_QUEUE_DELETE" }}
+fcrepo.indexer.media={{ getenv "ALPACA_FCREPO_INDEXER_QUEUE_MEDIA" }}
+fcrepo.indexer.external={{ getenv "ALPACA_FCREPO_INDEXER_QUEUE_EXTERNAL" }}
+fcrepo.indexer.milliner.baseUrl={{ getenv "ALPACA_FCREPO_INDEXER_MILLINER_URL" }}
+fcrepo.indexer.concurrent-consumers={{ getenv "ALPACA_FCREPO_INDEXER_CONSUMERS" }}
+fcrepo.indexer.max-concurrent-consumers={{ getenv "ALPACA_FCREPO_INDEXER_MAX_CONSUMERS" }}
+fcrepo.indexer.async-consumer={{ getenv "ALPACA_FCREPO_INDEXER_ASYNC_CONSUMER" }}
+
+# Triplestore indexer options
+triplestore.indexer.enabled={{ getenv "ALPACA_TRIPLESTORE_INDEXER_ENABLED" }}
+triplestore.baseUrl={{ getenv "ALPACA_TRIPLESTORE_INDEXER_URL" }}
+triplestore.index.stream={{ getenv "ALPACA_TRIPLESTORE_INDEXER_QUEUE_INDEX" }}
+triplestore.delete.stream={{ getenv "ALPACA_TRIPLESTORE_INDEXER_QUEUE_DELETE" }}
+triplestore.indexer.concurrent-consumers={{ getenv "ALPACA_TRIPLESTORE_INDEXER_CONSUMERS" }}
+triplestore.indexer.max-concurrent-consumers={{ getenv "ALPACA_TRIPLESTORE_INDEXER_MAX_CONSUMERS" }}
+triplestore.indexer.async-consumer={{ getenv "ALPACA_TRIPLESTORE_INDEXER_ASYNC_CONSUMER" }}
+
+# Derivative services
+derivative.systems.installed={{ getenv "ALPACA_DERIVATIVE_SYSTEMS" }} fits,homarus,houdini,ocr
+
+derivative.fits.enabled={{ getenv "ALPACA_DERIVATIVE_FITS_ENABLED" }}
+derivative.fits.in.stream={{ getenv "ALPACA_DERIVATIVE_FITS_QUEUE" }}
+derivative.fits.service.url={{ getenv "ALPACA_DERIVATIVE_FITS_URL" }}
+derivative.fits.concurrent-consumers={{ getenv "ALPACA_DERIVATIVE_FITS_CONSUMERS" }}
+derivative.fits.max-concurrent-consumers={{ getenv "ALPACA_DERIVATIVE_FITS_MAX_CONSUMERS" }}
+derivative.fits.async-consumer={{ getenv "ALPACA_DERIVATIVE_FITS_ASYNC_CONSUMER" }}
+
+derivative.homarus.enabled={{ getenv "ALPACA_DERIVATIVE_HOMARUS_ENABLED" }}
+derivative.homarus.in.stream={{ getenv "ALPACA_DERIVATIVE_HOMARUS_QUEUE" }}
+derivative.homarus.service.url={{ getenv "ALPACA_DERIVATIVE_HOMARUS_URL" }}
+derivative.homarus.concurrent-consumers={{ getenv "ALPACA_DERIVATIVE_HOMARUS_CONSUMERS" }}
+derivative.homarus.max-concurrent-consumers={{ getenv "ALPACA_DERIVATIVE_HOMARUS_MAX_CONSUMERS" }}
+derivative.homarus.async-consumer={{ getenv "ALPACA_DERIVATIVE_HOMARUS_ASYNC_CONSUMER" }}
+
+derivative.houdini.enabled={{ getenv "ALPACA_DERIVATIVE_HOUDINI_ENABLED" }}
+derivative.houdini.in.stream={{ getenv "ALPACA_DERIVATIVE_HOUDINI_QUEUE" }}
+derivative.houdini.service.url={{ getenv "ALPACA_DERIVATIVE_HOUDINI_URL" }}
+derivative.houdini.concurrent-consumers={{ getenv "ALPACA_DERIVATIVE_HOUDINI_CONSUMERS" }}
+derivative.houdini.max-concurrent-consumers={{ getenv "ALPACA_DERIVATIVE_HOUDINI_MAX_CONSUMERS" }}
+derivative.houdini.async-consumer={{ getenv "ALPACA_DERIVATIVE_HOUDINI_ASYNC_CONSUMER" }}
+
+derivative.ocr.enabled={{ getenv "ALPACA_DERIVATIVE_OCR_ENABLED" }}
+derivative.ocr.in.stream={{ getenv "ALPACA_DERIVATIVE_OCR_QUEUE" }}
+derivative.ocr.service.url={{ getenv "ALPACA_DERIVATIVE_OCR_URL" }}
+derivative.ocr.concurrent-consumers={{ getenv "ALPACA_DERIVATIVE_OCR_CONSUMERS" }}
+derivative.ocr.max-concurrent-consumers={{ getenv "ALPACA_DERIVATIVE_OCR_MAX_CONSUMERS" }}
+derivative.ocr.async-consumer={{ getenv "ALPACA_DERIVATIVE_OCR_ASYNC_CONSUMER" }}

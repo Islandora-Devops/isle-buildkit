@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM alpine:${alpine} AS cache
 FROM ${repository}/base:${tag}
 
@@ -21,4 +21,4 @@ RUN --mount=type=cache,id=postgresql-apk,sharing=locked,from=cache,target=/var/c
 ENV \
     PGDATA=/var/lib/postgresql/data
 
-COPY rootfs /
+COPY --link rootfs /

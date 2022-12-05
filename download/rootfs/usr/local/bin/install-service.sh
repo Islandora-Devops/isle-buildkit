@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+ARGS=("$@")
+PROGNAME=$(basename "$0")
+readonly ARGS PROGNAME
 
 function usage() {
-    cat <<- EOF
+    cat <<-EOF
     usage: $PROGNAME options [FILE]...
 
     Creates a user/group for the service and as well as a directory in /opt
@@ -34,27 +35,27 @@ EOF
 
 function cmdline() {
     local arg=
-    for arg
-    do
+    for arg; do
         local delim=""
         case "$arg" in
-            # Translate --gnu-long-options to -g (short options)
-            --name)       args="${args}-n ";;
-            --file)       args="${args}-f ";;
-            --depth)      args="${args}-d ";;
-            --help)       args="${args}-h ";;
-            --debug)      args="${args}-x ";;
-            # Pass through anything else
-            *) [[ "${arg:0:1}" == "-" ]] || delim="\""
-               args="${args}${delim}${arg}${delim} ";;
+        # Translate --gnu-long-options to -g (short options)
+        --name) args="${args}-n " ;;
+        --file) args="${args}-f " ;;
+        --depth) args="${args}-d " ;;
+        --help) args="${args}-h " ;;
+        --debug) args="${args}-x " ;;
+        # Pass through anything else
+        *)
+            [[ "${arg:0:1}" == "-" ]] || delim="\""
+            args="${args}${delim}${arg}${delim} "
+            ;;
         esac
     done
 
     # Reset the positional parameters to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
-    while getopts "n:f:d:hx" OPTION
-    do
+    while getopts "n:f:d:hx" OPTION; do
         case $OPTION in
         n)
             readonly NAME=${OPTARG}
@@ -70,8 +71,12 @@ function cmdline() {
             exit 0
             ;;
         x)
-            readonly DEBUG='-x'
             set -x
+            ;;
+        *)
+            echo "Invalid Option: $OPTION" >&2
+            usage
+            exit 1
             ;;
         esac
     done
@@ -87,20 +92,25 @@ function cmdline() {
     fi
 
     # All remaning parameters are files to be removed from the installation.
-    shift $((OPTIND-1))
+    shift $((OPTIND - 1))
     readonly REMOVE=("$@")
 
     return 0
 }
 
 function main {
-    cmdline ${ARGS}
-    local install_directory=/opt/${NAME}
-    create-service-user.sh --name ${NAME}
-    case $FILE in 
-    *.tar.gz|*.tgz)
-        tar -xzf ${FILE} -C ${install_directory} --strip-components ${DEPTH}
-        chown -R ${NAME}:${NAME} ${install_directory}
+    local install_directory
+    cmdline "${ARGS[@]}"
+    install_directory="/opt/${NAME}"
+    create-service-user.sh --name "${NAME}"
+    case "${FILE}" in
+    *.tar.gz | *.tgz)
+        tar -xzf "${FILE}" -C "${install_directory}" --strip-components "${DEPTH}"
+        chown -R "${NAME}:${NAME}" "${install_directory}"
+        ;;
+    *.jar)
+        cp "${FILE}" "${install_directory}"
+        chown -R "${NAME}:${NAME}" "${install_directory}"
         ;;
     *)
         echo "Unable to unpack ${FILE} please update script to support additional formats." >&2
@@ -109,7 +119,7 @@ function main {
     esac
     # Remove extraneous files.
     for i in "${REMOVE[@]}"; do
-        rm -fr "${install_directory}/${i}"
+        rm -fr "${install_directory:?}/${i}"
     done
 }
 main

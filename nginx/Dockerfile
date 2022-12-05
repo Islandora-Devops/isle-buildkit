@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM alpine:${alpine} AS cache
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 FROM ${repository}/base:${tag}
@@ -9,34 +9,36 @@ FROM ${repository}/base:${tag}
 RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/apk \
     apk add \
         nginx \
-        php7 \
-        php7-ctype \
-        php7-curl \
-        php7-dom \
-        php7-fileinfo \
-        php7-fpm \
-        php7-gd \
-        php7-iconv \
-        php7-intl \
-        php7-json \
-        php7-ldap \
-        php7-mbstring \
-        php7-mysqli \
-        php7-opcache \
-        php7-openssl \
-        php7-pdo \
-        php7-pdo_mysql \
-        php7-pdo_pgsql \
-        php7-phar \
-        php7-session \
-        php7-simplexml \
-        php7-tokenizer \
-        php7-xml \
-        php7-xmlreader \
-        php7-xmlwriter \
-        php7-xsl \
-        php7-zip \
+        php81 \
+        php81-ctype \
+        php81-curl \
+        php81-dom \
+        php81-fileinfo \
+        php81-fpm \
+        php81-gd \
+        php81-iconv \
+        php81-intl \
+        php81-json \
+        php81-ldap \
+        php81-mbstring \
+        php81-mysqli \
+        php81-opcache \
+        php81-openssl \
+        php81-pdo \
+        php81-pdo_mysql \
+        php81-pdo_pgsql \
+        php81-phar \
+        php81-session \
+        php81-simplexml \
+        php81-tokenizer \
+        php81-xml \
+        php81-xmlreader \
+        php81-xmlwriter \
+        php81-xsl \
+        php81-zip \
     && \
+    addgroup nginx jwt && \
+    ln -s /usr/bin/php81 /usr/bin/php && \
     cleanup.sh
 
 ENV \
@@ -67,6 +69,8 @@ ENV \
     PHP_REQUEST_TERMINATE_TIMEOUT=60 \
     PHP_UPLOAD_MAX_FILESIZE=128M
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www
 
-COPY rootfs /
+COPY --link --from=composer /usr/bin/composer /usr/bin/composer
+
+COPY --link rootfs /

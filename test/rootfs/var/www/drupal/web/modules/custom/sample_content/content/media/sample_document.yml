@@ -1,0 +1,56 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: fa518f3c-4f31-4ca3-94af-31648d68bc37
+  bundle: document
+  default_langcode: en
+  depends:
+    cb22c7d7-0d0b-45a9-b716-71c499bc3fd5: file
+    955c361d-1f45-48f9-812d-fe699a6de60f: node
+    3397d872-5a18-4e04-bf0a-f1e5ba69f6d0: taxonomy_term
+default:
+  revision_user:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: 'Sample Document'
+  created:
+    -
+      value: 1668785814
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_file_size:
+    -
+      value: 3028
+  field_media_document:
+    -
+      entity: cb22c7d7-0d0b-45a9-b716-71c499bc3fd5
+      display: true
+      description: ''
+  field_media_of:
+    -
+      entity: 955c361d-1f45-48f9-812d-fe699a6de60f
+  field_media_use:
+    -
+      entity: 3397d872-5a18-4e04-bf0a-f1e5ba69f6d0
+  field_mime_type:
+    -
+      value: application/pdf

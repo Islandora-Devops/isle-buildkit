@@ -1,0 +1,15 @@
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+services:
+  postgresql:
+    <<: *common
+    image: ${POSTGRESQL_IMAGE:-islandora.dev/postgresql:latest}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

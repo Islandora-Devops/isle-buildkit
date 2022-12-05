@@ -1,0 +1,17 @@
+# file: docker-compose.yml
+#
+# Tests that the service starts successfully (timeout otherwise).
+#
+version: "3.8"
+
+x-common: &common
+  restart: "no"
+
+services:
+  activemq:
+    <<: *common
+    image: ${ACTIVEMQ_IMAGE:-islandora.dev/activemq:latest}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

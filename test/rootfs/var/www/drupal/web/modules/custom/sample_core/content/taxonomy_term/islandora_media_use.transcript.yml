@@ -1,0 +1,47 @@
+_meta:
+  version: '1.0'
+  entity_type: taxonomy_term
+  uuid: 6ae2b742-32bc-4312-8554-0beb9e41590e
+  bundle: islandora_media_use
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  name:
+    -
+      value: Transcript
+  description:
+    -
+      value: 'A textual representation of the Object appropriate for presenting to users, such as subtitles or transcript of a video. Can be used as a substitute or complement to other files for accessibility purposes'
+      format: ''
+  weight:
+    -
+      value: 0
+  parent:
+    -
+      target_id: 0
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  content_translation_uid:
+    -
+      target_id: 1
+  content_translation_created:
+    -
+      value: 1667998710
+  field_external_uri:
+    -
+      uri: 'http://pcdm.org/use#Transcript'
+      title: ''
+      options: {  }

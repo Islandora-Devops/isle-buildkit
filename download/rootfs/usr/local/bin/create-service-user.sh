@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+ARGS=("$@")
+PROGNAME=$(basename "$0")
+readonly ARGS PROGNAME
 
 function usage() {
-    cat <<- EOF
+    cat <<-EOF
     usage: $PROGNAME options
 
     Creates a user/group for the service and as well as a directory in /opt
@@ -18,31 +19,31 @@ function usage() {
 
     Examples:
        Create user/group "activemq" and home folder /opt/activemq:
-       $PROGNAME --name "activemq" 
+       $PROGNAME --name "activemq"
 EOF
 }
 
 function cmdline() {
     local arg=
-    for arg
-    do
+    for arg; do
         local delim=""
         case "$arg" in
-            # Translate --gnu-long-options to -g (short options)
-            --name)       args="${args}-n ";;
-            --help)       args="${args}-h ";;
-            --debug)      args="${args}-x ";;
-            # Pass through anything else
-            *) [[ "${arg:0:1}" == "-" ]] || delim="\""
-               args="${args}${delim}${arg}${delim} ";;
+        # Translate --gnu-long-options to -g (short options)
+        --name) args="${args}-n " ;;
+        --help) args="${args}-h " ;;
+        --debug) args="${args}-x " ;;
+        # Pass through anything else
+        *)
+            [[ "${arg:0:1}" == "-" ]] || delim="\""
+            args="${args}${delim}${arg}${delim} "
+            ;;
         esac
     done
 
     # Reset the positional parameters to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
-    while getopts "n:hx" OPTION
-    do
+    while getopts "n:hx" OPTION; do
         case $OPTION in
         n)
             readonly NAME=${OPTARG}
@@ -52,8 +53,12 @@ function cmdline() {
             exit 0
             ;;
         x)
-            readonly DEBUG='-x'
             set -x
+            ;;
+        *)
+            echo "Invalid Option: $OPTION" >&2
+            usage
+            exit 1
             ;;
         esac
     done
@@ -67,16 +72,18 @@ function cmdline() {
 }
 
 function main {
-    cmdline ${ARGS}
-    local install_directory=/opt/${NAME}
-    local user=${NAME}
-    local group=${NAME}
-    mkdir ${install_directory}
-    addgroup ${group}
+    local install_directory user group
+    cmdline "${ARGS[@]}"
+
+    install_directory="/opt/${NAME}"
+    user="${NAME}"
+    group="${NAME}"
+    mkdir "${install_directory}"
+    addgroup "${group}"
     # Users that run services should permit login / do not require passwords.
-    adduser --system --disabled-password --no-create-home --ingroup ${group} --shell /sbin/nologin --home ${install_directory} ${user}
+    adduser --system --disabled-password --no-create-home --ingroup "${group}" --shell /sbin/nologin --home "${install_directory}" "${user}"
     # User also needs to be a member of tty to write directly to /dev/stdout, etc.
-    addgroup ${user} tty
-    chown ${user}:${group} ${install_directory}
+    addgroup "${user}" tty
+    chown "${user}:${group}" "${install_directory}"
 }
 main

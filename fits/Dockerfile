@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 ARG FITSSERVLET_VERSION="1.2.3"
@@ -38,7 +38,7 @@ RUN --mount=type=cache,id=imagemagick-apk,sharing=locked,from=cache,target=/var/
         libtool \
         openjdk8
 
-COPY /build /build
+COPY --link /build /build
 
 WORKDIR /build
 
@@ -63,8 +63,8 @@ RUN --mount=type=bind,from=build,source=/packages,target=/packages \
     apk add /packages/java-jna-*.apk && \
     cleanup.sh
 
-COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
-COPY --from=download --chown=tomcat:tomcat /opt/fits /opt/fits
+COPY --link --from=download /opt/tomcat /opt/tomcat
+COPY --link --from=download /opt/fits /opt/fits
 
 # Replace linux shared libraries with ones that target muslibc and are platform specific.
 # Also add perl for exiftool, and platform specific jna so native libs can be loaded.
@@ -85,6 +85,6 @@ ENV \
     FITS_MAX_UPLOAD_FILE_SIZE=2000 \
     FITS_SERVICE_LOG_LEVEL=INFO
 
-COPY rootfs /
-COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat
-COPY --chown=tomcat:tomcat rootfs/opt/fits /opt/fits
+COPY --link rootfs /
+
+RUN chown -R tomcat:tomcat /opt/tomcat /opt/fits

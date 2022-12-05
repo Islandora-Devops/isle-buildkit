@@ -1,11 +1,11 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
-FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download 
+ARG alpine=3.16.2
+FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
-ARG COMPOSER_VERSION="2.0.12"
-ARG COMPOSER_SHA256="82ea8c1537cfaceb7e56f6004c7ccdf99ddafce7237c07374d920e635730a631"
+ARG COMPOSER_VERSION="2.3.10"
+ARG COMPOSER_SHA256="d808272f284fa8e0f8b470703e1438ac8f362030bbc9d12e29530277d767aff0"
 
 # https://getcomposer.org/download/
 RUN --mount=type=cache,id=download-downloads,sharing=locked,target=/opt/downloads \
@@ -21,33 +21,34 @@ FROM ${repository}/download:${tag}
 # Install packages and tools that allow for basic downloads.
 RUN --mount=type=cache,id=composer-apk,sharing=locked,from=cache,target=/var/cache/apk \
     apk add --no-cache \
-        php7 \
-        php7-ctype \
-        php7-curl \
-        php7-dom \
-        php7-fileinfo \
-        php7-fpm \
-        php7-gd \
-        php7-iconv \
-        php7-json \
-        php7-mbstring \
-        php7-mysqli \
-        php7-opcache \
-        php7-openssl \
-        php7-pdo \
-        php7-pdo_mysql \
-        php7-pdo_pgsql \
-        php7-phar \
-        php7-session \
-        php7-simplexml \
-        php7-tokenizer \
-        php7-xml \
-        php7-xmlwriter \
-        php7-xmlreader \
-        php7-xsl \
+        php81 \
+        php81-ctype \
+        php81-curl \
+        php81-dom \
+        php81-fileinfo \
+        php81-fpm \
+        php81-gd \
+        php81-iconv \
+        php81-json \
+        php81-mbstring \
+        php81-mysqli \
+        php81-opcache \
+        php81-openssl \
+        php81-pdo \
+        php81-pdo_mysql \
+        php81-pdo_pgsql \
+        php81-phar \
+        php81-session \
+        php81-simplexml \
+        php81-tokenizer \
+        php81-xml \
+        php81-xmlwriter \
+        php81-xmlreader \
+        php81-xsl \
     && \
+    ln -s /usr/bin/php81 /usr/bin/php && \
     echo '' > /root/.ash_history
 
-COPY --from=download /usr/bin/composer /usr/bin/composer
+COPY --link --from=download /usr/bin/composer /usr/bin/composer
 
-COPY rootfs /
+COPY --link rootfs /

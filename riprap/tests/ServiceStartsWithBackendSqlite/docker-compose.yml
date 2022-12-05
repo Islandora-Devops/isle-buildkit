@@ -6,4 +6,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-local/riprap:latest}
+    image: ${BASE_IMAGE:-islandora.dev/riprap:latest}

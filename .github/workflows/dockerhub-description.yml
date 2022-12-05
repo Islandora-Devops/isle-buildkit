@@ -96,14 +96,6 @@ jobs:
           repository: ${{ secrets.REPOSITORY }}/crayfits
           readme-filepath: ./crayfits/README.md
 
-      - name: Demo - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASS }}
-          repository: ${{ secrets.REPOSITORY }}/demo
-          readme-filepath: ./demo/README.md
-
       - name: Download - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
         with:
@@ -192,14 +184,6 @@ jobs:
           repository: ${{ secrets.REPOSITORY }}/java
           readme-filepath: ./java/README.md
 
-      - name: Karaf - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASS }}
-          repository: ${{ secrets.REPOSITORY }}/karaf
-          readme-filepath: ./karaf/README.md
-
       - name: MariaDB - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
         with:
@@ -263,6 +247,14 @@ jobs:
           password: ${{ secrets.REGISTRY_PASS }}
           repository: ${{ secrets.REPOSITORY }}/solr
           readme-filepath: ./solr/README.md
+
+      - name: Test - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v2
+        with:
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASS }}
+          repository: ${{ secrets.REPOSITORY }}/tomcat
+          readme-filepath: ./test/README.md
 
       - name: Tomcat - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2

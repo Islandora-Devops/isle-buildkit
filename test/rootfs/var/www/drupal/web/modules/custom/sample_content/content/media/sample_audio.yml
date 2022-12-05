@@ -1,0 +1,52 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: d63d1e91-29c0-4af7-93e5-05d65614655b
+  bundle: audio
+  default_langcode: en
+  depends:
+    71aef23b-86cc-4826-9ea4-becaf4a0c6d6: file
+    c18ab21b-2713-4120-9de4-9fd0d8ec1b0b: node
+    3397d872-5a18-4e04-bf0a-f1e5ba69f6d0: taxonomy_term
+default:
+  revision_user:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: 'Sample Audio'
+  created:
+    -
+      value: 1668787341
+  revision_translation_affected:
+    -
+      value: true
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_file_size:
+    -
+      value: 764176
+  field_media_audio_file:
+    -
+      entity: 71aef23b-86cc-4826-9ea4-becaf4a0c6d6
+      display: true
+      description: ''
+  field_media_of:
+    -
+      entity: c18ab21b-2713-4120-9de4-9fd0d8ec1b0b
+  field_media_use:
+    -
+      entity: 3397d872-5a18-4e04-bf0a-f1e5ba69f6d0
+  field_mime_type:
+    -
+      value: audio/mpeg

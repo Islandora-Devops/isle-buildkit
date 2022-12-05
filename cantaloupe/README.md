@@ -1,6 +1,6 @@
 # Cantaloupe
 
-Docker image for [Cantaloupe] version 3.3.1.
+Docker image for [Cantaloupe] version 4.1.5.
 
 Please refer to the [Cantaloupe Documentation] for more in-depth information.
 
@@ -25,7 +25,7 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable                                                                   | Confd Key                                                                                | Default                                                    |
+| Environment Variable                                                                   | Confd Key                                                                               | Default                                                    |
 | :------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- | :--------------------------------------------------------- |
 | CANTALOUPE_HTTP_ENABLED                                                                | /cantaloupe/http/enabled                                                                | true                                                       |
 | CANTALOUPE_HTTP_HOST                                                                   | /cantaloupe/http/host                                                                   | 0.0.0.0                                                    |
@@ -166,7 +166,7 @@ additional settings, volumes, ports, etc.
 | CANTALOUPE_REDACTION_ENABLED                                                           | /cantaloupe/redaction/enabled                                                           | false                                                      |
 | CANTALOUPE_METADATA_PRESERVE                                                           | /cantaloupe/metadata/preserve                                                           | false                                                      |
 | CANTALOUPE_METADATA_RESPECT_ORIENTATION                                                | /cantaloupe/metadata/respect/orientation                                                | false                                                      |
-| CANTALOUPE_LOG_APPLICATION_LEVEL                                                       | /cantaloupe/log/application/level                                                       | debug                                                      |
+| CANTALOUPE_LOG_APPLICATION_LEVEL                                                       | /cantaloupe/log/application/level                                                       | info                                                       |
 | CANTALOUPE_LOG_APPLICATION_CONSOLEAPPENDER_ENABLED                                     | /cantaloupe/log/application/consoleappender/enabled                                     | true                                                       |
 | CANTALOUPE_LOG_APPLICATION_FILEAPPENDER_ENABLED                                        | /cantaloupe/log/application/fileappender/enabled                                        | false                                                      |
 | CANTALOUPE_LOG_APPLICATION_FILEAPPENDER_PATHNAME                                       | /cantaloupe/log/application/fileappender/pathname                                       | /opt/tomcat/logs/cantaloupe.application.log                |

@@ -1,7 +1,0 @@
-#!/usr/bin/with-contenv bash
-set -e
-
-# Only shutdown the container if this service was enabled otherwise ignore.
-if [[ "${RIPRAP_CROND_ENABLE_SERVICE}" == "true" ]]; then
-  source /usr/local/share/s6/finish
-fi

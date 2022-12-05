@@ -1,0 +1,10 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash
+set -e
+
+# Only run the service if explicitly told to do so.
+if [[ "${CONFD_ENABLE_SERVICE}" == "true" ]]; then
+  exec confd-render-templates.sh -- -interval "${CONFD_POLLING_INTERVAL}"
+else
+  exec s6-svc -Od .
+fi

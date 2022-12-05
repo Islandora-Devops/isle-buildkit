@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 ARG DRUSH_VERSION="0.6.0"
@@ -31,6 +31,11 @@ RUN --mount=type=cache,id=drupal-apk,sharing=locked,from=cache,target=/var/cache
     addgroup nginx jwt && \
     cleanup.sh
 
+# Installation typically needs more than the default 30 seconds defined in the
+# base image. Set to 10 minutes just incase it ran on very old or overallocated
+# hardware.
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=600000
+
 ENV \
     DRUPAL_DEFAULT_ACCOUNT_EMAIL=webmaster@localhost.com \
     DRUPAL_DEFAULT_ACCOUNT_NAME=admin \
@@ -45,6 +50,8 @@ ENV \
     DRUPAL_DEFAULT_EMAIL=webmaster@localhost.com \
     DRUPAL_DEFAULT_FCREPO_HOST=islandora.traefik.me \
     DRUPAL_DEFAULT_FCREPO_PORT=8081 \
+    DRUPAL_DEFAULT_FITS_HOST=fits \
+    DRUPAL_DEFAULT_FITS_PORT=8080 \
     DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG=false \
     DRUPAL_DEFAULT_INSTALL=true \
     DRUPAL_DEFAULT_LOCALE=en \
@@ -60,11 +67,14 @@ ENV \
     DRUPAL_DEFAULT_TRIPLESTORE_HOST=blazegraph \
     DRUPAL_DEFAULT_TRIPLESTORE_NAMESPACE=islandora \
     DRUPAL_DEFAULT_TRIPLESTORE_PORT=8080 \
+    DRUPAL_ENABLE_HTTPS=true \
     DRUPAL_REVERSE_PROXY_IPS= \
     DRUPAL_SITES=DEFAULT
 
-COPY --from=download /usr/bin/drush /usr/bin/drush
-
-COPY rootfs /
-
 WORKDIR /var/www/drupal
+
+COPY --link --from=download /usr/bin/drush /usr/bin/drush
+
+COPY --link rootfs /
+
+RUN chown -R nginx:nginx /var/www

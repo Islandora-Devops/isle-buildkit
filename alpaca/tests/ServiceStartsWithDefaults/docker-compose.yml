@@ -1,0 +1,16 @@
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+services:
+  alpaca:
+    <<: *common
+    image: ${ALPACA_IMAGE:-islandora.dev/alpaca:latest}
+    depends_on:
+      - activemq
+  activemq:
+    <<: *common
+    image: ${ACTIVEMQ_IMAGE:-islandora.dev/activemq:latest}

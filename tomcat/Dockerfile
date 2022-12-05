@@ -1,11 +1,11 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM --platform=$BUILDPLATFORM ${repository}/java:${tag} AS download
 
-ARG TOMCAT_VERSION="9.0.58"
-ARG TOMCAT_FILE_SHA256="a7895a9f425dd57fba5a1e8685d43754d3ecfe05de80e93bfd245ca8313cc7c1"
+ARG TOMCAT_VERSION="9.0.69"
+ARG TOMCAT_FILE_SHA256="ef6564505f43f8f50afc25b7aa3b1ee4bae8c937f1d93131007f179fab92805a"
 
 RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads \
     TOMCAT_FILE="apache-tomcat-${TOMCAT_VERSION}.tar.gz" && \
@@ -14,16 +14,15 @@ RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads 
     install-apache-service.sh \
         --name tomcat \
         --file "${DOWNLOAD_CACHE_DIRECTORY}/${TOMCAT_FILE}" \
-        webapps/docs webapps/examples
+        webapps/docs webapps/examples \
+    && \
+    mkdir /data && \
+    chown tomcat:tomcat /data
 
 FROM alpine:${alpine} AS cache
 FROM ${repository}/java:${tag}
 
 EXPOSE 8080
-
-COPY --from=download /etc/group /etc/group
-COPY --from=download /etc/passwd /etc/passwd
-COPY --from=download /etc/shadow /etc/shadow
 
 ENV \
     TOMCAT_ADMIN_NAME=admin \
@@ -35,9 +34,14 @@ ENV \
     TOMCAT_LOG_LEVEL=INFO \
     TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE=^.*$
 
-COPY --from=download /opt /opt
-
-COPY rootfs /
-COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat
-
 WORKDIR /opt/tomcat
+
+COPY --link --from=download /etc/group /etc/group
+COPY --link --from=download /etc/passwd /etc/passwd
+COPY --link --from=download /etc/shadow /etc/shadow
+COPY --link --from=download /data /data
+COPY --link --from=download /opt/tomcat /opt/tomcat
+
+COPY --link rootfs /
+
+RUN chown -R tomcat:tomcat /opt/tomcat

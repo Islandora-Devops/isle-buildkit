@@ -1,15 +1,15 @@
-# syntax=docker/dockerfile:1.2.1
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
 
-ARG COMMIT="7d7cae2d09dec20caa3c3f5752434af32401819e"
+ARG COMMIT="b84ac14370d0ffa156542e387a8eff9104b8858b"
 
 RUN --mount=type=cache,id=riprap-composer,sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=riprap-downloads,sharing=locked,target=/opt/downloads \
     git-clone-cached.sh \
-        --url https://github.com/mjordan/riprap.git \
+        --url https://github.com/nigelgbanks/riprap.git \
         --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
         --commit "${COMMIT}" \
         --worktree /var/www/riprap && \
@@ -21,7 +21,7 @@ FROM ${repository}/nginx:${tag}
 EXPOSE 8000
 
 RUN --mount=type=cache,id=riprap-apk,sharing=locked,from=cache,target=/var/cache/apk \
-    apk add php7-pdo_sqlite && \
+    apk add php81-pdo_sqlite && \
     cleanup.sh
 
 # The driver is given explicitly as Rip Rap can be run on SQLite without
@@ -29,7 +29,7 @@ RUN --mount=type=cache,id=riprap-apk,sharing=locked,from=cache,target=/var/cache
 ENV \
     RIPRAP_APP_ENV=dev \
     RIPRAP_APP_SECRET=f58c87e1d737c4422b45ba4310abede6 \
-    RIPRAP_CROND_ENABLE_SERVICE=true \
+    RIPRAP_CROND_ENABLE_SERVICE=false \
     RIPRAP_CROND_LOG_LEVEL=8 \
     RIPRAP_CROND_SCHEDULE="0	0	1	*	*" \
     RIPRAP_DB_DRIVER=sqlite \
@@ -74,8 +74,10 @@ ENV \
     RIPRAP_CONFIG_USE_FEDORA_URLS=true \
     RIPRAP_CONFIG_VIEWS_PAGER_DATA_FILE_PATH=var/fetchresourcelist.from.drupal.pager.txt
 
-COPY --from=composer --chown=nginx:nginx /var/www /var/www
-
-COPY rootfs /
-
 WORKDIR /var/www/riprap
+
+COPY --link --from=composer /var/www /var/www
+
+COPY --link rootfs /
+
+RUN chown -R nginx:nginx /var/www

@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1.4.3
 ARG repository=local
 ARG tag=latest
-ARG alpine=3.15.0
+ARG alpine=3.16.2
 FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
 
 ARG FCREPO_VERSION="6.2.0"
@@ -43,6 +43,11 @@ RUN --mount=type=cache,id=fcrepo6-apk,sharing=locked,from=cache,target=/var/cach
     addgroup tomcat jwt && \
     cleanup.sh
 
+# Fcrepo does not properly handle SIGTERM signals and can often hang.
+ENV \
+    S6_SERVICES_GRACETIME=3000 \
+    S6_KILL_GRACETIME=3000
+
 ENV \
     FCREPO_ACTIVEMQ_BROKER=tcp://activemq:61616 \
     FCREPO_ACTIVEMQ_QUEUE=fedora \
@@ -57,8 +62,10 @@ ENV \
     FCREPO_S3_PASSWORD= \
     FCREPO_S3_USER= \
     FCREPO_AWS_REGION=us-east-1 \
-    FCREPO_S3_PREFIX= 
+    FCREPO_S3_PREFIX=
 
-COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
-COPY rootfs /
-COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat
+COPY --link --from=download /opt/tomcat /opt/tomcat
+
+COPY --link rootfs /
+
+RUN chown -R tomcat:tomcat /opt/tomcat
