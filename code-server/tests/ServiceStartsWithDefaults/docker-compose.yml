@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: code-server-servicestartswithdefaults
 services:
   code-server:
     <<: *common
-    image: ${CODE_SERVER_IMAGE:-islandora.dev/code-server:latest}
+    image: ${CODE_SERVER_IMAGE:-islandora/code-server:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

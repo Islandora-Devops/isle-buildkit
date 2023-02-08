@@ -7,10 +7,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: activemq-servicestartswithdefaults
 services:
   activemq:
     <<: *common
-    image: ${ACTIVEMQ_IMAGE:-islandora.dev/activemq:latest}
+    image: ${ACTIVEMQ_IMAGE:-islandora/activemq:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

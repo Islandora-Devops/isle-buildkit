@@ -1,27 +1,16 @@
-name: Build and Test Pull Requests
+name: Build and Test Pull Request
 on:
   pull_request:
     branches:
-      - main
+      - disabled
 jobs:
   build:
-    name: Build and Test PR
+    if: github.repository_owner != 'Islandora-Devops' # If the pull request is originating from inside the repo, we already build/test on push.
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 8
-      - name: Setup Gradle Cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      # We need to extend the IP range of the Docker Daemon so we can create
+      # more than 31 bridge networks when performing tests.
       - name: Extend IP range.
         run: |
           cat << EOF > /tmp/daemon.json
@@ -40,11 +29,21 @@ jobs:
           EOF
           sudo cp /tmp/daemon.json /etc/docker/daemon.json
           sudo systemctl restart docker
-      - name: Build/Test Docker images
-        uses: eskatos/gradle-command-action@v1
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          arguments: build test grype -PisCI=true --info
-      - uses: actions/upload-artifact@v2
+          distribution: temurin
+          java-version: 11
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build test grype # We do not push to the DockerHub as pull request can originate from forks only test a single architecture.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v3
         with:
           name: Grype Reports
           path: build/**/*-grype.*

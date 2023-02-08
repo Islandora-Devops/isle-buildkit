@@ -6,9 +6,10 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: base-sigkillexitcode
 services:
   base:
     <<: *common
-    image: ${BASE_IMAGE:-islandora.dev/base:latest}
+    image: ${BASE_IMAGE:-islandora/base:local}
     volumes:
       - ./service:/etc/services.d/test

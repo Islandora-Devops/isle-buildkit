@@ -16,10 +16,12 @@ x-common: &common
 volumes:
   drupal-solr-config: {}
 
+
+name: test-integrationtests
 services:
   alpaca:
     <<: *common
-    image: ${ALPACA_IMAGE:-islandora.dev/alpaca:latest}
+    image: ${ALPACA_IMAGE:-islandora/alpaca:local}
     environment:
       # Increase the throughput of consumption from the queue.
       ALPACA_ACTIVEMQ_CONNECTIONS: 100
@@ -28,37 +30,37 @@ services:
       - activemq
   crayfits:
     <<: *common
-    image: ${CRAYFITS_IMAGE:-islandora.dev/crayfits:latest}
+    image: ${CRAYFITS_IMAGE:-islandora/crayfits:local}
   fits:
     <<: *common
-    image: ${FITS_IMAGE:-islandora.dev/fits:latest}
+    image: ${FITS_IMAGE:-islandora/fits:local}
   homarus:
     <<: *common
-    image: ${HOMARUS_IMAGE:-islandora.dev/homarus:latest}
+    image: ${HOMARUS_IMAGE:-islandora/homarus:local}
   houdini:
     <<: *common
-    image: ${HOUDINI_IMAGE:-islandora.dev/houdini:latest}
+    image: ${HOUDINI_IMAGE:-islandora/houdini:local}
   hypercube:
     <<: *common
-    image: ${HYPERCUBE_IMAGE:-islandora.dev/hypercube:latest}
+    image: ${HYPERCUBE_IMAGE:-islandora/hypercube:local}
   mariadb:
     <<: *common
-    image: ${MARIADB_IMAGE:-islandora.dev/mariadb:latest}
+    image: ${MARIADB_IMAGE:-islandora/mariadb:local}
   milliner:
     <<: *common
-    image: ${MILLINER_IMAGE:-islandora.dev/milliner:latest}
+    image: ${MILLINER_IMAGE:-islandora/milliner:local}
   activemq:
     <<: *common
-    image: ${ACTIVEMQ_IMAGE:-islandora.dev/activemq:latest}
+    image: ${ACTIVEMQ_IMAGE:-islandora/activemq:local}
   blazegraph:
     <<: *common
-    image: ${BLAZEGRAPH_IMAGE:-islandora.dev/blazegraph:latest}
+    image: ${BLAZEGRAPH_IMAGE:-islandora/blazegraph:local}
   cantaloupe:
     <<: *common
-    image: ${CANTALOUPE_IMAGE:-islandora.dev/cantaloupe:latest}
+    image: ${CANTALOUPE_IMAGE:-islandora/cantaloupe:local}
   test:
     <<: *common
-    image: ${TEST_IMAGE:-islandora.dev/test:latest}
+    image: ${TEST_IMAGE:-islandora/test:local}
     environment:
       # Keep this in sync with "islandora.drupal.properties" in the helm chart.
       DRUPAL_DEFAULT_BROKER_URL: "tcp://activemq:61613"
@@ -81,7 +83,7 @@ services:
     command: /test.sh # Run test and exit.
   fcrepo:
     <<: *common
-    image: ${FCREPO6_IMAGE:-islandora.dev/fcrepo6:latest}
+    image: ${FCREPO6_IMAGE:-islandora/fcrepo6:local}
     environment:
       FCREPO_ALLOW_EXTERNAL_DEFAULT: "http://default/"
       FCREPO_ALLOW_EXTERNAL_DRUPAL: "http://test/"
@@ -89,7 +91,7 @@ services:
       - activemq
   solr:
     <<: *common
-    image: ${SOLR_IMAGE:-islandora.dev/solr:latest}
+    image: ${SOLR_IMAGE:-islandora/solr:local}
     volumes:
       - type: volume
         source: drupal-solr-config

@@ -1,6 +1,6 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
-set -ex
+set -e
 
 # shellcheck disable=SC1091
 source /etc/islandora/utilities.sh
@@ -53,7 +53,7 @@ function configure {
     # Import Default content, includes content normally included via migrate import.
     # So that the links between the default content and the tags work correctly (linked by UUID rather than ID).
     composer -d /var/www/drupal config minimum-stability dev
-    composer -d /var/www/drupal config repositories.repo-name path ./web/modules/custom/sample_core
+    composer -d /var/www/drupal config repositories.sample_core path ./web/modules/custom/sample_core
     composer -d /var/www/drupal require 'islandora/sample_core:*'
 
     # Ingest sample content.

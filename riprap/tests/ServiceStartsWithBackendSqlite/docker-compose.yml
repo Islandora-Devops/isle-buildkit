@@ -1,9 +1,11 @@
 # file: docker-compose.yml
 version: "3.8"
+
+name: riprap-servicestartswithbackendpostgresql
 services:
   riprap:
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora.dev/riprap:latest}
+    image: ${BASE_IMAGE:-islandora/riprap:local}

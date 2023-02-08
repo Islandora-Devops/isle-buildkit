@@ -1,13 +1,29 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.16.2
-FROM alpine:${alpine} AS cache
-FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
-FROM ${repository}/base:${tag}
+# syntax=docker/dockerfile:1.5.1
+FROM base
 
-RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/apk \
+ARG TARGETARCH
+ARG COMPOSER_VERSION="2.4.4"
+ARG COMPOSER_FILE="composer.phar"
+ARG COMPOSER_URL="https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}"
+ARG COMPOSER_SHA256="c252c2a2219956f88089ffc242b42c8cb9300a368fd3890d63940e4fc9652345"
+
+WORKDIR /var/www
+
+# https://getcomposer.org/download/
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=download-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${COMPOSER_URL}" \
+        --sha256 "${COMPOSER_SHA256}" \
+    && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${COMPOSER_FILE}" /usr/bin/composer && \
+    chmod a+x /usr/bin/composer && \
+    cleanup.sh
+
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
+        icu-data-full \
         nginx \
         php81 \
         php81-ctype \
@@ -38,7 +54,6 @@ RUN --mount=type=cache,id=nginx-apk,sharing=locked,from=cache,target=/var/cache/
         php81-zip \
     && \
     addgroup nginx jwt && \
-    ln -s /usr/bin/php81 /usr/bin/php && \
     cleanup.sh
 
 ENV \
@@ -68,9 +83,5 @@ ENV \
     PHP_PROCESS_CONTROL_TIMEOUT=60 \
     PHP_REQUEST_TERMINATE_TIMEOUT=60 \
     PHP_UPLOAD_MAX_FILESIZE=128M
-
-WORKDIR /var/www
-
-COPY --link --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY --link rootfs /

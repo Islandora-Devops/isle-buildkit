@@ -1,4 +1,4 @@
-import plugins.TestPlugin.DockerCompose
+import plugins.TestsPlugin.DockerCompose
 import tasks.DockerPull
 
 val pull by tasks.registering(DockerPull::class) {

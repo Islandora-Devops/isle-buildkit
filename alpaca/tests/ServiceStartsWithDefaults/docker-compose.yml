@@ -5,12 +5,13 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: alpaca-servicestartswithdefaults
 services:
   alpaca:
     <<: *common
-    image: ${ALPACA_IMAGE:-islandora.dev/alpaca:latest}
+    image: ${ALPACA_IMAGE:-islandora/alpaca:local}
     depends_on:
       - activemq
   activemq:
     <<: *common
-    image: ${ACTIVEMQ_IMAGE:-islandora.dev/activemq:latest}
+    image: ${ACTIVEMQ_IMAGE:-islandora/activemq:local}

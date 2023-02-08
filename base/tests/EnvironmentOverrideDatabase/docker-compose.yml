@@ -5,6 +5,8 @@
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
 version: "3.8"
+
+name: base-environmentoverridedatabase
 services:
   base:
     # Allow downstream container to override `DB` environment variables.
@@ -23,4 +25,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora.dev/base:latest}
+    image: ${BASE_IMAGE:-islandora/base:local}

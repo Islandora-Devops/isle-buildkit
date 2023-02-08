@@ -1,8 +1,10 @@
 # file: docker-compose.yml
 version: "3.8"
+
+name: riprap-servicestartswithbackendsqlite
 services:
   postgresql:
-    image: ${POSTGRESQL_IMAGE:-islandora.dev/postgresql:latest}
+    image: ${POSTGRESQL_IMAGE:-islandora/postgresql:local}
   riprap:
     # Allow downstream container to override `DB` environment variables.
     environment:
@@ -11,4 +13,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora.dev/riprap:latest}
+    image: ${BASE_IMAGE:-islandora/riprap:local}

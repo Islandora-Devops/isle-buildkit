@@ -8,7 +8,7 @@ x-common: &common
 services:
   mariadb:
     <<: *common
-    image: ${MARIADB_IMAGE:-islandora.dev/mariadb:latest}
+    image: ${MARIADB_IMAGE:-islandora/mariadb:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: recast-servicestartswithdefaults
 services:
   recast:
     <<: *common
-    image: ${RECAST_IMAGE:-islandora.dev/recast:latest}
+    image: ${RECAST_IMAGE:-islandora/recast:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

@@ -1,19 +1,20 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.16.2
-FROM --platform=$BUILDPLATFORM ${repository}/crayfish:${tag} AS crayfish
+# syntax=docker/dockerfile:1.5.1
+FROM crayfish AS hypercube
 
-RUN --mount=type=cache,id=hypercube-composer,sharing=locked,target=/root/.composer/cache \
-    composer install -d /var/www/crayfish/Hypercube && \
-    ln -s /var/www/crayfish/Hypercube/public /var/www/html
-
-FROM alpine:${alpine} AS cache
-FROM ${repository}/nginx:${tag}
+ARG TARGETARCH
 
 EXPOSE 8000
 
-RUN --mount=type=cache,id=hypercube-apk,sharing=locked,from=cache,target=/var/cache/apk \
+WORKDIR /var/www/crayfish/Hypercube
+
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=hypercube-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
+    composer install -d /var/www/crayfish/Hypercube && \
+    ln -s /var/www/crayfish/Hypercube/public /var/www/html && \
+    cleanup.sh
+
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=hypercube-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
         poppler-utils \
         tesseract-ocr \
@@ -31,11 +32,6 @@ RUN --mount=type=cache,id=hypercube-apk,sharing=locked,from=cache,target=/var/ca
 
 ENV HYPERCUBE_FCREPO_URL=fcrepo:8080/fcrepo/rest \
     HYPERCUBE_LOG_LEVEL=info
-
-WORKDIR /var/www/crayfish/Hypercube/
-
-COPY --link --from=crayfish /etc/nginx/http.d/default.conf /etc/nginx/http.d/default.conf
-COPY --link --from=crayfish /var/www /var/www
 
 COPY --link rootfs /
 

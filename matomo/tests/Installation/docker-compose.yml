@@ -9,13 +9,14 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: matomo-installation
 services:
   mariadb:
     <<: *common
-    image: ${DRUPAL_IMAGE:-islandora.dev/mariadb:latest}
+    image: ${DRUPAL_IMAGE:-islandora/mariadb:local}
   matomo:
     <<: *common
-    image: ${MATOMO_IMAGE:-islandora.dev/matomo:latest}
+    image: ${MATOMO_IMAGE:-islandora/matomo:local}
     environment:
       MATOMO_DEFAULT_HOST: "https://islandora.dev"
     volumes:

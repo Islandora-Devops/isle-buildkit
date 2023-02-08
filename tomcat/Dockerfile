@@ -1,28 +1,33 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.16.2
-FROM --platform=$BUILDPLATFORM ${repository}/java:${tag} AS download
+# syntax=docker/dockerfile:1.5.1
+FROM java
 
-ARG TOMCAT_VERSION="9.0.69"
-ARG TOMCAT_FILE_SHA256="ef6564505f43f8f50afc25b7aa3b1ee4bae8c937f1d93131007f179fab92805a"
+ARG TARGETARCH
+ARG TOMCAT_VERSION="9.0.71"
+ARG TOMCAT_FILE_SHA256="d78a3a09a67695d4f391d2e40713eeeb437bb201ad4571d200f9d23cc7868a78"
 
-RUN --mount=type=cache,id=tomcat-downloads,sharing=locked,target=/opt/downloads \
+EXPOSE 8080
+
+WORKDIR /opt/tomcat
+
+RUN --mount=type=cache,id=tomcat-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     TOMCAT_FILE="apache-tomcat-${TOMCAT_VERSION}.tar.gz" && \
     TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE}" && \
     download.sh --url "${TOMCAT_URL}" --sha256 "${TOMCAT_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    install-apache-service.sh \
-        --name tomcat \
-        --file "${DOWNLOAD_CACHE_DIRECTORY}/${TOMCAT_FILE}" \
+    download.sh \
+        --url "${TOMCAT_URL}" \
+        --sha256 "${TOMCAT_FILE_SHA256}" \
+        --dest "/opt/tomcat" \
+        --strip \
         webapps/docs webapps/examples \
     && \
-    mkdir /data && \
-    chown tomcat:tomcat /data
+    cleanup.sh
 
-FROM alpine:${alpine} AS cache
-FROM ${repository}/java:${tag}
-
-EXPOSE 8080
+RUN create-service-user.sh \
+        --name tomcat \
+        --group jwt \
+        /data \
+    && \
+    cleanup.sh
 
 ENV \
     TOMCAT_ADMIN_NAME=admin \
@@ -34,14 +39,4 @@ ENV \
     TOMCAT_LOG_LEVEL=INFO \
     TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE=^.*$
 
-WORKDIR /opt/tomcat
-
-COPY --link --from=download /etc/group /etc/group
-COPY --link --from=download /etc/passwd /etc/passwd
-COPY --link --from=download /etc/shadow /etc/shadow
-COPY --link --from=download /data /data
-COPY --link --from=download /opt/tomcat /opt/tomcat
-
 COPY --link rootfs /
-
-RUN chown -R tomcat:tomcat /opt/tomcat

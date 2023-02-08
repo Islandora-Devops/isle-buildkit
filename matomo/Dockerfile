@@ -1,46 +1,41 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=local
-ARG tag=latest
-FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
+# syntax=docker/dockerfile:1.5.1
+FROM nginx
 
-ARG MATOMO_VERSION="4.12.3"
-ARG MATOMO_FILE_SHA256="00efe4335c9cee9f269b5e8a337026af7f115c05cde1e9ae47485592372b37ee"
+ARG TARGETARCH
 
-# When updating this commit also update the lock files in rootfs/var/www/crayfish.
-ARG MATOMO_COMMIT=4.10.1
-ARG EXTRA_TOOLS_COMMIT=4.0.1-beta4
+ARG MATOMO_VERSION=4.13.0
+ARG MATOMO_FILE=${MATOMO_VERSION}.tar.gz
+ARG MATOMO_URL=https://github.com/matomo-org/matomo/archive/refs/tags/${MATOMO_FILE}
+ARG MATOMO_SHA256=064c0c9b17a8ff07c8f7bc496513e3739cc408e7e329615a4e340f5d0c7159c7
 
-RUN --mount=type=cache,id=matomo-downloads,sharing=locked,target=/opt/downloads \
-    git-clone-cached.sh \
-        --url https://github.com/matomo-org/matomo.git \
-        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
-        --commit "${EXTRA_TOOLS_COMMIT}" \
-        --worktree /opt/matomo && \
-    composer require -d /opt/matomo symfony/yaml:~2.6.0 && \
-    composer require -d /opt/matomo symfony/process:^3.4 && \
-    composer install -d /opt/matomo && \
-    git-clone-cached.sh \
-        --url https://github.com/digitalist-se/extratools.git \
-        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
-        --commit "${EXTRA_TOOLS_COMMIT}" \
-        --worktree /opt/matomo/plugins/ExtraTools
-
-# @todo Nigel should you revert this it would build faster but you need to deal with the composer things...
-#RUN --mount=type=cache,id=matomo-downloads,sharing=locked,target=/opt/downloads \
-#    MATOMO_FILE="matomo-${MATOMO_VERSION}.tar.gz" && \
-#    MATOMO_URL="https://builds.matomo.org/${MATOMO_FILE}" && \
-#    download.sh --url "${MATOMO_URL}" --sha256 "${MATOMO_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-#    tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${MATOMO_FILE}" -C /opt && \
-#    rm "/opt/How to install Matomo.html" && \
-#    git-clone-cached.sh \
-#        --url https://github.com/digitalist-se/extratools.git \
-#        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
-#        --commit "${EXTRA_TOOLS_COMMIT}" \
-#        --worktree /opt/matomo/plugins/ExtraTools
-
-FROM ${repository}/nginx:${tag}
+ARG EXTRA_TOOLS_VERSION=4.0.1-beta4
+ARG EXTRA_TOOLS_FILE=${EXTRA_TOOLS_VERSION}.tar.gz
+ARG EXTRA_TOOLS_URL=https://github.com/digitalist-se/extratools/archive/refs/tags/${EXTRA_TOOLS_FILE}
+ARG EXTRA_TOOLS_SHA256=1d04ee7b871c76c9f875da100e20e9472059b2a4fe7c52830360e90f205779e2
 
 EXPOSE 8000
+
+WORKDIR /var/www/matomo
+
+# Composer require statements are for supporting the Extra Tools plugin.
+#
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${MATOMO_URL}" \
+        --sha256 "${MATOMO_SHA256}" \
+        --strip \
+        --dest /var/www/matomo \
+    && \
+    composer require -d /var/www/matomo symfony/yaml:~2.6.0 && \
+    composer require -d /var/www/matomo symfony/process:^3.4 && \
+    composer install -d /var/www/matomo && \
+    download.sh \
+        --url "${EXTRA_TOOLS_URL}" \
+        --sha256 "${EXTRA_TOOLS_SHA256}" \
+        --strip \
+        --dest /var/www/matomo/plugins/ExtraTools && \
+    cleanup.sh
 
 # The driver is given explicitly to prevent accidentially overriding as Matomo
 # only supports MySQL.
@@ -60,10 +55,6 @@ ENV \
     MATOMO_USER_EMAIL=admin@example.org \
     MATOMO_USER_NAME=admin \
     MATOMO_USER_PASS=password
-
-WORKDIR /var/www/matomo
-
-COPY --link --from=composer /opt/matomo /var/www/matomo
 
 COPY --link rootfs /
 

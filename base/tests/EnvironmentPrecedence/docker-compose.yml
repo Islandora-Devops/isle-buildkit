@@ -4,6 +4,7 @@
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
 version: "3.8"
+
 secrets:
   # Secrets are #2 on the precedence list.
   DB_PASSWORD:
@@ -12,6 +13,8 @@ secrets:
     file: "./secrets/JWT_ADMIN_TOKEN"
   JWT_PRIVATE_KEY:
     file: "./secrets/JWT_PRIVATE_KEY"
+
+name: base-environmentprecedence
 services:
   # Single node cluster.
   etcd:
@@ -47,4 +50,4 @@ services:
       - ./defaults/JWT_ADMIN_TOKEN:/etc/defaults/JWT_ADMIN_TOKEN # Should be overridden by confd backend.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora.dev/base:latest}
+    image: ${BASE_IMAGE:-islandora/base:local}

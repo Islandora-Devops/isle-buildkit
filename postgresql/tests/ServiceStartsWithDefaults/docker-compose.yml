@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: postgresql-servicestartswithdefaults
 services:
   postgresql:
     <<: *common
-    image: ${POSTGRESQL_IMAGE:-islandora.dev/postgresql:latest}
+    image: ${POSTGRESQL_IMAGE:-islandora/postgresql:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

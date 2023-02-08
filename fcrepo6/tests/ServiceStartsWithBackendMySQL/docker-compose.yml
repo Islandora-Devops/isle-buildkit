@@ -9,20 +9,21 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: fcrepo6-servicestartswithbackendmysql
 services:
   activemq:
     <<: *common
-    image: ${ACTIVEMQ_IMAGE:-islandora.dev/activemq:latest}
+    image: ${ACTIVEMQ_IMAGE:-islandora/activemq:local}
   mariadb:
-    image: ${MYSQL_IMAGE:-islandora.dev/mariadb:latest}
-  fcrepo:
+    image: ${MYSQL_IMAGE:-islandora/mariadb:local}
+  fcrepo6:
     environment:
       FCREPO_PERSISTENCE_TYPE: mysql
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora.dev/fcrepo:latest}
+    image: ${BASE_IMAGE:-islandora/fcrepo6:local}
     depends_on:
       - activemq
       - mariadb

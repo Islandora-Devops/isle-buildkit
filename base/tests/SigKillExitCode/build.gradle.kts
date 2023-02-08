@@ -1,5 +1,5 @@
-import plugins.TestPlugin.DockerComposeUp
-import plugins.TestPlugin.DockerComposeUp.Companion.pool
+import plugins.TestsPlugin.DockerComposeUp
+import plugins.TestsPlugin.DockerComposeUp.Companion.pool
 import java.lang.Thread.sleep
 import java.time.Duration.ofSeconds
 import java.util.concurrent.CompletableFuture.supplyAsync

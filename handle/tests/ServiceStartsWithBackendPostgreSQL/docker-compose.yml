@@ -5,9 +5,11 @@
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
 version: "3.8"
+
+name: handle-servicestartswithbackendpostgresql
 services:
   postgresql:
-    image: ${MYSQL_IMAGE:-islandora.dev/postgresql:latest}
+    image: ${MYSQL_IMAGE:-islandora/postgresql:local}
   handle:
     environment:
       HANDLE_PERSISTENCE_TYPE: postgresql
@@ -15,4 +17,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora.dev/handle:latest}
+    image: ${BASE_IMAGE:-islandora/handle:local}

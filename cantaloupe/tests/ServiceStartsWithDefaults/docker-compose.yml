@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: cantaloupe-servicestartswithdefaults
 services:
   cantaloupe:
     <<: *common
-    image: ${CANTALOUPE_IMAGE:-islandora.dev/cantaloupe:latest}
+    image: ${CANTALOUPE_IMAGE:-islandora/cantaloupe:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

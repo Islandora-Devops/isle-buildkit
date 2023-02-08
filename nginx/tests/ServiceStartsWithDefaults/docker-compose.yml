@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: nginx-servicestartswithdefaults
 services:
   nginx:
     <<: *common
-    image: ${NGINX_IMAGE:-islandora.dev/nginx:latest}
+    image: ${NGINX_IMAGE:-islandora/nginx:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

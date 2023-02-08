@@ -5,7 +5,8 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: base-servicestartswithdefaults
 services:
   base:
     <<: *common
-    image: ${BASE_IMAGE:-islandora.dev/base:latest}
+    image: ${BASE_IMAGE:-islandora/base:local}

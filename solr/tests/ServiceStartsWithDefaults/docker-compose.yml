@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: solr-servicestartswithdefaults
 services:
   solr:
     <<: *common
-    image: ${SOLR_IMAGE:-islandora.dev/solr:latest}
+    image: ${SOLR_IMAGE:-islandora/solr:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

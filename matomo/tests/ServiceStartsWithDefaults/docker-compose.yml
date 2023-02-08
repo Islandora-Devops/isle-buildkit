@@ -5,11 +5,13 @@
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
 version: "3.8"
+
+name: matomo-servicestartswithdefaults
 services:
   mariadb:
-    image: ${MYSQL_IMAGE:-islandora.dev/mariadb:latest}
+    image: ${MYSQL_IMAGE:-islandora/mariadb:local}
   matomo:
-    image: ${BASE_IMAGE:-islandora.dev/matomo:latest}
+    image: ${BASE_IMAGE:-islandora/matomo:local}
     environment:
       # Testing without traefik, so we do not have SSL.
       MATOMO_FORCE_SSL: 0

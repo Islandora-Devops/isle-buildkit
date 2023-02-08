@@ -18,6 +18,9 @@
   - [Image Hierarchy](#image-hierarchy)
   - [Folder Layout](#folder-layout)
   - [Build System](#build-system)
+  - [Multi-arch builds](#multi-arch-builds)
+  - [Caching](#caching)
+  - [Baking](#baking)
 - [Design Constraints](#design-constraints)
 - [Issues / FAQ](#issues--faq)
 
@@ -449,9 +452,8 @@ are arranged in a hierarchy, that roughly follows below:
         └── matomo
 ```
 
-[abuild], [download], [composer], and [imagemagick] stand outside of the
-hierarchy as they are use only to build packages that are consumed by other
-images during their build stage.
+[abuild], and [imagemagick] stand outside of the hierarchy as they are use only
+to build packages that are consumed by other images during their build stage.
 
 ### Folder Layout
 
@@ -488,9 +490,55 @@ For example:
 
 ```Dockerfile
 # syntax=docker/dockerfile:1.4.3
-ARG repository=local
+ARG repository=islandora.dev
 ARG tag=latest
-FROM ${repository}/base:${tag}
+FROM ${repository}/base:${tag} AS base
+```
+
+### Multi-arch builds
+
+For a number of the following reasons we've split the builds to build a single
+image per architecture at a time rather than concurrently building multi-arch
+images with `buildkit` even though that is a supported feature.
+
+- Some Docker repositories such as GitLab's and Amazons do not handle OCI
+  multi-arch images well, and it's good to be able to fall back onto a
+  architecture specific image.
+- The `buildkit` caching system is bugging when dealing with concurrent builds
+  of multi-arch systems. It is better to split the caches by architecture to
+  ensure cache stability.
+- Being able to refer to an image by it's architecture directly is useful when
+  testing for cross platform bugs.
+
+That being said we still produce the OCI manifests for multi-arch images.
+
+So for example on any newish Docker the following command.
+
+```bash
+docker run --rm -ti --entrypoint uname islandora/base:latest -a
+```
+
+Will pull the appropriate image for the host platform without the user
+explicitly specifying which of the images to e.g.
+
+```bash
+docker run --rm -ti --entrypoint uname islandora/base:latest-amd64 -a
+```
+
+> N.B. By default local builds will not build multi-arch images, they will only
+> build the platform supported by the host. The above really only is used by the
+> Github Actions build jobs.
+
+### Caching
+
+The caching provided by `buildkit` is somewhat finicky and hard to control.
+We've opted to use [registry-cache] by default.
+
+
+### Baking
+
+```bash
+BRANCH=(git rev-parse --abbrev-ref HEAD)
 ```
 
 ## Design Constraints
@@ -596,6 +644,7 @@ adding the following, and restarting `Docker`:
 [Docker]: https://docs.docker.com/get-started/
 [execline]: https://skarnet.org/software/execline/index.html
 [glibc]: https://www.gnu.org/software/libc/
+[registry-cache]: https://docs.docker.com/build/cache/backends/registry/
 [islandora-playbook]: https://github.com/Islandora-Devops/islandora-playbook
 [islandora-starter-site]: https://github.com/Islandora/islandora-starter-site
 [Isle Site Template]: https://github.com/Islandora-Devops/isle-site-template

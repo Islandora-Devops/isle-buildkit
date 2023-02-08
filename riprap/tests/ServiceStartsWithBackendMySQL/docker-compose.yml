@@ -1,8 +1,10 @@
 # file: docker-compose.yml
 version: "3.8"
+
+name: riprap-servicestartswithbackendmysql
 services:
   mariadb:
-    image: ${MYSQL_IMAGE:-islandora.dev/mariadb:latest}
+    image: ${MYSQL_IMAGE:-islandora/mariadb:local}
   riprap:
     environment:
       RIPRAP_DB_DRIVER: mysql
@@ -10,4 +12,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora.dev/riprap:latest}
+    image: ${BASE_IMAGE:-islandora/riprap:local}

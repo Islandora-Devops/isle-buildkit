@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: fits-servicestartswithdefaults
 services:
   fits:
     <<: *common
-    image: ${FITS_IMAGE:-islandora.dev/fits:latest}
+    image: ${FITS_IMAGE:-islandora/fits:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

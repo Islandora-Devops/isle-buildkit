@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: hypercube-servicestartswithdefaults
 services:
   hypercube:
     <<: *common
-    image: ${HYPERCUBE_IMAGE:-islandora.dev/hypercube:latest}
+    image: ${HYPERCUBE_IMAGE:-islandora/hypercube:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

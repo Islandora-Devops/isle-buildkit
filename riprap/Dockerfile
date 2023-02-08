@@ -1,27 +1,31 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.16.2
-FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
+# syntax=docker/dockerfile:1.5.1
+FROM nginx
 
-ARG COMMIT="b84ac14370d0ffa156542e387a8eff9104b8858b"
-
-RUN --mount=type=cache,id=riprap-composer,sharing=locked,target=/root/.composer/cache \
-    --mount=type=cache,id=riprap-downloads,sharing=locked,target=/opt/downloads \
-    git-clone-cached.sh \
-        --url https://github.com/nigelgbanks/riprap.git \
-        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
-        --commit "${COMMIT}" \
-        --worktree /var/www/riprap && \
-    composer install -d /var/www/riprap --no-dev
-
-FROM alpine:${alpine} AS cache
-FROM ${repository}/nginx:${tag}
+ARG TARGETARCH
+ARG RIPRAP_COMMIT="b84ac14370d0ffa156542e387a8eff9104b8858b"
+ARG RIPRAP_FILE=${RIPRAP_COMMIT}.tar.gz
+ARG RIPRAP_URL=https://github.com/nigelgbanks/riprap/archive/${RIPRAP_FILE}
+ARG RIPRAP_SHA256=1ab119cae8bc65ab409031fa56ee98f683181478a27ad9e35352f7c350de75c2
 
 EXPOSE 8000
 
-RUN --mount=type=cache,id=riprap-apk,sharing=locked,from=cache,target=/var/cache/apk \
+WORKDIR /var/www/riprap
+
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=riprap-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add php81-pdo_sqlite && \
+    cleanup.sh
+
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=riprap-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
+    --mount=type=cache,id=riprap-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${RIPRAP_URL}" \
+        --sha256 "${RIPRAP_SHA256}" \
+        --strip \
+        --dest "/var/www/riprap" \
+    && \
+    composer install -d /var/www/riprap --no-dev && \
     cleanup.sh
 
 # The driver is given explicitly as Rip Rap can be run on SQLite without
@@ -73,10 +77,6 @@ ENV \
     RIPRAP_CONFIG_THIN=false \
     RIPRAP_CONFIG_USE_FEDORA_URLS=true \
     RIPRAP_CONFIG_VIEWS_PAGER_DATA_FILE_PATH=var/fetchresourcelist.from.drupal.pager.txt
-
-WORKDIR /var/www/riprap
-
-COPY --link --from=composer /var/www /var/www
 
 COPY --link rootfs /
 

@@ -1,6 +1,6 @@
 # Alpaca
 
-Docker image for [Alpaca] version 1.0.3.
+Docker image for [Alpaca] version 2.0.2.
 
 Please refer to the [Alpaca Documentation] for more in-depth information.
 

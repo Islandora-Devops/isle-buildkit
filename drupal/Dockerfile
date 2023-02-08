@@ -1,25 +1,28 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.16.2
-FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
+# syntax=docker/dockerfile:1.5.1
+FROM nginx
 
+ARG TARGETARCH
 ARG DRUSH_VERSION="0.6.0"
+ARG DRUSH_FILE="drush.phar"
+ARG DRUSH_URL="https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_VERSION}/${DRUSH_FILE}"
 ARG DRUSH_SHA256="c3f32a800a2f18470b0010cd71c49e49ef5c087f8131eecfe9b686dc1f3f3d4e"
-
-RUN --mount=type=cache,id=drupal-downloads,sharing=locked,target=/opt/downloads \
-    DRUSH_FILE="drush.phar" && \
-    DRUSH_URL="https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_VERSION}/${DRUSH_FILE}" && \
-    download.sh --url "${DRUSH_URL}" --sha256 "${DRUSH_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    cp "${DOWNLOAD_CACHE_DIRECTORY}/${DRUSH_FILE}" /usr/bin/drush && \
-    chmod a+x /usr/bin/drush
-
-FROM alpine:${alpine} AS cache
-FROM ${repository}/nginx:${tag}
 
 EXPOSE 80
 
-RUN --mount=type=cache,id=drupal-apk,sharing=locked,from=cache,target=/var/cache/apk \
+WORKDIR /var/www/drupal
+
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=drupal-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${DRUSH_URL}" \
+        --sha256 "${DRUSH_SHA256}" \
+    && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${DRUSH_FILE}" /usr/bin/drush && \
+    chmod a+x /usr/bin/drush && \
+    cleanup.sh
+
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=drupal-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
       patch \
     && \
@@ -70,10 +73,6 @@ ENV \
     DRUPAL_ENABLE_HTTPS=true \
     DRUPAL_REVERSE_PROXY_IPS= \
     DRUPAL_SITES=DEFAULT
-
-WORKDIR /var/www/drupal
-
-COPY --link --from=download /usr/bin/drush /usr/bin/drush
 
 COPY --link rootfs /
 

@@ -115,7 +115,7 @@ services:
       traefik.http.routers.cantaloupe_https.entrypoints: https
       traefik.http.routers.cantaloupe_https.rule: *traefik-host-cantaloupe
       traefik.http.routers.cantaloupe_https.tls: true
-      traefik.http.services.cantaloupe.loadbalancer.server.port: 8080
+      traefik.http.services.cantaloupe.loadbalancer.server.port: 8182
     volumes:
       - cantaloupe-data:/data:rw
   drupal:
@@ -124,13 +124,13 @@ services:
     environment: &drupal-environment
       # Keep this in sync with "islandora.drupal.properties" in the helm chart.
       DRUPAL_DEFAULT_BROKER_URL: "tcp://activemq:61613"
-      DRUPAL_DEFAULT_CANTALOUPE_URL: "https://islandora.dev/cantaloupe/iiif/2"
+      DRUPAL_DEFAULT_CANTALOUPE_URL: "https://islandora/cantaloupe/iiif/2"
       DRUPAL_DEFAULT_CONFIGDIR: "/var/www/drupal/config/sync"
       DRUPAL_DEFAULT_FCREPO_HOST: "fcrepo"
       DRUPAL_DEFAULT_FCREPO_PORT: 8080
-      DRUPAL_DEFAULT_FCREPO_URL: "https://fcrepo.islandora.dev/fcrepo/rest/"
+      DRUPAL_DEFAULT_FCREPO_URL: "https://fcrepo.islandora/fcrepo/rest/"
       DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG: "true"
-      DRUPAL_DEFAULT_MATOMO_URL: "https://islandora.dev/matomo/"
+      DRUPAL_DEFAULT_MATOMO_URL: "https://islandora/matomo/"
       DRUPAL_DEFAULT_NAME: "Islandora Digital Collections"
       DRUPAL_DEFAULT_PROFILE: "minimal"
       DRUPAL_DEFAULT_SITE_URL: "islandora.dev"
@@ -234,7 +234,7 @@ services:
     image: ${REPOSITORY}/fcrepo6:${TAG}
     environment:
       FCREPO_ALLOW_EXTERNAL_DEFAULT: "http://default/"
-      FCREPO_ALLOW_EXTERNAL_DRUPAL: "https://islandora.dev/"
+      FCREPO_ALLOW_EXTERNAL_DRUPAL: "https://islandora/"
     labels:
       <<: *traefik-https-redirect-middleware
       # Due to weird logic in `fcrepo/static/js/common.js`, do not use https

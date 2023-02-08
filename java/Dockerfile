@@ -1,12 +1,12 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.16.2
-FROM alpine:${alpine} AS cache
-FROM ${repository}/base:${tag}
+# syntax=docker/dockerfile:1.5.1
+FROM base
+
+ARG TARGETARCH
 
 # Install packages and tools required by all downstream images.
-RUN --mount=type=cache,id=java-apk,sharing=locked,from=cache,target=/var/cache/apk \
+#
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=java-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
         openjdk17 \
         maven \

@@ -1,22 +1,18 @@
-plugins {
-  id("io.github.nigelgbanks.Isle") version "1.0.1"
-}
+import plugins.BuildPlugin.Companion.isleBuildTags
+import plugins.IslePlugin.Companion.isDockerProject
 
-// Include any folder that has a Dockerfile as a sub-project.
-val loadTasks = rootProject.projectDir
-    .walk()
-    .maxDepth(1) // Only immediate directories.
-    .filter { it.isDirectory && it.resolve("Dockerfile").exists() } // Must have a Dockerfile.
-    .map { directory ->
-        // Include as a sub-project.
-        directory.relativeTo(rootProject.projectDir).path + ":load"
-    }.toList().toTypedArray()
+
+apply(plugin = "io.github.nigelgbanks.Isle")
 
 val down by tasks.registering(Exec::class) {
+    group = "Isle"
+    description = "Stops test docker compose environment and removes volumes"
     commandLine("docker", "compose", "down", "-v")
 }
 
 val wait by tasks.registering(Exec::class) {
+    group = "Isle"
+    description = "Waits for test image to successfully install Drupal"
     commandLine(
         "docker",
         "compose",
@@ -51,8 +47,10 @@ val wait by tasks.registering(Exec::class) {
 }
 
 tasks.register<Exec>("up") {
+    group = "Isle"
+    description = "Starts test docker compose environment"
     commandLine("docker", "compose", "up", "-d")
-    dependsOn(":generateCertificates", *loadTasks)
+    dependsOn(":generateCertificates", ":build")
     mustRunAfter(down)
     finalizedBy(wait)
 }

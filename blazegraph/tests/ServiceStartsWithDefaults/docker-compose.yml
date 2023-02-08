@@ -5,10 +5,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: blazegraph-servicestartswithdefaults
 services:
   blazegraph:
     <<: *common
-    image: ${BLAZEGRAPH_IMAGE:-islandora.dev/blazegraph:latest}
+    image: ${BLAZEGRAPH_IMAGE:-islandora/blazegraph:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

@@ -1,22 +1,24 @@
-# syntax=docker/dockerfile:1.4.3
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.15.0
-FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
+# syntax=docker/dockerfile:1.5.1
+FROM java
 
-RUN --mount=type=cache,id=alpaca-downloads,sharing=locked,target=/opt/downloads \
-    ALPACA_VERSION="2.2.0" && \
-    ALPACA_FILE="islandora-alpaca-app-${ALPACA_VERSION}-all.jar" && \
-    ALPACA_URL="https://repo1.maven.org/maven2/ca/islandora/alpaca/islandora-alpaca-app/${ALPACA_VERSION}/${ALPACA_FILE}" && \
-    ALPACA_FILE_SHA256="5722306dd78f9fdc3d7a4248a527c439143a3472e5b2d4ea10601b0038b43923" && \
-    download.sh --url "${ALPACA_URL}" --sha256 "${ALPACA_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    install-service.sh \
-        --name alpaca \
-        --file "${DOWNLOAD_CACHE_DIRECTORY}/${ALPACA_FILE}" && \
-    mv "/opt/alpaca/${ALPACA_FILE}" "/opt/alpaca/alpaca.jar"
+ARG TARGETARCH
+ARG ALPACA_VERSION="2.2.0"
+ARG ALPACA_FILE="islandora-alpaca-app-${ALPACA_VERSION}-all.jar"
+ARG ALPACA_URL="https://repo1.maven.org/maven2/ca/islandora/alpaca/islandora-alpaca-app/${ALPACA_VERSION}/${ALPACA_FILE}"
+ARG ALPACA_FILE_SHA256="5722306dd78f9fdc3d7a4248a527c439143a3472e5b2d4ea10601b0038b43923"
 
-FROM alpine:${alpine} AS cache
-FROM ${repository}/java:${tag}
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=alpaca-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${ALPACA_URL}" \
+        --sha256 "${ALPACA_FILE_SHA256}" \
+    && \
+    mkdir -p /opt/alpaca && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${ALPACA_FILE}" "/opt/alpaca/alpaca.jar" && \
+    cleanup.sh
+
+RUN create-service-user.sh --name alpaca && \
+    cleanup.sh
 
 ENV \
     ALPACA_CLIENT_ADDITIONAL_OPTIONS= \
@@ -73,13 +75,6 @@ ENV \
     ALPACA_TRIPLESTORE_INDEXER_QUEUE_INDEX=queue:islandora-indexing-triplestore-index \
     ALPACA_TRIPLESTORE_INDEXER_URL=http://blazegraph:8080/bigdata/namespace/islandora/sparql
 
-WORKDIR /opt/alpaca
-
-COPY --link --from=download /etc/group /etc/group
-COPY --link --from=download /etc/passwd /etc/passwd
-COPY --link --from=download /etc/shadow /etc/shadow
-COPY --link --from=download /opt/alpaca /opt/alpaca
-
 COPY --link rootfs /
 
-RUN chown -R alpaca:alpaca /opt/alpaca
+WORKDIR /opt/alpaca

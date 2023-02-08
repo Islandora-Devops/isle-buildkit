@@ -6,7 +6,7 @@ source /usr/local/share/isle/utilities.sh
 
 function count {
     cat <<-EOF | execute-sql-file.sh --database "fcrepo" - -- -N 2>/dev/null
-SELECT COUNT(ID) as count FROM MODESHAPE_REPOSITORY;
+SELECT COUNT(*) as count FROM containment;
 EOF
 }
 

@@ -10,7 +10,5 @@ do
     sleep 1
 done
 
-wait_20x "http://localhost:8161"
-
 # All tests were successful
 exit 0

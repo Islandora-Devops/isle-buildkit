@@ -6,10 +6,11 @@ version: "3.8"
 x-common: &common
   restart: "no"
 
+name: base-sigtermexitcode
 services:
   base:
     <<: *common
-    image: ${BASE_IMAGE:-islandora.dev/base:latest}
+    image: ${BASE_IMAGE:-islandora/base:local}
     volumes:
       - ./service:/etc/services.d/test
       - ./test.sh:/test.sh # Test to run.
