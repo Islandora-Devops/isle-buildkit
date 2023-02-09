@@ -35,7 +35,7 @@ function wait_for_dequeue {
         continue_waiting=0
         for queue in "${QUEUES[@]}"; do
             queue_size=$(jolokia "read" "${queue}" | jq .value.QueueSize) &>/dev/null || exit $?
-            if [ "${queue_size}" -ne 0 ]; then
+            if [ "${queue_size}" != "0" ]; then
                 continue_waiting=1
             fi
         done
