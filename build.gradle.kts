@@ -46,11 +46,21 @@ val wait by tasks.registering(Exec::class) {
     }
 }
 
+// Include any folder that has a Dockerfile as a sub-project.
+val buildTasks = rootProject.projectDir
+    .walk()
+    .maxDepth(1) // Only immediate directories.
+    .filter { it.isDirectory && it.resolve("Dockerfile").exists() } // Must have a Dockerfile.
+    .map { directory ->
+        // Include as a sub-project.
+        directory.relativeTo(rootProject.projectDir).path + ":build"
+    }.toList().toTypedArray()
+
 tasks.register<Exec>("up") {
     group = "Isle"
     description = "Starts test docker compose environment"
     commandLine("docker", "compose", "up", "-d")
-    dependsOn(":generateCertificates", ":build")
+    dependsOn(":generateCertificates", buildTasks)
     mustRunAfter(down)
     finalizedBy(wait)
 }
