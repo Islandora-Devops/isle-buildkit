@@ -25,7 +25,6 @@ IMAGES = [
   "milliner",
   "nginx",
   "postgresql",
-  "recast",
   "riprap",
   "solr",
   "test",
@@ -53,7 +52,6 @@ DEPENDENCIES = {
   milliner = ["crayfish"]
   nginx = ["base"]
   postgresql = ["base"]
-  recast = ["crayfish"]
   riprap = ["nginx"]
   solr = ["java"]
   test = ["drupal"]
@@ -241,10 +239,6 @@ group "postgresql-ci" {
   targets = arches("postgresql", "ci")
 }
 
-group "recast-ci" {
-  targets = arches("recast", "ci")
-}
-
 group "riprap-ci" {
   targets = arches("riprap", "ci")
 }
@@ -398,11 +392,6 @@ target "nginx-common" {
 target "postgresql-common" {
   inherits = ["common"]
   context = "postgresql"
-}
-
-target "recast-common" {
-  inherits = ["common"]
-  context = "recast"
 }
 
 target "riprap-common" {
@@ -572,13 +561,6 @@ target "postgresql" {
   contexts = dependencies("postgresql", "")
   cache-from = cacheFrom("postgresql", hostArch())
   tags = tags("postgresql", "")
-}
-
-target "recast" {
-  inherits = ["recast-common"]
-  contexts = dependencies("recast", "")
-  cache-from = cacheFrom("recast", hostArch())
-  tags = tags("recast", "")
 }
 
 target "riprap" {
@@ -758,13 +740,6 @@ target "postgresql-amd64" {
   tags = tags("postgresql", "amd64")
 }
 
-target "recast-amd64" {
-  inherits = ["recast-common", "amd64-common"]
-  contexts = dependencies("recast", "amd64")
-  cache-from = cacheFrom("recast", "amd64")
-  tags = tags("recast", "amd64")
-}
-
 target "riprap-amd64" {
   inherits = ["riprap-common", "amd64-common"]
   contexts = dependencies("riprap", "amd64")
@@ -942,13 +917,6 @@ target "postgresql-arm64" {
   tags = tags("postgresql", "arm64")
 }
 
-target "recast-arm64" {
-  inherits = ["recast-common", "arm64-common"]
-  contexts = dependencies("recast", "arm64")
-  cache-from = cacheFrom("recast", "arm64")
-  tags = tags("recast", "arm64")
-}
-
 target "riprap-arm64" {
   inherits = ["riprap-common", "arm64-common"]
   contexts = dependencies("riprap", "arm64")
@@ -1105,12 +1073,6 @@ target "postgresql-amd64-ci" {
   cache-to = cacheTo("postgresql", "amd64")
 }
 
-target "recast-amd64-ci" {
-  inherits = ["recast-amd64"]
-  contexts = dependencies("recast", "amd64-ci")
-  cache-to = cacheTo("recast", "amd64")
-}
-
 target "riprap-amd64-ci" {
   inherits = ["riprap-amd64"]
   contexts = dependencies("riprap", "amd64-ci")
@@ -1263,12 +1225,6 @@ target "postgresql-arm64-ci" {
   inherits = ["postgresql-arm64"]
   contexts = dependencies("postgresql", "arm64-ci")
   cache-to = cacheTo("postgresql", "arm64")
-}
-
-target "recast-arm64-ci" {
-  inherits = ["recast-arm64"]
-  contexts = dependencies("recast", "arm64-ci")
-  cache-to = cacheTo("recast", "arm64")
 }
 
 target "riprap-arm64-ci" {

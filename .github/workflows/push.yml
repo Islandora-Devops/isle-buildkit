@@ -201,15 +201,6 @@ jobs:
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
     needs: [tags, base]
-  recast:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.crayfish.outputs.context }}
-      image: recast
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-    secrets: inherit
-    needs: [tags, crayfish]
   riprap:
     uses: ./.github/workflows/build.yml
     with:
@@ -424,13 +415,6 @@ jobs:
       image: postgresql
     secrets: inherit
     needs: [postgresql]
-  test-recast:
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: ${{ needs.recast.outputs.digest }}
-      image: recast
-    secrets: inherit
-    needs: [recast]
   test-riprap:
     uses: ./.github/workflows/test.yml
     with:
@@ -642,13 +626,6 @@ jobs:
       image: postgresql
     secrets: inherit
     needs: [postgresql]
-  grype-recast:
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.recast.outputs.digest }}
-      image: recast
-    secrets: inherit
-    needs: [recast]
   grype-riprap:
     uses: ./.github/workflows/grype.yml
     with:

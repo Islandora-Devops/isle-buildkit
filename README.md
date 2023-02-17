@@ -394,7 +394,6 @@ The following docker images are provided:
 - [milliner]
 - [nginx]
 - [postgresql]
-- [recast]
 - [ripgrep]
 - [solr]
 - [test]
@@ -671,7 +670,6 @@ are arranged in a hierarchy, that roughly follows below:
         │   ├── houdini (consumes "imagemagick" as well during its build stage)
         │   ├── hypercube
         │   ├── milliner
-        │   ├── recast
         │   └── riprap
         ├── crayfits
         ├── drupal
@@ -845,7 +843,6 @@ adding the following, and restarting `Docker`:
 [milliner]: ./milliner/README.md
 [nginx]: ./nginx/README.md
 [postgresql]: ./postgresql/README.md
-[recast]: ./recast/README.md
 [ripgrep]: ./ripgrep/README.md
 [solr]: ./solr/README.md
 [test]: ./test/README.md

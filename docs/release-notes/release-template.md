@@ -51,9 +51,7 @@ code-server
 composer
 crayfish
 crayfits
-demo
 drupal
-fcrepo
 fcrepo6
 fits
 handle
@@ -62,15 +60,14 @@ houdini
 hypercube
 imagemagick
 java
-karaf
 mariadb
 matomo
 milliner
 nginx
 postgresql
-recast
 riprap
 solr
+test
 tomcat
 --->
 
