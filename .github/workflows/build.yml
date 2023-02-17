@@ -1,0 +1,58 @@
+name: Build
+on:
+  workflow_call:
+    inputs:
+      repository:
+        required: true
+        type: string
+      image:
+        required: true
+        type: string
+      tags:
+        required: true
+        type: string
+      contexts:
+        required: false
+        type: string
+    outputs:
+      digest:
+        description: "Digest argument for Gradle"
+        value: ${{ jobs.build.outputs.digest }}
+      context:
+        description: "Context to use in dependent images"
+        value: ${{ jobs.build.outputs.context }}
+    secrets:
+      registry_user:
+        required: true
+      registry_password:
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+      context: ${{ steps.build.outputs.context }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: |
+            image=moby/buildkit:v0.11.1
+            network=host
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+      - id: build
+        name: Build and push
+        run: |
+          set -ex
+          make push manifest "BUILDER=${{ steps.buildx.outputs.name }}" "TARGET=${{ inputs.image }}-ci" "TAGS=${{ inputs.tags }}" "CONTEXTS=${{ inputs.contexts }}"
+          echo "digest=-Pisle.${{ inputs.image }}.digest=${{ inputs.repository }}/${{ inputs.image }}@sha256:$(cat build/${{ inputs.image }}.digest)" >> $GITHUB_OUTPUT
+          echo "context=docker-image://${{ inputs.repository }}/${{ inputs.image }}@sha256:$(cat build/${{ inputs.image }}.digest)" >> $GITHUB_OUTPUT

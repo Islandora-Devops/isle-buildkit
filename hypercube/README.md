@@ -10,9 +10,9 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Confd Key             | Default                        | Description                                                                                       |
-| :------------------- | :-------------------- | :----------------------------- | :------------------------------------------------------------------------------------------------ |
-| HYPERCUBE_FCREPO_URL | /hypercube/fcrepo/url | http://fcrepo:8080/fcrepo/rest | Fcrepo Rest API URL                                                                               |
-| HYPERCUBE_LOG_LEVEL  | /hypercube/log/level  | info                           | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
+| Environment Variable | Default                        | Description                                                                                       |
+| :------------------- | :----------------------------- | :------------------------------------------------------------------------------------------------ |
+| HYPERCUBE_FCREPO_URL | http://fcrepo:8080/fcrepo/rest | Fcrepo Rest API URL                                                                               |
+| HYPERCUBE_LOG_LEVEL  | info                           | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
 [Hypercube]: https://github.com/Islandora/Crayfish/tree/main/Hypercube

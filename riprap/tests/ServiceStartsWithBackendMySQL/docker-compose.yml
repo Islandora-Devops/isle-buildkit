@@ -4,7 +4,7 @@ version: "3.8"
 name: riprap-servicestartswithbackendmysql
 services:
   mariadb:
-    image: ${MYSQL_IMAGE:-islandora/mariadb:local}
+    image: ${MARIADB:-islandora/mariadb:local}
   riprap:
     environment:
       RIPRAP_DB_DRIVER: mysql
@@ -12,4 +12,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora/riprap:local}
+    image: ${RIPRAP:-islandora/riprap:local}

@@ -9,9 +9,9 @@ version: "3.8"
 name: matomo-servicestartswithdefaults
 services:
   mariadb:
-    image: ${MYSQL_IMAGE:-islandora/mariadb:local}
+    image: ${MARIADB:-islandora/mariadb:local}
   matomo:
-    image: ${BASE_IMAGE:-islandora/matomo:local}
+    image: ${MATOMO:-islandora/matomo:local}
     environment:
       # Testing without traefik, so we do not have SSL.
       MATOMO_FORCE_SSL: 0

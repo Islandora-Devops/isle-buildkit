@@ -65,4 +65,3 @@ open class DockerPull : DefaultTask() {
         }
     }
 }
-

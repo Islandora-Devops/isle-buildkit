@@ -45,20 +45,6 @@ gradlePlugin {
             description = "Main gradle plugin for the Islandora Isle project"
             tags.set(listOf("isle"))
         }
-        create("IsleBuild") {
-            id = "io.github.nigelgbanks.IsleBuild"
-            implementationClass = "plugins.BuildPlugin"
-            displayName = "IsleBuild"
-            description = "Build docker images with buildkit."
-            tags.set(listOf("isle"))
-        }
-        create("IsleCertificateGeneration") {
-            id = "io.github.nigelgbanks.IsleCertificateGeneration"
-            implementationClass = "plugins.CertificateGenerationPlugin"
-            displayName = "IsleCertificateGeneration"
-            description = "Generates development certificates"
-            tags.set(listOf("isle"))
-        }
         create("IsleDockerHub") {
             id = "io.github.nigelgbanks.IsleDockerHub"
             implementationClass = "plugins.DockerHubPlugin"
@@ -71,13 +57,6 @@ gradlePlugin {
             implementationClass = "plugins.ReportsPlugin"
             displayName = "IsleReports"
             description = "Generates security reports for a single project"
-            tags.set(listOf("isle"))
-        }
-        create("IsleRegistry") {
-            id = "io.github.nigelgbanks.IsleRegistry"
-            implementationClass = "plugins.RegistryPlugin"
-            displayName = "IsleRegistry"
-            description = "Provides local Docker Registry"
             tags.set(listOf("isle"))
         }
         create("IsleTests") {

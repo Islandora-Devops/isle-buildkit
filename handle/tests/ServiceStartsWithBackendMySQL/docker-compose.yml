@@ -9,7 +9,7 @@ version: "3.8"
 name: handle-servicestartswithbackendmysql
 services:
   mariadb:
-    image: ${MYSQL_IMAGE:-islandora/mariadb:local}
+    image: ${MARIADB:-islandora/mariadb:local}
   handle:
     environment:
       HANDLE_PERSISTENCE_TYPE: mysql
@@ -17,4 +17,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora/handle:local}
+    image: ${HANDLE:-islandora/handle:local}

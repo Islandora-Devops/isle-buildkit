@@ -3,7 +3,6 @@ package plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
-import plugins.DockerPlugin.Companion.normalizeDockerTag
 import java.io.ByteArrayOutputStream
 
 // Calculate once, share everywhere, configuration properties.
@@ -43,10 +42,13 @@ class SharedPropertiesPlugin : Plugin<Project> {
         val Project.isLatestTag: Boolean
             get() = rootProject.extra["git.latest"] as Boolean
 
-        val Project.sourceDateEpoch: String
-            get() = (rootProject.properties.getOrDefault("isle.build.source.date.epoch", "") as String).ifBlank {
-                rootProject.extra["git.sourceDateEpoch"] as String
-            }
+        val Project.isleRepository: String
+            get() = properties.getOrDefault("isle.repository", "islandora") as String
+
+        val Project.isleTag: String
+            get() = properties.getOrDefault("isle.tag", "local") as String
+
+        fun String.normalizeDockerTag() = this.replace("""[^a-zA-Z0-9._-]""".toRegex(), "-")
     }
 
     override fun apply(pluginProject: Project): Unit = pluginProject.run {
@@ -55,7 +57,8 @@ class SharedPropertiesPlugin : Plugin<Project> {
             "Failed to get branch."
         ).normalizeDockerTag()
 
-        rootProject.extra["git.commit"] = execCaptureOutput(listOf("git", "rev-parse", "HEAD"), "Failed to get commit hash.")
+        rootProject.extra["git.commit"] =
+            execCaptureOutput(listOf("git", "rev-parse", "HEAD"), "Failed to get commit hash.")
 
         rootProject.extra["git.tag"] = try {
             execCaptureOutput(

@@ -9,4 +9,4 @@ name: base-servicestartswithdefaults
 services:
   base:
     <<: *common
-    image: ${BASE_IMAGE:-islandora/base:local}
+    image: ${BASE:-islandora/base:local}

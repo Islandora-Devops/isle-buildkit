@@ -9,7 +9,7 @@ name: houdini-servicestartswithdefaults
 services:
   houdini:
     <<: *common
-    image: ${HOUDINI_IMAGE:-islandora/houdini:local}
+    image: ${HOUDINI:-islandora/houdini:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

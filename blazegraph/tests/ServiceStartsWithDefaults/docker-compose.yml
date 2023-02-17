@@ -9,7 +9,7 @@ name: blazegraph-servicestartswithdefaults
 services:
   blazegraph:
     <<: *common
-    image: ${BLAZEGRAPH_IMAGE:-islandora/blazegraph:local}
+    image: ${BLAZEGRAPH:-islandora/blazegraph:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

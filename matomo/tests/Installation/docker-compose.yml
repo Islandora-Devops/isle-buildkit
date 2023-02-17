@@ -13,10 +13,10 @@ name: matomo-installation
 services:
   mariadb:
     <<: *common
-    image: ${DRUPAL_IMAGE:-islandora/mariadb:local}
+    image: ${MARIADB:-islandora/mariadb:local}
   matomo:
     <<: *common
-    image: ${MATOMO_IMAGE:-islandora/matomo:local}
+    image: ${MATOMO:-islandora/matomo:local}
     environment:
       MATOMO_DEFAULT_HOST: "https://islandora.dev"
     volumes:

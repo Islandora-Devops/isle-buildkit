@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  ide:
+    environment:
+      SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
+    volumes:
+      # Mount SSH agent so we can authenticate against github inside of the IDE container.
+      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock

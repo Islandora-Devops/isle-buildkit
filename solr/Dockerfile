@@ -35,4 +35,3 @@ ENV \
     SOLR_MEMORY=512m
 
 COPY --link rootfs /
-

@@ -8,10 +8,10 @@ version: "3.8"
 name: drupal-servicestartswithbackendmysql
 services:
   drupal:
-    image: ${DRUPAL_IMAGE:-islandora/drupal:local}
+    image: ${DRUPAL:-islandora/drupal:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
   mariadb:
-    image: ${DATABASE_IMAGE:-islandora/mariadb:local}
+    image: ${MARIADB:-islandora/mariadb:local}

@@ -3,8 +3,10 @@ package plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Delete
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.property
+import org.gradle.kotlin.dsl.provideDelegate
+import org.gradle.kotlin.dsl.withGroovyBuilder
 
 @Suppress("unused")
 class IslePlugin : Plugin<Project> {
@@ -18,17 +20,8 @@ class IslePlugin : Plugin<Project> {
     override fun apply(pluginProject: Project): Unit = pluginProject.run {
         apply<SharedPropertiesPlugin>()
         apply<DockerHubPlugin>()
-        apply<BuildPlugin>()
         apply<ReportsPlugin>()
         apply<TestsPlugin>()
-
-        // Return repository to initial "clean" state.
-        tasks.register<Delete>("clean") {
-            group = "Isle"
-            description = "Destroy absolutely everything"
-            delete(layout.buildDirectory)
-            dependsOn("pruneBuildCaches", "destroyBuilders", "destroyRegistryVolume", "destroyRegistryNetwork")
-        }
 
         extensions.findByName("buildScan")?.withGroovyBuilder {
             setProperty("termsOfServiceUrl", "https://gradle.com/terms-of-service")

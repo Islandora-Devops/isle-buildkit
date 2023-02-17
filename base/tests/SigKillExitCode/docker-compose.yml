@@ -10,6 +10,6 @@ name: base-sigkillexitcode
 services:
   base:
     <<: *common
-    image: ${BASE_IMAGE:-islandora/base:local}
+    image: ${BASE:-islandora/base:local}
     volumes:
       - ./service:/etc/services.d/test

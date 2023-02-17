@@ -11,7 +11,7 @@ name: activemq-servicestartswithdefaults
 services:
   activemq:
     <<: *common
-    image: ${ACTIVEMQ_IMAGE:-islandora/activemq:local}
+    image: ${ACTIVEMQ:-islandora/activemq:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

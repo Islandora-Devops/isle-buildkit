@@ -24,7 +24,7 @@ function jolokia {
     if [ "$action" != "" ]; then
         url="${url}/$action"
     fi
-    curl -u "admin:password" "${url}"
+    curl -s -u "admin:password" "${url}"
     printf "\n"
 }
 
@@ -35,6 +35,7 @@ function wait_for_dequeue {
         continue_waiting=0
         for queue in "${QUEUES[@]}"; do
             queue_size=$(jolokia "read" "${queue}" | jq .value.QueueSize) &>/dev/null || exit $?
+            echo "Queue (${queue}) remaining: ${queue_size}"
             if [ "${queue_size}" != "0" ]; then
                 continue_waiting=1
             fi
@@ -58,16 +59,16 @@ function configure {
 
     # Ingest sample content.
     drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" pm:enable sample_content -y
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cron || true
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cache:rebuild
 
     # Add check to wait for queue's to empty.
-    wait_for_dequeue &
+    wait_for_dequeue
 
     # Add check to wait for solr index to complete.
-    drush search-api:index &
+    drush search-api:index
 
-    wait
+    # Cache must be last as clearing the cache while adding content can cause deadlocks.
+    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cron || true
+    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cache:rebuild
 }
 
 function install {

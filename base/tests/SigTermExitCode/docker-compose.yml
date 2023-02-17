@@ -10,7 +10,7 @@ name: base-sigtermexitcode
 services:
   base:
     <<: *common
-    image: ${BASE_IMAGE:-islandora/base:local}
+    image: ${BASE:-islandora/base:local}
     volumes:
       - ./service:/etc/services.d/test
       - ./test.sh:/test.sh # Test to run.

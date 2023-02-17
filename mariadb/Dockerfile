@@ -18,4 +18,9 @@ RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/c
     && \
     cleanup.sh
 
+# Installation sometimes needs more than the default 30 seconds defined in the
+# base image. Set to 10 minutes just incase it ran on very old or overallocated
+# hardware.
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=600000
+
 COPY --link rootfs /

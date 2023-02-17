@@ -13,8 +13,9 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.*
-import plugins.BuildPlugin.Companion.isleHostArchBuildTask
 import plugins.IslePlugin.Companion.isDockerProject
+import plugins.SharedPropertiesPlugin.Companion.isleRepository
+import plugins.SharedPropertiesPlugin.Companion.isleTag
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -34,6 +35,11 @@ class TestsPlugin : Plugin<Project> {
         // Check if the project should have docker related tasks.
         val Project.isDockerComposeProject: Boolean
             get() = projectDir.resolve("docker-compose.yml").exists()
+
+        // Pushing may require logging in to the repository, if so these need to be populated.
+        // The local registry does not require credentials.
+        val Project.isleTestPull: Boolean
+            get() = (properties.getOrDefault("isle.test.pull", "false") as String).toBoolean()
     }
 
 
@@ -74,23 +80,26 @@ class TestsPlugin : Plugin<Project> {
             "compose"
         )
 
+        @Input
+        val environment = project.objects.mapProperty<String, String>().convention(project.provider {
+            val images = project.rootProject.allprojects.filter { it.isDockerProject }.map { it.name }
+            images.associate { image ->
+                image.uppercase().replace("-", "_") to (project.properties.getOrDefault(
+                    "isle.${image}.digest",
+                    ""
+                ) as String).ifEmpty { "${project.isleRepository}/${image}:${project.isleTag}" }
+            }
+        })
+
         @get:Internal
         val dockerCompose by lazy {
             DockerComposeFile.deserialize(project.file("docker-compose.yml"))
         }
 
-        // Output of load tasks for dependency caching and resolution.
-        @Input
-        val digests = project.objects.listProperty<String>()
-
         // Any file might be referenced by the docker-compose.yml file / as a volume, etc.
         @InputDirectory
         @PathSensitive(PathSensitivity.RELATIVE)
         val context = project.objects.directoryProperty().convention(project.layout.projectDirectory)
-
-        // Environment for docker-compose not the actual containers.
-        @Input
-        val env = project.objects.mapProperty<String, String>()
     }
 
     @CacheableTask
@@ -106,10 +115,9 @@ class TestsPlugin : Plugin<Project> {
         @Input
         val outputConditions = project.objects.mapProperty<String, String>()
 
-        // Capture the log output of the command for later inspection.
-        // Also prevents test from re-running if successful.
-        @OutputFile
-        val log = project.objects.fileProperty().convention(project.layout.buildDirectory.file("$name.log"))
+        // Capture the log output after exit (sometimes has more text).
+        @OutputDirectory
+        val logs = project.objects.directoryProperty().convention(project.layout.buildDirectory)
 
         init {
             // By default, limit max execution time to 5 minutes.
@@ -178,46 +186,26 @@ class TestsPlugin : Plugin<Project> {
         // Monitor output of the given service.
         private fun monitorService(service: String, output: String): Triple<String, String, Boolean> {
             logger.info("""Looking for "$output" in $service logs""")
-            val process = ProcessBuilder().run {
-                directory(project.projectDir)
-                command(
-                    baseArguments + listOf(
-                        "logs",
-                        "--follow",
-                        service
-                    )
-                )
-                redirectErrorStream(true)
-                start()
-            }
             val reader = CompletableFuture.supplyAsync({
-                // Wait for the first byte to be available.
                 val start = System.nanoTime()
-                while (true) {
-                    if (process.inputStream.available() > 0 || (System.nanoTime() - start) >= timeout.get().toNanos()) {
-                        break;
-                    }
-                    Thread.sleep(1000)
-                }
-                val reader = BufferedReader(InputStreamReader(process.inputStream))
-                var line: String?
-                while (reader.readLine().also { line = it } != null) {
-                    if (line?.contains(output) == true) {
-                        process.destroy()
-                        logger.info("""Found "$output" in $service logs""")
-                        return@supplyAsync Triple(service, output, true)
+                while ((System.nanoTime() - start) <= timeout.get().toNanos()) {
+                    ByteArrayOutputStream().use { outputStream ->
+                        project.exec {
+                            workingDir = project.projectDir
+                            commandLine = baseArguments + listOf("logs", service)
+                            standardOutput = outputStream
+                        }
+                        output.lines()
+                    }.forEach { line ->
+                        if (line.contains(output)) {
+                            logger.info("""Found "$output" in $service logs""")
+                            return@supplyAsync Triple(service, output, true)
+                        }
                     }
                 }
                 logger.info("""Missing "$output" from $service logs""")
                 return@supplyAsync Triple(service, output, false)
-
             }, pool)
-            reader.whenComplete { _, _ ->
-                process.destroyForcibly()
-            }
-            if (!process.waitFor(timeout.get().toMillis(), TimeUnit.MILLISECONDS)) {
-                process.destroyForcibly()
-            }
             return reader.get()
         }
 
@@ -228,8 +216,9 @@ class TestsPlugin : Plugin<Project> {
                     val process = ProcessBuilder().run {
                         directory(project.projectDir)
                         command(baseArguments + listOf("up", "--abort-on-container-exit"))
-                        redirectOutput(log.get().asFile)
+                        redirectOutput(logs.get().asFile.resolve("up.log"))
                         redirectErrorStream(true)
+                        environment().putAll(this@DockerComposeUp.environment.get())
                         start()
                     }
                     if (!process.waitFor(timeout.get().toMillis(), TimeUnit.MILLISECONDS)) {
@@ -243,7 +232,7 @@ class TestsPlugin : Plugin<Project> {
             var failedConditions = false
 
             if (outputConditions.get().isNotEmpty()) {
-                Thread.sleep(10000)
+                Thread.sleep(5000)
                 val logMonitors = outputConditions.get().map { (service, output) ->
                     CompletableFuture.supplyAsync({
                         monitorService(service, output)
@@ -261,6 +250,15 @@ class TestsPlugin : Plugin<Project> {
             project.exec {
                 workingDir = project.projectDir
                 commandLine = baseArguments + listOf("stop")
+            }
+            exitCodes.forEach { (service, _) ->
+                val process = ProcessBuilder().run {
+                    directory(project.projectDir)
+                    command(baseArguments + listOf("logs", service))
+                    redirectOutput(logs.get().asFile.resolve("${service}.log"))
+                    redirectErrorStream(true)
+                    start()
+                }.waitFor()
             }
             exitCodeConditions.get().forEach { (service, expectedExitCodes) ->
                 val exitCode = exitCodes[service]
@@ -315,28 +313,17 @@ class TestsPlugin : Plugin<Project> {
                         tasks.register<DockerComposeUp>("test") {
                             group = "Isle Tests"
                             description = "Perform test"
-                            // Rerun tests if build digests change. Assumes services are named for the folder the image
-                            // is built from.
-                            digests.set(project.provider {
-                                dockerCompose.services.keys.mapNotNull { image ->
-                                    try {
-                                        rootProject.project(":${image}").isleHostArchBuildTask.get().digest.get()
-                                    } catch (e: Exception) {
-                                        null
-                                    }
-                                }
-                            })
                             dependsOn(setUp)
-                            dependsOn(project.provider {
-                                dockerCompose.services.keys.mapNotNull { image ->
-                                    try {
-                                        rootProject.project(":${image}").isleHostArchBuildTask
-                                    } catch (e: Exception) {
-                                        null
+                            //finalizedBy(cleanUpAfter)
+                            doFirst {
+                                if (project.isleTestPull) {
+                                    project.exec {
+                                        workingDir = project.projectDir
+                                        commandLine = baseArguments + listOf("pull", "--ignore-pull-failures")
+                                        environment = this@register.environment.get() as Map<String, String>
                                     }
                                 }
-                            })
-                            finalizedBy(cleanUpAfter)
+                            }
                         }
                     }
                 }

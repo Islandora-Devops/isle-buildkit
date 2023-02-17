@@ -9,7 +9,7 @@ name: homarus-servicestartswithdefaults
 services:
   homarus:
     <<: *common
-    image: ${HOMARUS_IMAGE:-islandora/homarus:local}
+    image: ${HOMARUS:-islandora/homarus:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

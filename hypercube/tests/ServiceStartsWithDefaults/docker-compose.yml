@@ -9,7 +9,7 @@ name: hypercube-servicestartswithdefaults
 services:
   hypercube:
     <<: *common
-    image: ${HYPERCUBE_IMAGE:-islandora/hypercube:local}
+    image: ${HYPERCUBE:-islandora/hypercube:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

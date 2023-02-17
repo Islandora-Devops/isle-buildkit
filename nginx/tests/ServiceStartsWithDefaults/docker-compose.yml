@@ -9,7 +9,7 @@ name: nginx-servicestartswithdefaults
 services:
   nginx:
     <<: *common
-    image: ${NGINX_IMAGE:-islandora/nginx:local}
+    image: ${NGINX:-islandora/nginx:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

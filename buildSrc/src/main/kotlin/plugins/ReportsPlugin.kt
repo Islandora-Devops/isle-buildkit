@@ -7,9 +7,10 @@ import org.gradle.api.Project
 import org.gradle.api.file.RegularFile
 import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.*
-import plugins.BuildPlugin.Companion.isleHostArchBuildTask
 import plugins.IslePlugin.Companion.isDockerProject
 import plugins.SharedPropertiesPlugin.Companion.execCaptureOutput
+import plugins.SharedPropertiesPlugin.Companion.isleRepository
+import plugins.SharedPropertiesPlugin.Companion.isleTag
 import tasks.DockerPull
 
 // Generate reports via Syft and Grype.
@@ -255,8 +256,7 @@ class ReportsPlugin : Plugin<Project> {
                     group = "Isle Reports"
                     description = "Generate a software bill of material with Syft"
                     syft.set(pullSyft.map { it.digest })
-                    // Requires the build plugin to be included, or this will fail at configure time.
-                    image.set(project.isleHostArchBuildTask.map { it.digest.get() })
+                    image.set((properties.getOrDefault("isle.${project.name}.digest", "") as String).ifEmpty { "${project.isleRepository}/${project.name}:${project.isleTag}" })
                 }
 
                 tasks.register<Grype>("grype") {

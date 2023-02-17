@@ -9,7 +9,7 @@ name: matomo-servicestartswithdefaults
 services:
   milliner:
     <<: *common
-    image: ${MILLINER_IMAGE:-islandora/milliner:local}
+    image: ${MILLINER:-islandora/milliner:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

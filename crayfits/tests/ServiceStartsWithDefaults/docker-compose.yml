@@ -9,7 +9,7 @@ name: crayfits-servicestartswithdefaults
 services:
   crayfits:
     <<: *common
-    image: ${CRAYFITS_IMAGE:-islandora/crayfits:local}
+    image: ${CRAYFITS:-islandora/crayfits:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

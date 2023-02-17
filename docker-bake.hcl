@@ -1,3 +1,8 @@
+ARCHES = [
+  "amd64",
+  "arm64",
+]
+
 IMAGES = [
   "activemq",
   "alpaca",
@@ -62,10 +67,18 @@ variable "REPOSITORY" {
   default = "islandora"
 }
 
+variable "CACHE_FROM_REPOSITORY" {
+  default = "islandora"
+}
+
+variable "CACHE_TO_REPOSITORY" {
+  default = "islandora"
+}
+
 variable "TAGS" {
   # "latest" is reserved for the most recent release.
   # "local" is to distinguish that from builds produced locally.
-  # Multiple tags can be specified by using a "," delimited list.
+  # Multiple tags can be specified by using a space " " delimited list.
   default = "local"
 }
 
@@ -74,12 +87,8 @@ variable "SOURCE_DATE_EPOCH" {
 }
 
 variable "BRANCH" {
+  # Must be specified for ci builds.
   # BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  default = ""
-}
-
-variable "HOST_ARCH" {
-  # HOST_ARCH=$(uname -m)
   default = ""
 }
 
@@ -88,7 +97,12 @@ variable "HOST_ARCH" {
 ###############################################################################
 function hostArch {
   params = []
-  result = equal("", HOST_ARCH) ? "" : (equal("arm64", HOST_ARCH) ? "arm64" : "amd64")
+  result = equal("linux/amd64", BAKE_LOCAL_PLATFORM) ? "amd64" : "arm64" # Only two platforms supported.
+}
+
+function arches {
+  params = [image, suffix]
+  result = equal("", suffix) ? [for arch in ARCHES: "${image}-${arch}" ] : [ for arch in ARCHES: "${image}-${arch}-${suffix}" ]
 }
 
 function dependencies {
@@ -103,17 +117,17 @@ function targets {
 
 function "tags" {
   params = [image, suffix]
-  result = equal("", suffix) ? [for tag in split(",", TAGS): "${REPOSITORY}/${image}:${tag}"] : [for tag in split(",", TAGS): "${REPOSITORY}/${image}:${tag}-${suffix}"]
+  result = equal("", suffix) ? [for tag in split(" ", TAGS): "${REPOSITORY}/${image}:${tag}"] : [for tag in split(" ", TAGS): "${REPOSITORY}/${image}:${tag}-${suffix}"]
 }
 
 function "cacheFrom" {
   params = [image, arch]
-  result = equal("", arch) ? [] : ["type=registry,ref=${REPOSITORY}/cache:${image}-main-${arch}", notequal("", BRANCH) ? "type=registry,ref=${REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
+  result = equal("", arch) ? [] : ["type=registry,ref=${CACHE_FROM_REPOSITORY}/cache:${image}-main-${arch}", notequal("", BRANCH) ? "type=registry,ref=${CACHE_FROM_REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
 }
 
 function "cacheTo" {
   params = [image, arch]
-  result =  [notequal("", BRANCH) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
+  result =  [notequal("", BRANCH) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${CACHE_TO_REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
 }
 
 ###############################################################################
@@ -127,20 +141,124 @@ group "amd64" {
   targets = targets("amd64")
 }
 
-group "amd64-ci" {
-  targets = targets("amd64-ci")
-}
-
 group "arm64" {
   targets = targets("arm64")
+}
+
+group "ci" {
+  targets = [ "amd64-ci", "arm64-ci" ]
+}
+
+group "amd64-ci" {
+  targets = targets("amd64-ci")
 }
 
 group "arm64-ci" {
   targets = targets("arm64-ci")
 }
 
-group "ci" {
-  targets = [ "amd64-ci", "arm64-ci" ]
+group "activemq-ci" {
+  targets = arches("activemq", "ci")
+}
+
+group "alpaca-ci" {
+  targets = arches("alpaca", "ci")
+}
+
+group "base-ci" {
+  targets = arches("base", "ci")
+}
+
+group "blazegraph-ci" {
+  targets = arches("blazegraph", "ci")
+}
+
+group "cantaloupe-ci" {
+  targets = arches("cantaloupe", "ci")
+}
+
+group "code-server-ci" {
+  targets = arches("code-server", "ci")
+}
+
+group "crayfish-ci" {
+  targets = arches("crayfish", "ci")
+}
+
+group "crayfits-ci" {
+  targets = arches("crayfits", "ci")
+}
+
+group "drupal-ci" {
+  targets = arches("drupal", "ci")
+}
+
+group "fcrepo6-ci" {
+  targets = arches("fcrepo6", "ci")
+}
+
+group "fits-ci" {
+  targets = arches("fits", "ci")
+}
+
+group "handle-ci" {
+  targets = arches("handle", "ci")
+}
+
+group "homarus-ci" {
+  targets = arches("homarus", "ci")
+}
+
+group "houdini-ci" {
+  targets = arches("houdini", "ci")
+}
+
+group "hypercube-ci" {
+  targets = arches("hypercube", "ci")
+}
+
+group "java-ci" {
+  targets = arches("java", "ci")
+}
+
+group "mariadb-ci" {
+  targets = arches("mariadb", "ci")
+}
+
+group "matomo-ci" {
+  targets = arches("matomo", "ci")
+}
+
+group "milliner-ci" {
+  targets = arches("milliner", "ci")
+}
+
+group "nginx-ci" {
+  targets = arches("nginx", "ci")
+}
+
+group "postgresql-ci" {
+  targets = arches("postgresql", "ci")
+}
+
+group "recast-ci" {
+  targets = arches("recast", "ci")
+}
+
+group "riprap-ci" {
+  targets = arches("riprap", "ci")
+}
+
+group "solr-ci" {
+  targets = arches("solr", "ci")
+}
+
+group "test-ci" {
+  targets = arches("test", "ci")
+}
+
+group "tomcat-ci" {
+  targets = arches("tomcat", "ci")
 }
 
 ###############################################################################
@@ -242,6 +360,7 @@ target "houdini-common" {
   inherits = ["common"]
   context = "houdini"
   contexts = {
+    # Produced by this repository <https://github.com/Islandora-Devops/isle-imagemagick>.
     imagemagick = "docker-image://islandora/imagemagick:7.1.0.16@sha256:c9a9c5a7a6f49f38e5ddb4046b15ce149276ee08ab8d1d47a25bfa01a8530cab"
   }
 }

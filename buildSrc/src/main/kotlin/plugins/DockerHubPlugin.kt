@@ -20,7 +20,6 @@ import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkQueue
 import org.gradle.workers.WorkerExecutor
-import plugins.BuildPlugin.Companion.isleBuildPlatforms
 import plugins.IslePlugin.Companion.isDockerProject
 import java.net.URI
 import java.net.http.HttpClient
@@ -110,8 +109,7 @@ class DockerHubPlugin : Plugin<Project> {
                 .filter { it.isNotBlank() }
                 .toSet()
 
-            val archTags = project.isleBuildPlatforms.flatMap { buildPlatform ->
-                val suffix = buildPlatform.removePrefix("linux/")
+            val archTags = listOf("amd64", "arm64").flatMap { suffix ->
                 imageTags.map { "${it}-${suffix}" }
             }
 
@@ -318,7 +316,7 @@ class DockerHubPlugin : Plugin<Project> {
         val getDockerHubTagsEligibleForDeletion by tasks.registering(GetDockerHubTagsEligibleForDeletion::class) {
             group = "Isle DockerHub"
             description = "Gets the tags eligible for removal from DockerHub 'islandora/cache' Repository."
-            image.set(project.name)
+            image.set("cache")
             protectedTags.set(getProtectedDockerHubTags.map { it.protectedTags })
             token.set(getDockerHubToken.map { it.token.get() })
         }

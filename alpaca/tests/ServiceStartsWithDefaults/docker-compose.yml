@@ -9,9 +9,9 @@ name: alpaca-servicestartswithdefaults
 services:
   alpaca:
     <<: *common
-    image: ${ALPACA_IMAGE:-islandora/alpaca:local}
+    image: ${ALPACA:-islandora/alpaca:local}
     depends_on:
       - activemq
   activemq:
     <<: *common
-    image: ${ACTIVEMQ_IMAGE:-islandora/activemq:local}
+    image: ${ACTIVEMQ:-islandora/activemq:local}

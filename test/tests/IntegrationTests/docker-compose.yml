@@ -11,90 +11,86 @@ version: "3.8"
 
 # Common to all services
 x-common: &common
-  restart: "no"
+    restart: "no"
 
 volumes:
-  drupal-solr-config: {}
-
+    drupal-solr-config: {}
 
 name: test-integrationtests
 services:
-  alpaca:
-    <<: *common
-    image: ${ALPACA_IMAGE:-islandora/alpaca:local}
-    environment:
-      # Increase the throughput of consumption from the queue.
-      ALPACA_ACTIVEMQ_CONNECTIONS: 100
-      ALPACA_ACTIVEMQ_CONSUMERS: 10
-    depends_on:
-      - activemq
-  crayfits:
-    <<: *common
-    image: ${CRAYFITS_IMAGE:-islandora/crayfits:local}
-  fits:
-    <<: *common
-    image: ${FITS_IMAGE:-islandora/fits:local}
-  homarus:
-    <<: *common
-    image: ${HOMARUS_IMAGE:-islandora/homarus:local}
-  houdini:
-    <<: *common
-    image: ${HOUDINI_IMAGE:-islandora/houdini:local}
-  hypercube:
-    <<: *common
-    image: ${HYPERCUBE_IMAGE:-islandora/hypercube:local}
-  mariadb:
-    <<: *common
-    image: ${MARIADB_IMAGE:-islandora/mariadb:local}
-  milliner:
-    <<: *common
-    image: ${MILLINER_IMAGE:-islandora/milliner:local}
-  activemq:
-    <<: *common
-    image: ${ACTIVEMQ_IMAGE:-islandora/activemq:local}
-  blazegraph:
-    <<: *common
-    image: ${BLAZEGRAPH_IMAGE:-islandora/blazegraph:local}
-  cantaloupe:
-    <<: *common
-    image: ${CANTALOUPE_IMAGE:-islandora/cantaloupe:local}
-  test:
-    <<: *common
-    image: ${TEST_IMAGE:-islandora/test:local}
-    environment:
-      # Keep this in sync with "islandora.drupal.properties" in the helm chart.
-      DRUPAL_DEFAULT_BROKER_URL: "tcp://activemq:61613"
-      DRUPAL_DEFAULT_CANTALOUPE_URL: "http://test/cantaloupe/iiif/2"
-      DRUPAL_DEFAULT_CONFIGDIR: "/var/www/drupal/config/sync"
-      DRUPAL_DEFAULT_FCREPO_HOST: "fcrepo"
-      DRUPAL_DEFAULT_FCREPO_PORT: 8080
-      DRUPAL_DEFAULT_FCREPO_URL: "http://fcrepo:8080/fcrepo/rest/"
-      DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG: "true"
-      DRUPAL_DEFAULT_MATOMO_URL: "http://test/matomo/"
-      DRUPAL_DEFAULT_NAME: "Islandora Digital Collections"
-      DRUPAL_DEFAULT_PROFILE: "minimal"
-      DRUPAL_DEFAULT_SITE_URL: "test"
-      DRUPAL_DEFAULT_SOLR_CORE: "default"
-      DRUPAL_DRUSH_URI: "http://test" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
-      DRUPAL_ENABLE_HTTPS: false
-    volumes:
-      - drupal-solr-config:/opt/solr/server/solr/default:ro
-      - ./test.sh:/test.sh # Test to run.
-    command: /test.sh # Run test and exit.
-  fcrepo:
-    <<: *common
-    image: ${FCREPO6_IMAGE:-islandora/fcrepo6:local}
-    environment:
-      FCREPO_ALLOW_EXTERNAL_DEFAULT: "http://default/"
-      FCREPO_ALLOW_EXTERNAL_DRUPAL: "http://test/"
-    depends_on:
-      - activemq
-  solr:
-    <<: *common
-    image: ${SOLR_IMAGE:-islandora/solr:local}
-    volumes:
-      - type: volume
-        source: drupal-solr-config
-        target: /opt/solr/server/solr/default
-        volume:
-          nocopy: true
+    alpaca:
+        <<: *common
+        image: ${ALPACA:-islandora/alpaca:local}
+        depends_on:
+            - activemq
+            - crayfits
+            - homarus
+            - houdini
+            - hypercube
+    crayfits:
+        <<: *common
+        image: ${CRAYFITS:-islandora/crayfits:local}
+    fits:
+        <<: *common
+        image: ${FITS:-islandora/fits:local}
+    homarus:
+        <<: *common
+        image: ${HOMARUS:-islandora/homarus:local}
+    houdini:
+        <<: *common
+        image: ${HOUDINI:-islandora/houdini:local}
+    hypercube:
+        <<: *common
+        image: ${HYPERCUBE:-islandora/hypercube:local}
+    mariadb:
+        <<: *common
+        image: ${MARIADB:-islandora/mariadb:local}
+    milliner:
+        <<: *common
+        image: ${MILLINER:-islandora/milliner:local}
+    activemq:
+        <<: *common
+        image: ${ACTIVEMQ:-islandora/activemq:local}
+    blazegraph:
+        <<: *common
+        image: ${BLAZEGRAPH:-islandora/blazegraph:local}
+    test:
+        <<: *common
+        image: ${TEST:-islandora/test:local}
+        environment:
+            # Keep this in sync with "islandora.drupal.properties" in the helm chart.
+            DRUPAL_DEFAULT_BROKER_URL: "tcp://activemq:61613"
+            DRUPAL_DEFAULT_CANTALOUPE_URL: "http://test/cantaloupe/iiif/2"
+            DRUPAL_DEFAULT_CONFIGDIR: "/var/www/drupal/config/sync"
+            DRUPAL_DEFAULT_FCREPO_HOST: "fcrepo"
+            DRUPAL_DEFAULT_FCREPO_PORT: 8080
+            DRUPAL_DEFAULT_FCREPO_URL: "http://fcrepo:8080/fcrepo/rest/"
+            DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG: "true"
+            DRUPAL_DEFAULT_MATOMO_URL: "http://test/matomo/"
+            DRUPAL_DEFAULT_NAME: "Islandora Digital Collections"
+            DRUPAL_DEFAULT_PROFILE: "minimal"
+            DRUPAL_DEFAULT_SITE_URL: "test"
+            DRUPAL_DEFAULT_SOLR_CORE: "default"
+            DRUPAL_DRUSH_URI: "http://test" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
+            DRUPAL_ENABLE_HTTPS: false
+        volumes:
+            - drupal-solr-config:/opt/solr/server/solr/default:ro
+            - ./test.sh:/test.sh # Test to run.
+        command: /test.sh # Run test and exit.
+    fcrepo:
+        <<: *common
+        image: ${FCREPO6:-islandora/fcrepo6:local}
+        environment:
+            FCREPO_ALLOW_EXTERNAL_DEFAULT: "http://default/"
+            FCREPO_ALLOW_EXTERNAL_DRUPAL: "http://test/"
+        depends_on:
+            - activemq
+    solr:
+        <<: *common
+        image: ${SOLR:-islandora/solr:local}
+        volumes:
+            - type: volume
+              source: drupal-solr-config
+              target: /opt/solr/server/solr/default
+              volume:
+                  nocopy: true

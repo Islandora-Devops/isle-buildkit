@@ -5,13 +5,20 @@
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
+- [Tooling](#tooling)
+  - [Make](#make)
+  - [Gradle](#gradle)
+  - [Github Actions](#github-actions)
 - [Building](#building)
   - [Build All Images](#build-all-images)
   - [Build Specific Image](#build-specific-image)
-  - [Building Continuously](#building-continuously)
 - [Testing](#testing)
+  - [Test Specific Image](#test-specific-image)
 - [Running](#running)
 - [Docker Images](#docker-images)
+  - [Updating Dependencies](#updating-dependencies)
+    - [Updating Composer](#updating-composer)
+  - [Updating Configuration](#updating-configuration)
 - [Design Considerations](#design-considerations)
   - [Confd](#confd)
   - [S6 Overlay](#s6-overlay)
@@ -20,7 +27,6 @@
   - [Build System](#build-system)
   - [Multi-arch builds](#multi-arch-builds)
   - [Caching](#caching)
-  - [Baking](#baking)
 - [Design Constraints](#design-constraints)
 - [Issues / FAQ](#issues--faq)
 
@@ -28,32 +34,101 @@
 
 This repository provides a number of docker images which can be used to build an
 Islandora site. On commit, these images are automatically pushed to
-[Docker Hub] via Github Actions. Which are consumed by [isle-dc] and can be used
-by other Docker orchestration tools such as Swarm / Kubernetes.
+[Docker Hub] via Github Actions. Which are consumed by [isle-dc] and
+[isle-site-template]. They can also be used by other Docker orchestration tools
+such as Swarm / Kubernetes. Reach out on the community slack for other example
+installations.
 
 It is **not** meant as a starting point for new users or those unfamiliar with
 Docker, or basic server administration.
 
 If you are looking to use islandora please read the [official documentation] and
-use either [isle-dc] or the [Isle Site Template] to deploy via [Docker] or the
+use either [isle-dc] or the [isle-site-template] to deploy via [Docker] or the
 [islandora-playbook] to deploy via [Ansible].
 
 ## Requirements
 
 To build the Docker images using the provided Gradle build scripts requires:
 
-- [Docker 19.03+](https://docs.docker.com/get-docker/)
+- [Docker 20.10+](https://docs.docker.com/get-docker/)
+- [GNU Make 4.3+](https://www.gnu.org/software/make/)
+- [jq 1.6+](https://stedolan.github.io/jq/)
+- [mkcert 1.4+](https://github.com/FiloSottile/mkcert)
 - [OpenJDK or Oracle JDK 11+](https://www.java.com/en/download/)
+- [pre-commit 2.19+](https://pre-commit.com/) `Only required if submitting changes`
 
-That being said the images themselves are compatible with older versions of
-Docker.
+> N.B You can use older versions of Docker to run the images, just not build
+> them.
 
-## Building
+> N.B If you use Firefox you will also have to install `nss` to use `mkcert` see
+> the [docs](https://github.com/FiloSottile/mkcert#installation).
 
-The build scripts rely on Gradle and should function equally well across
-platforms. The only difference being the script you call to interact with gradle
-(the following assumes you are executing from the **root directory** of the
-project):
+> N.B The version of `make` that comes with OSX is to old, please update
+> using `brew` etc.
+
+To verify you have all the requirements run the following command.
+
+```bash
+make setup
+```
+
+If it is unsuccessful you should see the following message:
+
+```bash
+Could not find executable: XXXX
+Consult the README.md for how to install requirements.
+```
+
+## Tooling
+
+There are a number of tools you can use to [build](#building) and
+[test](#testing) the images produced by this repository. In general there are
+tools like `docker buildx` and `docker compose` that can be invoked directly or
+you can the wrapper tools like [make](#make), [gradle](#gradle). Using the
+wrapper tools has some advantages and is generally recommended, but it is
+occasionally good to revert to the tools they wrap around if you need to debug
+an issue with the building or testing.
+
+### Make
+
+[Building](#building) and [running](#running) relies on Make. You can see the
+tasks available by invoking Make with no arguments. Make is really only
+supported in Linux/OSX, or if you are using Windows you can use
+[Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+```bash
+make
+```
+
+Which yields:
+
+```bash
+Usage:
+  make <target>
+
+BuildKit:
+  bake                           Builds and loads the target(s) into the local docker context.
+  push                           Builds and pushes the target(s) into remote repository.
+  manifest                       Creates manifest for multi-arch images.
+
+Compose:
+  up                             Starts up the local development environment.
+  down                           Stops the local development environment.
+
+General:
+  test                           Run all tests
+  clean                          Destroys local environment and cleans up any uncommitted files.
+  purge                          Destroys all data.
+  help                           Displays this help message.
+```
+
+### Gradle
+
+[Testing](#testing) and [generating security reports](#grype) as well as
+[DockerHub maintenance](#dockerhub) rely on Gradle and should function equally
+well across platforms. The only difference being the script you call to interact
+with gradle (the following assumes you are executing from the **root directory**
+of the project):
 
 **Linux or OSX:**
 
@@ -87,13 +162,27 @@ Tasks runnable from root project
 ------------------------------------------------------------
 
 ...
+Isle DockerHub tasks
+--------------------
+deleteEligibleDockerHubTags - Delete eligible tags from DockerHub 'islandora/cache' Repository.
+getDockerHubTagsEligibleForDeletion - Gets the tags eligible for removal from DockerHub 'islandora/cache' Repository.
+getDockerHubToken - Gets the login token required for interacting with DockerHub Rest API.
+getProtectedDockerHubTags - Gets the tags which should not be removed by DockerHub cleanup inactive tags task.
 
-Islandora tasks
----------------
-abuild:build - Creates Docker image.
-activemq:build - Creates Docker image.
-alpaca:build - Creates Docker image.
-base:build - Creates Docker image.
+Isle Reports tasks
+------------------
+grype - Process the software bill of material with Grype
+pullGrype - Pull anchore/grype docker image
+pullSyft - Pull anchore/syft docker image
+syft - Generate a software bill of material with Syft
+updateGrypeDB - Update the Grype Database
+
+Isle Tests tasks
+----------------
+cleanUpAfter - Clean up resources after running test
+cleanUpBefore - Clean up resources before running test (if interrupted externally, etc)
+setUp - Prepare to run test
+test - Perform test
 
 ...
 ```
@@ -116,6 +205,36 @@ To get more verbose output from Gradle use the `--info` argument like so:
 ./gradlew :PROJECT:TASK --info
 ```
 
+### Github Actions
+
+This repository makes use of [Github Actions] to perform a number of tasks.
+
+| Workflow                                                                 | Description                                                            |
+| :----------------------------------------------------------------------- | :--------------------------------------------------------------------- |
+| [cleanup.yml](.github/workflows/cleanup.yml)                             | Deletes old tags in DockerHub once a week.                             |
+| [dockerhub-description.yml](.github/workflows/dockerhub-description.yml) | Updates DockerHub Description of images to match README.md files.      |
+| [push.yml](.github/workflows/push.yml)                                   | Builds and Tests images and generates a security vulnerability report. |
+
+## Building
+
+This repository makes use of [buildx] which is a wrapper around [buildkit] to
+build all the images. This can be invoked directly like so:
+
+```bash
+docker buildx bake <target>
+```
+
+By default if no `<target>` is specified it will build all the images in this
+repository.
+
+Alternatively you can use `make` to invoke `bake`, it is advantageous as it will
+pass in additional properties that should allow you to make use of the remote
+cache.
+
+```bash
+make bake
+```
+
 To build all the docker images you can use the following command:
 
 ### Build All Images
@@ -123,8 +242,17 @@ To build all the docker images you can use the following command:
 The following will build all the images in the correct order.
 
 ```bash
-./gradlew build
+make bake
 ```
+
+By default this will produce images like `islandora/base:local` you can change
+the repository and tag by specifying them as arguments, like so:
+
+```bash
+make bake REPOSITORY=foo TAGS=bar
+```
+
+This would produce images like `foo/base:bar`.
 
 ### Build Specific Image
 
@@ -132,19 +260,17 @@ To build a specific image and it's dependencies, for example
 `islandora/tomcat`, you can use the following:
 
 ```bash
-./gradlew tomcat:build
+make bake TARGET=tomcat
 ```
 
-### Building Continuously
-
-It is often helpful to build continuously where-in any change you make to any of
-the `Dockerfile` files or other project files, will automatically trigger the
-building of that image and any downstream dependencies. To do this add the
-`--continuous` flag like so:
+If you do not want to build all it's dependent images you can set the context
+using existing images like so:
 
 ```bash
-./gradlew build --continuous
+make bake TARGET=nginx CONTEXTS="docker-image://islandora/base:1.0.10"
 ```
+
+> N.B. Github actions do this to prevent rebuilding dependant images.
 
 ## Testing
 
@@ -157,57 +283,97 @@ To run these tests use the following command:
 ./gradlew test
 ```
 
-To manually test changes in a functioning environment use the command:
+> N.B. Running all tests concurrently can saturate Docker's default number of
+> bridge networks. Please see the [Issues/FAQ](#issues--faq) for how to remedy
+> this.
+
+### Test Specific Image
+
+Alternatively you can test a single image like so:
 
 ```bash
-./gradlew up
+./gradlew tomcat:test
+```
+
+## Running
+
+While `isle-buildkit` does provide a test environment, it is not meant for
+development on Islandora or as production environment. It is meant for testing
+for breaking changes to the images provided by this repository. Instead please
+refer to [isle-dc], or the [isle-site-template], for how to build your own
+Islandora site.
+
+To manually test changes in a functioning environment you can use the provided
+`docker-compose.yml` file.
+
+Though you must **first** generate certificates for use by `traefik`.
+
+```bash
+make certs
+```
+
+> N.B. This will prompt you for a password as generating a root Certificate
+> requires administrative privileges.
+
+You can interact with the `docker compose` directly instead of using
+`make`.
+
+```bash
+docker compose up -d
+```
+
+Although you can interact with `docker compose` directly, it is recommend you
+use `make` as this will ensure you have build all the images and generated the
+required certificates needed, etc:
+
+```bash
+make up
 ```
 
 This will bring up the environment based on [islandora-starter-site]. When
 completed a message will print like so:
 
 ```
-For all services the credentials are:
+Waiting for installation...
 
-Username: admin
-Password: password
+  Credentials:
+  Username                       admin
+  Password                       password
 
-The following services can be reached at the given URLs:
-
-ActiveMQ: https://activemq.islandora.dev/
-Blazegraph: https://blazegraph.islandora.dev/bigdata/
-Drupal: https://islandora.dev/
-Fedora: https://fcrepo.islandora.dev/fcrepo/rest/
-Matomo: https://islandora.dev/matomo/index.php
-Solr: https://solr.islandora.dev/solr/#/
-Traefik: https://traefik.islandora.dev/dashboard/#/
+  Services Available:
+  Drupal                         https://islandora.dev
+  IDE                            https://ide.islandora.dev
+  ActiveMQ                       https://activemq.islandora.dev
+  Blazegraph                     https://blazegraph.islandora.dev/bigdata/
+  Fedora                         https://fcrepo.islandora.dev/fcrepo/rest/
+  Matomo                         https://islandora.dev/matomo/index.php
+  Solr                           https://solr.islandora.dev
+  Traefik                        https://traefik.islandora.dev
 ```
 
-To destroy this environment use the following command:
+To **stop** the containers use the following command:
 
 ```bash
-./gradlew down
+make stop
+```
+
+To **destroy** this environment use the following command:
+
+```bash
+make down
 ```
 
 The two commands can be used at once to ensure you are starting from a clean
 environment:
 
 ```bash
-./gradlew down up
+make down up
 ```
-
-## Running
-
-While `isle-buildkit` does provide a [test environment](#testing), it is not
-meant for development on Islandora or as production environment. Instead please
-refer to [isle-dc], or the [Isle Site Template], for how to build your own
-Islandora site.
 
 ## Docker Images
 
 The following docker images are provided:
 
-- [abuild]
 - [activemq]
 - [alpaca]
 - [base]
@@ -216,16 +382,13 @@ The following docker images are provided:
 - [crayfish]
 - [crayfits]
 - [drupal]
-- [fcrepo]
 - [fcrepo6]
 - [fits]
 - [handle]
 - [homarus]
 - [houdini]
 - [hypercube]
-- [imagemagick]
 - [java]
-- [karaf]
 - [mariadb]
 - [matomo]
 - [milliner]
@@ -241,6 +404,74 @@ Many are intermediate images used to build other images in the list, for example
 [java](./java/README.md). Please see the `README.md` of each image to find out
 what settings, and ports, are exposed and what functionality it provides, as
 well as how to update it to the latest releases.
+
+Additionally this repository consumes [imagemagick] image produced by a separate
+repository. Since it is a standalone image that rarely changes and takes a while
+to build, due to building it under emulation.
+
+### Updating Dependencies
+
+To update the dependencies of a image follow this general pattern, for example [alpaca].
+
+Update the following `ARG` values in
+
+```dockerfile
+ARG ALPACA_VERSION="x.x.x"
+ARG ALPACA_FILE_SHA256="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+```
+
+You'll have to download the new version you wish to update to, you can construct
+the url from the the following `ARG` values in the [Dockerfile](./alpaca/Dockerfile),
+to generate the `sha256` value to put in the above `ARG`.
+
+```dockerfile
+ARG ALPACA_VERSION="x.x.x"
+ARG ALPACA_FILE="islandora-alpaca-app-${ALPACA_VERSION}-all.jar"
+ARG ALPACA_URL="https://repo1.maven.org/maven2/ca/islandora/alpaca/islandora-alpaca-app/${ALPACA_VERSION}/${ALPACA_FILE}"
+```
+
+For example for the version `x.x.x`:
+
+```bash
+ALPACA_VERSION="x.x.x"
+ALPACA_FILE="islandora-alpaca-app-${ALPACA_VERSION}-all.jar"
+ALPACA_URL="https://repo1.maven.org/maven2/ca/islandora/alpaca/islandora-alpaca-app/${ALPACA_VERSION}/${ALPACA_FILE}"
+wget "${ALPACA_URL}" &>/dev/null
+shasum -a 256 ${ALPACA_FILE}
+```
+
+> N.B. Please read the release notes the new version and account for any changes
+> to configuration that are required, as well as test locally.
+
+#### Updating Composer
+
+A number of images like [crayfish] provide a `composer.lock` file to pin them to
+particular dependencies.
+
+When updating the dependencies be sure to search for `composer.lock` in the
+`rootfs` folder of the image and update them as well.
+
+This can be done by running the image after
+[updating dependencies](#updating-dependencies), to get the latest code, and
+running composer update. For example [crayfish]:
+
+```bash
+# Update ARGS as done in previous section
+# ...
+# Build image
+make bake TARGET=crayfish
+for lock in $(find crayfish -name "composer.lock"); \
+do \
+  docker run --rm -ti -v "$(pwd)/${lock}:${lock#crayfish/rootfs*}" -w $(dirname "${lock#crayfish/rootfs*}") --entrypoint composer islandora/crayfish:local update; \
+done
+```
+
+### Updating Configuration
+
+In particular review the files in
+[rootfs/etc/confd](./alpaca/rootfs/etc/confd/), as configuration is likely to
+change between releases.
+
 
 ## Design Considerations
 
@@ -377,16 +608,16 @@ There are only a few `longrun` services:
 - activemq
 - confd (optional, not enabled by default)
 - fpm
-- karaf
 - mysqld
 - nginx
 - solr
 - tomcat
+- etc
 
 Of these only `confd` can be configured to run in every container, it
 periodically listens for changes in it's configured backend (e.g. `etcd` or
-`environment variables`) and will re-render the templates upon any change (see
-it's [README.md](./base/README.md), for more information).
+`environment variables`) and will re-render the templates upon any change. See
+it's [README.md](./base/README.md), for more information.
 
 `oneshot` services are pretty much the same, except they use they `up` and
 `down` instead of `run` and `finish`.
@@ -422,18 +653,14 @@ In order to save space and reduce the amount of duplication across images, they
 are arranged in a hierarchy, that roughly follows below:
 
 ```bash
-├── abuild
-│   └── imagemagick
 └── base
     ├── java
     │   ├── activemq
-    │   ├── karaf
-    │   │   └── alpaca
+    │   ├── alpaca
     │   ├── solr
     │   └── tomcat
     │       ├── blazegraph
     │       ├── cantaloupe
-    │       ├── fcrepo
     │       ├── fcrepo6
     │       └── fits
     ├── mariadb
@@ -452,8 +679,8 @@ are arranged in a hierarchy, that roughly follows below:
         └── matomo
 ```
 
-[abuild], and [imagemagick] stand outside of the hierarchy as they are use only
-to build packages that are consumed by other images during their build stage.
+[imagemagick] stand outside of the hierarchy as they are use only to build
+packages that are consumed by other images during their build stage.
 
 ### Folder Layout
 
@@ -466,34 +693,19 @@ image. So for example `rootfs/etc/islandora/configs` will be
 
 ### Build System
 
-Gradle is used as the build system, it is setup such that it will automatically
-detect which folders should be considered
-[projects](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html) and
-what dependencies exist between them. The only caveat is
-that the projects cannot be nested, though that use case does not really apply.
+Since [bake] is used to build all the images, you must add new images to
+[docker-bake.hcl](./docker-bake.hcl).
 
-The dependencies are resolved by parsing the Dockerfile and looking for:
+Be sure to update `IMAGES` and `DEPENDENCIES` variables for any new images
+added, along with all the required targets for your new `IMAGE-NAME`:
 
-- `FROM` statements
-- `--mount=type=bind` statements
-- `COPY --from` statements
-
-As they are capable of referring to other images.
-
-This means to add a new Docker image to the project you do not need to modify
-the build scripts, simply add a new folder and place your Dockerfile inside of
-it. It will be discovered and built in the correct order relative to the other
-images assuming you refer to the other image using the `repository` build
-argument.
-
-For example:
-
-```Dockerfile
-# syntax=docker/dockerfile:1.4.3
-ARG repository=islandora.dev
-ARG tag=latest
-FROM ${repository}/base:${tag} AS base
-```
+- `IMAGE-NAME-common`: Properties shared by all the following targets.
+- `IMAGE-NAME`: Targets the host platform.
+- `IMAGE-NAME-amd64`: Targets amd64, regardless of host platform.
+- `IMAGE-NAME-arm64`: Targets arm64, regardless of host platform.
+- `IMAGE-NAME-ci`: Used to update the remote cache and build both `PLATFORM-ci` images.
+- `IMAGE-NAME-amd64-ci`: Targets amd64, regardless of host platform updates remote cache.
+- `IMAGE-NAME-arm64-ci`: Targets arm64, regardless of host platform updates remote cache.
 
 ### Multi-arch builds
 
@@ -510,7 +722,13 @@ images with `buildkit` even though that is a supported feature.
 - Being able to refer to an image by it's architecture directly is useful when
   testing for cross platform bugs.
 
-That being said we still produce the OCI manifests for multi-arch images.
+That being said we still produce the OCI manifests for multi-arch images. For
+local development this is not a requirement but the
+[Github Actions](#github-actions) will do this when building.
+
+```bash
+make manifest TARGET=tomcat
+```
 
 So for example on any newish Docker the following command.
 
@@ -525,6 +743,9 @@ explicitly specifying which of the images to e.g.
 docker run --rm -ti --entrypoint uname islandora/base:latest-amd64 -a
 ```
 
+Where the above command will explicitly pull the `amd64` image regardless of the
+hosts architecture.
+
 > N.B. By default local builds will not build multi-arch images, they will only
 > build the platform supported by the host. The above really only is used by the
 > Github Actions build jobs.
@@ -532,14 +753,11 @@ docker run --rm -ti --entrypoint uname islandora/base:latest-amd64 -a
 ### Caching
 
 The caching provided by `buildkit` is somewhat finicky and hard to control.
-We've opted to use [registry-cache] by default.
+We've opted to use [registry-cache] by default. No other forms of caching are
+supported.
 
-
-### Baking
-
-```bash
-BRANCH=(git rev-parse --abbrev-ref HEAD)
-```
+Additionally things like the `s3` is too slow to be practical, and `gha` (Github
+Actions cache) is not large enough to support all the images we build.
 
 ## Design Constraints
 
@@ -615,16 +833,13 @@ adding the following, and restarting `Docker`:
 [crayfish]: ./crayfish/README.md
 [crayfits]: ./crayfits/README.md
 [drupal]: ./drupal/README.md
-[fcrepo]: ./fcrepo/README.md
 [fcrepo6]: ./fcrepo6/README.md
 [fits]: ./fits/README.md
 [handle]: ./handle/README.md
 [homarus]: ./homarus/README.md
 [houdini]: ./houdini/README.md
 [hypercube]: ./hypercube/README.md
-[imagemagick]: ./imagemagick/README.md
 [java]: ./java/README.md
-[karaf]: ./karaf/README.md
 [mariadb]: ./mariadb/README.md
 [matomo]: ./matomo/README.md
 [milliner]: ./milliner/README.md
@@ -638,18 +853,23 @@ adding the following, and restarting `Docker`:
 
 [Alpine Docker Image]: https://hub.docker.com/_/alpine
 [Ansible]: https://docs.ansible.com/ansible/latest/user_guide/index.html#getting-started
+[bake]: https://docs.docker.com/engine/reference/commandline/buildx_bake/
+[buildkit]: https://docs.docker.com/build/buildkit/
+[buildx]: https://docs.docker.com/engine/reference/commandline/buildx/
 [BusyBox]: https://busybox.net/
 [Confd]: https://github.com/kelseyhightower/confd
 [Docker Hub]: https://hub.docker.com/u/islandora
 [Docker]: https://docs.docker.com/get-started/
 [execline]: https://skarnet.org/software/execline/index.html
+[Github Actions]: https://github.com/features/actions
 [glibc]: https://www.gnu.org/software/libc/
-[registry-cache]: https://docs.docker.com/build/cache/backends/registry/
+[imagemagick]: https://github.com/Islandora-Devops/isle-imagemagick
 [islandora-playbook]: https://github.com/Islandora-Devops/islandora-playbook
 [islandora-starter-site]: https://github.com/Islandora/islandora-starter-site
-[Isle Site Template]: https://github.com/Islandora-Devops/isle-site-template
 [isle-dc]: https://github.com/Islandora-Devops/isle-dc
+[isle-site-template]: https://github.com/Islandora-Devops/isle-site-template
 [musl libc]: https://musl.libc.org/
 [official documentation]: https://islandora.github.io/documentation/
 [Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver
+[registry-cache]: https://docs.docker.com/build/cache/backends/registry/
 [S6 Overlay]: https://github.com/just-containers/s6-overlay

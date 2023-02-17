@@ -49,7 +49,7 @@
         <property name="constraint" ref="adminSecurityConstraint" />
         <property name="pathSpec" value="*.action" />
     </bean>
-    
+
     <bean id="rewriteHandler" class="org.eclipse.jetty.rewrite.handler.RewriteHandler">
         <property name="rules">
             <list>
@@ -71,7 +71,7 @@
             </list>
         </property>
     </bean>
-    
+
 	<bean id="secHandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
@@ -100,7 +100,7 @@
 				</bean>
 			</list>
 		</property>
-	</bean>    
+	</bean>
     <bean id="securityHandler" class="org.eclipse.jetty.security.ConstraintSecurityHandler">
         <property name="loginService" ref="securityLoginService" />
         <property name="authenticator">
@@ -165,7 +165,7 @@
 					<constructor-arg ref="Server" />
 					<constructor-arg>
 						<bean id="handlers" class="org.eclipse.jetty.util.ssl.SslContextFactory">
-						
+
 							<property name="keyStorePath" value="${activemq.conf}/broker.ks" />
 							<property name="keyStorePassword" value="password" />
 						</bean>
@@ -185,12 +185,12 @@
 			</list>
 		</property>
 	</bean>
-    
-    <bean id="invokeStart" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" 
+
+    <bean id="invokeStart" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
     	depends-on="configureJetty, invokeConnectors">
     	<property name="targetObject" ref="Server" />
-    	<property name="targetMethod" value="start" />  	
+    	<property name="targetMethod" value="start" />
     </bean>
-    
-    
+
+
 </beans>

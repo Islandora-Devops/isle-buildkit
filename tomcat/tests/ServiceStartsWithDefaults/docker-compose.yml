@@ -9,7 +9,7 @@ name: tomcat-servicestartswithdefaults
 services:
   tomcat:
     <<: *common
-    image: ${TOMCAT_IMAGE:-islandora/tomcat:local}
+    image: ${TOMCAT:-islandora/tomcat:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

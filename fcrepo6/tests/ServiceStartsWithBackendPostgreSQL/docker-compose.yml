@@ -12,9 +12,9 @@ name: fcrepo6-servicestartswithbackendpostgresql
 services:
   activemq:
     <<: *common
-    image: ${ACTIVEMQ_IMAGE:-islandora/activemq:local}
+    image: ${ACTIVEMQ:-islandora/activemq:local}
   postgresql:
-    image: ${POSTGRESQL_IMAGE:-islandora/postgresql:local}
+    image: ${POSTGRESQL:-islandora/postgresql:local}
   fcrepo6:
     # Allow downstream container to override `DB` environment variables.
     environment:
@@ -23,7 +23,7 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-islandora/fcrepo6:local}
+    image: ${FCREPO6:-islandora/fcrepo6:local}
     depends_on:
       - activemq
       - postgresql
