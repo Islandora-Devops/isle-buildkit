@@ -404,9 +404,9 @@ Many are intermediate images used to build other images in the list, for example
 what settings, and ports, are exposed and what functionality it provides, as
 well as how to update it to the latest releases.
 
-Additionally this repository consumes [imagemagick] image produced by a separate
-repository. Since it is a standalone image that rarely changes and takes a while
-to build, due to building it under emulation.
+Additionally this repository consumes [imagemagick] & [leptonica] images
+produced by a separate repositories. Since it is a standalone image that rarely
+changes and takes a while to build, due to building it under emulation.
 
 ### Updating Dependencies
 
@@ -485,7 +485,7 @@ All of the images build by this project are derived from the
 
 The image is only `5MB` in size and has access to a package repository. It has
 been chosen for its small size, and ease of generating custom packages (as is
-done in the [imagemagick] image).
+done in the [imagemagick] & [leptonica] images).
 
 The [base] image includes two tools essential to the functioning of all the
 images.
@@ -667,8 +667,8 @@ are arranged in a hierarchy, that roughly follows below:
     └── nginx
         ├── crayfish
         │   ├── homarus
-        │   ├── houdini (consumes "imagemagick" as well during its build stage)
-        │   ├── hypercube
+        │   ├── houdini (consumes [imagemagick] as well during its build stage)
+        │   ├── hypercube (consumes [leptonica] as well during its build stage)
         │   ├── milliner
         │   └── riprap
         ├── crayfits
@@ -677,8 +677,8 @@ are arranged in a hierarchy, that roughly follows below:
         └── matomo
 ```
 
-[imagemagick] stand outside of the hierarchy as they are use only to build
-packages that are consumed by other images during their build stage.
+[imagemagick] & [leptonica] stand outside of the hierarchy as they are use only
+to build packages that are consumed by other images during their build stage.
 
 ### Folder Layout
 
@@ -865,6 +865,7 @@ adding the following, and restarting `Docker`:
 [islandora-starter-site]: https://github.com/Islandora/islandora-starter-site
 [isle-dc]: https://github.com/Islandora-Devops/isle-dc
 [isle-site-template]: https://github.com/Islandora-Devops/isle-site-template
+[leptonica]: https://github.com/Islandora-Devops/isle-leptonica
 [musl libc]: https://musl.libc.org/
 [official documentation]: https://islandora.github.io/documentation/
 [Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver
