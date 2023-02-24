@@ -10,11 +10,17 @@ RED = $(shell tput setaf 9)
 BLUE = $(shell tput setaf 6)
 TARGET_MAX_CHAR_NUM = 30
 
-# The location of root certificates.
-CAROOT = $(shell mkcert -CAROOT)
-
 # Some targets will only be included if the appropriate condition is met.
-SSH_AGENT_RUNNING = $(shell test -S "$${SSH_AUTH_SOCK}" && echo "true")
+SSH_AGENT_RUNNING := $(shell test -S "$${SSH_AUTH_SOCK}" && echo "true")
+
+# For some commands we must invoke a Windows executable if in the context of WSL.
+IS_WSL := $(shell grep -q WSL /proc/version && echo "true")
+
+# Use the host mkcert.exe if executing make from WSL context.
+MKCERT := $(if $(filter true,$(IS_WSL)),mkcert.exe,mkcert)
+
+# The location of root certificates.
+CAROOT := $(if $(filter true,$(IS_WSL)),$(shell $(MKCERT) -CAROOT | xargs -0 wslpath -u),$(shell $(MKCERT) -CAROOT))
 
 # Display text for requirements.
 README_MESSAGE = ${BLUE}Consult the README.md for how to install requirements.${RESET}\n
@@ -114,15 +120,15 @@ login:
 		fi \
 	done
 
-$(CAROOT)/rootCA-key.pem $(CAROOT)/rootCA.pem &: | mkcert
+$(CAROOT)/rootCA-key.pem $(CAROOT)/rootCA.pem &: | $(MKCERT)
   # Requires mkcert to be installed first (It may fail on some systems due to how Java is configured, but this can be ignored).
-	-mkcert -install
+	-$(MKCERT) -install
 
 # Using mkcert to generate local certificates rather than traefik certs
 # as they often get revoked.
-build/certs/cert.pem build/certs/privkey.pem build/certs/rootCA.pem build/certs/rootCA-key.pem  &: $(CAROOT)/rootCA-key.pem $(CAROOT)/rootCA.pem | mkcert build
+build/certs/cert.pem build/certs/privkey.pem build/certs/rootCA.pem build/certs/rootCA-key.pem &: $(CAROOT)/rootCA-key.pem $(CAROOT)/rootCA.pem | $(MKCERT) build
 	mkdir -p build/certs
-	mkcert -cert-file build/certs/cert.pem -key-file build/certs/privkey.pem \
+	$(MKCERT) -cert-file build/certs/cert.pem -key-file build/certs/privkey.pem \
 		"*.islandora.dev" \
 		"islandora.dev" \
 		"*.islandora.io" \
@@ -368,7 +374,7 @@ purge: clean builder-destroy registry-destroy network-destroy
 
 .PHONY: setup
 ## Checks that all required tools are installed (Installs pre-commit).
-setup: .git/hooks/pre-commit | git docker-compose docker-buildx jq awk mkcert
+setup: .git/hooks/pre-commit | git docker-compose docker-buildx jq awk $(MKCERT)
 
 .PHONY: help
 .SILENT: help

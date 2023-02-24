@@ -5,6 +5,7 @@
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
+  - [Windows](#windows)
 - [Tooling](#tooling)
   - [Make](#make)
   - [Gradle](#gradle)
@@ -80,6 +81,17 @@ If it is unsuccessful you should see the following message:
 Could not find executable: XXXX
 Consult the README.md for how to install requirements.
 ```
+
+### Windows
+
+Since this repository relies on `make` you must use WSL2 to invoke it, and all
+dependencies should be installed inside of the WSL2 context. With the exeception
+of `mkcert` which must be installed in the host Windows context, as it needs to
+modify the Windows trust store so that the browsers will support the generated
+certificates.
+
+> N.B Firefox is not a supported browser on Windows for this project, you must
+> use Edge or Chrome.
 
 ## Tooling
 
