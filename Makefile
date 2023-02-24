@@ -247,6 +247,7 @@ up: bake | docker-compose
 		"Blazegraph|https://blazegraph.islandora.dev/bigdata/" \
 		"Fedora|https://fcrepo.islandora.dev/fcrepo/rest/" \
 		"Matomo|https://islandora.dev/matomo/index.php" \
+		"Cantaloupe|https://islandora.dev/cantaloupe" \
 		"Solr|https://solr.islandora.dev" \
 		"Traefik|https://traefik.islandora.dev" \
 	; \
