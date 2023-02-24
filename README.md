@@ -57,7 +57,7 @@ To build the Docker images using the provided Gradle build scripts requires:
 - [jq 1.6+](https://stedolan.github.io/jq/)
 - [mkcert 1.4+](https://github.com/FiloSottile/mkcert)
 - [OpenJDK or Oracle JDK 11+](https://www.java.com/en/download/)
-- [pre-commit 2.19+](https://pre-commit.com/) `Only required if submitting changes`
+- [pre-commit 2.19+](https://pre-commit.com/)
 
 > N.B You can use older versions of Docker to run the images, just not build
 > them.
