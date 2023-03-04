@@ -18,14 +18,6 @@ jobs:
         run: |
           find . -maxdepth 2 -mindepth 2 -type f -name "README*.md" -exec sed -i 's/](\.\.\/\([^/]*\).*)/](.\/\1)/g' {} \;
 
-      - name: ABuild - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.REGISTRY_DOCKERHUB_USER }}
-          password: ${{ secrets.REGISTRY_DOCKERHUB_TOKEN }}
-          repository: ${{ secrets.REGISTRY_DOCKERHUB }}/abuild
-          readme-filepath: ./abuild/README.md
-
       - name: ActiveMQ - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
         with:
@@ -98,14 +90,6 @@ jobs:
           repository: ${{ secrets.REGISTRY_DOCKERHUB }}/crayfits
           readme-filepath: ./crayfits/README.md
 
-      - name: Download - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.REGISTRY_DOCKERHUB_USER }}
-          password: ${{ secrets.REGISTRY_DOCKERHUB_TOKEN }}
-          repository: ${{ secrets.REGISTRY_DOCKERHUB }}/download
-          readme-filepath: ./download/README.md
-
       - name: Drupal - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
         with:
@@ -162,14 +146,6 @@ jobs:
           repository: ${{ secrets.REGISTRY_DOCKERHUB }}/hypercube
           readme-filepath: ./hypercube/README.md
 
-      - name: imagemagick - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.REGISTRY_DOCKERHUB_USER }}
-          password: ${{ secrets.REGISTRY_DOCKERHUB_TOKEN }}
-          repository: ${{ secrets.REGISTRY_DOCKERHUB }}/imagemagick
-          readme-filepath: ./imagemagick/README.md
-
       - name: Java - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
         with:
@@ -217,14 +193,6 @@ jobs:
           password: ${{ secrets.REGISTRY_DOCKERHUB_TOKEN }}
           repository: ${{ secrets.REGISTRY_DOCKERHUB }}/postgresql
           readme-filepath: ./postgresql/README.md
-
-      - name: Recast - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.REGISTRY_DOCKERHUB_USER }}
-          password: ${{ secrets.REGISTRY_DOCKERHUB_TOKEN }}
-          repository: ${{ secrets.REGISTRY_DOCKERHUB }}/recast
-          readme-filepath: ./recast/README.md
 
       - name: RipRap - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2

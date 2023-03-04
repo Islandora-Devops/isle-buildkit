@@ -51,12 +51,6 @@ REPOSITORY ?= islandora
 CACHE_FROM_REPOSITORY ?= $(REPOSITORY)
 CACHE_TO_REPOSITORY ?= $(REPOSITORY)
 
-# Load images into local Docker context form builder.
-LOAD ?= true
-
-# Push images to remote repository (requires authentication).
-PUSH ?= false
-
 # Tags to apply to all images loaded or pushed, space delimited.
 TAGS ?= local
 
