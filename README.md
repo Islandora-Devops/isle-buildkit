@@ -1,7 +1,7 @@
 # ISLE: Docker Prototype <!-- omit in toc -->
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
-![CI](https://github.com/Islandora-Devops/isle-buildkit/workflows/CI/badge.svg?branch=main)
+[![Build and Push Docker Images](https://github.com/Islandora-Devops/isle-buildkit/actions/workflows/push.yml/badge.svg)](https://github.com/Islandora-Devops/isle-buildkit/actions/workflows/push.yml)
 
 - [Introduction](#introduction)
 - [Requirements](#requirements)
