@@ -17,5 +17,5 @@ jobs:
         with:
           arguments: |
             deleteEligibleDockerHubTags
-            '-Pisle.dockerhub.personal.access.token=${{ secrets.REGISTRY_DOCKERHUB_TOKEN }}'
+            '-Pisle.dockerhub.personal.access.token=${{ secrets.registry_token }}'
             --no-parallel
