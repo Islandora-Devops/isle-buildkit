@@ -1,99 +1,57 @@
-# syntax=docker/dockerfile:1.2.1
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.15.0
-FROM alpine:${alpine} AS cache
-FROM node:fermium-alpine3.15 as node
-FROM ${repository}/abuild:${tag} AS build
+# syntax=docker/dockerfile:1.5.1
+FROM drupal
 
-COPY --from=node /usr/lib /usr/lib
-COPY --from=node /usr/local/share /usr/local/share
-COPY --from=node /usr/local/lib /usr/local/lib
-COPY --from=node /usr/local/include /usr/local/include
-COPY --from=node /usr/local/bin /usr/local/bin
-COPY --from=node /opt /opt
-
-# g++, make, python are only required to build native dependencies via node-gyp.
-# spdlog is required for building / using xdebug extension.
-RUN --mount=type=cache,id=code-server-apk,sharing=locked,from=cache,target=/var/cache/apk \
-    apk add \
-        bash \
-        g++ \
-        make \
-        nghttp2-dev \
-        python3 \
-        spdlog \
-        sudo
-
-# `node-gyp` must be installed before anything else. This is unfortuante, but
-# make sure the version here matches the exact version in:
-# `rootfs/usr/local/share/.config/yarn/global/package.json`
-RUN --mount=type=cache,id=code-server-yarn,sharing=locked,from=cache,target=/usr/local/share/.cache/yarn \
-    yarn global add node-gyp@9.0.0
-
-COPY rootfs/usr/local/share/.config/yarn/global /usr/local/share/.config/yarn/global
-
-RUN --mount=type=cache,id=code-server-yarn,sharing=locked,from=cache,target=/usr/local/share/.cache/yarn \
-    cd /usr/local/share/.config/yarn/global && \
-    JOBS=max yarn install
-
-SHELL ["/bin/bash", "-c"]
-
-# Install Editor plugins from bind mounted folder (Not available on online marketplace).
-RUN --mount=type=bind,source=/extensions,target=/extensions \
-    for extension in /extensions/*.vsix; \
-    do \
-        /usr/local/share/.config/yarn/global/node_modules/.bin/code-server \
-            --config /opt/code-server/config.yaml \
-            --user-data-dir /opt/code-server/data \
-            --extensions-dir /opt/code-server/extensions \
-            --install-extension="${extension}" & \
-    done; \
-    wait
-
-# Install Editor plugins from internet (saves downloading when installing).
-RUN --mount=type=cache,id=code-server-extensions,sharing=locked,from=cache,target=/opt/code-server/.local/share/code-server/CachedExtensionVSIXs \
-    EXTENSIONS=(\
-        bmewburn.vscode-intelephense-client \
-        felixfbecker.php-debug \
-        streetsidesoftware.code-spell-checker \
-        mblode.twig-language-2 \
-    ) && \
-    for extension in "${EXTENSIONS[@]}"; \
-    do \
-        /usr/local/share/.config/yarn/global/node_modules/.bin/code-server \
-            --config /opt/code-server/config.yaml \
-            --user-data-dir /opt/code-server/data \
-            --extensions-dir /opt/code-server/extensions \
-            --install-extension="${extension}" & \
-    done; \
-    wait
-
-FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
-
-COPY rootfs/root/.composer /root/.composer
-
-RUN --mount=type=cache,id=code-server-composer,sharing=locked,target=/root/.composer/cache \
-    cd /root/.composer && \
-    composer install -n 
-
-FROM ${repository}/drupal:${tag}
+ARG TARGETARCH
+ARG CODE_SERVER_VERSION="4.8.3"
+ARG CODE_SERVER_BASE_URL="https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VERSION}"
+ARG CODE_SERVER_AMD64_FILE="code-server-${CODE_SERVER_VERSION}-linux-amd64.tar.gz"
+ARG CODE_SERVER_AMD64_SHA256="16e8b600d03eec710a7b4d6380986ba3414e7e3aa503da90b518d4fd066e220a"
+ARG CODE_SERVER_ARM64_FILE="code-server-${CODE_SERVER_VERSION}-linux-arm64.tar.gz"
+ARG CODE_SERVER_ARM64_SHA256="b7b4cd77c992ea3e982d399f0e40b98707ceaf7e0960eeb84ba674f54315c595"
 
 EXPOSE 8443 \
        9003
 
-# Set a default shell so it can be used via code-server.
-RUN sed -i "/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/cnginx:x:100:101:nginx:/var/lib/nginx:/bin/bash" /etc/passwd
+# Install code-server
+RUN --mount=type=cache,id=code-server-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    if [ "${TARGETARCH}" = "amd64" ]; \
+    then \
+        download.sh \
+            --url "${CODE_SERVER_BASE_URL}/${CODE_SERVER_AMD64_FILE}" \
+            --sha256 "${CODE_SERVER_AMD64_SHA256}" \
+            --strip \
+            --dest "/opt/code-server" ; \
+    else \
+        download.sh \
+            --url "${CODE_SERVER_BASE_URL}/${CODE_SERVER_ARM64_FILE}" \
+            --sha256 "${CODE_SERVER_ARM64_SHA256}" \
+            --strip \
+            --dest "/opt/code-server" ; \
+    fi && \
+    cleanup.sh
+
+RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
+    --mount=type=cache,id=code-server-composer-${TARGETARCH},sharing=locked,target=/var/lib/nginx/.composer/cache \
+    mkdir -p /var/lib/nginx/.composer && \
+    cp -r /composer/* /var/lib/nginx/.composer && \
+    ls -lah /var/lib/nginx/.composer && \
+    composer install -n -d /var/lib/nginx/.composer && \
+    cleanup.sh
 
 # Include commonly used tools and xdebug.
-RUN --mount=type=cache,id=code-server-drupal-apk,sharing=locked,from=cache,target=/var/cache/apk \
-    apk --update add \
+RUN --mount=type=cache,id=code-server-drupal-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    apk add \
+        docker-cli \
+        gcompat \
         htop \
-        php7-pecl-xdebug \
+        nodejs \
+        openssh \
+        parallel \
+        php81-pecl-xdebug \
+        shadow \
         spdlog \
         sudo \
         unison \
-        parallel \
     && \
     cleanup.sh
 
@@ -108,22 +66,46 @@ ENV \
     CODE_SERVER_PASSWORD=password \
     XDEBUG_FLAGS="-d xdebug.mode=develop,debug"
 
-COPY --from=composer --chown=nginx:nginx /root/.composer /var/lib/nginx/.composer
-COPY --from=build --chown=nginx:nginx /opt/code-server /opt/code-server
-COPY --from=build /usr/local/share/.config/yarn /usr/local/share/.config/yarn
-COPY --from=node /usr/lib /usr/lib
-COPY --from=node /usr/local/share /usr/local/share
-COPY --from=node /usr/local/lib /usr/local/lib
-COPY --from=node /usr/local/include /usr/local/include
-COPY --from=node /usr/local/bin /usr/local/bin
-COPY --from=node /opt /opt
+COPY --link rootfs /
 
-COPY rootfs /
+# Install Editor plugins from bind mounted folder (Not available on online marketplace).
+RUN --mount=type=bind,source=/extensions,target=/extensions \
+    for extension in /extensions/*.vsix; \
+    do \
+        /opt/code-server/bin/code-server \
+            --config /opt/code-server/config.yaml \
+            --user-data-dir /opt/code-server/data \
+            --extensions-dir /opt/code-server/extensions \
+            --install-extension="${extension}" & \
+    done; \
+    wait && \
+    cleanup.sh
 
-RUN ln -s /usr/local/share/.config/yarn/global/node_modules/.bin/code-server /usr/local/bin/code-server && \
-    ln -s /usr/local/share/.config/yarn/global/node_modules/.bin/node-gyp /usr/local/bin/node-gyp && \
-    ln -s /usr/local/share/.config/yarn/global/node_modules/.bin/grunt /usr/local/bin/grunt && \
-    ln -s /usr/local/share/.config/yarn/global/node_modules/.bin/bower /usr/local/bin/bower
+# Install Editor plugins from internet (saves downloading when installing).
+RUN \
+    EXTENSIONS=(\
+        bmewburn.vscode-intelephense-client \
+        felixfbecker.php-debug \
+        streetsidesoftware.code-spell-checker \
+        mblode.twig-language-2 \
+    ) && \
+    for extension in "${EXTENSIONS[@]}"; \
+    do \
+        /opt/code-server/bin/code-server \
+            --config /opt/code-server/config.yaml \
+            --user-data-dir /opt/code-server/data \
+            --extensions-dir /opt/code-server/extensions \
+            --install-extension="${extension}" & \
+    done; \
+    wait && \
+    cleanup.sh
 
-# https://github.com/sudo-project/sudo/issues/42
-RUN chmod a=r,u+w /etc/sudo.conf
+# Code server should be on the path.
+# Set a default shell so it can be used via code-server.
+# Additionally https://github.com/sudo-project/sudo/issues/42
+RUN sed -i "/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/cnginx:x:100:101:nginx:/var/lib/nginx:/bin/bash" /etc/passwd && \
+    mkdir -p /var/lib/nginx/.local && \
+    chown -R nginx:nginx /opt/code-server /var/lib/nginx && \
+    ln -fs "/opt/code-server/bin/code-server" "/usr/local/bin/code-server" && \
+    chmod a=r,u+w /etc/sudo.conf && \
+    cleanup.sh

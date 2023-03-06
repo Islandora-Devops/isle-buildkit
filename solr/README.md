@@ -19,12 +19,12 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Confd Key        | Default | Description                                                                    |
-| :------------------- | :--------------- | :------ | :----------------------------------------------------------------------------- |
-| SOLR_JAVA_OPTS       | /solr/java/opts  |         | Additional parameters to pass to the JVM when starting Solr                    |
-| SOLR_JETTY_OPTS      | /solr/jetty/opts |         | Additional parameters to pass to Jetty when starting Solr.                     |
-| SOLR_LOG_LEVEL       | /solr/log/level  | INFO    | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
-| SOLR_MEMORY          | /solr/memory     | 512m    | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
+| Environment Variable | Default | Description                                                                    |
+| :------------------- | :------ | :----------------------------------------------------------------------------- |
+| SOLR_JAVA_OPTS       |         | Additional parameters to pass to the JVM when starting Solr                    |
+| SOLR_JETTY_OPTS      |         | Additional parameters to pass to Jetty when starting Solr.                     |
+| SOLR_LOG_LEVEL       | INFO    | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+| SOLR_MEMORY          | 512m    | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
 
 ## Ports
 
@@ -48,7 +48,7 @@ additional settings, volumes, ports, etc.
 
 ## Changing versions
 
-There is 2 values you need to update/change the version. 
+There is 2 values you need to update/change the version.
 
 1. Solr version: found at [archive.apache.org](https://archive.apache.org/dist/lucene/solr)
 1. SOLR_FILE_SHA256: sha256sum of the tgz file

@@ -1,0 +1,34 @@
+name: Build
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+    outputs:
+      tags:
+        description: "Image Tags"
+        value: ${{ jobs.tags.outputs.tags }}
+jobs:
+  tags:
+    runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.tags.outputs.tags }}
+    steps:
+      - id: tags
+        name: Set TAGS Environment Variable
+        run: |
+          TAG="${{ inputs.tag }}"
+          if awk '/^[0-9]+\.[0-9]+\.[0-9]+$/ { rc = 1; print $NF }; END { exit !rc }' <<< "${TAG}"; then
+            VERSION=( ${TAG//./ } ) # replace points, split into array
+            MAJOR=${VERSION[0]}
+            MINOR=${VERSION[1]}
+            TAGS="${TAG} ${MAJOR}.${MINOR} ${MAJOR}"
+            LATEST=$(git tag -l '*.*.*' --sort=version:refname | grep -v '-' | tail -n 1)
+            if [[ "${TAG}" == "${LATEST_TAG}" ]]; then
+              TAGS="${TAGS} latest"
+            fi
+            echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          else
+            echo "tags=${TAG}" >> $GITHUB_OUTPUT
+          fi

@@ -1,5 +1,5 @@
 build.gradle.kts
-Dockerfile
+README.dockerhub.md
 README.md
 tests
 tests/**/*

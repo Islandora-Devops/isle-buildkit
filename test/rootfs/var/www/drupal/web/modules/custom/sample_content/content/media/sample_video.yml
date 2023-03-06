@@ -1,0 +1,54 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: c6c791fd-9771-4071-aa35-c70aada1811f
+  bundle: video
+  default_langcode: en
+  depends:
+    4c1d613d-36b9-40a6-99a2-488ad9330c2a: node
+    3397d872-5a18-4e04-bf0a-f1e5ba69f6d0: taxonomy_term
+    c6a604f2-f612-463d-b82e-35b032f87728: taxonomy_term
+    afc418da-8303-45bb-8639-0a9fc158c324: taxonomy_term
+    b77150f6-950c-4be3-b7e6-f501335a60de: file
+default:
+  revision_user:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: 'Sample Video'
+  created:
+    -
+      value: 1668002691
+  revision_translation_affected:
+    -
+      value: true
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_file_size:
+    -
+      value: 236780
+  field_media_of:
+    -
+      entity: 4c1d613d-36b9-40a6-99a2-488ad9330c2a
+  field_media_use:
+    -
+      entity: 3397d872-5a18-4e04-bf0a-f1e5ba69f6d0
+  field_media_video_file:
+    -
+      entity: b77150f6-950c-4be3-b7e6-f501335a60de
+      display: true
+      description: ''
+  field_mime_type:
+    -
+      value: video/mp4

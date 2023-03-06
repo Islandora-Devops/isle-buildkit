@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+# Many services deployed into tomcat need somewhere to write data, by convention
+# we make this /data.
+#
+# When bind mounting we need to ensure that we
+# actually can write to the folder.
+chown tomcat:tomcat /data
+
+exec with-contenv s6-setuidgid tomcat /opt/tomcat/bin/catalina.sh run

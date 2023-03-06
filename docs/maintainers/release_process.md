@@ -52,7 +52,7 @@ When testing isle-buildkit
 
 #### Results
 
-Describe output, expectation and steps. 
+Describe output, expectation and steps.
 
 Include screenshots etc.
 ```
@@ -80,7 +80,7 @@ Reporting results from testing process:
 
 #### Results
 
-Describe output, expectation and steps. 
+Describe output, expectation and steps.
 
 Include screenshots etc.
 ```

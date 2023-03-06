@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+ARGS=("$@")
+PROGNAME=$(basename "$0")
+readonly ARGS PROGNAME
 
 function usage() {
-    cat <<- EOF
+    cat <<-EOF
     usage: $PROGNAME
 
     With a given prefix find all environment variables that have that prefix
@@ -28,25 +29,25 @@ EOF
 
 function cmdline() {
     local arg=
-    for arg
-    do
+    for arg; do
         local delim=""
         case "$arg" in
-            # Translate --gnu-long-options to -g (short options)
-            --prefix)     args="${args}-p ";;
-            --help)       args="${args}-h ";;
-            --debug)      args="${args}-x ";;
-            # Pass through anything else
-            *) [[ "${arg:0:1}" == "-" ]] || delim="\""
-               args="${args}${delim}${arg}${delim} ";;
+        # Translate --gnu-long-options to -g (short options)
+        --prefix) args="${args}-p " ;;
+        --help) args="${args}-h " ;;
+        --debug) args="${args}-x " ;;
+        # Pass through anything else
+        *)
+            [[ "${arg:0:1}" == "-" ]] || delim="\""
+            args="${args}${delim}${arg}${delim} "
+            ;;
         esac
     done
 
     # Reset the positional parameters to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
-    while getopts "p:hx" OPTION
-    do
+    while getopts "p:hx" OPTION; do
         case $OPTION in
         p)
             readonly PREFIX=${OPTARG}
@@ -56,8 +57,12 @@ function cmdline() {
             exit 0
             ;;
         x)
-            readonly DEBUG='-x'
             set -x
+            ;;
+        *)
+            echo "Invalid Option: $OPTION" >&2
+            usage
+            exit 1
             ;;
         esac
     done
@@ -71,17 +76,17 @@ function cmdline() {
 }
 
 function main {
-    cmdline ${ARGS}
-    ENVIRONMENT_VARIABLES=$(with-contenv env | egrep "^${PREFIX}_" | cut -f1 -d=)
+    local environment_variables
+    cmdline "${ARGS[@]}"
 
     # Overwrite environment variables only if suitable canidate exists.
+    environment_variables=$(with-contenv env | grep -E "^${PREFIX}_" | cut -f1 -d=)
     {
-        for ENVIRONMENT_VARIABLE in ${ENVIRONMENT_VARIABLES}
-        do
-            FILE=(/var/run/s6/container_environment/*_${ENVIRONMENT_VARIABLE})
-            if [ -f "${FILE}" ]; then
-                DEFAULT_VAR=$(basename "${FILE}")
-                echo "${ENVIRONMENT_VARIABLE}=\"{{ getenv \"${DEFAULT_VAR}\" }}\""
+        for environment_variable in ${environment_variables}; do
+            FILE=(/var/run/s6/container_environment/*_"${environment_variable}")
+            if [ -f "${FILE[0]}" ]; then
+                DEFAULT_VAR=$(basename "${FILE[0]}")
+                echo "${environment_variable}=\"{{ getenv \"${DEFAULT_VAR}\" }}\""
             fi
         done
     } | /usr/local/bin/confd-import-environment.sh

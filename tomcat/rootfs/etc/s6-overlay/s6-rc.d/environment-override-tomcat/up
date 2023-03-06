@@ -1,0 +1,2 @@
+# Allow TOMCAT_LOG_LEVEL to be overridden by FEDORA_TOMCAT_LOG_LEVEL, etc.
+/usr/local/bin/confd-override-environment.sh --prefix TOMCAT

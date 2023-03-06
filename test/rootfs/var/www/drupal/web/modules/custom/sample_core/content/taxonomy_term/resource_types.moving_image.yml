@@ -1,0 +1,48 @@
+_meta:
+  version: '1.0'
+  entity_type: taxonomy_term
+  uuid: 06f1735c-b84e-4ffa-bef6-da06e0ccecb1
+  bundle: resource_types
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  name:
+    -
+      value: 'Moving Image'
+  description:
+    -
+      value: 'A series of visual representations imparting an impression of motion when shown in succession'
+      format: ''
+  weight:
+    -
+      value: 0
+  parent:
+    -
+      target_id: 0
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  content_translation_uid:
+    -
+      target_id: 1
+  content_translation_created:
+    -
+      value: 1667998710
+  field_authority_link:
+    -
+      uri: 'http://purl.org/dc/dcmitype/MovingImage'
+      title: ''
+      options: {  }
+      source: ''

@@ -1,5 +1,7 @@
-#!/usr/bin/with-contenv bash
+#!/command/with-contenv bash
+# shellcheck shell=bash
 
+# shellcheck disable=SC1091
 source /usr/local/share/isle/utilities.sh
 
 function count {

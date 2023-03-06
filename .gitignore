@@ -1,7 +1,9 @@
-.idea/
 .gradle/
+.idea/
+.secrets
 /build
 scratch
 scratch.md
-volumes
-/docker-compose.yml
+
+# Used for adding platform / user specific changes.
+docker-compose.override.yml

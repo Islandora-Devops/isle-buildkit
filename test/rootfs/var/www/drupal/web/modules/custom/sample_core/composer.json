@@ -1,0 +1,27 @@
+{
+  "name": "islandora/sample_core",
+  "description": "Required sample content for testing",
+  "type": "drupal-custom-module",
+  "keywords": ["Drupal", "Islandora"],
+  "homepage": "https://github.com/Islandora-Devops/isle-buildkit",
+  "support": {
+    "issues": "https://github.com/Islandora/documentation/issues"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  ],
+  "require": {
+    "drupal/default_content": "^2.0@alpha"
+  },
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Islandora Foundation",
+      "email": "community@islandora.ca",
+      "role": "Owner"
+    }
+  ]
+}

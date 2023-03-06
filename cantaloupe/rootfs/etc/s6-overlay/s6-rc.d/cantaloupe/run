@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+# When bind mounting we need to ensure that we
+# actually can write to the folder.
+chown cantaloupe:cantaloupe /data
+
+exec s6-setuidgid cantaloupe java -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties -jar /opt/cantaloupe/cantaloupe.jar

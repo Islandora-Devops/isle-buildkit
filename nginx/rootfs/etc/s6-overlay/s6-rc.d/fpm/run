@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+exec s6-notifyoncheck -d -t 30000 -n 1 /usr/sbin/php-fpm81 \
+	--pid /var/run/php-fpm81/php-fpm81.pid \
+	--prefix /var/run/php-fpm81 \
+	--fpm-config /etc/php81/php-fpm.conf

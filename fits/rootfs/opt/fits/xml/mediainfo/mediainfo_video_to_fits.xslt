@@ -359,7 +359,7 @@
                                                 <!-- If no scan type returned, then the element is not present -->
                                                 <!--
                                     <xsl:when test="$codecLC='apcn'">
-                                        <xsl:text></xsl:text>             				        
+                                        <xsl:text></xsl:text>
                                     </xsl:when>
                                     -->
                                                 <xsl:when test="$codecLC='r10g'">
@@ -381,7 +381,7 @@
                                                     <xsl:text>Progressive</xsl:text>
                                                 </xsl:when>
                                                 <!-- Do not use a default mapping -->
-                                                <!--            			            			            				            				            
+                                                <!--
                                     <xsl:otherwise>
                                         <xsl:text>Unknown</xsl:text>
                                     </xsl:otherwise>

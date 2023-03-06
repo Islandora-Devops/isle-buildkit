@@ -1,6 +1,6 @@
 # PostgreSQL
 
-Docker image for [PostgreSQL] version 12.2
+Docker image for [PostgreSQL] version 15.1
 
 Please refer to the [PostgreSQL Documentation] for more in-depth information.
 
@@ -30,10 +30,10 @@ Requires `islandora/base` docker image to build. Please refer to the
 Please see the documentation in the [base image] for more information about the
 default database connection configuration.
 
-| Environment Variable     | Confd Key                 | Default | Description                                                                           |
-| :----------------------- | :------------------------ | :------ | :------------------------------------------------------------------------------------ |
-| POSTGRESQL_ROOT_USER     | /postgresql/root/user     |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
-| POSTGRESQL_ROOT_PASSWORD | /postgresql/root/password |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
+| Environment Variable     | Default | Description                                                                           |
+| :----------------------- | :------ | :------------------------------------------------------------------------------------ |
+| POSTGRESQL_ROOT_USER     |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
+| POSTGRESQL_ROOT_PASSWORD |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
 
 [base image]: ../base/README.md
 [PostgreSQL Documentation]: https://www.postgresql.org/docs/

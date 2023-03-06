@@ -1,9 +1,10 @@
 # file: docker-compose.yml
 #
 # Used for testing environment precedence follows what is expected from:
-# 
+#
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
 version: "3.8"
+
 secrets:
   # Secrets are #2 on the precedence list.
   DB_PASSWORD:
@@ -12,11 +13,12 @@ secrets:
     file: "./secrets/JWT_ADMIN_TOKEN"
   JWT_PRIVATE_KEY:
     file: "./secrets/JWT_PRIVATE_KEY"
+
+name: base-environmentprecedence
 services:
   # Single node cluster.
   etcd:
-    # etcd uses a different tag for arm64, default to x86_64 have gradle pass in the appropriate tag based on host.
-    image: ${ETCD_TAG:-gcr.io/etcd-development/etcd:v3.4.15}
+    image: gcr.io/etcd-development/etcd:v3.5.6
     environment:
       ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
       ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
@@ -28,8 +30,8 @@ services:
       etcd --data-dir=/data
   base:
     # Environment variables defined here are #3 on on the precedence list.
-    # Environment variables specified in the Dockerfile for are #4 on the 
-    # precedence list. Followed by files in /etc/defaults in the image, 
+    # Environment variables specified in the Dockerfile for are #4 on the
+    # precedence list. Followed by files in /etc/defaults in the image,
     # which are #5 on the precedence list
     environment:
       CONFD_BACKEND: "etcd"
@@ -48,4 +50,4 @@ services:
       - ./defaults/JWT_ADMIN_TOKEN:/etc/defaults/JWT_ADMIN_TOKEN # Should be overridden by confd backend.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-local/base:latest}
+    image: ${BASE:-islandora/base:local}

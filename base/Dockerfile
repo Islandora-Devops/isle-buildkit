@@ -1,62 +1,88 @@
-# syntax=docker/dockerfile:1.2.1
-ARG repository=local
-ARG tag=latest
-ARG alpine=3.15.0
-FROM ${repository}/download:${tag} AS download
-FROM alpine:${alpine} AS cache
-FROM alpine:${alpine}
+# syntax=docker/dockerfile:1.5.1
+FROM alpine
 
-ENV DOWNLOAD_CACHE_DIRECTORY=/opt/downloads
+ARG TARGETARCH
+ARG S6_VERSION="3.1.2.1"
+ARG S6_BASE_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}"
+ARG S6_OVERLAY_NOARCH=s6-overlay-noarch.tar.xz
+ARG S6_OVERLAY_NOARCH_SHA256="cee89d3eeabdfe15239b2c5c3581d9352d2197d4fd23bba3f1e64bf916ccf496"
+ARG S6_OVERLAY_SYMLINKS_ARCH=s6-overlay-symlinks-arch.tar.xz
+ARG S6_OVERLAY_SYMLINKS_ARCH_SHA256="1b75ac96ddc953f6b7b10be4f579c3e4f6cdf85270116a539930e03e74066f2f"
+ARG S6_OVERLAY_SYMLINKS_NOARCH=s6-overlay-symlinks-noarch.tar.xz
+ARG S6_OVERLAY_SYMLINKS_NOARCH_SHA256="1e36efb936084fddffe6c55dae8f478e7b2d70f77db2caaceb78c7425b9a7956"
+ARG S6_OVERLAY_AMD64=s6-overlay-x86_64.tar.xz
+ARG S6_OVERLAY_AMD64_SHA256="6019b6b06cfdbb1d1cd572d46b9b158a4904fd19ca59d374de4ddaaa6a3727d5"
+ARG S6_OVERLAY_ARM64=s6-overlay-aarch64.tar.xz
+ARG S6_OVERLAY_ARM64_SHA256="e73f9a021b64f88278830742149c14ef8a52331102881ba025bf32a66a0e7c78"
+
+LABEL License="MIT License"
+
+# Start s6
+ENTRYPOINT [ "/init" ]
 
 # Install packages and tools required by all downstream images.
-RUN --mount=type=cache,id=base-apk,sharing=locked,from=cache,target=/var/cache/apk \
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=base-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     ln -s /var/cache/apk /etc/apk/cache && \
     apk add \
         bash \
         curl \
         git \
         gnupg \
+        jq \
         mariadb-client \
         mysql-client \
         netcat-openbsd \
         openssl \
+        patch \
         postgresql-client \
-        wget \
+        procps \
         util-linux \
+        wget \
+        yq \
     && \
     addgroup -g 2000 jwt && \
     echo '' > /root/.ash_history
 
-ARG TARGETARCH
+ENV DOWNLOAD_CACHE_DIRECTORY=/opt/downloads
 
-COPY --from=download /usr/local/bin/*.sh /usr/local/bin
-
-ARG S6_VERSION="2.2.0.3"
-ARG S6_AMD64_SHA256="a7076cf205b331e9f8479bbb09d9df77dbb5cd8f7d12e9b74920902e0c16dd98"
-ARG S6_ARM64_SHA256="84f585a100b610124bb80e441ef2dc2d68ac2c345fd393d75a6293e0951ccfc5"
-
-# Install s6
-RUN --mount=type=cache,id=base-downloads,sharing=locked,from=download,target=/opt/downloads \
-    if [ "${TARGETARCH}" = "arm64" ]; then \
-        S6_FILE="s6-overlay-aarch64.tar.gz"; \
-        S6_SHA256="${S6_ARM64_SHA256}"; \
-    fi; \
-    if [ "${TARGETARCH}" = "amd64" ]; then \
-        S6_FILE="s6-overlay-amd64.tar.gz"; \
-        S6_SHA256="${S6_AMD64_SHA256}"; \
-    fi; \
-    S6_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/${S6_FILE}" && \
-    download.sh --url "${S6_URL}" --sha256 "${S6_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    tar -xzf "${DOWNLOAD_CACHE_DIRECTORY}/${S6_FILE}" -C /  && \
+# Install s6.
+RUN --mount=type=bind,source=rootfs/usr/local/bin/download.sh,target=/usr/local/bin/download.sh \
+    --mount=type=cache,id=base-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${S6_BASE_URL}/${S6_OVERLAY_NOARCH}" \
+        --sha256 "${S6_OVERLAY_NOARCH_SHA256}" \
+        --dest / \
+    && \
+    download.sh \
+        --url "${S6_BASE_URL}/${S6_OVERLAY_SYMLINKS_ARCH}" \
+        --sha256 "${S6_OVERLAY_SYMLINKS_ARCH_SHA256}" \
+        --dest / \
+    && \
+    download.sh \
+        --url "${S6_BASE_URL}/${S6_OVERLAY_SYMLINKS_NOARCH}" \
+        --sha256 "${S6_OVERLAY_SYMLINKS_NOARCH_SHA256}" \
+        --dest / \
+    && \
     echo '' > /root/.ash_history
 
-# Install confd
-COPY confd/confd-0.15.0-linux-${TARGETARCH} /usr/local/bin/confd
+RUN --mount=type=bind,source=rootfs/usr/local/bin/download.sh,target=/usr/local/bin/download.sh \
+    --mount=type=cache,id=base-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    if [ "${TARGETARCH}" = "amd64" ]; \
+    then \
+        download.sh \
+            --url "${S6_BASE_URL}/${S6_OVERLAY_AMD64}" \
+            --sha256 "${S6_OVERLAY_AMD64_SHA256}" \
+            --dest / ; \
+    else \
+        download.sh \
+            --url "${S6_BASE_URL}/${S6_OVERLAY_ARM64}" \
+            --sha256 "${S6_OVERLAY_ARM64_SHA256}" \
+            --dest / ; \
+    fi && \
+    echo '' > /root/.ash_history
 
-# Start s6
-ENTRYPOINT [ "/init" ]
-
-LABEL License="MIT License"
+SHELL ["/bin/bash", "-c"]
 
 ENV \
     CERTIFICATE_AUTHORITY=/usr/local/share/ca-certificates/rootCA.pem \
@@ -71,8 +97,8 @@ ENV \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     S6_CMD_WAIT_FOR_SERVICE=1 \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=30000 \
-    S6_SERVICES_GRACETIME=30000 \
     S6_LOGGING=0 \
+    S6_SERVICES_GRACETIME=30000 \
     TERM=xterm
 
 # CERT_AUTHORITY and CERT_PUBLIC as well as JWT_PUBLIC_KEY and JWT_PRIVATE_KEY
@@ -80,7 +106,7 @@ ENV \
 # environment variables via ENV. The 'DB' environment variables can be
 # overridden by prefixing it with the image name i.e. `FCREPO_DB_NAME` would
 # override the value for `DB_NAME`.
-ENV \ 
+ENV \
     DB_DRIVER=mysql \
     DB_HOST= \
     DB_MYSQL_HOST=mariadb \
@@ -95,4 +121,7 @@ ENV \
     DB_USER=default \
     JWT_ADMIN_TOKEN=islandora
 
-COPY rootfs /
+COPY --link rootfs /
+
+# Install confd
+COPY --link confd/confd-0.15.0-linux-${TARGETARCH} /usr/local/bin/confd

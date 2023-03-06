@@ -1,38 +1,656 @@
-name: Build and Push Docker Images for Commit
+name: Build and Push Docker Images
 on:
   push:
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  build:
-    name: Build and Push Docker Images for Commit
-    runs-on: ubuntu-latest
-    timeout-minutes: 360
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 8
-      - name: Setup Gradle Cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASS }}
-      - name: Set TAG Environment Variable
-        run: |
-          echo "TAG=$GITHUB_SHA" >> $GITHUB_ENV
-      - name: Build/Test/Push Docker images
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: build test grype '-Pdocker.tags=${{ env.TAG }}' '-Pdocker.repository=${{ secrets.REPOSITORY }}' -Pdocker.push=true -Pdocker.driver=docker-container -Pdocker.cacheTo=true -Pdocker.platforms=linux/amd64,linux/arm64 -PisCI=true --info
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Grype Reports
-          path: build/**/*-grype.*
+  #############################################################################
+  ## Build.
+  #############################################################################
+  tags:
+    uses: ./.github/workflows/tags.yml
+    with:
+      tag: ${{ github.ref_name }}
+    secrets: inherit
+  base:
+    uses: ./.github/workflows/build.yml
+    with:
+      image: base
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: tags
+  activemq:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: activemq
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, java]
+  alpaca:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: alpaca
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, java]
+  blazegraph:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.tomcat.outputs.context }}
+      image: blazegraph
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, tomcat]
+  cantaloupe:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: cantaloupe
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, java]
+  code-server:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.drupal.outputs.context }}
+      image: code-server
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, drupal]
+  crayfish:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: crayfish
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, nginx]
+  crayfits:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: crayfits
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, nginx]
+  drupal:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: drupal
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, nginx]
+  fcrepo6:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.tomcat.outputs.context }}
+      image: fcrepo6
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, tomcat]
+  fits:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.tomcat.outputs.context }}
+      image: fits
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, tomcat]
+  handle:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: handle
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, java]
+  homarus:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: homarus
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, crayfish]
+  houdini:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: houdini
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, crayfish]
+  hypercube:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: hypercube
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, crayfish]
+  java:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: java
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, base]
+  mariadb:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: mariadb
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, base]
+  matomo:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: matomo
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, nginx]
+  milliner:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: milliner
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, crayfish]
+  nginx:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: nginx
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, base]
+  postgresql:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: postgresql
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, base]
+  riprap:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: riprap
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, nginx]
+  solr:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: solr
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, java]
+  test:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.drupal.outputs.context }}
+      image: test
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, drupal]
+  tomcat:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: tomcat
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, java]
+  #############################################################################
+  ## Tests.
+  #############################################################################
+  test-base:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.base.outputs.digest }}
+      image: base
+    secrets: inherit
+    needs: [base]
+  test-activemq:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.activemq.outputs.digest }}
+      image: activemq
+    secrets: inherit
+    needs: [activemq]
+  test-alpaca:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: >-
+        ${{ needs.activemq.outputs.digest }}
+        ${{ needs.alpaca.outputs.digest }}
+      image: alpaca
+    secrets: inherit
+    needs:
+      - activemq
+      - alpaca
+  test-blazegraph:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.blazegraph.outputs.digest }}
+      image: blazegraph
+    secrets: inherit
+    needs: [blazegraph]
+  test-cantaloupe:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.cantaloupe.outputs.digest }}
+      image: cantaloupe
+    secrets: inherit
+    needs: [cantaloupe]
+  test-code-server:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.code-server.outputs.digest }}
+      image: code-server
+    secrets: inherit
+    needs: [code-server]
+  test-crayfish:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.crayfish.outputs.digest }}
+      image: crayfish
+    secrets: inherit
+    needs: [crayfish]
+  test-crayfits:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.crayfits.outputs.digest }}
+      image: crayfits
+    secrets: inherit
+    needs: [crayfits]
+  test-drupal:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: >-
+        ${{ needs.drupal.outputs.digest }}
+        ${{ needs.mariadb.outputs.digest }}
+        ${{ needs.postgresql.outputs.digest }}
+      image: drupal
+    secrets: inherit
+    needs:
+      - drupal
+      - mariadb
+      - postgresql
+  test-fcrepo6:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: >-
+        ${{ needs.activemq.outputs.digest }}
+        ${{ needs.fcrepo6.outputs.digest }}
+        ${{ needs.mariadb.outputs.digest }}
+        ${{ needs.postgresql.outputs.digest }}
+      image: fcrepo6
+    secrets: inherit
+    needs:
+      - activemq
+      - fcrepo6
+      - mariadb
+      - postgresql
+  test-fits:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.fits.outputs.digest }}
+      image: fits
+    secrets: inherit
+    needs: [fits]
+  test-handle:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: >-
+        ${{ needs.handle.outputs.digest }}
+        ${{ needs.mariadb.outputs.digest }}
+        ${{ needs.postgresql.outputs.digest }}
+      image: handle
+    secrets: inherit
+    needs:
+      - handle
+      - mariadb
+      - postgresql
+  test-homarus:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.homarus.outputs.digest }}
+      image: homarus
+    secrets: inherit
+    needs: [homarus]
+  test-houdini:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.houdini.outputs.digest }}
+      image: houdini
+    secrets: inherit
+    needs: [houdini]
+  test-hypercube:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.hypercube.outputs.digest }}
+      image: hypercube
+    secrets: inherit
+    needs: [hypercube]
+  test-java:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.java.outputs.digest }}
+      image: java
+    secrets: inherit
+    needs: [java]
+  test-mariadb:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.mariadb.outputs.digest }}
+      image: mariadb
+    secrets: inherit
+    needs: [mariadb]
+  test-matomo:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: >-
+        ${{ needs.mariadb.outputs.digest }}
+        ${{ needs.matomo.outputs.digest }}
+      image: matomo
+    secrets: inherit
+    needs:
+      - mariadb
+      - matomo
+  test-milliner:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.milliner.outputs.digest }}
+      image: milliner
+    secrets: inherit
+    needs: [milliner]
+  test-nginx:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.nginx.outputs.digest }}
+      image: nginx
+    secrets: inherit
+    needs: [nginx]
+  test-postgresql:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.postgresql.outputs.digest }}
+      image: postgresql
+    secrets: inherit
+    needs: [postgresql]
+  test-riprap:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: >-
+        ${{ needs.riprap.outputs.digest }}
+        ${{ needs.mariadb.outputs.digest }}
+        ${{ needs.postgresql.outputs.digest }}
+      image: riprap
+    secrets: inherit
+    needs:
+      - riprap
+      - mariadb
+      - postgresql
+  test-solr:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.solr.outputs.digest }}
+      image: solr
+    secrets: inherit
+    needs: [solr]
+  test-test:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: >-
+        ${{ needs.activemq.outputs.digest }}
+        ${{ needs.alpaca.outputs.digest }}
+        ${{ needs.blazegraph.outputs.digest }}
+        ${{ needs.crayfits.outputs.digest }}
+        ${{ needs.fcrepo6.outputs.digest }}
+        ${{ needs.fits.outputs.digest }}
+        ${{ needs.homarus.outputs.digest }}
+        ${{ needs.houdini.outputs.digest }}
+        ${{ needs.hypercube.outputs.digest }}
+        ${{ needs.mariadb.outputs.digest }}
+        ${{ needs.milliner.outputs.digest }}
+        ${{ needs.solr.outputs.digest }}
+        ${{ needs.test.outputs.digest }}
+      image: test
+    secrets: inherit
+    needs:
+      - activemq
+      - alpaca
+      - blazegraph
+      - crayfits
+      - fcrepo6
+      - fits
+      - homarus
+      - houdini
+      - hypercube
+      - mariadb
+      - milliner
+      - solr
+      - test
+  test-tomcat:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.tomcat.outputs.digest }}
+      image: tomcat
+    secrets: inherit
+    needs: [tomcat]
+  #############################################################################
+  ## Grype.
+  #############################################################################
+  grype-base:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.base.outputs.digest }}
+      image: base
+    secrets: inherit
+    needs: [base]
+  grype-activemq:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.activemq.outputs.digest }}
+      image: activemq
+    secrets: inherit
+    needs: [activemq]
+  grype-alpaca:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.alpaca.outputs.digest }}
+      image: alpaca
+    secrets: inherit
+    needs: [alpaca]
+  grype-blazegraph:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.blazegraph.outputs.digest }}
+      image: blazegraph
+    secrets: inherit
+    needs: [blazegraph]
+  grype-cantaloupe:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.cantaloupe.outputs.digest }}
+      image: cantaloupe
+    secrets: inherit
+    needs: [cantaloupe]
+  grype-code-server:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.code-server.outputs.digest }}
+      image: code-server
+    secrets: inherit
+    needs: [code-server]
+  grype-crayfish:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.crayfish.outputs.digest }}
+      image: crayfish
+    secrets: inherit
+    needs: [crayfish]
+  grype-crayfits:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.crayfits.outputs.digest }}
+      image: crayfits
+    secrets: inherit
+    needs: [crayfits]
+  grype-drupal:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: >-
+        ${{ needs.drupal.outputs.digest }}
+      image: drupal
+    secrets: inherit
+    needs: [drupal]
+  grype-fcrepo6:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.fcrepo6.outputs.digest }}
+      image: fcrepo6
+    secrets: inherit
+    needs: [fcrepo6]
+  grype-fits:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.fits.outputs.digest }}
+      image: fits
+    secrets: inherit
+    needs: [fits]
+  grype-handle:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.handle.outputs.digest }}
+      image: handle
+    secrets: inherit
+    needs: [handle]
+  grype-homarus:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.homarus.outputs.digest }}
+      image: homarus
+    secrets: inherit
+    needs: [homarus]
+  grype-houdini:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.houdini.outputs.digest }}
+      image: houdini
+    secrets: inherit
+    needs: [houdini]
+  grype-hypercube:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.hypercube.outputs.digest }}
+      image: hypercube
+    secrets: inherit
+    needs: [hypercube]
+  grype-java:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.java.outputs.digest }}
+      image: java
+    secrets: inherit
+    needs: [java]
+  grype-mariadb:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.mariadb.outputs.digest }}
+      image: mariadb
+    secrets: inherit
+    needs: [mariadb]
+  grype-matomo:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.matomo.outputs.digest }}
+      image: matomo
+    secrets: inherit
+    needs: [matomo]
+  grype-milliner:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.milliner.outputs.digest }}
+      image: milliner
+    secrets: inherit
+    needs: [milliner]
+  grype-nginx:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.nginx.outputs.digest }}
+      image: nginx
+    secrets: inherit
+    needs: [nginx]
+  grype-postgresql:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.postgresql.outputs.digest }}
+      image: postgresql
+    secrets: inherit
+    needs: [postgresql]
+  grype-riprap:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.riprap.outputs.digest }}
+      image: riprap
+    secrets: inherit
+    needs: [riprap]
+  grype-solr:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.solr.outputs.digest }}
+      image: solr
+    secrets: inherit
+    needs: [solr]
+  grype-test:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.test.outputs.digest }}
+      image: test
+    secrets: inherit
+    needs: [test]
+  grype-tomcat:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.tomcat.outputs.digest }}
+      image: tomcat
+    secrets: inherit
+    needs: [tomcat]

@@ -1,0 +1,47 @@
+_meta:
+  version: '1.0'
+  entity_type: taxonomy_term
+  uuid: ec911234-5830-41ea-b73d-307b370a5f2a
+  bundle: islandora_models
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  name:
+    -
+      value: Image
+  description:
+    -
+      value: 'A visual representation other than text, including all types of moving image and still image'
+      format: ''
+  weight:
+    -
+      value: 0
+  parent:
+    -
+      target_id: 0
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  content_translation_uid:
+    -
+      target_id: 1
+  content_translation_created:
+    -
+      value: 1667998710
+  field_external_uri:
+    -
+      uri: 'http://purl.org/coar/resource_type/c_c513'
+      title: ''
+      options: {  }

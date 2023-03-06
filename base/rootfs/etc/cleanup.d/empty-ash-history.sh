@@ -1,2 +1,2 @@
 #!/bin/sh
-echo '' > /root/.ash_history
+echo '' >/root/.ash_history

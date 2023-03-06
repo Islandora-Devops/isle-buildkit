@@ -2,12 +2,14 @@
 #
 # Tests that the base values for database environment variables can be
 # overridden by prefixing them.
-# 
+#
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
 version: "3.8"
+
+name: handle-servicestartswithbackendmysql
 services:
   mariadb:
-    image: ${MYSQL_IMAGE:-local/mariadb:latest}
+    image: ${MARIADB:-islandora/mariadb:local}
   handle:
     environment:
       HANDLE_PERSISTENCE_TYPE: mysql
@@ -15,4 +17,4 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${BASE_IMAGE:-local/handle:latest}
+    image: ${HANDLE:-islandora/handle:local}

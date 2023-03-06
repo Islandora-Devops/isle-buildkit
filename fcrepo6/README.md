@@ -1,6 +1,6 @@
 # Fcrepo
 
-Docker image for [Fcrepo] version 6.0.0.
+Docker image for [Fcrepo] version 6.2.0.
 
 Please refer to the [Fcrepo Documentation] for more in-depth information.
 
@@ -30,28 +30,28 @@ additional settings, volumes, ports, etc.
 
 ### Confd Settings
 
-| Environment Variable         | Confd Key                  | Default              | Description                                                                          |
-| :--------------------------- | :------------------------- | :------------------- | :----------------------------------------------------------------------------------- |
-| FCREPO_ACTIVEMQ_BROKER       | /fcrepo/activemq/broker    | tcp://activemq:61616 | The location of the ActiveMQ Broker in which to publish JMS messages to              |
-| FCREPO_ACTIVEMQ_QUEUE        | /fcrepo/activemq/queue     | fedora               | The ActiveMQ Queue in which to publish JMS messages                                  |
-| FCREPO_ACTIVEMQ_QUEUE_ENABLE | /fcrepo/activemq/queue     | false                | If `true` publish JMS messages on the queue `FCREPO_ACTIVEMQ_QUEUE`                  |
-| FCREPO_ACTIVEMQ_TOPIC        | /fcrepo/activemq/topic     | fedora               | The ActiveMQ Topic in which to publish JMS messages                                  |
-| FCREPO_ACTIVEMQ_TOPIC_ENABLE | /fcrepo/activemq/topic     | true                 | If `true` publish JMS messages on the topic `FCREPO_ACTIVEMQ_TOPIC`                  |
-| FCREPO_BINARYSTORAGE_TYPE    | /fcrepo/binarystorage/type | file                 | The binary storage type. Only `file` and `s3` are supported at this time             |
-| FCREPO_AWS_REGION            | /fcrepo/aws/region         | us-east-1            | AWS Region for S3 Bucket                                                             |
-| FCREPO_S3_BUCKET             | /fcrepo/s3/bucket          |                      | Bucket to use for S3 Storage                                                         |
-| FCREPO_S3_USER               | /fcrepo/s3/user            |                      | AWS User for S3 Storage                                                              |
-| FCREPO_S3_PASSWORD           | /fcrepo/s3/password        |                      | AWS Secret Token for S3 Storage                                                      |
-| FCREPO_S3_PREFIX             | /fcrepo/s3/prefix          |                      | AWS Prefix for S3 Storage                                                            |
-| FCREPO_PERSISTENCE_TYPE      | /fcrepo/persistence/type   | file                 | The object store type. Only `file`, `mysql`, `postgresql` are supported at this time |
-| FCREPO_DISABLE_SYN           | /fcrepo/disable/syn        | false                | Enable or disable authentication via [Syn](https://github.com/Islandora/Syn)         |
+| Environment Variable         | Default              | Description                                                                          |
+| :--------------------------- | :------------------- | :----------------------------------------------------------------------------------- |
+| FCREPO_ACTIVEMQ_BROKER       | tcp://activemq:61616 | The location of the ActiveMQ Broker in which to publish JMS messages to              |
+| FCREPO_ACTIVEMQ_QUEUE        | fedora               | The ActiveMQ Queue in which to publish JMS messages                                  |
+| FCREPO_ACTIVEMQ_QUEUE_ENABLE | false                | If `true` publish JMS messages on the queue `FCREPO_ACTIVEMQ_QUEUE`                  |
+| FCREPO_ACTIVEMQ_TOPIC        | fedora               | The ActiveMQ Topic in which to publish JMS messages                                  |
+| FCREPO_ACTIVEMQ_TOPIC_ENABLE | true                 | If `true` publish JMS messages on the topic `FCREPO_ACTIVEMQ_TOPIC`                  |
+| FCREPO_BINARYSTORAGE_TYPE    | file                 | The binary storage type. Only `file` and `s3` are supported at this time             |
+| FCREPO_AWS_REGION            | us-east-1            | AWS Region for S3 Bucket                                                             |
+| FCREPO_S3_BUCKET             |                      | Bucket to use for S3 Storage                                                         |
+| FCREPO_S3_USER               |                      | AWS User for S3 Storage                                                              |
+| FCREPO_S3_PASSWORD           |                      | AWS Secret Token for S3 Storage                                                      |
+| FCREPO_S3_PREFIX             |                      | AWS Prefix for S3 Storage                                                            |
+| FCREPO_PERSISTENCE_TYPE      | file                 | The object store type. Only `file`, `mysql`, `postgresql` are supported at this time |
+| FCREPO_DISABLE_SYN           | false                | Enable or disable authentication via [Syn](https://github.com/Islandora/Syn)         |
 
 To allow [external content] provide sites as key pairs. Wherein multiple values
 is the url and the 'name' is a key that replaces the '*' symbol below.
 
-| Environment Variable    | Confd Key                |
-| :---------------------- | :----------------------- |
-| FCREPO_ALLOW_EXTERNAL_* | /fcrepo/allow/external/* |
+| Environment Variable    |
+| :---------------------- |
+| FCREPO_ALLOW_EXTERNAL_* |
 
 ### JWT Settings
 
@@ -67,11 +67,11 @@ database connection configuration.
 The following settings are only used if `FCREPO_PERSISTENCE_TYPE` is set to
 `mysql` or `postgresql`.
 
-| Environment Variable | Confd Key           | Default  | Description                                              |
-| :------------------- | :------------------ | :------- | :------------------------------------------------------- |
-| FCREPO_DB_NAME       | /fcrepo/db/name     | fedora   | The name of the database                                 |
-| FCREPO_DB_USER       | /fcrepo/db/user     | fedora   | The user to connect to the database                      |
-| FCREPO_DB_PASSWORD   | /fcrepo/db/password | password | The password of the user used to connect to the database |
+| Environment Variable | Default  | Description                                              |
+| :------------------- | :------- | :------------------------------------------------------- |
+| FCREPO_DB_NAME       | fedora   | The name of the database                                 |
+| FCREPO_DB_USER       | fedora   | The user to connect to the database                      |
+| FCREPO_DB_PASSWORD   | password | The password of the user used to connect to the database |
 
 Additionally the `DB_DRIVER` variable is derived from the
 `FCREPO_PERSISTENCE_TYPE` so users do not need to specify it separately.

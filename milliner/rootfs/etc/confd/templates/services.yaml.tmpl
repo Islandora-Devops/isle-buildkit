@@ -1,0 +1,45 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    app.fedora_base_url: "{{ getenv "MILLINER_FCREPO_URL" }}"
+    app.modified_date_predicate: "http://schema.org/dateModified"
+    app.strip_format_jsonld: true
+    app.isFedora6: {{ getenv "MILLINER_FEDORA6" }}
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\Islandora\Milliner\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    App\Islandora\Milliner\Service\MillinerService:
+        arguments:
+            $modifiedDatePredicate: '%app.modified_date_predicate%'
+            $stripFormatJsonld: '%app.strip_format_jsonld%'
+            $isFedora6: '%app.isFedora6%'
+
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Islandora\Milliner\Controller\MillinerController:
+        public: false
+        tags: [ 'controller.service_arguments' ]
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    # A guzzle instance as a service
+    GuzzleHttp\Client: ~

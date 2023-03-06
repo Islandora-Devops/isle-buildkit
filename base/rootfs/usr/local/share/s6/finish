@@ -1,42 +1,59 @@
 #!/usr/bin/env bash
 set -e
 
-readonly SERVICE_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" &> /dev/null && pwd )"
-readonly SERVICE=$(basename ${SERVICE_DIR})
+SERVICE_DIR="$(cd "$(dirname "${BASH_SOURCE[1]}")" &>/dev/null && pwd)"
+SERVICE=$(basename "${SERVICE_DIR}")
+readonly SERVICE SERVICE_DIR
 
 # Handles exit codes / signals to ensure the container exits with the expected
 # value. Meant to be sourced in /etc/service.d/*/finish scripts.
 # See https://skarnet.org/software/s6/s6-supervise.html
 
 # Process received a non-catchable signal (i.e. SIGINT). s6 sets the exit
-# code to >= 256 and expects the user to inspect the signal value instead.
-# Though it is possible for the service to recieve a signal directly and exit
-# with a exit code that indicates it exited due to receiving a signal.
-if test ${1} -gt 255; then
-    readonly EXIT_CODE=$(s6-expr 128 + ${2})
-    readonly SIGNAL=${2}
-elif test ${1} -gt 128; then
-    readonly EXIT_CODE=${1}
-    readonly SIGNAL=$(s6-expr ${1} - 128)
+# code to be equal to 256 and expects the user to inspect the signal value
+# instead.
+# It is possible for the service to recieve a signal directly and exit
+# with a exit code that indicates it exited due to receiving a signal
+# e.g. 128 + signal.
+
+echo "s6-rc: info: service ${SERVICE} finish: executing..." >&2
+
+# The first argument will be the exit code of your service, or 256 if your
+# service was killed by an uncaught signal
+if test "${1}" -eq 256; then
+    # 128 + signal indicates that it was not handled by our service.
+    EXIT_CODE=$(s6-expr 128 + "${2}")
+    SIGNAL="${2}"
+    HANDLED=1
+    echo "s6-rc: info: service ${SERVICE} failed to handle signal: ${SIGNAL}..." >&2
+elif test "${1}" -gt 128; then
+    # Was handled but application adds to 128 + signal to indicate a it recieved the signal.
+    EXIT_CODE="${1}"
+    SIGNAL=$(s6-expr "${1}" - 128)
+    HANDLED=0
+    echo "s6-rc: info: service ${SERVICE} handled signal: ${SIGNAL}..." >&2
 else
-    readonly EXIT_CODE=${1}
+    EXIT_CODE="${1}"
+    echo "s6-rc: info: service ${SERVICE} did not recieve a signal..." >&2
 fi
+readonly SIGNAL EXIT_CODE HANDLED
 
-echo "[services.d] service ${SERVICE} finish: executing..." >&2
-
-# Report the exit code / signal and exit.
-if test -z "$SIGNAL"; then
-    echo ${EXIT_CODE} > /var/run/s6/env-stage3/S6_STAGE2_EXITED
-    echo "[services.d] service ${SERVICE} exiting with exit code: ${EXIT_CODE}" >&2
-else
-    if test ${SIGNAL} -eq 15; then
-        # Process received a SIGTERM. Shutdown gracefully and do not set exit code.
-        echo "[services.d] service ${SERVICE} received SIGTERM exiting gracefully" >&2
+# Report the exit code / signal and exit (only if a non-zero exit code has not already been reported).
+if test "$(cat /run/s6-linux-init-container-results/exitcode)" -eq 0; then
+    if test -z "${SIGNAL}"; then
+        echo "${EXIT_CODE}" >/run/s6-linux-init-container-results/exitcode
+        echo "s6-rc: info: service ${SERVICE} exiting with exit code: ${EXIT_CODE}" >&2
     else
-        echo ${EXIT_CODE} > /var/run/s6/env-stage3/S6_STAGE2_EXITED
-        echo "[services.d] service ${SERVICE} received signal: ${SIGNAL}, exiting with exit code: ${EXIT_CODE}" >&2
+        if test "${SIGNAL}" -eq 15 -a "${HANDLED}" -eq 0; then
+            # Process received a SIGTERM. Shutdown gracefully and do not set exit code.
+            echo "s6-rc: info: service ${SERVICE} received SIGTERM exiting gracefully" >&2
+        else
+            echo "${EXIT_CODE}" >/run/s6-linux-init-container-results/exitcode
+            echo "s6-rc: info: service ${SERVICE} received signal: ${SIGNAL}, exiting with exit code: ${EXIT_CODE}" >&2
+        fi
     fi
 fi
 
 # Regardless take down all other services.
-s6-svscanctl -t /var/run/s6/services 2>/dev/null
+s6-svc -Od .
+/run/s6/basedir/bin/halt

@@ -1,0 +1,30 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: cb22c7d7-0d0b-45a9-b716-71c499bc3fd5
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 1
+  filename:
+    -
+      value: sample.pdf
+  uri:
+    -
+      value: 'fedora://2022-11/sample.pdf'
+  filemime:
+    -
+      value: application/pdf
+  filesize:
+    -
+      value: 3028
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1668785846
+  sha1:
+    -
+      value: bfd009f500c057195ffde66fae64f92fa5f59b72
