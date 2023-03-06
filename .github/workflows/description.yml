@@ -1,0 +1,219 @@
+name: Update Docker Hub Description
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/README.md"
+      - "**/README.dockerhub.md"
+      - ".github/workflows/dockerhub-description.yml"
+jobs:
+  description:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Fix Relative Paths
+        run: |
+          find . -maxdepth 2 -mindepth 2 -type f -name "README*.md" -exec sed -i 's/](\.\.\/\([^/]*\).*)/](.\/\1)/g' {} \;
+
+      - name: ActiveMQ - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/activemq
+          readme-filepath: ./activemq/README.md
+
+      - name: Alpaca - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/alpaca
+          readme-filepath: ./alpaca/README.md
+
+      - name: Base - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/base
+          readme-filepath: ./base/README.md
+
+      - name: Blazegraph - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/blazegraph
+          readme-filepath: ./blazegraph/README.md
+
+      - name: cantaloupe - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/cantaloupe
+          readme-filepath: ./cantaloupe/README.dockerhub.md
+
+      - name: Code-Server - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/code-server
+          readme-filepath: ./code-server/README.md
+
+      - name: Crayfish - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/crayfish
+          readme-filepath: ./crayfish/README.md
+
+      - name: CrayFits - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/crayfits
+          readme-filepath: ./crayfits/README.md
+
+      - name: Drupal - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/drupal
+          readme-filepath: ./drupal/README.md
+
+      - name: Fcrepo6 - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/fcrepo6
+          readme-filepath: ./fcrepo6/README.md
+
+      - name: Fits - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/fits
+          readme-filepath: ./fits/README.md
+
+      - name: Handle - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/handle
+          readme-filepath: ./handle/README.md
+
+      - name: Homarus - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/homarus
+          readme-filepath: ./homarus/README.md
+
+      - name: Houdini - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/houdini
+          readme-filepath: ./houdini/README.md
+
+      - name: hypercube - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/hypercube
+          readme-filepath: ./hypercube/README.md
+
+      - name: Java - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/java
+          readme-filepath: ./java/README.md
+
+      - name: MariaDB - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/mariadb
+          readme-filepath: ./mariadb/README.md
+
+      - name: Matomo - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/matomo
+          readme-filepath: ./matomo/README.md
+
+      - name: Milliner - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/milliner
+          readme-filepath: ./milliner/README.md
+
+      - name: Nginx - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/nginx
+          readme-filepath: ./nginx/README.md
+
+      - name: PostgreSQL - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/postgresql
+          readme-filepath: ./postgresql/README.md
+
+      - name: RipRap - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/riprap
+          readme-filepath: ./riprap/README.md
+
+      - name: Solr - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/solr
+          readme-filepath: ./solr/README.md
+
+      - name: Test - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/tomcat
+          readme-filepath: ./test/README.md
+
+      - name: Tomcat - Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.registry_user }}
+          password: ${{ secrets.registry_password }}
+          repository: islandora/tomcat
+          readme-filepath: ./tomcat/README.md
