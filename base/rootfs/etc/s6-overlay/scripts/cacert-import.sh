@@ -15,9 +15,9 @@ if [[ -s "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
         keytool \
             -importcert \
             -noprompt \
-            -keystore /usr/lib/jvm/default-jvm/jre/lib/security/cacerts \
+            -cacerts \
             -storepass changeit \
             -file "/usr/local/share/ca-certificates/rootCA.pem" \
-            -alias islandora
+            -alias rootCA.pem
     fi
 fi
