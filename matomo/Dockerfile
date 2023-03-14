@@ -27,6 +27,8 @@ RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/
         --strip \
         --dest /var/www/matomo \
     && \
+    wget --directory-prefix=/var/www/matomo "https://raw.githubusercontent.com/matomo-org/matomo/${MATOMO_VERSION}/composer.json" && \
+    wget --directory-prefix=/var/www/matomo "https://raw.githubusercontent.com/matomo-org/matomo/${MATOMO_VERSION}/composer.lock" && \
     composer require -d /var/www/matomo symfony/yaml:~2.6.0 && \
     composer require -d /var/www/matomo symfony/process:^3.4 && \
     composer install -d /var/www/matomo && \
