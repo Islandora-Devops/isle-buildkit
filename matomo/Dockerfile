@@ -5,8 +5,8 @@ ARG TARGETARCH
 
 ARG MATOMO_VERSION=4.13.0
 ARG MATOMO_FILE=${MATOMO_VERSION}.tar.gz
-ARG MATOMO_URL=https://github.com/matomo-org/matomo/archive/refs/tags/${MATOMO_FILE}
-ARG MATOMO_SHA256=064c0c9b17a8ff07c8f7bc496513e3739cc408e7e329615a4e340f5d0c7159c7
+ARG MATOMO_URL=https://builds.matomo.org/matomo-${MATOMO_FILE}
+ARG MATOMO_SHA256=59614fbfa870d354f8abc634cc21dbbebda2b9fde31592df8c813c39e1dff981
 
 ARG EXTRA_TOOLS_VERSION=4.0.1-beta4
 ARG EXTRA_TOOLS_FILE=${EXTRA_TOOLS_VERSION}.tar.gz
@@ -27,6 +27,8 @@ RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/
         --strip \
         --dest /var/www/matomo \
     && \
+    wget --directory-prefix=/var/www/matomo "https://raw.githubusercontent.com/matomo-org/matomo/${MATOMO_VERSION}/composer.json" && \
+    wget --directory-prefix=/var/www/matomo "https://raw.githubusercontent.com/matomo-org/matomo/${MATOMO_VERSION}/composer.lock" && \
     composer require -d /var/www/matomo symfony/yaml:~2.6.0 && \
     composer require -d /var/www/matomo symfony/process:^3.4 && \
     composer install -d /var/www/matomo && \
