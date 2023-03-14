@@ -3,33 +3,6 @@
 
 set -xeuo pipefail
 
-# To pause cause Fedora can't shutdown successfully.
-readonly QUEUES=(
-  islandora-indexing-fcrepo-delete
-  islandora-indexing-fcrepo-file-external
-  islandora-indexing-fcrepo-media
-  islandora-indexing-fcrepo-content
-)
-
-function jolokia {
-    local type="${1}"
-    local queue="${2}"
-    local action="${3}"
-    local url="http://${DRUPAL_DEFAULT_BROKER_HOST}:8161/api/jolokia/${type}/org.apache.activemq:type=Broker,brokerName=localhost,destinationType=Queue,destinationName=${queue}"
-    if [ "$action" != "" ]; then
-        url="${url}/$action"
-    fi
-    curl -s -u "admin:password" "${url}"
-    printf "\n"
-}
-
-function pause_queues {
-  for queue in "${QUEUES[@]}"; do
-    jolokia "exec" "${queue}" "pause" &
-  done
-  wait
-}
-
 function node_count() {
   local count="${1}"
   test "$(drush sql-query 'select count(*) from node;')" -eq "${count}"
@@ -80,10 +53,5 @@ function main() {
 
   echo "Confirm Solr documents were created."
   solr_document_count 4
-
-  # Fcrepo will not shut down gracefully if still recieving requests, so pause
-  # all ActiveMQ queues first and sleep.
-  pause_queues
-  sleep 30
 }
 main
