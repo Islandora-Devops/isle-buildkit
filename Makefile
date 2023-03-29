@@ -14,7 +14,7 @@ TARGET_MAX_CHAR_NUM = 30
 SSH_AGENT_RUNNING := $(shell test -S "$${SSH_AUTH_SOCK}" && echo "true")
 
 # For some commands we must invoke a Windows executable if in the context of WSL.
-IS_WSL := $(shell grep -q WSL /proc/version && echo "true")
+IS_WSL := $(shell grep -q WSL /proc/version 2>/dev/null && echo "true")
 
 # Use the host mkcert.exe if executing make from WSL context.
 MKCERT := $(if $(filter true,$(IS_WSL)),mkcert.exe,mkcert)

@@ -48,7 +48,6 @@ RUN --mount=type=cache,id=code-server-drupal-apk-${TARGETARCH},sharing=locked,ta
         openssh \
         parallel \
         php81-pecl-xdebug \
-        shadow \
         spdlog \
         sudo \
         unison \
