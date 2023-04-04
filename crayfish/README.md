@@ -27,27 +27,33 @@ the [base image] for more information.
 ## Updating
 
 You can change the commit used for crayfish by modifying the build argument
-`COMMIT` in the `Dockerfile` shown as `XXXXXXXXXXXX` in the following snippet:
+`COMMIT` and `SHA256` in the `Dockerfile` shown as `XXXXXXXXXXXX` in the
+following snippet:
 
 ```Dockerfile
-#...
-# When updating this commit also update the lock files in rootfs/var/www/crayfish.
 ARG COMMIT=XXXXXXXXXXXX
-
-RUN --mount=type=cache,id=crayfish-downloads,sharing=locked,target=/opt/downloads \
-    git-clone-cached.sh \
-        --url https://github.com/Islandora/Crayfish.git \
-        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
-        --commit "${COMMIT}" \
-        --worktree /var/www/crayfish
 #...
+ARG SHA256=XXXXXXXXXXXX
 ```
 
-When changing the `COMMIT` be sure to also update the composer lock files, this
+You can generate the `SHA256` with the following commands:
+
+```bash
+COMMIT=$(cat crayfish/Dockerfile | grep -o 'COMMIT=.*' | cut -f2 -d=)
+FILE=$(cat crayfish/Dockerfile | grep -o 'FILE=.*' | cut -f2 -d=)
+URL=$(cat crayfish/Dockerfile | grep -o 'URL=.*' | cut -f2 -d=)
+FILE=$(eval "echo $FILE")
+URL=$(eval "echo $URL")
+wget --quiet "${URL}"
+shasum -a 256 "${FILE}" | cut -f1 -d' '
+rm "${FILE}"
+```
+
+When changing the `COMMIT` and `SHA256` be sure to also update the composer lock files, this
 can be done with the following commands:
 
 ```bash
-./gradlew crayfish:build
+make bake TARGET=crayfish
 
 docker run --rm -ti \
   -v $(pwd)/crayfish/rootfs/var/www/crayfish/Recast/composer.lock:/var/www/crayfish/Recast/composer.lock \

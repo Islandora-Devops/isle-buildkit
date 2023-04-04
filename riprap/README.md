@@ -119,6 +119,31 @@ Aside from `RIPRAP_DB_DRIVER`, the following settings are only used if
 | RIPRAP_DB_PASSWORD   | password | The database users password                                   |
 | RIPRAP_DB_USER       | riprap   | The database user                                             |
 
+## Updating
+
+You can change the commit used for riprap by modifying the build argument
+`COMMIT` and `SHA256` in the `Dockerfile` shown as `XXXXXXXXXXXX` in the
+following snippet:
+
+```Dockerfile
+ARG COMMIT=XXXXXXXXXXXX
+#...
+ARG SHA256=XXXXXXXXXXXX
+```
+
+You can generate the `SHA256` with the following commands:
+
+```bash
+COMMIT=$(cat riprap/Dockerfile | grep -o 'COMMIT=.*' | cut -f2 -d=)
+FILE=$(cat riprap/Dockerfile | grep -o 'FILE=.*' | cut -f2 -d=)
+URL=$(cat riprap/Dockerfile | grep -o 'URL=.*' | cut -f2 -d=)
+FILE=$(eval "echo $FILE")
+URL=$(eval "echo $URL")
+wget --quiet "${URL}"
+shasum -a 256 "${FILE}" | cut -f1 -d' '
+rm "${FILE}"
+```
+
 [base image]: ../base/README.md
 [Riprap Documentation]: https://github.com/mjordan/riprap#riprap
 [Riprap Plugin Documentation]: https://github.com/mjordan/riprap/blob/master/docs/plugins.md

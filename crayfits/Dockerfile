@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1.5.1
 FROM nginx
 
-# Use a lock file for reproducible builds, always update it when updating the commit above.
+# When updating this commit also update the lock file in rootfs/var/www/crayfits.
 ARG TARGETARCH
-ARG CRAYFITS_COMMIT=89f8229508c3da4f3d4a7002eb72a69c40c03e94
-ARG CRAYFITS_FILE=${CRAYFITS_COMMIT}.tar.gz
-ARG CRAYFITS_URL=https://github.com/roblib/CrayFits/archive/${CRAYFITS_FILE}
-ARG CRAYFITS_SHA256=f6c45699d2dbf28c984777abb7a18bb3e864d27666abb71488e2ffbcc567632a
+ARG COMMIT=89f8229508c3da4f3d4a7002eb72a69c40c03e94
+ARG FILE=${COMMIT}.tar.gz
+ARG URL=https://github.com/roblib/CrayFits/archive/${FILE}
+ARG SHA256=f6c45699d2dbf28c984777abb7a18bb3e864d27666abb71488e2ffbcc567632a
 
 EXPOSE 8000
 
@@ -16,8 +16,8 @@ WORKDIR /var/www/crayfits
 RUN --mount=type=cache,id=crayfits-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     --mount=type=cache,id=crayfish-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
     download.sh \
-        --url "${CRAYFITS_URL}" \
-        --sha256 "${CRAYFITS_SHA256}" \
+        --url "${URL}" \
+        --sha256 "${SHA256}" \
         --strip \
         --dest "/var/www/crayfits" \
     && \

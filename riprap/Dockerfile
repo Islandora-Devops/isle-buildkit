@@ -2,10 +2,10 @@
 FROM nginx
 
 ARG TARGETARCH
-ARG RIPRAP_COMMIT="b84ac14370d0ffa156542e387a8eff9104b8858b"
-ARG RIPRAP_FILE=${RIPRAP_COMMIT}.tar.gz
-ARG RIPRAP_URL=https://github.com/nigelgbanks/riprap/archive/${RIPRAP_FILE}
-ARG RIPRAP_SHA256=1ab119cae8bc65ab409031fa56ee98f683181478a27ad9e35352f7c350de75c2
+ARG COMMIT="b84ac14370d0ffa156542e387a8eff9104b8858b"
+ARG FILE=${COMMIT}.tar.gz
+ARG URL=https://github.com/nigelgbanks/riprap/archive/${FILE}
+ARG SHA256=1ab119cae8bc65ab409031fa56ee98f683181478a27ad9e35352f7c350de75c2
 
 EXPOSE 8000
 
@@ -20,8 +20,8 @@ RUN --mount=type=cache,id=riprap-apk-${TARGETARCH},sharing=locked,target=/var/ca
 RUN --mount=type=cache,id=riprap-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
     --mount=type=cache,id=riprap-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
-        --url "${RIPRAP_URL}" \
-        --sha256 "${RIPRAP_SHA256}" \
+        --url "${URL}" \
+        --sha256 "${SHA256}" \
         --strip \
         --dest "/var/www/riprap" \
     && \
