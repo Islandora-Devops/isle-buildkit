@@ -92,7 +92,7 @@ class ReportsPlugin : Plugin<Project> {
             outputs.upToDateWhen {
                 // If the database is missing the task will re-run or be restored from cache.
                 // If the database is present check to make sure it is up-to-date, if not run again.
-                !database.get().asFile.exists() || upToDate()
+                database.get().asFile.exists() && upToDate()
             }
             uid.set(project.execCaptureOutput(listOf("id", "-u"), "Failed to get UID").toInt())
             gid.set(project.execCaptureOutput(listOf("id", "-g"), "Failed to get GID").toInt())
