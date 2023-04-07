@@ -192,7 +192,7 @@ build/manifests.json: build/bake.json
 .PHONY: bake
 ## Builds and loads the target(s) into the local docker context.
 bake: build/bake.json
-	docker buildx bake --builder $(BUILDER) -f build/bake.json --progress=$(PROGRESS) --load --no-cache
+	docker buildx bake --builder $(BUILDER) -f build/bake.json --progress=$(PROGRESS) --load
 
 .PHONY: push
 ## Builds and pushes the target(s) into remote repository.
