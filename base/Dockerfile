@@ -83,7 +83,7 @@ RUN --mount=type=bind,source=rootfs/usr/local/bin/download.sh,target=/usr/local/
     fi && \
     echo '' > /root/.ash_history
 
-SHELL ["/bin/bash", "-c"]
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 ENV \
     CERTIFICATE_AUTHORITY=/usr/local/share/ca-certificates/rootCA.pem \

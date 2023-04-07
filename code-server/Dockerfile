@@ -75,9 +75,8 @@ RUN --mount=type=bind,source=/extensions,target=/extensions \
             --config /opt/code-server/config.yaml \
             --user-data-dir /opt/code-server/data \
             --extensions-dir /opt/code-server/extensions \
-            --install-extension="${extension}" & \
-    done; \
-    wait && \
+            --install-extension="${extension}"; \
+    done && \
     cleanup.sh
 
 # Install Editor plugins from internet (saves downloading when installing).
@@ -94,9 +93,8 @@ RUN \
             --config /opt/code-server/config.yaml \
             --user-data-dir /opt/code-server/data \
             --extensions-dir /opt/code-server/extensions \
-            --install-extension="${extension}" & \
-    done; \
-    wait && \
+            --install-extension="${extension}"; \
+    done && \
     cleanup.sh
 
 # Code server should be on the path.

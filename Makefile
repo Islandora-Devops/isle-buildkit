@@ -47,6 +47,8 @@ BUILDER ?= default
 # Were to push/pull from.
 REPOSITORY ?= islandora
 
+PROGRESS ?= auto
+
 # Were to push/pull cache from.
 CACHE_FROM_REPOSITORY ?= $(REPOSITORY)
 CACHE_TO_REPOSITORY ?= $(REPOSITORY)
@@ -190,13 +192,13 @@ build/manifests.json: build/bake.json
 .PHONY: bake
 ## Builds and loads the target(s) into the local docker context.
 bake: build/bake.json
-	docker buildx bake --builder $(BUILDER) -f build/bake.json --load
+	docker buildx bake --builder $(BUILDER) -f build/bake.json --progress=$(PROGRESS) --load --no-cache
 
 .PHONY: push
 ## Builds and pushes the target(s) into remote repository.
 push: build/bake.json login
 push:
-	docker buildx bake --builder $(BUILDER) -f build/bake.json --push
+	docker buildx bake --builder $(BUILDER) -f build/bake.json --progress=$(PROGRESS) --push
 
 .PHONY: manifest
 ## Creates manifest for multi-arch images.

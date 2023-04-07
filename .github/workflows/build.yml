@@ -53,6 +53,6 @@ jobs:
         name: Build and push
         run: |
           set -ex
-          make push manifest "BUILDER=${{ steps.buildx.outputs.name }}" "TARGET=${{ inputs.image }}-ci" "TAGS=${{ inputs.tags }}" "CONTEXTS=${{ inputs.contexts }}"
+          make push manifest "PROGRESS=plain" "BUILDER=${{ steps.buildx.outputs.name }}" "TARGET=${{ inputs.image }}-ci" "TAGS=${{ inputs.tags }}" "CONTEXTS=${{ inputs.contexts }}"
           echo "digest=-Pisle.${{ inputs.image }}.digest=${{ inputs.repository }}/${{ inputs.image }}@sha256:$(cat build/${{ inputs.image }}.digest)" >> $GITHUB_OUTPUT
           echo "context=docker-image://${{ inputs.repository }}/${{ inputs.image }}@sha256:$(cat build/${{ inputs.image }}.digest)" >> $GITHUB_OUTPUT
