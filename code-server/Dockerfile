@@ -2,12 +2,12 @@
 FROM drupal
 
 ARG TARGETARCH
-ARG CODE_SERVER_VERSION="4.8.3"
+ARG CODE_SERVER_VERSION="4.11.0"
 ARG CODE_SERVER_BASE_URL="https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VERSION}"
 ARG CODE_SERVER_AMD64_FILE="code-server-${CODE_SERVER_VERSION}-linux-amd64.tar.gz"
-ARG CODE_SERVER_AMD64_SHA256="16e8b600d03eec710a7b4d6380986ba3414e7e3aa503da90b518d4fd066e220a"
+ARG CODE_SERVER_AMD64_SHA256="4eb233054941ec298caec6fc84dfba0a72c1bc5fadc0fe4896b10f3f4a291d51"
 ARG CODE_SERVER_ARM64_FILE="code-server-${CODE_SERVER_VERSION}-linux-arm64.tar.gz"
-ARG CODE_SERVER_ARM64_SHA256="b7b4cd77c992ea3e982d399f0e40b98707ceaf7e0960eeb84ba674f54315c595"
+ARG CODE_SERVER_ARM64_SHA256="81bf50ac0f4a49b8f92e3ab27816a4b25d95dcff68eb81b310090e14360cf9c4"
 
 EXPOSE 8443 \
        9003
@@ -28,6 +28,7 @@ RUN --mount=type=cache,id=code-server-downloads-${TARGETARCH},sharing=locked,tar
             --strip \
             --dest "/opt/code-server" ; \
     fi && \
+    rm /opt/code-server/lib/node && \
     cleanup.sh
 
 RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
@@ -52,6 +53,7 @@ RUN --mount=type=cache,id=code-server-drupal-apk-${TARGETARCH},sharing=locked,ta
         sudo \
         unison \
     && \
+    ln -s /usr/bin/node /opt/code-server/lib/node && \
     cleanup.sh
 
 # Drush requires HOME to be set as such.
