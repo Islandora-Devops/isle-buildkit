@@ -60,49 +60,34 @@ COPY --link rootfs /
 
 # Install Editor plugins from bind mounted folder (Not available on online marketplace).
 RUN --mount=type=bind,source=/extensions,target=/extensions \
-    declare -a pids=(); \
-    for extension in /extensions/*.vsix; \
+    declare -a PIDS=() EXTENSIONS=(/extensions/*.vsix); \
+    EXTENSIONS+=(\
+        bmewburn.vscode-intelephense-client \
+        felixfbecker.php-debug \
+        streetsidesoftware.code-spell-checker \
+        mblode.twig-language-2 \
+    ) && \
+    mkdir -p /opt/code-server/data /opt/code-server/extensions; \
+    for extension in "${EXTENSIONS[@]}"; \
     do \
         code-server \
             --config /opt/code-server/config.yaml \
             --user-data-dir /opt/code-server/data \
             --extensions-dir /opt/code-server/extensions \
             --install-extension="${extension}" & \
-        pids+=($!); \
+        PIDS+=($!); \
     done; \
-    for pid in "${pids[@]}"; \
+    for pid in "${PIDS[@]}"; \
     do \
         wait "$pid"; \
     done; \
-    cleanup.sh
-
-# Install Editor plugins from internet (saves downloading when installing).
-RUN \
-    declare -a pids=(); \
-    EXTENSIONS=(\
-        bmewburn.vscode-intelephense-client \
-        felixfbecker.php-debug \
-        streetsidesoftware.code-spell-checker \
-        mblode.twig-language-2 \
-    ) && \
-    for extension in "${EXTENSIONS[@]}"; \
-    do \
-        /opt/code-server/bin/code-server \
-            --config /opt/code-server/config.yaml \
-            --user-data-dir /opt/code-server/data \
-            --extensions-dir /opt/code-server/extensions \
-            --install-extension="${extension}" & \
-    done && \
-    for pid in "${pids[@]}"; \
-    do \
-        wait "$pid"; \
-    done; \
+    chown -R nginx:nginx /opt/code-server && \
     cleanup.sh
 
 # Set a default shell so it can be used via code-server.
 # Additionally https://github.com/sudo-project/sudo/issues/42
 RUN sed -i "/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/cnginx:x:100:101:nginx:/var/lib/nginx:/bin/bash" /etc/passwd && \
     mkdir -p /var/lib/nginx/.local && \
-    chown -R nginx:nginx /opt/code-server /var/lib/nginx && \
+    chown -R nginx:nginx /var/lib/nginx && \
     chmod a=r,u+w /etc/sudo.conf && \
     cleanup.sh
