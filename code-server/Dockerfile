@@ -74,12 +74,7 @@ RUN --mount=type=bind,source=/extensions,target=/extensions \
             --config /opt/code-server/config.yaml \
             --user-data-dir /opt/code-server/data \
             --extensions-dir /opt/code-server/extensions \
-            --install-extension="${extension}" & \
-        PIDS+=($!); \
-    done; \
-    for pid in "${PIDS[@]}"; \
-    do \
-        wait "$pid"; \
+            --install-extension="${extension}"; \
     done; \
     chown -R nginx:nginx /opt/code-server && \
     cleanup.sh
