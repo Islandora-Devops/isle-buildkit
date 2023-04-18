@@ -260,113 +260,17 @@ up: bake | docker-compose
 .PHONY: stop
 ## Stops the local development environment.
 stop: | docker-compose
-	docker compose down
+	docker compose stop
 
 .PHONY: down
 ## Stops the local development environment and destroys volumes.
 down: | docker-compose
 	docker compose down -v
 
-# Marked as phony
-build/buildkitd.toml: build/certs/cert.pem build/certs/privkey.pem build/certs/rootCA.pem
-	@contents=( \
-	"[worker.containerd]" \
-	"  enabled = false" \
-	"[worker.oci]" \
-	"  enabled = true" \
-	"  gc = false" \
-	"[registry.\"islandora.io\"]" \
-	"  insecure=false" \
-	"  ca=[\"$(CURDIR)/build/certs/rootCA.pem\"]" \
-	"  [[registry.\"islandora.io\".keypair]]" \
-	"    key=\"$(CURDIR)/build/certs/privkey.pem\"" \
-	"    cert=\"$(CURDIR)/build/certs/cert.pem\"" \
-	) && \
-	printf '%s\n' "$${contents[@]}" >build/buildkitd.toml
-
-.PHONY: network-create
-network-create: | docker
-	if ! docker network inspect isle-buildkit &>/dev/null; \
-	then \
-		docker network create isle-buildkit; \
-	fi
-
-.PHONY: network-destroy
-network-destroy: | docker
-	if docker network inspect isle-buildkit &>/dev/null; \
-	then \
-		docker network rm isle-buildkit; \
-	fi
-
-.PHONY: registry-create
-registry-create: network-create build/certs/cert.pem build/certs/privkey.pem build/certs/rootCA.pem | docker
-	if ! docker volume inspect isle-registry &>/dev/null; \
-	then \
-		docker volume create isle-registry; \
-	fi
-	if ! docker container inspect isle-registry &>/dev/null; \
-	then \
-		docker create \
-			--network isle-buildkit \
-			--network-alias islandora.io \
-			--env "REGISTRY_HTTP_ADDR=0.0.0.0:443" \
-			--env "REGISTRY_STORAGE_DELETE_ENABLED=true" \
-			--env "REGISTRY_HTTP_TLS_CERTIFICATE=/usr/local/share/ca-certificates/cert.pem" \
-			--env "REGISTRY_HTTP_TLS_KEY=/usr/local/share/ca-certificates/privkey.pem" \
-			--volume "$(CURDIR)/build/certs/cert.pem:/usr/local/share/ca-certificates/cert.pem:ro" \
-			--volume "$(CURDIR)/build/certs/privkey.pem:/usr/local/share/ca-certificates/privkey.pem:ro" \
-			--volume "$(CURDIR)/build/certs/rootCA.pem:/usr/local/share/ca-certificates/rootCA.pem:ro" \
-			--volume isle-registry:/var/lib/registry \
-			--name isle-registry \
-			registry:2; \
-	fi
-	docker start isle-registry
-
-.PHONY: registry-stop
-registry-stop: | docker
-	if docker container inspect isle-registry &>/dev/null; \
-	then \
-		docker stop isle-registry >/dev/null; \
-	fi
-
-.PHONY: registry-destroy
-registry-destroy: registry-stop | docker
-	if docker container inspect isle-registry &>/dev/null; \
-	then \
-		docker rm isle-registry; \
-	fi
-	if docker volume inspect isle-registry &>/dev/null; \
-		then \
-			docker volume rm isle-registry >/dev/null; \
-	fi
-
-.PHONY: builder-create
-builder-create: build/buildkitd.toml registry-create | docker-buildx
-	if ! docker buildx inspect isle-buildkit &>/dev/null; \
-	then \
-		docker buildx create \
-			--append \
-			--bootstrap \
-			--config build/buildkitd.toml \
-			--driver-opt "image=moby/buildkit:v0.11.1,network=isle-buildkit" \
-			--name "isle-buildkit"; \
-	fi
-
-.PHONY: builder-destroy
-builder-destroy: | docker-buildx
-	if docker buildx inspect isle-buildkit &>/dev/null; \
-	then \
-		docker buildx rm "isle-buildkit"; \
-	fi
-
 .PHONY: clean
 ## Destroys local environment and cleans up any uncommitted files.
 clean: down | git
 	git clean -xfd .
-
-.PHONY: purge
-## Destroys all data.
-purge: clean builder-destroy registry-destroy network-destroy
 
 .PHONY: setup
 ## Checks that all required tools are installed (Installs pre-commit).
@@ -412,7 +316,7 @@ help: | awk
 		if (helpMessage) { \
 			helpCommand = $$1; sub(/:$$/, "", helpCommand); \
 			helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
-			if (helpCommand == "setup" || helpCommand == "clean" || helpCommand == "help" || helpCommand == "purge" || helpCommand == "test") { \
+			if (helpCommand == "setup" || helpCommand == "clean" || helpCommand == "help" || helpCommand == "test") { \
 				printf "  ${RED}%-$(TARGET_MAX_CHAR_NUM)s${RESET} ${BLUE}%s${RESET}\n", helpCommand, helpMessage; \
 			} \
 		} \

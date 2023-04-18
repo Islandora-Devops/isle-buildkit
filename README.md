@@ -249,7 +249,8 @@ cache.
 make bake
 ```
 
-To build all the docker images you can use the following command:
+If you want to build cross platform issues, please use the [isle-builder]
+repository for setting up a builder.
 
 ### Build All Images
 
@@ -944,3 +945,4 @@ adding the following, and restarting `Docker`:
 [Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver
 [registry-cache]: https://docs.docker.com/build/cache/backends/registry/
 [S6 Overlay]: https://github.com/just-containers/s6-overlay
+[isle-builder]: https://github.com/Islandora-Devops/isle-dc
