@@ -5,7 +5,7 @@
 function capitalize {
     local string="${1}"
     shift
-    tr '[:lower:]' '[:upper:]' <<<"${string:0:1}" && tr '[:upper:]' '[:lower:]' <<<"${string:1}"
+    awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}' <<<"${string}"
 }
 
 # Transform the given string to uppercase.
