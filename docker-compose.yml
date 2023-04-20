@@ -123,7 +123,6 @@ services:
         image: ${REPOSITORY:-local}/test:${TAG:-latest}
         environment:
             &drupal-environment # Keep this in sync with "islandora.drupal.properties" in the helm chart.
-            DRUPAL_DEFAULT_BROKER_URL: "tcp://activemq:61613"
             DRUPAL_DEFAULT_CANTALOUPE_URL: "https://islandora.dev/cantaloupe/iiif/2"
             DRUPAL_DEFAULT_CONFIGDIR: "/var/www/drupal/config/sync"
             DRUPAL_DEFAULT_FCREPO_HOST: "fcrepo"
