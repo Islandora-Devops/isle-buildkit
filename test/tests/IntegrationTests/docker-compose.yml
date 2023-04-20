@@ -59,14 +59,14 @@ services:
         image: ${TEST:-islandora/test:local}
         environment:
             # Keep this in sync with "islandora.drupal.properties" in the helm chart.
-            DRUPAL_DEFAULT_BROKER_URL: "tcp://activemq:61613"
             DRUPAL_DEFAULT_CANTALOUPE_URL: "http://test/cantaloupe/iiif/2"
             DRUPAL_DEFAULT_CONFIGDIR: "/var/www/drupal/config/sync"
             DRUPAL_DEFAULT_FCREPO_HOST: "fcrepo"
             DRUPAL_DEFAULT_FCREPO_PORT: 8080
             DRUPAL_DEFAULT_FCREPO_URL: "http://fcrepo:8080/fcrepo/rest/"
             DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG: "true"
-            DRUPAL_DEFAULT_MATOMO_URL: "http://test/matomo/"
+            DRUPAL_DEFAULT_MATOMO_URL_HTTP: "http://test/matomo/"
+            DRUPAL_DEFAULT_MATOMO_URL_HTTPS: "https://test/matomo/"
             DRUPAL_DEFAULT_NAME: "Islandora Digital Collections"
             DRUPAL_DEFAULT_PROFILE: "minimal"
             DRUPAL_DEFAULT_SITE_URL: "test"

@@ -45,6 +45,7 @@ ENV \
     DRUPAL_DEFAULT_ACCOUNT_PASSWORD=password \
     DRUPAL_DEFAULT_BROKER_HOST=activemq \
     DRUPAL_DEFAULT_BROKER_PORT=61613 \
+    DRUPAL_DEFAULT_BROKER_URL=tcp://activemq:61613 \
     DRUPAL_DEFAULT_CANTALOUPE_URL=https://islandora.traefik.me/cantaloupe/iiif/2 \
     DRUPAL_DEFAULT_CONFIGDIR=/var/www/drupal/config/sync \
     DRUPAL_DEFAULT_DB_NAME=drupal_default \
@@ -58,7 +59,8 @@ ENV \
     DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG=false \
     DRUPAL_DEFAULT_INSTALL=true \
     DRUPAL_DEFAULT_LOCALE=en \
-    DRUPAL_DEFAULT_MATOMO_URL=https://islandora.traefik.me/matomo/ \
+    DRUPAL_DEFAULT_MATOMO_URL_HTTP=http://islandora.traefik.me/matomo/ \
+    DRUPAL_DEFAULT_MATOMO_URL_HTTPS=https://islandora.traefik.me/matomo/ \
     DRUPAL_DEFAULT_NAME=Default \
     DRUPAL_DEFAULT_PROFILE=standard \
     DRUPAL_DEFAULT_SALT=9PPaL0CxZAIcq0l9wxgDGlCZrp7JdT_x7v9gVzpdbUjMt1PqDz3uD0Zy-i16DuJ1-Htuq5hqeg \
