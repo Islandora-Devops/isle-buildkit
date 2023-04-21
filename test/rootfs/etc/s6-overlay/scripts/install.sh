@@ -51,12 +51,6 @@ function configure {
     drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" pm:uninstall pgsql sqlite
     drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cache:rebuild
 
-    # Import Default content, includes content normally included via migrate import.
-    # So that the links between the default content and the tags work correctly (linked by UUID rather than ID).
-    composer -d /var/www/drupal config minimum-stability dev
-    composer -d /var/www/drupal config repositories.sample_core path ./web/modules/custom/sample_core
-    composer -d /var/www/drupal require 'islandora/sample_core:*'
-
     # Ingest sample content.
     drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" pm:enable sample_content -y
 

@@ -5,9 +5,10 @@ _meta:
   bundle: islandora_object
   default_langcode: en
   depends:
-    6a6061d1-58ab-4a7f-9968-9836d48d72f8: taxonomy_term
+    0c7da6e9-7295-46eb-afd0-16cf94462dce: node
     a66edb41-4736-4bc8-8da3-9f801ef0ab0f: taxonomy_term
     23038c93-e6e1-41f8-b1de-663bd529f6bd: taxonomy_term
+    6a6061d1-58ab-4a7f-9968-9836d48d72f8: taxonomy_term
 default:
   revision_uid:
     -
@@ -39,15 +40,18 @@ default:
   content_translation_outdated:
     -
       value: false
-  field_display_hints:
-    -
-      entity: 6a6061d1-58ab-4a7f-9968-9836d48d72f8
   field_extent:
     -
       value: '1 item'
+  field_member_of:
+    -
+      entity: 0c7da6e9-7295-46eb-afd0-16cf94462dce
   field_model:
     -
       entity: a66edb41-4736-4bc8-8da3-9f801ef0ab0f
   field_resource_type:
     -
       entity: 23038c93-e6e1-41f8-b1de-663bd529f6bd
+  field_viewer_override:
+    -
+      entity: 6a6061d1-58ab-4a7f-9968-9836d48d72f8

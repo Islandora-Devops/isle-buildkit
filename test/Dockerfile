@@ -17,8 +17,14 @@ RUN --mount=type=cache,id=test-downloads-${TARGETARCH},sharing=locked,target=/op
     && \
     cleanup.sh
 
+# Import Default content, includes content normally included via migrate import.
+# So that the links between the default content and the tags work correctly (linked by UUID rather than ID).
 RUN --mount=type=bind,source=rootfs/var/www/drupal/assets/patches/default_settings.txt,target=/var/www/drupal/assets/patches/default_settings.txt \
+    --mount=type=bind,source=rootfs/var/www/drupal/web/modules/custom,target=/var/www/drupal/web/modules/custom \
     --mount=type=cache,id=test-drupal-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
+    composer -d /var/www/drupal config minimum-stability dev && \
+    composer -d /var/www/drupal config repositories.sample_core path ./web/modules/custom/sample_core && \
+    composer -d /var/www/drupal require 'islandora/sample_core:*' && \
     composer install -d /var/www/drupal && \
     cleanup.sh
 

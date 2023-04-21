@@ -1,13 +1,11 @@
 _meta:
   version: '1.0'
   entity_type: node
-  uuid: c18ab21b-2713-4120-9de4-9fd0d8ec1b0b
+  uuid: 0c7da6e9-7295-46eb-afd0-16cf94462dce
   bundle: islandora_object
   default_langcode: en
   depends:
-    0c7da6e9-7295-46eb-afd0-16cf94462dce: node
-    60c1d566-4693-412e-b184-9a208459f1d9: taxonomy_term
-    bd9d194c-2de7-43de-8f5e-df50d8ed2a99: taxonomy_term
+    4adbf9a6-08e6-4911-bd36-9cd0ab8e3b59: taxonomy_term
 default:
   revision_uid:
     -
@@ -20,10 +18,10 @@ default:
       target_id: 1
   title:
     -
-      value: 'Sample Audio'
+      value: 'Sample Collection'
   created:
     -
-      value: 1668787139
+      value: 1682105372
   promote:
     -
       value: true
@@ -39,15 +37,6 @@ default:
   content_translation_outdated:
     -
       value: false
-  field_extent:
-    -
-      value: '1 item'
-  field_member_of:
-    -
-      entity: 0c7da6e9-7295-46eb-afd0-16cf94462dce
   field_model:
     -
-      entity: 60c1d566-4693-412e-b184-9a208459f1d9
-  field_resource_type:
-    -
-      entity: bd9d194c-2de7-43de-8f5e-df50d8ed2a99
+      entity: 4adbf9a6-08e6-4911-bd36-9cd0ab8e3b59
