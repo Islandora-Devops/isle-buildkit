@@ -27,7 +27,7 @@ function main() {
   sleep 30
 
   echo "Confirm default Nodes were created."
-  node_count 4
+  node_count 5
 
   echo "Confirm default Media was created."
   media_use_count "Original File" 4
@@ -52,6 +52,6 @@ function main() {
   #media_use_count "Extracted Text" 1
 
   echo "Confirm Solr documents were created."
-  solr_document_count 4
+  solr_document_count 5
 }
 main
