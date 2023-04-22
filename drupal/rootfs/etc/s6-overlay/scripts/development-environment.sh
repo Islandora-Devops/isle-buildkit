@@ -8,7 +8,7 @@ if [[ "${DEVELOPMENT_ENVIRONMENT}" == "true" ]]; then
     if ! getent passwd ${UID}; then
       usermod -u ${UID} nginx
     fi
-    if [[ "$(stat -c %u /var/www)" != "${UID}" ]]; then
+    if [[ "$(stat -c %u /var/www/drupal)" != "${UID}" ]]; then
       chown -R nginx:nginx /var/www
     fi
   fi
