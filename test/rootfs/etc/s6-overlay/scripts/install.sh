@@ -20,11 +20,11 @@ function jolokia {
     local type="${1}"
     local queue="${2}"
     local action="${3}"
-    local url="http://${DRUPAL_DEFAULT_BROKER_HOST}:8161/api/jolokia/${type}/org.apache.activemq:type=Broker,brokerName=localhost,destinationType=Queue,destinationName=${queue}"
+    local url="http://${DRUPAL_DEFAULT_BROKER_HOST}:${DRUPAL_DEFAULT_BROKER_WEB_PORT}/api/jolokia/${type}/org.apache.activemq:type=Broker,brokerName=localhost,destinationType=Queue,destinationName=${queue}"
     if [ "$action" != "" ]; then
         url="${url}/$action"
     fi
-    curl -s -u "admin:password" "${url}"
+    curl -s -u "${DRUPAL_DEFAULT_BROKER_WEB_ADMIN_USER}:${DRUPAL_DEFAULT_BROKER_WEB_ADMIN_PASSWORD}" "${url}"
     printf "\n"
 }
 
