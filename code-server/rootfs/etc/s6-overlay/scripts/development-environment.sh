@@ -7,11 +7,14 @@ if [[ "${DEVELOPMENT_ENVIRONMENT}" == "true" ]]; then
     if ! getent passwd ${UID}; then
       usermod -u ${UID} nginx
     fi
-    if [[ "$(stat -c %u /var/www/drupal)" != "${UID}" ]]; then
+    if [[ "$(stat -c %u /opt/code-server)" != "${UID}" ]]; then
       parallel --will-cite chown -R nginx:nginx ::: \
         /opt/code-server \
         /root/.composer \
-        /var/lib/nginx \
+        /var/lib/nginx
+    fi
+    if [[ "$(stat -c %u /var/www/drupal)" != "${UID}" ]]; then
+      parallel --will-cite chown -R nginx:nginx ::: \
         /var/www
     fi
   fi
