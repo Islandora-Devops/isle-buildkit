@@ -3,6 +3,11 @@ FROM drupal
 
 ARG TARGETARCH
 
+ARG GLIBC_VERSION="2.35-r1"
+ARG GLIBC_FILE="glibc-${GLIBC_VERSION}.apk"
+ARG GLIBC_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/${GLIBC_FILE}"
+ARG GLIBC_SHA256="276f43ce9b2d5878422bca94ca94e882a7eb263abe171d233ac037201ffcaf06"
+
 EXPOSE 8443 \
        9003
 
@@ -15,6 +20,7 @@ RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
     cleanup.sh
 
 # Include commonly used tools and xdebug.
+# PHPStorm remote requries Glibc.
 RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
         alpine-sdk \
@@ -30,6 +36,14 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
         unison \
         yarn \
     && \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    download.sh \
+        --url "${GLIBC_URL}" \
+        --sha256 "${GLIBC_SHA256}" \
+    && \
+    apk add "${DOWNLOAD_CACHE_DIRECTORY}/${GLIBC_FILE}" && \
+    mkdir /lib64 && \
+    ln -s /lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 && \
     cleanup.sh
 
 RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/usr/local/share/.cache/yarn \
