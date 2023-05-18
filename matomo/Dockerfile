@@ -43,13 +43,13 @@ RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/
         --sha256 "${EXTRA_TOOLS_SHA256}" \
         --strip \
         --dest /var/www/matomo/plugins/ExtraTools && \
-    cleanup.sh && \
     # Download geolocation database for later use
     download.sh \
         --url "${IP_TO_CITY_URL}" \
         --sha256 "${IP_TO_CITY_SHA256}" \
         --strip \
-        --dest /tmp \
+        --dest /var/www/matomo/misc && \
+    cleanup.sh
 
 # The driver is given explicitly to prevent accidentially overriding as Matomo
 # only supports MySQL.
