@@ -1,0 +1,30 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: 8acb9ed6-5430-40a8-8110-075da7f405b2
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 1
+  filename:
+    -
+      value: sample.jpg
+  uri:
+    -
+      value: 'fedora://2022-11/sample.jpg'
+  filemime:
+    -
+      value: image/jpeg
+  filesize:
+    -
+      value: 358020
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1668006708
+  sha1:
+    -
+      value: c234bb8e6526adf16352365bc05520a1d2763a69

@@ -1,0 +1,61 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: 047959ca-2ff2-4664-91bb-6541cae44f31
+  bundle: image
+  default_langcode: en
+  depends:
+    8acb9ed6-5430-40a8-8110-075da7f405b2: file
+    34fafe07-661c-44c7-8c34-27179a23d759: node
+    3397d872-5a18-4e04-bf0a-f1e5ba69f6d0: taxonomy_term
+    c6a604f2-f612-463d-b82e-35b032f87728: taxonomy_term
+default:
+  revision_user:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: 'Sample Image'
+  created:
+    -
+      value: 1668006692
+  revision_translation_affected:
+    -
+      value: true
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_file_size:
+    -
+      value: 358020
+  field_height:
+    -
+      value: 1374
+  field_media_image:
+    -
+      entity: 8acb9ed6-5430-40a8-8110-075da7f405b2
+      alt: 'Sample Image'
+      title: ''
+      width: 1483
+      height: 1374
+  field_media_of:
+    -
+      entity: 34fafe07-661c-44c7-8c34-27179a23d759
+  field_media_use:
+    -
+      entity: 3397d872-5a18-4e04-bf0a-f1e5ba69f6d0
+  field_mime_type:
+    -
+      value: image/jpeg
+  field_width:
+    -
+      value: 1483

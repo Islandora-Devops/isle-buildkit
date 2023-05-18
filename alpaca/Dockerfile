@@ -1,88 +1,80 @@
-# syntax=docker/dockerfile:1.2.1
-ARG repository=local
-ARG tag=latest
-FROM --platform=$BUILDPLATFORM ${repository}/karaf:${tag} AS download
+# syntax=docker/dockerfile:1.5.1
+FROM java
 
-# Install common features and repos
-RUN bin/start && \
-    ALPACA_VERSION=1.0.5 && \
-    ACTIVEMQ_VERSION=5.15.0 && \
-    CAMEL_VERSION=2.20.4 && \
-    bin/client -r 10 -d 5  "feature:repo-add mvn:ca.islandora.alpaca/islandora-karaf/${ALPACA_VERSION}/xml/features" && \
-    bin/client -r 10 -d 5  "feature:repo-add mvn:org.apache.activemq/activemq-karaf/${ACTIVEMQ_VERSION}/xml/features" && \
-    bin/client -r 10 -d 5  "feature:repo-add mvn:org.apache.camel.karaf/apache-camel/${CAMEL_VERSION}/xml/features" && \
-    bin/client -r 10 -d 5  "feature:install -v fcrepo-service-activemq" && \
-    bin/client -r 10 -d 5  "feature:install -v fcrepo-service-camel" && \
-    bin/client -r 10 -d 5  "feature:install -v islandora-http-client" && \
-    bin/stop && \
-    rm -rf instances/*
+ARG TARGETARCH
+ARG ALPACA_VERSION="2.2.0"
+ARG ALPACA_FILE="islandora-alpaca-app-${ALPACA_VERSION}-all.jar"
+ARG ALPACA_URL="https://repo1.maven.org/maven2/ca/islandora/alpaca/islandora-alpaca-app/${ALPACA_VERSION}/${ALPACA_FILE}"
+ARG ALPACA_FILE_SHA256="5722306dd78f9fdc3d7a4248a527c439143a3472e5b2d4ea10601b0038b43923"
 
-# Derivative connector
-RUN bin/start && \
-    bin/client -r 10 -d 5  "feature:install -v islandora-connector-derivative" && \
-    bin/stop && \
-    rm -rf instances/*
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=alpaca-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${ALPACA_URL}" \
+        --sha256 "${ALPACA_FILE_SHA256}" \
+    && \
+    mkdir -p /opt/alpaca && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/${ALPACA_FILE}" "/opt/alpaca/alpaca.jar" && \
+    cleanup.sh
 
-# Fcrepo indexing
-RUN bin/start && \
-    bin/client -r 10 -d 5  "feature:install -v islandora-indexing-fcrepo" && \
-    bin/stop && \
-    rm -rf instances/*
-
-# Triple indexing
-RUN bin/start && \
-    bin/client -r 10 -d 5  "feature:install islandora-indexing-triplestore" && \
-    bin/stop && \
-    rm -rf instances/*
-
-# Fix up ownership.
-RUN chown -R karaf:karaf /opt/karaf
-
-FROM ${repository}/karaf:${tag}
+RUN create-service-user.sh --name alpaca && \
+    cleanup.sh
 
 ENV \
-    ALPACA_ACTIVEMQ_PASSWORD=password \
-    ALPACA_ACTIVEMQ_URL=tcp://activemq:61616 \
-    ALPACA_ACTIVEMQ_USER=admin \
-    ALPACA_FCREPO_AUTH_HOST= \
-    ALPACA_FCREPO_AUTH_PASSWORD= \
-    ALPACA_FCREPO_AUTH_USER= \
-    ALPACA_FCREPO_URL=http://fcrepo/fcrepo/rest \
-    ALPACA_FITS_QUEUE=broker:queue:islandora-connector-fits \
-    ALPACA_FITS_REDELIVERIES=10 \
-    ALPACA_FITS_SERVICE=http://crayfits:8000 \
-    ALPACA_FITS_TIMEOUT=10000 \
-    ALPACA_HOMARUS_QUEUE=broker:queue:islandora-connector-homarus \
-    ALPACA_HOMARUS_REDELIVERIES=10 \
-    ALPACA_HOMARUS_SERVICE=http://homarus:8000/convert \
-    ALPACA_HOMARUS_TIMEOUT=10000 \
-    ALPACA_HOUDINI_QUEUE=broker:queue:islandora-connector-houdini \
-    ALPACA_HOUDINI_REDELIVERIES=10 \
-    ALPACA_HOUDINI_SERVICE=http://houdini:8000/convert \
-    ALPACA_HOUDINI_TIMEOUT=10000 \
-    ALPACA_HTTP_TOKEN=islandora \
-    ALPACA_INDEXING_MILLINER_URL=http://milliner:8000 \
-    ALPACA_INDEXING_REDELIVERIES=10 \
-    ALPACA_INDEXING_STREAM_FILE_DELETE=broker:queue:islandora-indexing-fcrepo-file-delete \
-    ALPACA_INDEXING_STREAM_FILE_EXTERNAL=broker:queue:islandora-indexing-fcrepo-file-external \
-    ALPACA_INDEXING_STREAM_INPUT=broker:topic:fedora \
-    ALPACA_INDEXING_STREAM_MEDIA_INDEX=broker:queue:islandora-indexing-fcrepo-media \
-    ALPACA_INDEXING_STREAM_NODE_DELETE=broker:queue:islandora-indexing-fcrepo-delete \
-    ALPACA_INDEXING_STREAM_NODE_INDEX=broker:queue:islandora-indexing-fcrepo-content \
-    ALPACA_INDEXING_STREAM_TRIPLESTORE_DELETE=broker:queue:islandora-indexing-triplestore-delete \
-    ALPACA_INDEXING_STREAM_TRIPLESTORE_INDEX=broker:queue:islandora-indexing-triplestore-index \
-    ALPACA_INDEXING_STREAM_TRIPLESTORE_REINDEX=broker:queue:triplestore.reindex \
-    ALPACA_INDEXING_URL=http://blazegraph/bigdata/namespace/islandora/sparql \
-    ALPACA_LOGGER_CAMEL_LEVEL=WARN \
-    ALPACA_LOGGER_ISLANDORA_LEVEL=WARN \
-    ALPACA_LOGGER_ROOT_LEVEL=WARN \
-    ALPACA_OCR_QUEUE=broker:queue:islandora-connector-ocr \
-    ALPACA_OCR_REDELIVERIES=10 \
-    ALPACA_OCR_SERVICE=http://hypercube:8000 \
-    ALPACA_OCR_TIMEOUT=10000 \
-    JAVA_OPTS="-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx8g"
+    ALPACA_CLIENT_ADDITIONAL_OPTIONS= \
+    ALPACA_CLIENT_CONFIGURER=true \
+    ALPACA_CLIENT_CONNECTION_TIMEOUT=-1 \
+    ALPACA_CLIENT_REQUEST_TIMEOUT=-1 \
+    ALPACA_CLIENT_SOCKET_TIMEOUT=-1 \
+    ALPACA_DERIVATIVE_FITS_ASYNC_CONSUMER=true \
+    ALPACA_DERIVATIVE_FITS_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_FITS_ENABLED=true \
+    ALPACA_DERIVATIVE_FITS_MAX_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_FITS_QUEUE=queue:islandora-connector-fits \
+    ALPACA_DERIVATIVE_FITS_URL=http://crayfits:8000/ \
+    ALPACA_DERIVATIVE_HOMARUS_ASYNC_CONSUMER=true \
+    ALPACA_DERIVATIVE_HOMARUS_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_HOMARUS_ENABLED=true \
+    ALPACA_DERIVATIVE_HOMARUS_MAX_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_HOMARUS_QUEUE=queue:islandora-connector-homarus \
+    ALPACA_DERIVATIVE_HOMARUS_URL=http://homarus:8000/convert \
+    ALPACA_DERIVATIVE_HOUDINI_ASYNC_CONSUMER=true \
+    ALPACA_DERIVATIVE_HOUDINI_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_HOUDINI_ENABLED=true \
+    ALPACA_DERIVATIVE_HOUDINI_MAX_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_HOUDINI_QUEUE=queue:islandora-connector-houdini \
+    ALPACA_DERIVATIVE_HOUDINI_URL=http://houdini:8000/convert \
+    ALPACA_DERIVATIVE_OCR_ASYNC_CONSUMER=true \
+    ALPACA_DERIVATIVE_OCR_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_OCR_ENABLED=true \
+    ALPACA_DERIVATIVE_OCR_MAX_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_OCR_QUEUE=queue:islandora-connector-ocr \
+    ALPACA_DERIVATIVE_OCR_URL=http://hypercube:8000/ \
+    ALPACA_DERIVATIVE_SYSTEMS=fits,homarus,houdini,ocr \
+    ALPACA_FCREPO_INDEXER_ASYNC_CONSUMER=true \
+    ALPACA_FCREPO_INDEXER_CONSUMERS=-1 \
+    ALPACA_FCREPO_INDEXER_ENABLED=true \
+    ALPACA_FCREPO_INDEXER_MAX_CONSUMERS=-1 \
+    ALPACA_FCREPO_INDEXER_MILLINER_URL=http://milliner:8000/ \
+    ALPACA_FCREPO_INDEXER_QUEUE_DELETE=queue:islandora-indexing-fcrepo-delete \
+    ALPACA_FCREPO_INDEXER_QUEUE_EXTERNAL=queue:islandora-indexing-fcrepo-file-external \
+    ALPACA_FCREPO_INDEXER_QUEUE_MEDIA=queue:islandora-indexing-fcrepo-media \
+    ALPACA_FCREPO_INDEXER_QUEUE_NODE=queue:islandora-indexing-fcrepo-content \
+    ALPACA_JAVA_OPTS= \
+    ALPACA_JMS_CONNECTIONS=10 \
+    ALPACA_JMS_CONSUMERS=1 \
+    ALPACA_JMS_PASSWORD=password \
+    ALPACA_JMS_URL=tcp://activemq:61616 \
+    ALPACA_JMS_USER=admin \
+    ALPACA_MAX_REDELIVERIES=5 \
+    ALPACA_TRIPLESTORE_INDEXER_ASYNC_CONSUMER=true \
+    ALPACA_TRIPLESTORE_INDEXER_CONSUMERS=-1 \
+    ALPACA_TRIPLESTORE_INDEXER_ENABLED=true \
+    ALPACA_TRIPLESTORE_INDEXER_MAX_CONSUMERS=-1 \
+    ALPACA_TRIPLESTORE_INDEXER_QUEUE_DELETE=queue:islandora-indexing-triplestore-delete \
+    ALPACA_TRIPLESTORE_INDEXER_QUEUE_INDEX=queue:islandora-indexing-triplestore-index \
+    ALPACA_TRIPLESTORE_INDEXER_URL=http://blazegraph:8080/bigdata/namespace/islandora/sparql
 
-COPY --from=download --chown=karaf:karaf /opt/karaf /opt/karaf
-COPY --from=download /root/.m2 /root/.m2
+COPY --link rootfs /
 
-COPY rootfs /
+WORKDIR /opt/alpaca

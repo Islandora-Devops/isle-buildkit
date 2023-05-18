@@ -1,0 +1,47 @@
+_meta:
+  version: '1.0'
+  entity_type: taxonomy_term
+  uuid: 6a6061d1-58ab-4a7f-9968-9836d48d72f8
+  bundle: islandora_display
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  name:
+    -
+      value: PDFjs
+  description:
+    -
+      value: 'Display using the PDF.js viewer'
+      format: ''
+  weight:
+    -
+      value: 0
+  parent:
+    -
+      target_id: 0
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  content_translation_uid:
+    -
+      target_id: 1
+  content_translation_created:
+    -
+      value: 1667998710
+  field_external_uri:
+    -
+      uri: 'http://mozilla.github.io/pdf.js'
+      title: ''
+      options: {  }

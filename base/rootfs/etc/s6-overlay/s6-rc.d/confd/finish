@@ -1,0 +1,9 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash
+set -e
+
+# Only run the service if explicitly told to do so.
+if [[ "${CONFD_ENABLE_SERVICE}" == "true" ]]; then
+  # shellcheck disable=SC1091
+  source /usr/local/share/s6/finish "${1}" "${2}"
+fi

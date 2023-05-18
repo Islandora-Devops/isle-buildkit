@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+# Wait for Socket to exist.
+while ! test -S /run/php-fpm81/php-fpm81.sock; do sleep 1; done
+
+# Wait for PID file to exist.
+while ! test -f /run/php-fpm81/php-fpm81.pid; do sleep 1; done

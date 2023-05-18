@@ -1,0 +1,30 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: 71aef23b-86cc-4826-9ea4-becaf4a0c6d6
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 1
+  filename:
+    -
+      value: sample.mp3
+  uri:
+    -
+      value: 'fedora://2022-11/sample.mp3'
+  filemime:
+    -
+      value: audio/mpeg
+  filesize:
+    -
+      value: 764176
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1668787348
+  sha1:
+    -
+      value: dae94d2ae419b398c977f27f4190680715ae10c3

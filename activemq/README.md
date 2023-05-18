@@ -1,6 +1,6 @@
 # ActiveMQ
 
-Docker image for [ActiveMQ] version 5.14.5.
+Docker image for [ActiveMQ] version 5.17.3.
 
 Please refer to the [ActiveMQ Documentation] for more in-depth information.
 
@@ -40,45 +40,44 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable        | Confd Key                     | Default  | Description                              |
-| :-------------------------- | :--------------------------- | :------- | :--------------------------------------- |
-| ACTIVEMQ_USER               | /activemq/user               | admin    | See [Security]: credentials.properties   |
-| ACTIVEMQ_PASSWORD           | /activemq/password           | password | See [Security]: credentials.properties   |
-| ACTIVEMQ_WEB_ADMIN_NAME     | /activemq/web/admin/name     | admin    | See [WebConsole]: jetty-realm.properties |
-| ACTIVEMQ_WEB_ADMIN_PASSWORD | /activemq/web/admin/password | password | See [WebConsole]: jetty-realm.properties |
-| ACTIVEMQ_WEB_ADMIN_ROLES    | /activemq/web/admin/roles    | admin    | See [WebConsole]: jetty-realm.properties |
+| Environment Variable        | Default  | Description                                                                    |
+| :-------------------------- | :------- | :----------------------------------------------------------------------------- |
+| ACTIVEMQ_AUDIT_LOG_LEVEL    | INFO     | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+| ACTIVEMQ_LOG_LEVEL          | INFO     | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+| ACTIVEMQ_PASSWORD           | password | See [Security]: credentials.properties                                         |
+| ACTIVEMQ_USER               | admin    | See [Security]: credentials.properties                                         |
+| ACTIVEMQ_WEB_ADMIN_NAME     | admin    | See [WebConsole]: jetty-realm.properties                                       |
+| ACTIVEMQ_WEB_ADMIN_PASSWORD | password | See [WebConsole]: jetty-realm.properties                                       |
+| ACTIVEMQ_WEB_ADMIN_ROLES    | admin    | See [WebConsole]: jetty-realm.properties                                       |
 
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:
 
-| Environment Variable              | Confd Key                           | Description                              |
-| :-------------------------------- | :--------------------------------- | :--------------------------------------- |
-| ACTIVEMQ_USER_{USER}_NAME         | /activemq/user/{USER}/name         | See [Security]: users.properties         |
-| ACTIVEMQ_USER_{USER}_PASSWORD     | /activemq/user/{USER}/password     | See [Security]: users.properties         |
-| ACTIVEMQ_GROUP_{GROUP}_NAME       | /activemq/group/{GROUP}/name       | See [Security]: groups.properties        |
-| ACTIVEMQ_GROUP_{GROUP}_MEMBERS    | /activemq/group/{GROUP}/members    | See [Security]: groups.properties        |
-| ACTIVEMQ_WEB_USER_{USER}_NAME     | /activemq/web/user/{USER}/name     | See [WebConsole]: jetty-realm.properties |
-| ACTIVEMQ_WEB_USER_{USER}_PASSWORD | /activemq/web/user/{USER}/password | See [WebConsole]: jetty-realm.properties |
-| ACTIVEMQ_WEB_USER_{USER}_ROLES    | /activemq/web/user/{USER}/roles    | See [WebConsole]: jetty-realm.properties |
+| Environment Variable              | Description                              |
+| :-------------------------------- | :--------------------------------------- |
+| ACTIVEMQ_USER_{USER}_NAME         | See [Security]: users.properties         |
+| ACTIVEMQ_USER_{USER}_PASSWORD     | See [Security]: users.properties         |
+| ACTIVEMQ_GROUP_{GROUP}_NAME       | See [Security]: groups.properties        |
+| ACTIVEMQ_GROUP_{GROUP}_MEMBERS    | See [Security]: groups.properties        |
+| ACTIVEMQ_WEB_USER_{USER}_NAME     | See [WebConsole]: jetty-realm.properties |
+| ACTIVEMQ_WEB_USER_{USER}_PASSWORD | See [WebConsole]: jetty-realm.properties |
+| ACTIVEMQ_WEB_USER_{USER}_ROLES    | See [WebConsole]: jetty-realm.properties |
 
 > N.B. These do not have defaults.
 
 For example to add a new user `someone` to the [WebConsole] you would need to
 define the following:
 
-| Environment Variable               | Confd Key                            | Value    |
-| :--------------------------------- | :---------------------------------- | :------- |
-| ACTIVEMQ_WEB_USER_SOMEONE_NAME     | /activemq/web/user/someone/name     | someone  |
-| ACTIVEMQ_WEB_USER_SOMEONE_PASSWORD | /activemq/web/user/someone/password | password |
-| ACTIVEMQ_WEB_USER_SOMEONE_ROLES    | /activemq/web/user/someone/roles    | admin    |
+| Environment Variable               | Value    |
+| :--------------------------------- | :------- |
+| ACTIVEMQ_WEB_USER_SOMEONE_NAME     | someone  |
+| ACTIVEMQ_WEB_USER_SOMEONE_PASSWORD | password |
+| ACTIVEMQ_WEB_USER_SOMEONE_ROLES    | admin    |
 
 ## Logs
 
-| Path                            | Description    |
-| :------------------------------ | :------------- |
-| STDOUT                          | [ActiveMQ Log] |
-| /opt/activemq/data/activemq.log | [ActiveMQ Log] |
-| /opt/activemq/data/audit.log    | [Audit Log]    |
+- [ActiveMQ Log]
+- [Audit Log]
 
 [ActiveMQ Documentation]: https://activemq.apache.org/components/classic/documentation
 [ActiveMQ Log]: https://activemq.apache.org/how-do-i-change-the-logging

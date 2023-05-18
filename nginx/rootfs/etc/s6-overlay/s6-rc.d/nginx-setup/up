@@ -1,0 +1,2 @@
+# Create the folder to house the PID file.
+mkdir -p /run/nginx

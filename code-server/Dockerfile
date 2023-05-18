@@ -1,84 +1,61 @@
-# syntax=docker/dockerfile:1.2.1
-ARG repository=local
-ARG tag=latest
-FROM alpine:3.13.2 AS cache
-FROM ${repository}/abuild:${tag} AS build
+# syntax=docker/dockerfile:1.5.1
+FROM drupal
 
-# g++, make, python are only required to build native dependencies via node-gyp.
-# spdlog is required for building / using xdebug extension.
-RUN --mount=type=cache,id=code-server-apk,sharing=locked,from=cache,target=/var/cache/apk \
-    apk add \
-        bash \
-        g++ \
-        make \
-        nghttp2-dev \
-        python3 \
-        spdlog \
-        sudo \
-        yarn
+ARG TARGETARCH
 
-RUN --mount=type=cache,id=code-server-yarn,sharing=locked,from=cache,target=/usr/local/share/.cache/yarn \
-    yarn global add node-gyp bower grunt-cli && \
-    JOBS=max yarn global add code-server spdlog
-
-SHELL ["/bin/bash", "-c"]
-
-# Install Editor plugins from bind mounted folder (Not available on online marketplace).
-RUN --mount=type=bind,source=/extensions,target=/extensions \
-    for extension in /extensions/*.vsix; \
-    do \
-        code-server \
-            --config /opt/code-server/config.yaml \
-            --user-data-dir /opt/code-server/data \
-            --extensions-dir /opt/code-server/extensions \
-            --install-extension="${extension}" & \
-    done; \
-    wait
-
-# Install Editor plugins from internet (saves downloading when installing).
-RUN --mount=type=cache,id=code-server-extensions,sharing=locked,from=cache,target=/opt/code-server/.local/share/code-server/CachedExtensionVSIXs \
-    EXTENSIONS=(\
-        bmewburn.vscode-intelephense-client \
-        felixfbecker.php-debug \
-        streetsidesoftware.code-spell-checker \
-        whatwedo.twig \
-    ) && \
-    for extension in "${EXTENSIONS[@]}"; \
-    do \
-        code-server \
-            --config /opt/code-server/config.yaml \
-            --user-data-dir /opt/code-server/data \
-            --extensions-dir /opt/code-server/extensions \
-            --install-extension="${extension}" & \
-    done; \
-    wait
-
-FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
-
-RUN --mount=type=cache,id=code-server-composer,sharing=locked,target=/root/.composer/cache \
-    composer global require "dealerdirect/phpcodesniffer-composer-installer" && \
-    composer global require "drupal/coder" && \
-    composer global require "sebastian/phpcpd" && \
-    composer global require "squizlabs/php_codesniffer"
-
-FROM ${repository}/drupal:${tag}
+ARG GLIBC_VERSION="2.35-r1"
+ARG GLIBC_FILE="glibc-${GLIBC_VERSION}.apk"
+ARG GLIBC_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/${GLIBC_FILE}"
+ARG GLIBC_SHA256="276f43ce9b2d5878422bca94ca94e882a7eb263abe171d233ac037201ffcaf06"
 
 EXPOSE 8443 \
        9003
 
-# Set a default shell so it can be used via code-server.
-RUN sed -i "/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/cnginx:x:100:101:nginx:/var/lib/nginx:/bin/bash" /etc/passwd
+RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
+    --mount=type=cache,id=code-server-composer-${TARGETARCH},sharing=locked,target=/var/lib/nginx/.composer/cache \
+    mkdir -p /var/lib/nginx/.composer && \
+    cp -r /composer/* /var/lib/nginx/.composer && \
+    ls -lah /var/lib/nginx/.composer && \
+    composer install -n -d /var/lib/nginx/.composer && \
+    cleanup.sh
 
 # Include commonly used tools and xdebug.
-RUN --mount=type=cache,id=code-server-drupal-apk,sharing=locked,from=cache,target=/var/cache/apk \
-    apk --update add \
+# PHPStorm remote requries Glibc.
+RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    apk add \
+        alpine-sdk \
+        docker-cli \
         htop \
-        php7-pecl-xdebug \
+        nodejs \
+        openssh \
+        parallel \
+        php81-pecl-xdebug \
+        python3 \
         spdlog \
-        yarn \
         sudo \
         unison \
-        parallel \
+        yarn \
+    && \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    download.sh \
+        --url "${GLIBC_URL}" \
+        --sha256 "${GLIBC_SHA256}" \
+    && \
+    apk add "${DOWNLOAD_CACHE_DIRECTORY}/${GLIBC_FILE}" && \
+    mkdir /lib64 && \
+    ln -s /lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 && \
+    cleanup.sh
+
+RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/usr/local/share/.cache/yarn \
+    yarn global add node-gyp@9.3.1 && \
+    FORCE_NODE_VERSION=18 yarn global add --ignore-engines --unsafe-perm \
+        @microsoft/1ds-core-js@3.2.9 \
+        code-server@4.11.0 \
+        minimist@1.2.8 \
+        node-gyp@9.3.1 \
+        spdlog@0.13.7 \
+        yauzl@2.10.0 \
+        yazl@2.5.1 \
     && \
     cleanup.sh
 
@@ -93,18 +70,33 @@ ENV \
     CODE_SERVER_PASSWORD=password \
     XDEBUG_FLAGS="-d xdebug.mode=develop,debug"
 
-COPY --from=composer --chown=nginx:nginx /root/.composer/composer.json /var/lib/nginx/.composer/composer.json
-COPY --from=composer --chown=nginx:nginx /root/.composer/composer.lock /var/lib/nginx/.composer/composer.lock
-COPY --from=composer --chown=nginx:nginx /root/.composer/vendor /var/lib/nginx/.composer/vendor
-COPY --from=build --chown=nginx:nginx /opt/code-server /opt/code-server
-COPY --from=build /usr/local/share/.config/yarn /usr/local/share/.config/yarn
+COPY --link rootfs /
 
-COPY rootfs /
+# Install Editor plugins from bind mounted folder (Not available on online marketplace).
+RUN --mount=type=bind,source=/extensions,target=/extensions \
+    declare -a PIDS=() EXTENSIONS=(/extensions/*.vsix); \
+    EXTENSIONS+=(\
+        bmewburn.vscode-intelephense-client \
+        felixfbecker.php-debug \
+        streetsidesoftware.code-spell-checker \
+        mblode.twig-language-2 \
+    ) && \
+    mkdir -p /opt/code-server/data /opt/code-server/extensions; \
+    for extension in "${EXTENSIONS[@]}"; \
+    do \
+        code-server \
+            --config /opt/code-server/config.yaml \
+            --user-data-dir /opt/code-server/data \
+            --extensions-dir /opt/code-server/extensions \
+            --install-extension="${extension}"; \
+    done; \
+    chown -R nginx:nginx /opt/code-server && \
+    cleanup.sh
 
-RUN ln -s /usr/local/share/.config/yarn/global/node_modules/.bin/code-server /usr/local/bin/code-server && \
-    ln -s /usr/local/share/.config/yarn/global/node_modules/.bin/node-gyp /usr/local/bin/node-gyp && \
-    ln -s /usr/local/share/.config/yarn/global/node_modules/.bin/grunt /usr/local/bin/grunt && \
-    ln -s /usr/local/share/.config/yarn/global/node_modules/.bin/bower /usr/local/bin/bower
-
-# https://github.com/sudo-project/sudo/issues/42
-RUN chmod a=r,u+w /etc/sudo.conf
+# Set a default shell so it can be used via code-server.
+# Additionally https://github.com/sudo-project/sudo/issues/42
+RUN sed -i "/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/cnginx:x:100:101:nginx:/var/lib/nginx:/bin/bash" /etc/passwd && \
+    mkdir -p /var/lib/nginx/.local && \
+    chown -R nginx:nginx /var/lib/nginx && \
+    chmod a=r,u+w /etc/sudo.conf && \
+    cleanup.sh

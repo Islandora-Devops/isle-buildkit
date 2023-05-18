@@ -1,4 +1,6 @@
-import tasks.tests.ServiceStartsWithDefaultsTest
-tasks.register<ServiceStartsWithDefaultsTest>("test") {
-    waitForMessage.set("org.apache.catalina.startup.Catalina.start Server startup")
+import plugins.TestsPlugin.DockerComposeUp
+
+tasks.named<DockerComposeUp>("test") {
+    // Remove 143 when https://github.com/Islandora-Devops/isle-buildkit/issues/269 is resolved.
+    expectExitCodes("fits", 0, 143)
 }

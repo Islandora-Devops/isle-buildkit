@@ -1,16 +1,18 @@
-#!/usr/bin/with-contenv bash
+#!/command/with-contenv bash
+# shellcheck shell=bash
 
+# shellcheck disable=SC1091
 source /usr/local/share/isle/utilities.sh
 
 function count {
-    cat <<- EOF | execute-sql-file.sh --database "${DB_NAME}" - -- -N 2>/dev/null
+    cat <<-EOF | execute-sql-file.sh --database "${DB_NAME}" - -- -N 2>/dev/null
 SELECT COUNT(*) as count FROM fixity_check_event;
 EOF
 }
 
 # Exit non-zero if database does not exist.
-cat <<- EOF | execute-sql-file.sh
-use ${DB_NAME}
+cat <<-EOF | execute-sql-file.sh
+	use ${DB_NAME}
 EOF
 
 # Perform check-fixity (ingests from CSV).

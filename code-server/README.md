@@ -1,6 +1,6 @@
 # Coder
 
-Docker image for [code-server].
+Docker image for [code-server] 4.8.3.
 
 Please refer to the [code-server Documentation] for more in-depth information.
 
@@ -53,10 +53,10 @@ image.
 
 ### Code Server
 
-| Environment Variable       | Confd Key                   | Default  | Description                                                    |
-| :------------------------- | :-------------------------- | :------- | :------------------------------------------------------------- |
-| CODE_SERVER_AUTHENTICATION | /code/server/authentication | password | Must be either 'none' or 'password'                            |
-| CODE_SERVER_PASSWORD       | /code/server/password       | password | Only used if `CODE_SERVER_AUTHENTICATION` is set to 'password' |
+| Environment Variable       | Default  | Description                                                    |
+| :------------------------- | :------- | :------------------------------------------------------------- |
+| CODE_SERVER_AUTHENTICATION | password | Must be either 'none' or 'password'                            |
+| CODE_SERVER_PASSWORD       | password | Only used if `CODE_SERVER_AUTHENTICATION` is set to 'password' |
 
 Code server provides shell access to the server on which it is running, for that
 reason **never** use it in a situation where it is accessible publicly from the
@@ -65,9 +65,9 @@ password and instead use port forwarding so that it is inaccessible publicly.
 
 ### XDebug
 
-| Environment Variable | Confd Key     | Default                      | Description                                                                |
-| :------------------- | :------------ | :--------------------------- | :------------------------------------------------------------------------- |
-| XDEBUG_FLAGS         | /xdebug/flags | -d xdebug.mode=develop,debug | See [XDebug Documentation] for settings, and prefix each setting with `-d` |
+| Environment Variable | Default                      | Description                                                                |
+| :------------------- | :--------------------------- | :------------------------------------------------------------------------- |
+| XDEBUG_FLAGS         | -d xdebug.mode=develop,debug | See [XDebug Documentation] for settings, and prefix each setting with `-d` |
 
 [drupal image]: ../drupal/README.md
 [code-server]: https://github.com/cdr/code-server

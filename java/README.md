@@ -1,6 +1,6 @@
 # Java
 
-Docker image for [Java] OpenJDK version 8.
+Docker image for [Java] OpenJDK version 17.
 
 Please refer to the [Java Documentation] for more in-depth information.
 

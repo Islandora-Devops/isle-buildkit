@@ -27,25 +27,25 @@ Requires `islandora/java` docker image to build. Please refer to the
 
 ### Confd Settings
 
-| Environment Variable         | Confd Key                     | Default                                              | Description                                                                                         |
-| :--------------------------- | :---------------------------- | :--------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
-| HANDLE_ADMIN_FULL_ACCESS     | /handle/admin/full/access     | yes                                                  | "yes" or "no". If set to "no" the "server_admins" will have default permissions at the prefix level |
-| HANDLE_ADMIN_PRIVATE_KEY_PEM | /handle/admin/private/key/pem | See rootfs/etc/defaults/HANDLE_ADMIN_PRIVATE_KEY_PEM | Please read the handle documentation for how this is use                                            |
-| HANDLE_ADMIN_PUBLIC_KEY_PEM  | /handle/admin/public/key/pem  | See rootfs/etc/defaults/HANDLE_ADMIN_PUBLIC_KEY_PEM  | Please read the handle documentation for how this is use                                            |
-| HANDLE_ALLOW_NA_ADMINS       | /handle/allow/na/admins       | yes                                                  | "yes" or "no". Allow admins from GHR?                                                               |
-| HANDLE_CASE_SENSITIVE        | /handle/case/sensitive        | no                                                   | "yes" or "no". Whether or not handles are case sensitive                                            |
-| HANDLE_DB_NAME               | /handle/db/name               | handle                                               | The name of the handle database                                                                     |
-| HANDLE_DB_PASSWORD           | /handle/db/password           | password                                             | The database users password                                                                         |
-| HANDLE_DB_READONLY           | /handle/db/readonly           | no                                                   | A boolean setting (can be "yes" or "no") prevent / allow database modification                      |
-| HANDLE_DB_USER               | /handle/db/user               | handle                                               | The database user                                                                                   |
-| HANDLE_MAX_AUTH_TIME         | /handle/max/auth/time         | 60000                                                | The number of seconds to wait for a client to respond to an authentication challenge                |
-| HANDLE_MAX_SESSION_TIME      | /handle/max/session/time      | 86400000                                             | Time in milliseconds that an authenticated client session can persist                               |
-| HANDLE_PREFIX                | /handle/prefix                | 200                                                  | Please read the handle documentation for how this is use                                            |
-| HANDLE_PRIVATE_KEY_PEM       | /handle/private/key/pem       | See rootfs/etc/defaults/HANDLE_PRIVATE_KEY_PEM       | Please read the handle documentation for how this is use                                            |
-| HANDLE_PUBLIC_KEY_PEM        | /handle/public/key/pem        | See rootfs/etc/defaults/HANDLE_PUBLIC_KEY_PEM        | Please read the handle documentation for how this is use                                            |
-| HANDLE_SERVER_ID             | /handle/server/id             | 1                                                    | Used to distinguish from other servers within the same site                                         |
-| HANDLE_PERSISTENCE_TYPE      | /handle/persistence/type      | bdbje                                                | Can be 'sql', if 'bdbje' make sure to create a volume at `/var/handle/bdbje` to persist changes     |
-| HANDLE_TEMPLATE_NS_OVERRIDE  | /handle/template/ns/override  | no                                                   | Prefer server_config settings.                                                                      |
+| Environment Variable         | Default                                              | Description                                                                                         |
+| :--------------------------- | :--------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
+| HANDLE_ADMIN_FULL_ACCESS     | yes                                                  | "yes" or "no". If set to "no" the "server_admins" will have default permissions at the prefix level |
+| HANDLE_ADMIN_PRIVATE_KEY_PEM | See rootfs/etc/defaults/HANDLE_ADMIN_PRIVATE_KEY_PEM | Please read the handle documentation for how this is use                                            |
+| HANDLE_ADMIN_PUBLIC_KEY_PEM  | See rootfs/etc/defaults/HANDLE_ADMIN_PUBLIC_KEY_PEM  | Please read the handle documentation for how this is use                                            |
+| HANDLE_ALLOW_NA_ADMINS       | yes                                                  | "yes" or "no". Allow admins from GHR?                                                               |
+| HANDLE_CASE_SENSITIVE        | no                                                   | "yes" or "no". Whether or not handles are case sensitive                                            |
+| HANDLE_DB_NAME               | handle                                               | The name of the handle database                                                                     |
+| HANDLE_DB_PASSWORD           | password                                             | The database users password                                                                         |
+| HANDLE_DB_READONLY           | no                                                   | A boolean setting (can be "yes" or "no") prevent / allow database modification                      |
+| HANDLE_DB_USER               | handle                                               | The database user                                                                                   |
+| HANDLE_MAX_AUTH_TIME         | 60000                                                | The number of seconds to wait for a client to respond to an authentication challenge                |
+| HANDLE_MAX_SESSION_TIME      | 86400000                                             | Time in milliseconds that an authenticated client session can persist                               |
+| HANDLE_PREFIX                | 200                                                  | Please read the handle documentation for how this is use                                            |
+| HANDLE_PRIVATE_KEY_PEM       | See rootfs/etc/defaults/HANDLE_PRIVATE_KEY_PEM       | Please read the handle documentation for how this is use                                            |
+| HANDLE_PUBLIC_KEY_PEM        | See rootfs/etc/defaults/HANDLE_PUBLIC_KEY_PEM        | Please read the handle documentation for how this is use                                            |
+| HANDLE_SERVER_ID             | 1                                                    | Used to distinguish from other servers within the same site                                         |
+| HANDLE_PERSISTENCE_TYPE      | bdbje                                                | Can be 'sql', if 'bdbje' make sure to create a volume at `/var/handle/bdbje` to persist changes     |
+| HANDLE_TEMPLATE_NS_OVERRIDE  | no                                                   | Prefer server_config settings.                                                                      |
 
 **Note:** For PEM files the private key must conform to
 [PKCS#8](https://en.wikipedia.org/wiki/PKCS_8) and not
@@ -67,11 +67,11 @@ database connection configuration.
 The following settings are only used if `HANDLE_PERSISTENCE_TYPE` is set to
 `mysql` or `postgresql`.
 
-| Environment Variable | Confd Key           | Default  | Description                                              |
-| :------------------- | :------------------ | :------- | :------------------------------------------------------- |
-| HANDLE_DB_NAME       | /handle/db/name     | handle   | The name of the database                                 |
-| HANDLE_DB_USER       | /handle/db/user     | handle   | The user to connect to the database                      |
-| HANDLE_DB_PASSWORD   | /handle/db/password | password | The password of the user used to connect to the database |
+| Environment Variable | Default  | Description                                              |
+| :------------------- | :------- | :------------------------------------------------------- |
+| HANDLE_DB_NAME       | handle   | The name of the database                                 |
+| HANDLE_DB_USER       | handle   | The user to connect to the database                      |
+| HANDLE_DB_PASSWORD   | password | The password of the user used to connect to the database |
 
 Additionally the `DB_DRIVER` variable is derived from the
 `HANDLE_PERSISTENCE_TYPE` so users do not need to specify it separately.

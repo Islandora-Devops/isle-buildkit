@@ -1,0 +1,2 @@
+# Allow NGINX_ERROR_LOG_LEVEL to be overridden by DRUPAL_NGINX_ERROR_LOG_LEVEL, etc.
+/usr/local/bin/confd-override-environment.sh --prefix NGINX

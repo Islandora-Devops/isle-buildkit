@@ -1,25 +1,31 @@
-# syntax=docker/dockerfile:1.2.1
-ARG repository=local
-ARG tag=latest
-FROM --platform=$BUILDPLATFORM ${repository}/composer:${tag} AS composer
+# syntax=docker/dockerfile:1.5.1
+FROM nginx
 
-RUN --mount=type=cache,id=riprap-composer,sharing=locked,target=/root/.composer/cache \
-    --mount=type=cache,id=riprap-downloads,sharing=locked,target=/opt/downloads \
-    COMMIT=7d7cae2d09dec20caa3c3f5752434af32401819e && \
-    git-clone-cached.sh \
-        --url https://github.com/mjordan/riprap.git \
-        --cache-dir "${DOWNLOAD_CACHE_DIRECTORY}" \
-        --commit "${COMMIT}" \
-        --worktree /var/www/riprap && \
-    composer install -d /var/www/riprap --no-dev
-
-FROM alpine:3.13.2 AS cache
-FROM ${repository}/nginx:${tag}
+ARG TARGETARCH
+ARG COMMIT="b84ac14370d0ffa156542e387a8eff9104b8858b"
+ARG FILE=${COMMIT}.tar.gz
+ARG URL=https://github.com/nigelgbanks/riprap/archive/${FILE}
+ARG SHA256=1ab119cae8bc65ab409031fa56ee98f683181478a27ad9e35352f7c350de75c2
 
 EXPOSE 8000
 
-RUN --mount=type=cache,id=riprap-apk,sharing=locked,from=cache,target=/var/cache/apk \
-    apk add php7-pdo_sqlite && \
+WORKDIR /var/www/riprap
+
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=riprap-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    apk add php81-pdo_sqlite && \
+    cleanup.sh
+
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=riprap-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
+    --mount=type=cache,id=riprap-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${URL}" \
+        --sha256 "${SHA256}" \
+        --strip \
+        --dest "/var/www/riprap" \
+    && \
+    composer install -d /var/www/riprap --no-dev && \
     cleanup.sh
 
 # The driver is given explicitly as Rip Rap can be run on SQLite without
@@ -27,14 +33,14 @@ RUN --mount=type=cache,id=riprap-apk,sharing=locked,from=cache,target=/var/cache
 ENV \
     RIPRAP_APP_ENV=dev \
     RIPRAP_APP_SECRET=f58c87e1d737c4422b45ba4310abede6 \
-    RIPRAP_CROND_ENABLE_SERVICE=true \
+    RIPRAP_CROND_ENABLE_SERVICE=false \
     RIPRAP_CROND_LOG_LEVEL=8 \
     RIPRAP_CROND_SCHEDULE="0	0	1	*	*" \
     RIPRAP_DB_DRIVER=sqlite \
     RIPRAP_DB_NAME=riprap \
     RIPRAP_DB_PASSWORD=password \
     RIPRAP_DB_USER=riprap \
-    RIPRAP_LOG_LEVEL=debug \
+    RIPRAP_LOG_LEVEL=info \
     RIPRAP_MAILER_URL=null://localhost \
     RIPRAP_TRUSTED_HOSTS="" \
     RIPRAP_TRUSTED_PROXIES=""
@@ -72,8 +78,6 @@ ENV \
     RIPRAP_CONFIG_USE_FEDORA_URLS=true \
     RIPRAP_CONFIG_VIEWS_PAGER_DATA_FILE_PATH=var/fetchresourcelist.from.drupal.pager.txt
 
-COPY --from=composer --chown=nginx:nginx /var/www /var/www
+COPY --link rootfs /
 
-COPY rootfs /
-
-WORKDIR /var/www/riprap
+RUN chown -R nginx:nginx /var/www

@@ -1,0 +1,53 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 34fafe07-661c-44c7-8c34-27179a23d759
+  bundle: islandora_object
+  default_langcode: en
+  depends:
+    0c7da6e9-7295-46eb-afd0-16cf94462dce: node
+    ec911234-5830-41ea-b73d-307b370a5f2a: taxonomy_term
+    dd1732a5-d66d-498f-8860-bbc6fd63b195: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Sample Image'
+  created:
+    -
+      value: 1668006672
+  promote:
+    -
+      value: true
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_extent:
+    -
+      value: '1 item'
+  field_member_of:
+    -
+      entity: 0c7da6e9-7295-46eb-afd0-16cf94462dce
+  field_model:
+    -
+      entity: ec911234-5830-41ea-b73d-307b370a5f2a
+  field_resource_type:
+    -
+      entity: dd1732a5-d66d-498f-8860-bbc6fd63b195

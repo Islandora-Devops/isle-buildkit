@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -e
-
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+ARGS=("$@")
+PROGNAME=$(basename "$0")
+readonly ARGS PROGNAME
 
 function usage {
-    cat <<- EOF
+    cat <<-EOF
     usage: $PROGNAME options FILE
 
     With no FILE, or when FILE is -, read standard input.
@@ -57,92 +57,96 @@ function fallback {
 
 function cmdline {
     local arg=
-    for arg
-    do
+    for arg; do
         local delim=""
         case "$arg" in
-            # Translate --gnu-long-options to -g (short options)
-            --driver)      args="${args}-a ";;
-            --host)        args="${args}-b ";;
-            --port)        args="${args}-c ";;
-            --user)        args="${args}-d ";;
-            --password)    args="${args}-e ";;
-            --database)    args="${args}-f ";;
-            --help)        args="${args}-h ";;
-            --debug)       args="${args}-x ";;
-            # Pass through anything else
-            *) [[ "${arg:0:1}" == "-" ]] || delim="\""
-               args="${args}${delim}${arg}${delim} ";;
+        # Translate --gnu-long-options to -g (short options)
+        --driver) args="${args}-a " ;;
+        --host) args="${args}-b " ;;
+        --port) args="${args}-c " ;;
+        --user) args="${args}-d " ;;
+        --password) args="${args}-e " ;;
+        --database) args="${args}-f " ;;
+        --help) args="${args}-h " ;;
+        --debug) args="${args}-x " ;;
+        # Pass through anything else
+        *)
+            [[ "${arg:0:1}" == "-" ]] || delim="\""
+            args="${args}${delim}${arg}${delim} "
+            ;;
         esac
     done
 
     # Reset the positional parameters to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
-    while getopts "a:b:c:d:e:f:hx" OPTION
-    do
+    while getopts "a:b:c:d:e:f:hx" OPTION; do
         case $OPTION in
         a)
-            readonly DRIVER=${OPTARG}
+            DRIVER=${OPTARG}
             ;;
         b)
-            readonly HOST=${OPTARG}
+            HOST=${OPTARG}
             ;;
         c)
-            readonly PORT=${OPTARG}
+            PORT=${OPTARG}
             ;;
         d)
-            readonly USER=${OPTARG}
+            USER=${OPTARG}
             ;;
         e)
-            readonly PASSWORD=${OPTARG}
+            PASSWORD=${OPTARG}
             ;;
         f)
-            readonly DATABASE=${OPTARG}
+            DATABASE=${OPTARG}
             ;;
         h)
             usage
             exit 0
             ;;
         x)
-            readonly DEBUG='-x'
             set -x
+            ;;
+        *)
+            echo "Invalid Option: $OPTION" >&2
+            usage
+            exit 1
             ;;
         esac
     done
 
     if fallback "--user" "USER" "DB_ROOT_USER"; then
-        readonly USER=${DB_ROOT_USER}
+        USER=${DB_ROOT_USER}
     fi
 
     if fallback "--password" "PASSWORD" "DB_ROOT_PASSWORD"; then
-        readonly PASSWORD=${DB_ROOT_PASSWORD}
+        PASSWORD=${DB_ROOT_PASSWORD}
     fi
 
     if fallback "--driver" "DRIVER" "DB_DRIVER"; then
-        readonly DRIVER=${DB_DRIVER}
+        DRIVER=${DB_DRIVER}
     fi
 
     if fallback "--host" "HOST" "DB_HOST"; then
-        readonly HOST=${DB_HOST}
+        HOST=${DB_HOST}
     fi
 
     if fallback "--port" "PORT" "DB_PORT"; then
-        readonly PORT=${DB_PORT}
+        PORT=${DB_PORT}
     fi
 
-    shift $((OPTIND-1))
+    shift $((OPTIND - 1))
 
     # Allow either passing in a file or reading from stdin by specifiying "-" or
     # ommiting completely.
     if [[ -f "${1}" || -p "${1}" ]]; then
-        readonly FILE="${1}"
+        FILE="${1}"
         shift
     elif [[ "${1}" == "-" ]]; then
-        readonly FILE=/dev/stdin
+        FILE=/dev/stdin
         shift
     else
-        readonly FILE=/dev/stdin
+        FILE=/dev/stdin
     fi
 
     # Remaining options to be passed onto the client, preceeded by '--'.
@@ -151,11 +155,13 @@ function cmdline {
     fi
 
     if [ "$#" -gt 0 ]; then
-        readonly OPTIONS=(${@})
+        OPTIONS=("${@}")
         shift $#
     else
-        readonly OPTIONS=()
+        OPTIONS=()
     fi
+
+    readonly DRIVER HOST PORT USER PASSWORD DATABASE FILE OPTIONS
 
     return 0
 }
@@ -174,7 +180,7 @@ function wait_for_access {
 function mysql_execute_sql_file {
     local database_arg=
 
-    if [[ ! -z "${DATABASE}" ]]; then
+    if [[ -n "${DATABASE}" ]]; then
         database_arg="--database=${DATABASE}"
     fi
 
@@ -186,13 +192,13 @@ function mysql_execute_sql_file {
         --protocol=tcp \
         "${database_arg}" \
         "${OPTIONS[@]}" \
-        < "${FILE}"
+        <"${FILE}"
 }
 
 function postgresql_execute_sql_file {
     local database_arg="--dbname=postgres"
 
-    if [[ ! -z "${DATABASE}" ]]; then
+    if [[ -n "${DATABASE}" ]]; then
         database_arg="--dbname=${DATABASE}"
     fi
 
@@ -208,20 +214,21 @@ function postgresql_execute_sql_file {
 
 function execute_sql_file {
     case "${DRIVER}" in
-        mysql)
-            mysql_execute_sql_file
-            ;;
-        postgresql)
-            postgresql_execute_sql_file
-            ;;
-        *)
-            echo "Only MySQL/PostgresSQL databases are supported for now." >&2
-            exit 1
+    mysql)
+        mysql_execute_sql_file
+        ;;
+    postgresql)
+        postgresql_execute_sql_file
+        ;;
+    *)
+        echo "Only MySQL/PostgresSQL databases are supported for now." >&2
+        exit 1
+        ;;
     esac
 }
 
 function main {
-    cmdline ${ARGS}
+    cmdline "${ARGS[@]}"
     wait_for_access
     execute_sql_file
 }

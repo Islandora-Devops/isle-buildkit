@@ -1,23 +1,22 @@
-# syntax=docker/dockerfile:1.2.1
-ARG repository=local
-ARG tag=latest
-FROM alpine:3.13.2 AS cache
-FROM ${repository}/base:${tag}
+# syntax=docker/dockerfile:1.5.1
+FROM base
+
+ARG TARGETARCH
 
 EXPOSE 5432
 
-RUN --mount=type=cache,id=postgresql-apk,sharing=locked,from=cache,target=/var/cache/apk \
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=postgresql-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
         postgresql \
         postgresql-client \
     && \
-    mkdir -p /var/lib/postgresql/data && \
+    mkdir -p /var/lib/postgresql/data /etc/postgresql && \
     chown -R postgres:postgres /var/lib/postgresql && \
     chmod 700 /var/lib/postgresql/data && \
-    mkdir -p /etc/postgresql && \
     cleanup.sh
 
 ENV \
     PGDATA=/var/lib/postgresql/data
 
-COPY rootfs /
+COPY --link rootfs /

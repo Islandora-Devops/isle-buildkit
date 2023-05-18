@@ -1,0 +1,7 @@
+[template]
+src = "log4j2.xml.tmpl"
+dest = "/opt/tomcat/webapps/fits/WEB-INF/classes/log4j2.xml"
+uid = 100
+gid = 1000
+mode = "0640"
+keys = [ "/" ]

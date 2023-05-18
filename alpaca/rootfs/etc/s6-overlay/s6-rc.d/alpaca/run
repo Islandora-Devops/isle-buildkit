@@ -1,0 +1,4 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash
+set -e
+exec s6-setuidgid alpaca java "${ALPACA_JAVA_OPTS[@]}" -jar /opt/alpaca/alpaca.jar -c /opt/alpaca/alpaca.properties

@@ -1,0 +1,53 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: c18ab21b-2713-4120-9de4-9fd0d8ec1b0b
+  bundle: islandora_object
+  default_langcode: en
+  depends:
+    0c7da6e9-7295-46eb-afd0-16cf94462dce: node
+    60c1d566-4693-412e-b184-9a208459f1d9: taxonomy_term
+    bd9d194c-2de7-43de-8f5e-df50d8ed2a99: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Sample Audio'
+  created:
+    -
+      value: 1668787139
+  promote:
+    -
+      value: true
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_extent:
+    -
+      value: '1 item'
+  field_member_of:
+    -
+      entity: 0c7da6e9-7295-46eb-afd0-16cf94462dce
+  field_model:
+    -
+      entity: 60c1d566-4693-412e-b184-9a208459f1d9
+  field_resource_type:
+    -
+      entity: bd9d194c-2de7-43de-8f5e-df50d8ed2a99

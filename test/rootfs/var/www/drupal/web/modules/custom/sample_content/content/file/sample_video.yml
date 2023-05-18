@@ -1,0 +1,30 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: b77150f6-950c-4be3-b7e6-f501335a60de
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 1
+  filename:
+    -
+      value: sample.mp4
+  uri:
+    -
+      value: 'fedora://2022-11/sample.mp4'
+  filemime:
+    -
+      value: video/mp4
+  filesize:
+    -
+      value: 273100
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1668002700
+  sha1:
+    -
+      value: 55508bc98a00f615dbe9bd4c84a253ba4238b021

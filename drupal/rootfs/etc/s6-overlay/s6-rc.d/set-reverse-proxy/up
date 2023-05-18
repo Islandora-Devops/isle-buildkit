@@ -1,0 +1,2 @@
+# Some directories must exist prior to rendering templates.
+/etc/s6-overlay/scripts/set-reverse-proxy.sh

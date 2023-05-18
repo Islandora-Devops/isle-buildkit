@@ -1,19 +1,26 @@
-# syntax=docker/dockerfile:1.2.1
-ARG repository=local
-ARG tag=latest
-FROM alpine:3.13.2 AS cache
-FROM ${repository}/base:${tag}
+# syntax=docker/dockerfile:1.5.1
+FROM base
+
+ARG TARGETARCH
 
 EXPOSE 3306
 
-RUN --mount=type=cache,id=mariadb-apk,sharing=locked,from=cache,target=/var/cache/apk \
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
         mariadb \
         mysql-client \
     && \
     mkdir -p /var/lib/mysql-files && \
-    chown -R mysql:mysql /var/lib/mysql && \
-    chown -R mysql:mysql /var/lib/mysql-files && \
+    chown -R mysql:mysql \
+        /var/lib/mysql \
+        /var/lib/mysql-files \
+    && \
     cleanup.sh
 
-COPY rootfs /
+# Installation sometimes needs more than the default 30 seconds defined in the
+# base image. Set to 10 minutes just incase it ran on very old or overallocated
+# hardware.
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=600000
+
+COPY --link rootfs /

@@ -1,38 +1,42 @@
-# syntax=docker/dockerfile:1.2.1
-ARG repository=local
-ARG tag=latest
-FROM --platform=$BUILDPLATFORM ${repository}/download:${tag} AS download
+# syntax=docker/dockerfile:1.5.1
+FROM tomcat
 
-RUN --mount=type=cache,id=fits-downloads,sharing=locked,target=/opt/downloads \
-    FITSSERVLET_VERSION=1.2.1 && \
-    FITSSERVLET_FILE="fits-${FITSSERVLET_VERSION}.war" && \
-    FITSSERVLET_URL="http://projects.iq.harvard.edu/files/fits/files/${FITSSERVLET_FILE}" && \
-    FITSSERVLET_SHA256="13cfcb910092b197757e459353f0c30381febfca6baf3031ac69ff92789b200c" && \
-    download.sh --url "${FITSSERVLET_URL}" --sha256 "${FITSSERVLET_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    install-war-into-tomcat.sh --name "fits" --file "${DOWNLOAD_CACHE_DIRECTORY}/${FITSSERVLET_FILE}" && \
-    FITS_VERSION="1.5.0" && \
-    FITS_FILE="fits-${FITS_VERSION}.zip" && \
-    FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}" \
-    FITS_SHA256="1378a78892db103b3a00e45c510b58c70e19a1a401b3720ff4d64a51438bfe0b" && \
+ARG TARGETARCH
+ARG FITSSERVLET_VERSION="1.2.3"
+ARG FITSSERVLET_FILE="fits-service-${FITSSERVLET_VERSION}.war"
+ARG FITSSERVLET_URL="https://github.com/harvard-lts/FITSservlet/releases/download/${FITSSERVLET_VERSION}/${FITSSERVLET_FILE}"
+ARG FITSSERVLET_SHA256="e98450a1617c491976966a307da8b9c783c83e9e1a79bca9dbd9bc6c9a7226cd"
+
+ARG FITS_VERSION="1.5.5"
+ARG FITS_FILE="fits-${FITS_VERSION}.zip"
+ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}"
+ARG FITS_SHA256="48be7ad9f27d9cc0b52c63f1aea1a3814e1b6996ca4e8467e77772c187ac955c"
+
+# Platform agnostic does not require arch specific identifier.
+RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${FITSSERVLET_URL}" \
+        --sha256 "${FITSSERVLET_SHA256}" \
+        --dest "/opt/tomcat/webapps/fits" \
+    && \
     mkdir /opt/fits && \
-    download.sh --url "${FITS_URL}" --sha256 "${FITS_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
-    unzip "${DOWNLOAD_CACHE_DIRECTORY}/${FITS_FILE}" -d /opt/fits && \
-    rm -fr \
-        /opt/fits/lib/jna-* \
-        /opt/fits/tools/exiftool/perl/html \
-        /opt/fits/tools/exiftool/windows \
-        /opt/fits/tools/file_utility_windows \
-        /opt/fits/tools/mediainfo
-
-FROM alpine:3.13.2 AS cache
-FROM ${repository}/tomcat:${tag}
-
-COPY --from=download --chown=tomcat:tomcat /opt/tomcat /opt/tomcat
-COPY --from=download --chown=tomcat:tomcat /opt/fits /opt/fits
+    download.sh \
+        --url "${FITS_URL}" \
+        --sha256 "${FITS_SHA256}" \
+        --dest "/opt/fits" \
+        tools/exiftool/perl/html \
+        tools/exiftool/windows \
+        tools/file_utility_windows \
+        tools/mediainfo \
+    && \
+    rm /opt/fits/lib/jna-* && \
+    cleanup.sh
 
 # Replace linux shared libraries with ones that target muslibc and are platform specific.
 # Also add perl for exiftool, and platform specific jna so native libs can be loaded.
-RUN --mount=type=cache,id=fits-apk,sharing=locked,from=cache,target=/var/cache/apk \
+#
+# Platform specific does require arch specific identifier.
+RUN --mount=type=cache,id=fits-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
         file \
         java-jna \
@@ -40,15 +44,17 @@ RUN --mount=type=cache,id=fits-apk,sharing=locked,from=cache,target=/var/cache/a
         libzen \
         perl \
     && \
-    cp $(realpath /usr/share/java/jna.jar) /opt/fits/lib && \
     cleanup.sh
 
 ENV \
     FITS_MAX_IN_MEMORY_FILE_SIZE=4 \
     FITS_MAX_OBJECTS_IN_POOL=5 \
     FITS_MAX_REQUEST_SIZE=2000 \
-    FITS_MAX_UPLOAD_FILE_SIZE=2000
+    FITS_MAX_UPLOAD_FILE_SIZE=2000 \
+    FITS_SERVICE_LOG_LEVEL=INFO
 
-COPY rootfs /
-COPY --chown=tomcat:tomcat rootfs/opt/tomcat /opt/tomcat
-COPY --chown=tomcat:tomcat rootfs/opt/fits /opt/fits
+COPY --link rootfs /
+
+RUN cp $(realpath /usr/share/java/jna.jar) /opt/fits/lib && \
+    chown -R tomcat:tomcat /opt/tomcat /opt/fits && \
+    cleanup.sh

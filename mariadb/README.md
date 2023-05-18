@@ -1,6 +1,6 @@
 # MariaDB
 
-Docker image for [MariaDB] version 10.4.12
+Docker image for [MariaDB] version 10.6.12
 
 Please refer to the [MariaDB Documentation] for more in-depth information.
 
@@ -37,10 +37,10 @@ Requires `islandora/base` docker image to build. Please refer to the
 Please see the documentation in the [base image] for more information about the
 default database connection configuration.
 
-| Environment Variable | Confd Key            | Default | Description                                                                           |
-| :------------------- | :------------------- | :------ | :------------------------------------------------------------------------------------ |
-| MYSQL_ROOT_PASSWORD  | /mysql/root/password |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
-| MYSQL_ROOT_USER      | /mysql/root/user     |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
+| Environment Variable | Default | Description                                                                           |
+| :------------------- | :------ | :------------------------------------------------------------------------------------ |
+| MYSQL_ROOT_PASSWORD  |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
+| MYSQL_ROOT_USER      |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
 
 ## Logs
 

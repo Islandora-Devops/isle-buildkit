@@ -1,3 +1,1 @@
-plugins {
-  id("com.github.nigelgbanks.IsleDocker") version "0.7"
-}
+apply(plugin = "io.github.nigelgbanks.Isle")

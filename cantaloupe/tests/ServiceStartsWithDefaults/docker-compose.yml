@@ -1,0 +1,16 @@
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+name: cantaloupe-servicestartswithdefaults
+services:
+  cantaloupe:
+    <<: *common
+    image: ${CANTALOUPE:-islandora/cantaloupe:local}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

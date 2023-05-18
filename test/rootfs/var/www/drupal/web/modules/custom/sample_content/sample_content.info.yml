@@ -1,0 +1,10 @@
+# This .info.yml files provides the basic information about our module to Drupal
+# More: https://www.drupal.org/node/2000204
+name: Sample Content
+description: "Sample content for testing"
+type: module
+package: Custom
+version: 1.0
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:sample_core

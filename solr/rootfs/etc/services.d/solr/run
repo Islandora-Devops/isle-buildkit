@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-set -e
-exec s6-setuidgid solr /opt/solr/bin/solr start -f
