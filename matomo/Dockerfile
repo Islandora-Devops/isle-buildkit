@@ -3,15 +3,21 @@ FROM nginx
 
 ARG TARGETARCH
 
-ARG MATOMO_VERSION=4.13.0
+ARG MATOMO_VERSION=4.14.2
 ARG MATOMO_FILE=${MATOMO_VERSION}.tar.gz
 ARG MATOMO_URL=https://builds.matomo.org/matomo-${MATOMO_FILE}
-ARG MATOMO_SHA256=59614fbfa870d354f8abc634cc21dbbebda2b9fde31592df8c813c39e1dff981
+ARG MATOMO_SHA256=8cfb3fe1b82ded5a9e4a878b9f01ebf85238dba84087088ff117224033700a9a
 
-ARG EXTRA_TOOLS_VERSION=4.0.1-beta4
+ARG EXTRA_TOOLS_VERSION=4.1.0-beta5
 ARG EXTRA_TOOLS_FILE=${EXTRA_TOOLS_VERSION}.tar.gz
 ARG EXTRA_TOOLS_URL=https://github.com/digitalist-se/extratools/archive/refs/tags/${EXTRA_TOOLS_FILE}
-ARG EXTRA_TOOLS_SHA256=1d04ee7b871c76c9f875da100e20e9472059b2a4fe7c52830360e90f205779e2
+ARG EXTRA_TOOLS_SHA256=ce9c9f1d01aaf04e3dfded21d6b9080c1fda633535295dc1c8cd0427bcdc826f
+
+# IP to City Lite - opensource monthly geolocation database
+ARG IP_TO_CITY_VERSION=2023-05
+ARG IP_TO_CITY_FILE=dbip-city-lite-${IP_TO_CITY_VERSION}.mmdb.gz
+ARG IP_TO_CITY_URL=https://download.db-ip.com/free/${IP_TO_CITY_FILE}
+ARG IP_TO_CITY_SHA256=048942a57652e8dcefd8c1ea6a834513152b00dc935ca1abcdc3d6e8863b21b9
 
 EXPOSE 8000
 
@@ -30,14 +36,20 @@ RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/
     wget --directory-prefix=/var/www/matomo "https://raw.githubusercontent.com/matomo-org/matomo/${MATOMO_VERSION}/composer.json" && \
     wget --directory-prefix=/var/www/matomo "https://raw.githubusercontent.com/matomo-org/matomo/${MATOMO_VERSION}/composer.lock" && \
     composer require -d /var/www/matomo symfony/yaml:~2.6.0 && \
-    composer require -d /var/www/matomo symfony/process:^3.4 && \
+    composer require -d /var/www/matomo symfony/process:^5.4 && \
     composer install -d /var/www/matomo && \
     download.sh \
         --url "${EXTRA_TOOLS_URL}" \
         --sha256 "${EXTRA_TOOLS_SHA256}" \
         --strip \
         --dest /var/www/matomo/plugins/ExtraTools && \
-    cleanup.sh
+    cleanup.sh && \
+    # Download geolocation database for later use
+    download.sh \
+        --url "${IP_TO_CITY_URL}" \
+        --sha256 "${IP_TO_CITY_SHA256}" \
+        --strip \
+        --dest /tmp \
 
 # The driver is given explicitly to prevent accidentially overriding as Matomo
 # only supports MySQL.
