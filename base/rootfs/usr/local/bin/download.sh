@@ -112,6 +112,9 @@ function unpack {
         args+=("--strip-components" "1")
     fi
     case "${file}" in
+    *.gz | *.gzip)
+        gunzip -fq "${file}" -c "${dest}" "${args[@]}"
+        ;;
     *.tar.xz | *.txz)
         tar -xf "${file}" -C "${dest}" "${args[@]}"
         ;;
