@@ -113,7 +113,7 @@ function unpack {
     fi
     case "${file}" in
     *.gz | *.gzip)
-        gunzip -fq "${file}" -c "${dest}" "${args[@]}"
+        gunzip -fq "${file}" -c "${dest}"
         ;;
     *.tar.xz | *.txz)
         tar -xf "${file}" -C "${dest}" "${args[@]}"
