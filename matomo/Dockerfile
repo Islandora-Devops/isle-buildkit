@@ -47,7 +47,6 @@ RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/
     download.sh \
         --url "${IP_TO_CITY_URL}" \
         --sha256 "${IP_TO_CITY_SHA256}" \
-        --strip \
         --dest /var/www/matomo/misc && \
     cleanup.sh
 
