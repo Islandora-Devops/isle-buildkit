@@ -44,8 +44,10 @@ RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/
         --strip \
         --dest /var/www/matomo/plugins/ExtraTools && \
     # Download geolocation database for later use
-    wget "${IP_TO_CITY_URL}" -P /var/www/matomo/misc && \
-    gunzip -f /var/www/matomo/misc/"${IP_TO_CITY_FILE}" && \
+    download.sh \
+        --url "${IP_TO_CITY_URL}" \
+        --sha256 "${IP_TO_CITY_SHA256}" \
+        --dest /var/www/matomo/misc && \
     cleanup.sh
 
 # The driver is given explicitly to prevent accidentially overriding as Matomo
