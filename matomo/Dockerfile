@@ -13,12 +13,6 @@ ARG EXTRA_TOOLS_FILE=${EXTRA_TOOLS_VERSION}.tar.gz
 ARG EXTRA_TOOLS_URL=https://github.com/digitalist-se/extratools/archive/refs/tags/${EXTRA_TOOLS_FILE}
 ARG EXTRA_TOOLS_SHA256=ce9c9f1d01aaf04e3dfded21d6b9080c1fda633535295dc1c8cd0427bcdc826f
 
-# IP to City Lite - opensource monthly geolocation database
-ARG IP_TO_CITY_VERSION=2023-05
-ARG IP_TO_CITY_FILE=dbip-city-lite-${IP_TO_CITY_VERSION}.mmdb.gz
-ARG IP_TO_CITY_URL=https://download.db-ip.com/free/${IP_TO_CITY_FILE}
-ARG IP_TO_CITY_SHA256=048942a57652e8dcefd8c1ea6a834513152b00dc935ca1abcdc3d6e8863b21b9
-
 EXPOSE 8000
 
 WORKDIR /var/www/matomo
@@ -26,6 +20,7 @@ WORKDIR /var/www/matomo
 # Composer require statements are for supporting the Extra Tools plugin.
 #
 # Platform agnostic does not require arch specific identifier.
+# IP to City Lite - opensource monthly geolocation database - expires after three months - will be refreshed with latest upon every build
 RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
         --url "${MATOMO_URL}" \
@@ -43,11 +38,9 @@ RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/
         --sha256 "${EXTRA_TOOLS_SHA256}" \
         --strip \
         --dest /var/www/matomo/plugins/ExtraTools && \
-    # Download geolocation database for later use
-    download.sh \
-        --url "${IP_TO_CITY_URL}" \
-        --sha256 "${IP_TO_CITY_SHA256}" \
-        --dest /var/www/matomo/misc && \
+    curl https://download.db-ip.com/free/dbip-city-lite-`date +%Y`-`date +%m`.mmdb.gz > /tmp/dbip.mmdb.gz && \
+	gunzip -f /tmp/dbip.mmdb.gz && \
+	mv /tmp/dbip.mmdb /var/www/matomo/misc/DBIP-City.mmdb && \
     cleanup.sh
 
 # The driver is given explicitly to prevent accidentially overriding as Matomo
