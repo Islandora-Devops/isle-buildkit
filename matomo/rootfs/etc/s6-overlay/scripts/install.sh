@@ -52,11 +52,11 @@ function install {
     s6-setuidgid nginx /var/www/matomo/console plugin:activate ExtraTools
 
     # Add additional configurations.
-    add_setting General assume_secure_protocol "${MATOMO_ASSUME_SECURE_PROTOCOL}"
-    add_setting General proxy_client_headers "${MATOMO_PROXY_CLIENT_HEADERS}"
-    add_setting General proxy_host_headers "${MATOMO_PROXY_HOST_HEADERS}"
-    add_setting General force_ssl "${MATOMO_FORCE_SSL}"
-    add_setting General proxy_uri_header "${MATOMO_PROXY_URI_HEADER}"
+    add_setting General "assume_secure_protocol" "${MATOMO_ASSUME_SECURE_PROTOCOL}"
+    add_setting General "proxy_client_headers[]" "${MATOMO_PROXY_CLIENT_HEADERS}"
+    add_setting General "proxy_host_headers" "${MATOMO_PROXY_HOST_HEADERS}"
+    add_setting General "force_ssl" "${MATOMO_FORCE_SSL}"
+    add_setting General "proxy_uri_header" "${MATOMO_PROXY_URI_HEADER}"
 
     # Add subsites.
     for site in $(env | grep "MATOMO_SITE_.*_HOST" | cut -f1 -d=); do
