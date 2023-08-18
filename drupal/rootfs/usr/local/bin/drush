@@ -6,9 +6,9 @@ set -e
 # regardless of which shell is used or how it is started (login, interactive, etc)
 if test "$(id -u)" -eq 0; then
 	# If root run as nginx.
-	s6-setuidgid nginx php -d memory_limit=-1 /usr/bin/drush "${@}"
+	s6-setuidgid nginx php -d memory_limit=-1 /var/www/drupal/vendor/bin/drush "${@}"
 else
 	# If non-root user, then run as current user
 	# as we do not have permissions to switch user.
-	php -d memory_limit=-1 /usr/bin/drush "${@}"
+	php -d memory_limit=-1 /var/www/drupal/vendor/bin/drush "${@}"
 fi
