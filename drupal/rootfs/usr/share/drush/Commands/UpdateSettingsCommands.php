@@ -201,7 +201,9 @@ class UpdateSettingsCommands extends DrushCommands
       'required' => TRUE,
     ];
     $settings['settings']['reverse_proxy_trusted_headers'] = (object) [
-      'value' => \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_ALL | \Symfony\Component\HttpFoundation\Request::HEADER_FORWARDED,
+      'value' => \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR |
+        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO |
+        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT,
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
