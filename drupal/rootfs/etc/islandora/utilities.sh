@@ -481,7 +481,7 @@ function configure_islandora_module {
 # Configure Solr port and host.
 function configure_islandora_default_module {
     local site site_url host port
-    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q search_api; then
+    if ! drush pm-list --format=string --type=module --status=enabled --no-core | grep -q search_api; then
         echo "Search API is not installed.  Skipping configuration"
         return 0
     fi
@@ -514,7 +514,7 @@ function configure_search_api_solr_module {
 # Enables and sets carapace as the default theme.
 function set_carapace_default_theme {
     local site site_url
-    if ! drush pm-list --pipe --type=theme --status=enabled --no-core | grep -q carapace; then
+    if ! drush pm-list --format=string --type=theme --status=enabled --no-core | grep -q carapace; then
         echo "carapace is not available. Skipping configuration."
         return 0
     fi
@@ -569,7 +569,7 @@ function create_solr_core {
 # Generate solr config and create a core for it.
 function create_solr_core_with_default_config {
     local site
-    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q search_api_solr; then
+    if ! drush pm-list --format=string --type=module --status=enabled --no-core | grep -q search_api_solr; then
         echo "search_api_solr is not installed.  Skipping core setup."
         return 0
     fi
@@ -584,7 +584,7 @@ function create_solr_core_with_default_config {
 function configure_matomo_module {
     local site site_url site_id matomo_url matomo_http_url
 
-    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q matomo; then
+    if ! drush pm-list --format=string --type=module --status=enabled --no-core | grep -q matomo; then
         echo "matomo is not installed.  Skipping configuration"
         return 0
     fi
@@ -605,7 +605,7 @@ function configure_matomo_module {
 function configure_openseadragon {
     local site site_url cantaloupe_url
 
-    if ! drush pm-list --pipe --type=module --status=enabled --no-core | grep -q openseadragon; then
+    if ! drush pm-list --format=string --type=module --status=enabled --no-core | grep -q openseadragon; then
         echo "openseadragon is not installed.  Skipping configuration"
         return 0
     fi
