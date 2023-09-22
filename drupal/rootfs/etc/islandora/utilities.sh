@@ -539,7 +539,7 @@ function generate_solr_config {
 
     mkdir -p "/tmp/${core}" || true
     chmod a+rwx "/tmp/${core}"
-    if ! drush -l "${site_url}" -y search-api-solr:get-server-config default_solr_server "/tmp/${core}/solr_config.zip" 7.1; then
+    if ! drush -l "${site_url}" -y search-api-solr:get-server-config default_solr_server "/tmp/${core}/solr_config.zip" 8; then
         echo -e "\n\nERROR: Could not generate SOLR config.zip!\nIn Drupal, check Configuration -> Search API -> SOLR Server, and use the\n"+ Get config.zip" option which should give you information into the actual error.\n\n"
         return 1
     fi
