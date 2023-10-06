@@ -15,7 +15,7 @@ RUN --mount=type=cache,id=milliner-composer-${TARGETARCH},sharing=locked,target=
 
 ENV \
     MILLINER_FCREPO_URL=http://fcrepo:8080/fcrepo/rest \
-    MILLINER_FEDORA6=false \
+    MILLINER_FEDORA6=true \
     MILLINER_LOG_LEVEL=info
 
 COPY --link rootfs /
