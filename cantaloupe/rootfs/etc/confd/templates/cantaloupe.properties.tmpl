@@ -165,41 +165,41 @@ FilesystemSource.BasicLookupStrategy.path_suffix = {{ getenv "CANTALOUPE_FILESYS
 #----------------------------------------
 
 # Trusts insecure certificates and cipher suites.
-HttpSource.allow_insecure = {{ getenv "CANTALOUPE_HTTPS_URCE_ALLOW_INSECURE" }}
+HttpSource.allow_insecure = {{ getenv "CANTALOUPE_HTTPSOURCE_ALLOW_INSECURE" }}
 
 # Request timeout in seconds.
-HttpSource.request_timeout = {{ getenv "CANTALOUPE_HTTPS_URCE_REQUEST_TIMEOUT" }}
+HttpSource.request_timeout = {{ getenv "CANTALOUPE_HTTPSOURCE_REQUEST_TIMEOUT" }}
 
 # Tells HttpSource how to look up resources. Allowed values are
 # `BasicLookupStrategy` and `ScriptLookupStrategy`. ScriptLookupStrategy
 # uses a delegate method for dynamic lookups; see the user manual.
-HttpSource.lookup_strategy = {{ getenv "CANTALOUPE_HTTPS_URCE_LOOKUP_STRATEGY" }}
+HttpSource.lookup_strategy = {{ getenv "CANTALOUPE_HTTPSOURCE_LOOKUP_STRATEGY" }}
 
 # URL that will be prefixed to the identifier in the request URL.
 # Trailing slash is important!
-HttpSource.BasicLookupStrategy.url_prefix = {{ getenv "CANTALOUPE_HTTPS_URCE_BASICLOOKUPSTRATEGY_URL_PREFIX" }}
+HttpSource.BasicLookupStrategy.url_prefix = {{ getenv "CANTALOUPE_HTTPSOURCE_BASICLOOKUPSTRATEGY_URL_PREFIX" }}
 
 # Path, extension, query string, etc. that will be suffixed to the
 # identifier in the request URL.
-HttpSource.BasicLookupStrategy.url_suffix = {{ getenv "CANTALOUPE_HTTPS_URCE_BASICLOOKUPSTRATEGY_URL_SUFFIX" }}
+HttpSource.BasicLookupStrategy.url_suffix = {{ getenv "CANTALOUPE_HTTPSOURCE_BASICLOOKUPSTRATEGY_URL_SUFFIX" }}
 
 # Enables access to resources that require HTTP Basic authentication.
-HttpSource.BasicLookupStrategy.auth.basic.username = {{ getenv "CANTALOUPE_HTTPS_URCE_BASICLOOKUPSTRATEGY_AUTH_BASIC_USERNAME" }}
-HttpSource.BasicLookupStrategy.auth.basic.secret = {{ getenv "CANTALOUPE_HTTPS_URCE_BASICLOOKUPSTRATEGY_AUTH_BASIC_SECRET" }}
+HttpSource.BasicLookupStrategy.auth.basic.username = {{ getenv "CANTALOUPE_HTTPSOURCE_BASICLOOKUPSTRATEGY_AUTH_BASIC_USERNAME" }}
+HttpSource.BasicLookupStrategy.auth.basic.secret = {{ getenv "CANTALOUPE_HTTPSOURCE_BASICLOOKUPSTRATEGY_AUTH_BASIC_SECRET" }}
 
 # Read data in chunks when it may be more efficient. (This also may end up
 # being less efficient, depending on many variables; see the user manual.)
-HttpSource.chunking.enabled = {{ getenv "CANTALOUPE_HTTPS_URCE_CHUNKING_ENABLED" }}
+HttpSource.chunking.enabled = {{ getenv "CANTALOUPE_HTTPSOURCE_CHUNKING_ENABLED" }}
 
 # Chunk size.
-HttpSource.chunking.chunk_size = {{ getenv "CANTALOUPE_HTTPS_URCE_CHUNKING_CHUNK_SIZE" }}
+HttpSource.chunking.chunk_size = {{ getenv "CANTALOUPE_HTTPSOURCE_CHUNKING_CHUNK_SIZE" }}
 
 # The per-request chunk cache caches downloaded chunks in memory during
 # a request, and clears them when the request is complete.
-HttpSource.chunking.cache.enabled = {{ getenv "CANTALOUPE_HTTPS_URCE_CHUNKING_CACHE_ENABLED" }}
+HttpSource.chunking.cache.enabled = {{ getenv "CANTALOUPE_HTTPSOURCE_CHUNKING_CACHE_ENABLED" }}
 
 # Max per-request chunk cache size.
-HttpSource.chunking.cache.max_size = {{ getenv "CANTALOUPE_HTTPS_URCE_CHUNKING_CACHE_MAX_SIZE" }}
+HttpSource.chunking.cache.max_size = {{ getenv "CANTALOUPE_HTTPSOURCE_CHUNKING_CACHE_MAX_SIZE" }}
 
 #----------------------------------------
 # S3Source
