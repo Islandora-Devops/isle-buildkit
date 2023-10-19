@@ -23,6 +23,7 @@ RUN --mount=type=cache,id=hypercube-apk-${TARGETARCH},sharing=locked,target=/var
         /packages/leptonica-*.apk \
         poppler-utils \
         tesseract-ocr \
+        tesseract-ocr-data-eng \
         tesseract-ocr-data-fra \
         tesseract-ocr-data-spa \
         tesseract-ocr-data-ita \
