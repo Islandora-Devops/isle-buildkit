@@ -23,5 +23,7 @@ RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/c
 # base image. Set to 10 minutes just incase it ran on very old or overallocated
 # hardware.
 ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=600000
+# Default value of 256 MB in bytes
+ENV DB_MAX_ALLOWED_PACKET=268435456
 
 COPY --link rootfs /
