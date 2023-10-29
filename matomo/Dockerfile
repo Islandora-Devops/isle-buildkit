@@ -20,7 +20,6 @@ WORKDIR /var/www/matomo
 # Composer require statements are for supporting the Extra Tools plugin.
 #
 # Platform agnostic does not require arch specific identifier.
-# IP to City Lite - opensource monthly geolocation database - expires after three months - will be refreshed with latest upon every build
 RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
         --url "${MATOMO_URL}" \
@@ -38,9 +37,6 @@ RUN --mount=type=cache,id=matomo-downloads-${TARGETARCH},sharing=locked,target=/
         --sha256 "${EXTRA_TOOLS_SHA256}" \
         --strip \
         --dest /var/www/matomo/plugins/ExtraTools && \
-    curl https://download.db-ip.com/free/dbip-city-lite-`date +%Y`-`date +%m`.mmdb.gz > /tmp/dbip.mmdb.gz && \
-	gunzip -f /tmp/dbip.mmdb.gz && \
-	mv /tmp/dbip.mmdb /var/www/matomo/misc/DBIP-City.mmdb && \
     cleanup.sh
 
 # The driver is given explicitly to prevent accidentially overriding as Matomo
