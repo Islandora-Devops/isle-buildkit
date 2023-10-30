@@ -1,7 +1,7 @@
 [template]
 src = "mariadb-server.tmpl"
 dest = "/etc/my.cnf.d/mariadb-server.cnf"
-uid = 100
-gid = 1000
-mode = "0664"
+uid = 0
+gid = 0
+mode = 0664
 keys = [ "/" ]

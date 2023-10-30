@@ -9,7 +9,7 @@
 [mysqld]
 # skip-networking
 # Allow for max_allowed_packet to be set in the project .env
-max_allowed_packet ={{ getenv "DB_MAX_ALLOWED_PACKET" }}
+max_allowed_packet ={{ getenv "MYSQL_MAX_ALLOWED_PACKET" }}
 # Galera-related settings
 [galera]
 # Mandatory settings
