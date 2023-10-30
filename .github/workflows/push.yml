@@ -1,6 +1,11 @@
 name: Build and Push Docker Images
 on:
   push:
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        required: true
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
@@ -11,7 +16,8 @@ jobs:
   tags:
     uses: ./.github/workflows/tags.yml
     with:
-      tag: ${{ github.ref_name }}
+      # Use tag from workflow_dispatch OR push event
+      tag: ${{ inputs.tag && inputs.tag || github.ref_name }}
     secrets: inherit
   base:
     uses: ./.github/workflows/build.yml
