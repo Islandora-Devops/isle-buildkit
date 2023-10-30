@@ -1,5 +1,5 @@
 [template]
-src = "mariadb-server.tmpl"
+src = "mariadb-server.cnf.tmpl"
 dest = "/etc/my.cnf.d/mariadb-server.cnf"
 uid = 0
 gid = 0
