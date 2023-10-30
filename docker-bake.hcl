@@ -298,7 +298,7 @@ target "base-common" {
     # N.B. This should match the value used in:
     # - <https://github.com/Islandora-Devops/isle-imagemagick>
     # - <https://github.com/Islandora-Devops/isle-leptonica>
-    alpine = "docker-image://alpine:3.18.3@sha256:7144f7bab3d4c2648d7e59409f15ec52a18006a128c733fcff20d3a4a54ba44a"
+    alpine = "docker-image://alpine:3.18.4@sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293fc851978"
   }
 }
 
@@ -357,7 +357,7 @@ target "houdini-common" {
   context = "houdini"
   contexts = {
     # Produced by this repository <https://github.com/Islandora-Devops/isle-imagemagick>.
-    imagemagick = "docker-image://islandora/imagemagick:7.1.1.13@sha256:f95f073798966ca963b1337480bbdadedd958fadb5cee1af7c8c5dc2b9618797"
+    imagemagick = "docker-image://islandora/imagemagick:alpine-3.18.4-imagemagick-7.1.1.13-r0@sha256:491f818e0398339fd042d874328d48a0a4b6a2f9eb99e6a3d792ad76570c60c2"
   }
 }
 
@@ -366,7 +366,7 @@ target "hypercube-common" {
   context = "hypercube"
   contexts = {
     # Produced by this repository <https://github.com/Islandora-Devops/isle-leptonica>.
-    leptonica = "docker-image://islandora/leptonica:1.83.1@sha256:621b7ff8480b8f9c450259b6610141f5200cf1a0169e2802df74af2f97a3b928"
+    leptonica = "docker-image://islandora/leptonica:alpine-3.18.4-leptonica-1.83.1-r0@sha256:d197e51eb68aa5ae802b07e4e30cb82abd24c022651fd67e1daca47409cbe812"
   }
 }
 
