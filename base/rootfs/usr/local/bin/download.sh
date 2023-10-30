@@ -21,7 +21,7 @@ function usage {
        -u --url           The url of the file to download.
        -c --sha256        The sha256 checksum to use to validate the download.
        -d --dest          The location to unpack file into (optional).
-       -s --strip         Exclude the root folder when unpacking (optional).
+       -s --strip         Exclude the root folder when unpacking (optional, not supported with gzip or jar).
        -h --help          Show this help.
        -x --debug         Debug this script.
 
@@ -107,16 +107,21 @@ function unpack {
     local file="${1}"
     local dest="${2}"
     local args=()
+    local filename=
     mkdir -p "${dest}"
     if [[ -v STRIP ]]; then
         args+=("--strip-components" "1")
     fi
+    filename=$(basename "${file}")
     case "${file}" in
     *.tar.xz | *.txz)
         tar -xf "${file}" -C "${dest}" "${args[@]}"
         ;;
     *.tar.gz | *.tgz)
         tar -xzf "${file}" -C "${dest}" "${args[@]}"
+        ;;
+    *.gz | *.gzip)
+        gunzip "${file}" -f -c > "${dest}/${filename%.*}"
         ;;
     *.zip | *.war)
         if [[ -v STRIP ]]; then

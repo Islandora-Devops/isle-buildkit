@@ -29,6 +29,7 @@ RUN --mount=type=cache,id=base-apk-${TARGETARCH},sharing=locked,target=/var/cach
         curl \
         git \
         gnupg \
+        gzip \
         jq \
         mariadb-client \
         mysql-client \
