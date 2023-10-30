@@ -16,10 +16,8 @@ import org.gradle.kotlin.dsl.*
 import plugins.IslePlugin.Companion.isDockerProject
 import plugins.SharedPropertiesPlugin.Companion.isleRepository
 import plugins.SharedPropertiesPlugin.Companion.isleTag
-import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.InputStreamReader
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -88,7 +86,7 @@ class TestsPlugin : Plugin<Project> {
                     "isle.${image}.digest",
                     ""
                 ) as String).ifEmpty { "${project.isleRepository}/${image}:${project.isleTag}" }
-            }
+            }.plus(Pair("HOME", System.getenv("HOME")))
         })
 
         @get:Internal
@@ -252,7 +250,7 @@ class TestsPlugin : Plugin<Project> {
                 commandLine = baseArguments + listOf("stop")
             }
             exitCodes.forEach { (service, _) ->
-                val process = ProcessBuilder().run {
+                ProcessBuilder().run {
                     directory(project.projectDir)
                     command(baseArguments + listOf("logs", service))
                     redirectOutput(logs.get().asFile.resolve("${service}.log"))
@@ -305,7 +303,7 @@ class TestsPlugin : Plugin<Project> {
                             dependsOn(cleanUpBefore)
                         }
 
-                        val cleanUpAfter by tasks.registering(DockerComposeDown::class) {
+                        tasks.register<DockerComposeDown>("cleanUpAfter") {
                             group = "Isle Tests"
                             description = "Clean up resources after running test"
                         }
@@ -314,7 +312,6 @@ class TestsPlugin : Plugin<Project> {
                             group = "Isle Tests"
                             description = "Perform test"
                             dependsOn(setUp)
-                            //finalizedBy(cleanUpAfter)
                             doFirst {
                                 if (project.isleTestPull) {
                                     project.exec {
