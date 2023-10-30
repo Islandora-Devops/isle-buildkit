@@ -7,6 +7,7 @@ on:
       - closed
 permissions:
   contents: write
+  actions: write
 jobs:
   release:
     if: github.event.pull_request.merged == true
@@ -24,5 +25,6 @@ jobs:
           git tag $TAG
           git push origin $TAG
           gh release create $TAG
+          gh workflow run push.yml -f tag=$TAG --ref $TAG
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
