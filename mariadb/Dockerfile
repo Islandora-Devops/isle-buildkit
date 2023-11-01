@@ -23,5 +23,7 @@ RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/c
 # base image. Set to 10 minutes just incase it ran on very old or overallocated
 # hardware.
 ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=600000
+# Default Mariadb value of 16 MB (bytes)
+ENV MYSQL_MAX_ALLOWED_PACKET=16777216
 
 COPY --link rootfs /
