@@ -1,6 +1,6 @@
 # ActiveMQ
 
-Docker image for [ActiveMQ] version 5.17.3.
+Docker image for [ActiveMQ] version 5.17.6.
 
 Please refer to the [ActiveMQ Documentation] for more in-depth information.
 
