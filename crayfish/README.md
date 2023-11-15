@@ -57,30 +57,35 @@ make bake TARGET=crayfish
 
 docker run --rm -ti \
   -v $(pwd)/crayfish/rootfs/var/www/crayfish/Recast/composer.lock:/var/www/crayfish/Recast/composer.lock \
-  --entrypoint ash islandora.dev/crayfish:latest -c \
+  --entrypoint ash islandora/crayfish:local -c \
     "cd /var/www/crayfish/Recast && composer update"
 
 docker run --rm -ti \
   -v $(pwd)/crayfish/rootfs/var/www/crayfish/Homarus/composer.lock:/var/www/crayfish/Homarus/composer.lock \
-  --entrypoint ash islandora.dev/crayfish:latest -c \
+  --entrypoint ash islandora/crayfish:local -c \
     "cd /var/www/crayfish/Homarus && composer update"
 
 docker run --rm -ti \
   -v $(pwd)/crayfish/rootfs/var/www/crayfish/Hypercube/composer.lock:/var/www/crayfish/Hypercube/composer.lock \
-  --entrypoint ash islandora.dev/crayfish:latest -c \
+  --entrypoint ash islandora/crayfish:local -c \
     "cd /var/www/crayfish/Hypercube && composer update"
 
 docker run --rm -ti \
   -v $(pwd)/crayfish/rootfs/var/www/crayfish/Houdini/composer.lock:/var/www/crayfish/Houdini/composer.lock \
-  --entrypoint ash islandora.dev/crayfish:latest -c \
+  --entrypoint ash islandora/crayfish:local -c \
     "cd /var/www/crayfish/Houdini && composer update"
 
 docker run --rm -ti \
   -v $(pwd)/crayfish/rootfs/var/www/crayfish/Milliner/composer.lock:/var/www/crayfish/Milliner/composer.lock \
-  --entrypoint ash islandora.dev/crayfish:latest -c \
+  --entrypoint ash islandora/crayfish:local -c \
     "cd /var/www/crayfish/Milliner && composer update"
+
+docker run --rm -ti \
+  -v $(pwd)/crayfish/rootfs/var/www/crayfish/CrayFits/composer.lock:/var/www/crayfish/CrayFits/composer.lock \
+  --entrypoint ash islandora/crayfish:local -c \
+    "cd /var/www/crayfish/CrayFits && composer update"
 ```
 
 [base image]: ../base/README.md
 [nginx image]: ../nginx/README.md
-[Crayfish]: https://github.com/Islandora/Crayfish/tree/main
+[Crayfish]: https://github.com/Islandora/Crayfish/tree/4.x

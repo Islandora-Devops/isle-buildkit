@@ -2,10 +2,10 @@
 FROM base
 
 ARG TARGETARCH
-ARG COMPOSER_VERSION="2.4.4"
-ARG COMPOSER_FILE="composer.phar"
-ARG COMPOSER_URL="https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}"
-ARG COMPOSER_SHA256="c252c2a2219956f88089ffc242b42c8cb9300a368fd3890d63940e4fc9652345"
+ARG COMPOSER_VERSION=2.6.5
+ARG COMPOSER_FILE=composer.phar
+ARG COMPOSER_URL=https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}
+ARG COMPOSER_SHA256=9a18e1a3aadbcb94c1bafd6c4a98ff931f4b43a456ef48575130466e19f05dd6
 
 WORKDIR /var/www
 
@@ -25,34 +25,36 @@ RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cac
     apk add \
         icu-data-full \
         nginx \
-        php81 \
-        php81-ctype \
-        php81-curl \
-        php81-dom \
-        php81-fileinfo \
-        php81-fpm \
-        php81-gd \
-        php81-iconv \
-        php81-intl \
-        php81-json \
-        php81-ldap \
-        php81-mbstring \
-        php81-mysqli \
-        php81-opcache \
-        php81-openssl \
-        php81-pdo \
-        php81-pdo_mysql \
-        php81-pdo_pgsql \
-        php81-phar \
-        php81-session \
-        php81-simplexml \
-        php81-tokenizer \
-        php81-xml \
-        php81-xmlreader \
-        php81-xmlwriter \
-        php81-xsl \
-        php81-zip \
+        php82 \
+        php82-ctype \
+        php82-curl \
+        php82-dom \
+        php82-fileinfo \
+        php82-fpm \
+        php82-gd \
+        php82-iconv \
+        php82-intl \
+        php82-json \
+        php82-ldap \
+        php82-mbstring \
+        php82-mysqli \
+        php82-opcache \
+        php82-openssl \
+        php82-pdo \
+        php82-pdo_mysql \
+        php82-pdo_pgsql \
+        php82-phar \
+        php82-session \
+        php82-simplexml \
+        php82-sockets \
+        php82-tokenizer \
+        php82-xml \
+        php82-xmlreader \
+        php82-xmlwriter \
+        php82-xsl \
+        php82-zip \
     && \
+    ln -s /usr/bin/php82 /usr/bin/php && \
     addgroup nginx jwt && \
     cleanup.sh
 

@@ -1,11 +1,11 @@
 # syntax=docker/dockerfile:1.5.1
-FROM nginx
+FROM nginx as download
 
 ARG TARGETARCH
-ARG COMMIT="b84ac14370d0ffa156542e387a8eff9104b8858b"
+ARG COMMIT=6e38c75c1af3ee92a4fc54f8b8e36bc294812421
 ARG FILE=${COMMIT}.tar.gz
-ARG URL=https://github.com/nigelgbanks/riprap/archive/${FILE}
-ARG SHA256=1ab119cae8bc65ab409031fa56ee98f683181478a27ad9e35352f7c350de75c2
+ARG URL=https://github.com/mjordan/riprap/archive/${FILE}
+ARG SHA256=b5de7767ca570cdfa8d44d7a8ab56165982b11058b4853494773776d232541c3
 
 EXPOSE 8000
 
@@ -13,18 +13,22 @@ WORKDIR /var/www/riprap
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=riprap-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
-    apk add php81-pdo_sqlite && \
+    apk add php82-pdo_sqlite && \
     cleanup.sh
 
 # Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=riprap-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
-    --mount=type=cache,id=riprap-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+RUN --mount=type=cache,id=riprap-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
         --url "${URL}" \
         --sha256 "${SHA256}" \
         --strip \
         --dest "/var/www/riprap" \
-    && \
+    cleanup.sh
+
+FROM download
+
+RUN --mount=type=cache,id=riprap-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
+    --mount=type=bind,source=rootfs/var/www/riprap/composer.lock,target=/var/www/riprap/composer.lock \
     composer install -d /var/www/riprap --no-dev && \
     cleanup.sh
 

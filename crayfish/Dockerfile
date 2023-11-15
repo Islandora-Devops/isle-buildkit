@@ -3,10 +3,10 @@ FROM nginx
 
 # When updating this commit also update the lock files in rootfs/var/www/crayfish.
 ARG TARGETARCH
-ARG COMMIT=d4bc375c6dd9c6df6bb4fa088629a2f8b7cf5cce
+ARG COMMIT=6ba190c3ffebabb83e977c6515ecfd022692f6e5
 ARG FILE=${COMMIT}.tar.gz
 ARG URL=https://github.com/Islandora/Crayfish/archive/${FILE}
-ARG SHA256=3b4c144a98b4ed4d1fd9a6395a4e3484ecbb89cac144142d3fc187bc0e5c130a
+ARG SHA256=3fb7ae787be43a719f66a3d98efff85766056cf2d962365d9e821ff3a9f813ee
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=crayfish-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \

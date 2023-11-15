@@ -144,6 +144,26 @@ shasum -a 256 "${FILE}" | cut -f1 -d' '
 rm "${FILE}"
 ```
 
+When changing either the `riprap` version or when the version of `PHP` in the
+`nginx` image this is based on changes you will also need to update the
+`compose.lock` file.
+
+```bash
+# Build required base image.
+make bake TARGET=nginx
+# Build the layer before installation.
+docker buildx build --target download \
+  --tag islandora/riprap:download \
+  --build-context nginx=docker-image://islandora/nginx:local ./riprap
+# Update the lock file.
+docker run --rm -ti \
+  -v $(pwd)/riprap/rootfs/var/www/riprap/composer.lock:/var/www/riprap/composer.lock \
+  --entrypoint ash islandora/riprap:download -c \
+    "cd /var/www/riprap && composer update"
+# Build the image with the updated composer.lock file.
+make bake target=riprap
+```
+
 [base image]: ../base/README.md
 [Riprap Documentation]: https://github.com/mjordan/riprap#riprap
 [Riprap Plugin Documentation]: https://github.com/mjordan/riprap/blob/master/docs/plugins.md

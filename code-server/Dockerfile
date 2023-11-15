@@ -29,7 +29,7 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
         nodejs \
         openssh \
         parallel \
-        php81-pecl-xdebug \
+        php82-pecl-xdebug \
         python3 \
         spdlog \
         sudo \

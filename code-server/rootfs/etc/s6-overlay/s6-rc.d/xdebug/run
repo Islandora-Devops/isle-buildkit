@@ -5,10 +5,10 @@ mkdir -p /run/xdebug
 
 XDEBUG_FLAGS=$(</var/run/s6/container_environment/XDEBUG_FLAGS)
 
-exec /usr/sbin/php-fpm81 \
-	--pid /var/run/xdebug/php-fpm81.pid \
+exec /usr/sbin/php-fpm82 \
+	--pid /var/run/xdebug/php-fpm82.pid \
 	--prefix /var/run/xdebug \
-	--fpm-config /etc/php81/php-fpm.conf \
+	--fpm-config /etc/php82/php-fpm.conf \
 	-d "php_admin_value[zend_extension]=xdebug.so" \
 	-d "zend_extension=xdebug.so" \
 	"${XDEBUG_FLAGS[@]}"
