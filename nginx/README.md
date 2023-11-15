@@ -5,7 +5,7 @@ Docker image for [Nginx] version 1.22.1 and [FPM] version 8.1.15.
 Please refer to the [Nginx Documentation] and [FPM Documentation] for more
 in-depth information.
 
-Acts as base Docker image for all PHP based services, such as Crayfish, Docker
+Acts as base Docker image for all PHP based services, such as nginx, Docker
 etc. It can be used on it's own as well.
 
 ## Dependencies
@@ -54,6 +54,31 @@ Requires `islandora/base` docker image to build. Please refer to the
 | PHP_PROCESS_CONTROL_TIMEOUT   | 60      | Timeout for child processes to wait for a reaction on signals from master          |
 | PHP_REQUEST_TERMINATE_TIMEOUT | 60      | Timeout for serving a single request after which the worker process will be killed |
 | PHP_UPLOAD_MAX_FILESIZE       | 128M    | Maximum allowed size for uploaded files                                            |
+
+## Updating
+
+You can change the release used for `composer` by modifying the build argument
+`COMPOSER_VERSION` and `COMPOSER_SHA256` in the `Dockerfile` shown as `XXXXXXXXXXXX` in the
+following snippet:
+
+```Dockerfile
+ARG COMPOSER_VERSION=XXXXXXXXXXXX
+#...
+ARG COMPOSER_SHA256=XXXXXXXXXXXX
+```
+
+You can generate the `SHA256` with the following commands:
+
+```bash
+COMPOSER_VERSION=$(cat nginx/Dockerfile | grep -o 'COMPOSER_VERSION=.*' | cut -f2 -d=)
+COMPOSER_FILE=$(cat nginx/Dockerfile | grep -o 'COMPOSER_FILE=.*' | cut -f2 -d=)
+COMPOSER_URL=$(cat nginx/Dockerfile | grep -o 'COMPOSER_URL=.*' | cut -f2 -d=)
+FILE=$(eval "echo $COMPOSER_FILE")
+URL=$(eval "echo $COMPOSER_URL")
+wget --quiet "${URL}"
+shasum -a 256 "${FILE}" | cut -f1 -d' '
+rm "${FILE}"
+```
 
 [FPM Documentation]: https://www.php.net/manual/en/install.fpm.configuration.php
 [FPM Logging]: https://www.php.net/manual/en/install.fpm.configuration.php

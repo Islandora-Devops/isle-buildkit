@@ -20,6 +20,7 @@ RUN --mount=type=cache,id=homarus-apk-${TARGETARCH},sharing=locked,target=/var/c
     cleanup.sh
 
 ENV \
+    HOMARUS_APIX_MIDDLEWARE_ENABLED=false \
     HOMARUS_FCREPO_URL=http://fcrepo:8080/fcrepo/rest \
     HOMARUS_LOG_LEVEL=info
 

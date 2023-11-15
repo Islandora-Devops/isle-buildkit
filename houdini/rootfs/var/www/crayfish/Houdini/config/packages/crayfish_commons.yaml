@@ -1,3 +1,0 @@
-crayfish_commons:
-  syn_config: /opt/keys/jwt/syn-settings.xml
-  syn_enabled: True

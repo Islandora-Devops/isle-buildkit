@@ -1,0 +1,30 @@
+security:
+    enable_authenticator_manager: true
+    # https://symfony.com/doc/5.4/security.html#where-do-users-come-from-user-providers
+    providers:
+        users_in_memory: { memory: null }
+        jwt:
+            lexik_jwt: ~
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            # Need stateless or it reloads the User based on a token.
+            stateless: true
+
+            # To enable JWT authentication, uncomment the below 2 lines and change anonymous to false above.
+            provider: jwt
+            jwt: ~
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/5.4/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/5.4/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+    # - { path: ^/admin, roles: ROLE_ADMIN }
+    # - { path: ^/profile, roles: ROLE_USER }

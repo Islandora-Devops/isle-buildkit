@@ -15,4 +15,4 @@ additional settings, volumes, ports, etc.
 | HOUDINI_FCREPO_URL   | http://fcrepo:8080/fcrepo/rest | Fcrepo Rest API URL                                                                               |
 | HOUDINI_LOG_LEVEL    | info                           | Log level. Possible Values: debug, info, notice, warning, error, critical, alert, emergency, none |
 
-[Houdini]: https://github.com/Islandora/Crayfish/tree/main/Houdini
+[Houdini]: https://github.com/Islandora/Crayfish/tree/4.x/Houdini
