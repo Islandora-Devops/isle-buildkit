@@ -276,7 +276,7 @@ services:
         environment:
             MATOMO_DEFAULT_HOST: "https://islandora.dev"
         volumes:
-            - matomo-data:/var/www/matomo:rw
+            - matomo-data:/var/www/matomo/config:rw
     solr:
         <<: *common
         image: ${REPOSITORY:-local}/solr:${TAG:-latest}
