@@ -25,24 +25,24 @@ ARG UPGRADE_UTILS_SHA256=a897faeda52322ead9b619dfadab6f77d3f4b3c5baf8ab3f188e8d8
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=fcrepo6-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
-        --url "${FCREPO_URL}" \
-        --sha256 "${FCREPO_SHA256}" \
-        --dest "/opt/tomcat/webapps/fcrepo" \
+        --url ${FCREPO_URL} \
+        --sha256 ${FCREPO_SHA256} \
+        --dest /opt/tomcat/webapps/fcrepo \
     && \
     download.sh \
-        --url "${SYN_URL}" \
-        --sha256 "${SYN_SHA256}" \
-        --dest "/opt/tomcat/lib" \
+        --url ${SYN_URL} \
+        --sha256 ${SYN_SHA256} \
+        --dest /opt/tomcat/lib \
     && \
     download.sh \
-        --url "${IMPORT_EXPORT_URL}" \
-        --sha256 "${IMPORT_EXPORT_SHA256}" \
-        --dest "/opt/tomcat" \
+        --url ${IMPORT_EXPORT_URL} \
+        --sha256 ${IMPORT_EXPORT_SHA256} \
+        --dest /opt/tomcat \
     && \
     download.sh \
-        --url "${UPGRADE_UTILS_URL}" \
-        --sha256 "${UPGRADE_UTILS_SHA256}" \
-        --dest "/opt/tomcat" \
+        --url ${UPGRADE_UTILS_URL} \
+        --sha256 ${UPGRADE_UTILS_SHA256} \
+        --dest /opt/tomcat \
     && \
     cleanup.sh
 
