@@ -36,6 +36,7 @@ RUN --mount=type=cache,id=cantaloupe-apk-${TARGETARCH},sharing=locked,target=/va
     apk add \
         ffmpeg \
         openjpeg-tools \
+        libjpeg-turbo \
     && \
     create-service-user.sh --name cantaloupe --group jwt /data /opt/cantaloupe/logs && \
     cleanup.sh
