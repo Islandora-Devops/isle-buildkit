@@ -38,6 +38,8 @@ RUN --mount=type=cache,id=cantaloupe-apk-${TARGETARCH},sharing=locked,target=/va
         openjpeg-tools \
         libjpeg-turbo \
     && \
+    mkdir -p /opt/libjpeg-turbo/lib && \
+    ln -s /usr/lib/libturbojpeg.so.0 /opt/libjpeg-turbo/lib/libturbojpeg.so && \
     create-service-user.sh --name cantaloupe --group jwt /data /opt/cantaloupe/logs && \
     cleanup.sh
 
