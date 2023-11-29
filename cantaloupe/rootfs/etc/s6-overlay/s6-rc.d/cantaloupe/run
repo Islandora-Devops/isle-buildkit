@@ -5,4 +5,4 @@ set -e
 # actually can write to the folder.
 chown cantaloupe:cantaloupe /data
 
-exec s6-setuidgid cantaloupe java -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties -Xms"${CANTALOUPE_HEAP_MIN}" -Xmx"${CANTALOUPE_HEAP_MAX}" -jar /opt/cantaloupe/cantaloupe.jar
+exec with-contenv s6-setuidgid cantaloupe java -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties -Xms"${CANTALOUPE_HEAP_MIN}" -Xmx"${CANTALOUPE_HEAP_MAX}" -jar /opt/cantaloupe/cantaloupe.jar
