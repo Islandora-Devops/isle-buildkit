@@ -36,7 +36,10 @@ RUN --mount=type=cache,id=cantaloupe-apk-${TARGETARCH},sharing=locked,target=/va
     apk add \
         ffmpeg \
         openjpeg-tools \
+        libjpeg-turbo \
     && \
+    mkdir -p /opt/libjpeg-turbo/lib && \
+    ln -s /usr/lib/libturbojpeg.so.0 /opt/libjpeg-turbo/lib/libturbojpeg.so && \
     create-service-user.sh --name cantaloupe --group jwt /data /opt/cantaloupe/logs && \
     cleanup.sh
 
@@ -97,6 +100,8 @@ ENV \
     CANTALOUPE_FILESYSTEMSOURCE_BASICLOOKUPSTRATEGY_PATH_SUFFIX= \
     CANTALOUPE_FILESYSTEMSOURCE_LOOKUP_STRATEGY="BasicLookupStrategy" \
     CANTALOUPE_GROKPROCESSOR_PATH_TO_BINARIES= \
+    CANTALOUPE_HEAP_MIN="3G" \
+    CANTALOUPE_HEAP_MAX="5G" \
     CANTALOUPE_HEAPCACHE_PERSIST_FILESYSTEM_PATHNAME="/data/heap.cache" \
     CANTALOUPE_HEAPCACHE_PERSIST="false" \
     CANTALOUPE_HEAPCACHE_TARGET_SIZE="2G" \

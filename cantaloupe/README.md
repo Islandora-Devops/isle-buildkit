@@ -83,6 +83,8 @@ additional settings, volumes, ports, etc.
 | CANTALOUPE_FILESYSTEMSOURCE_BASICLOOKUPSTRATEGY_PATH_SUFFIX                            |                                                                  |
 | CANTALOUPE_FILESYSTEMSOURCE_LOOKUP_STRATEGY                                            | "BasicLookupStrategy"                                            |
 | CANTALOUPE_GROKPROCESSOR_PATH_TO_BINARIES                                              |                                                                  |
+| CANTALOUPE_HEAP_MIN                                                                    | "3G"                                                             |
+| CANTALOUPE_HEAP_MAX                                                                    | "5G"                                                             |
 | CANTALOUPE_HEAPCACHE_PERSIST_FILESYSTEM_PATHNAME                                       | "/data/heap.cache"                                               |
 | CANTALOUPE_HEAPCACHE_PERSIST                                                           | "false"                                                          |
 | CANTALOUPE_HEAPCACHE_TARGET_SIZE                                                       | "2G"                                                             |
