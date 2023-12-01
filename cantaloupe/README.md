@@ -218,7 +218,7 @@ additional settings, volumes, ports, etc.
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_XPM                                       |                                                                  |
 | CANTALOUPE_PROCESSOR_PDF_MAX_MEMORY_BYTES                                              | "-1"                                                             |
 | CANTALOUPE_PROCESSOR_PDF_SCRATCH_FILE_ENABLED                                          | "false"                                                          |
-| CANTALOUPE_PROCESSOR_SELECTION_STRATEGY                                                | "AutomaticSelectionStrategy"                                     |
+| CANTALOUPE_PROCESSOR_SELECTION_STRATEGY                                                | "ManualSelectionStrategy"                                        |
 | CANTALOUPE_PROCESSOR_SHARPEN                                                           | "0"                                                              |
 | CANTALOUPE_PROCESSOR_STREAM_RETRIEVAL_STRATEGY                                         | "StreamStrategy"                                                 |
 | CANTALOUPE_PROCESSOR_TIF_COMPRESSION                                                   | "LZW"                                                            |
