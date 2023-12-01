@@ -44,35 +44,36 @@ RUN --mount=type=cache,id=log4j-downloads-${TARGETARCH},sharing=locked,target=/o
         --sha256 "${LOG4J_FILE_SHA256}" \
         --strip \
         --dest "/opt/solr/server/lib/ext" \
-        *.txt \
-        *.xml \
-        *cyclonedx*.* \
-        *test*.* \
-        log4j-api-test*.* \
-        log4j-appserver*.* \
-        log4j-cassandra*.* \
-        log4j-couchdb*.* \
-        log4j-docker*.* \
-        log4j-flume*.* \
-        log4j-iostreams*.* \
-        log4j-jakarta-*.* \
-        log4j-jcl-*.* \
-        log4j-jdbc-*.* \
-        log4j-jpa-*.* \
-        log4j-jpl-*.* \
-        log4j-jul-*.* \
-        log4j-kubernetes-*.* \
-        log4j-layout-template-*.* \
-        log4j-mongodb*.* \
-        log4j-slf4j2*.* \
-        log4j-spring-*.* \
-        log4j-taglib-*.* \
-        log4j-to-*.* \
     && \
-    cleanup.sh && \
+    rm -rf /opt/solr/server/lib/ext/*.adoc && \
+    rm -rf /opt/solr/server/lib/ext/*.txt && \
+    rm -rf /opt/solr/server/lib/ext/*cyclonedx*.* && \
+    rm -rf /opt/solr/server/lib/ext/*test*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-api-test*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-appserver*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-cassandra*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-couchdb*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-docker*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-flume*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-iostreams*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-jakarta-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-jcl-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-jdbc-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-jpa-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-jpl-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-jul-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-kubernetes-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-layout-template-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-mongodb*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-slf4j2*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-spring-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-taglib-*.* && \
+    rm -rf /opt/solr/server/lib/ext/log4j-to-*.* && \
     cp /opt/solr/server/lib/ext/log4j-slf4j-impl-${LOG4J_VERSION}.jar /opt/solr/contrib/prometheus-exporter/lib/ && \
     cp /opt/solr/server/lib/ext/log4j-core-${LOG4J_VERSION}.jar /opt/solr/contrib/prometheus-exporter/lib/ && \
-    cp /opt/solr/server/lib/ext/log4j-api-${LOG4J_VERSION}.jar /opt/solr/contrib/prometheus-exporter/lib/
+    cp /opt/solr/server/lib/ext/log4j-api-${LOG4J_VERSION}.jar /opt/solr/contrib/prometheus-exporter/lib/ \
+    && \
+    cleanup.sh && \
 
 # Defaults environment variables to be overloaded.
 ENV \
