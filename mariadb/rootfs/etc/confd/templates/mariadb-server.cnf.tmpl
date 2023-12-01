@@ -9,6 +9,7 @@
 [mysqld]
 # skip-networking
 max_allowed_packet ={{ getenv "MYSQL_MAX_ALLOWED_PACKET" }}
+transaction-isolation ={{ getenv "MYSQL_TRANSACTION_ISOLATION" }}
 # Galera-related settings
 [galera]
 # Mandatory settings
