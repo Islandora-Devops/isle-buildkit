@@ -1,10 +1,10 @@
 # Solr
 
-Docker image for [Solr] version 8.11.2.
+Docker image for [solr] version 9.4.0.
 
 Please refer to the [Solr Documentation] for more in-depth information.
 
-As a quick example this will bring up an instance of [Solr], and allow you
+As a quick example this will bring up an instance of [solr], and allow you
 to view on <http://localhost:8983/solr/>.
 
 ```bash
@@ -19,12 +19,12 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Default | Description                                                                    |
-| :------------------- | :------ | :----------------------------------------------------------------------------- |
-| SOLR_JAVA_OPTS       |         | Additional parameters to pass to the JVM when starting Solr                    |
-| SOLR_JETTY_OPTS      |         | Additional parameters to pass to Jetty when starting Solr.                     |
-| SOLR_LOG_LEVEL       | INFO    | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
-| SOLR_MEMORY          | 512m    | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
+| Environment Variable | Default                     | Description                                                                    |
+| :------------------- | :-------------------------- | :----------------------------------------------------------------------------- |
+| SOLR_JAVA_OPTS       |                             | Additional parameters to pass to the JVM when starting Solr                    |
+| SOLR_JETTY_OPTS      | `-Dsolr.jetty.host=0.0.0.0` | Additional parameters to pass to Jetty when starting Solr.                     |
+| SOLR_LOG_LEVEL       | `INFO`                      | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+| SOLR_MEMORY          | `512m`                      | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
 
 ## Ports
 
@@ -42,29 +42,25 @@ additional settings, volumes, ports, etc.
 
 - [Solr Logging]
 
-[Solr Documentation]: https://lucene.apache.org/solr/guide/7_1/
-[Solr Logging]: https://lucene.apache.org/solr/guide/7_1/configuring-logging.html
-[Solr]: https://lucene.apache.org/solr/
+## Updating
 
-## Changing versions
+You can change the version used for [solr] by modifying the build argument
+`SOLR_VERSION` and `SOLR_FILE_SHA256` in the `Dockerfile`.
 
-There is 2 values you need to update/change the version.
-
-1. Solr version: found at [archive.apache.org](https://archive.apache.org/dist/lucene/solr)
-1. SOLR_FILE_SHA256: sha256sum of the tgz file
-
-```dockerfile
-ARG SOLR_VERSION="8.11.2"
-ARG SOLR_FILE_SHA256="54d6ebd392942f0798a60d50a910e26794b2c344ee97c2d9b50e678a7066d3a6"
-```
-
-Go to [archive.apache.org](https://archive.apache.org/dist/lucene/solr) and find the version you want. There will be several files but the one to use have the following naming convention.
-
-* solr-${SOLR_VERSION}.tgz
-
-Download the two files and run and replace the _1.1.1_ with the version you have.
+Change `SOLR_VERSION` and then generate the `SOLR_FILE_SHA256` with the following
+commands:
 
 ```bash
-# This outputs the value to use for $SOLR_FILE_SHA256.
-sha256sum solr-1.1.1.tgz
+SOLR_VERSION=$(cat solr/Dockerfile | grep -o 'SOLR_VERSION=.*' | cut -f2 -d=)
+SOLR_FILE=$(cat solr/Dockerfile | grep -o 'SOLR_FILE=.*' | cut -f2 -d=)
+SOLR_URL=$(cat solr/Dockerfile | grep -o 'SOLR_URL=.*' | cut -f2 -d=)
+SOLR_FILE=$(eval "echo $SOLR_FILE")
+SOLR_URL=$(eval "echo $SOLR_URL")
+wget --quiet "${SOLR_URL}"
+shasum -a 256 "${SOLR_FILE}" | cut -f1 -d' '
+rm "${SOLR_FILE}"
 ```
+
+[Solr Documentation]: https://lucene.apache.org/solr/guide/7_1/
+[Solr Logging]: https://lucene.apache.org/solr/guide/7_1/configuring-logging.html
+[solr]: https://lucene.apache.org/solr/
