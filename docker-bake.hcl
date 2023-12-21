@@ -357,7 +357,7 @@ target "houdini-common" {
   context = "houdini"
   contexts = {
     # Produced by this repository <https://github.com/Islandora-Devops/isle-imagemagick>.
-    imagemagick = "docker-image://islandora/imagemagick:alpine-3.18.4-imagemagick-7.1.1.13-r0@sha256:491f818e0398339fd042d874328d48a0a4b6a2f9eb99e6a3d792ad76570c60c2"
+    imagemagick = "docker-image://islandora/imagemagick:alpine-3.18.4-imagemagick-7.1.1.23-r0@sha256:7d1fa5d76a5c640bf109e2c3c0bea890f7290da15b8bce6dc17e5a111443b38f"
   }
 }
 
