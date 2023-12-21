@@ -2,15 +2,15 @@
 FROM tomcat
 
 ARG TARGETARCH
-ARG FITSSERVLET_VERSION="1.2.3"
+ARG FITSSERVLET_VERSION="2.1.0"
 ARG FITSSERVLET_FILE="fits-service-${FITSSERVLET_VERSION}.war"
 ARG FITSSERVLET_URL="https://github.com/harvard-lts/FITSservlet/releases/download/${FITSSERVLET_VERSION}/${FITSSERVLET_FILE}"
-ARG FITSSERVLET_SHA256="e98450a1617c491976966a307da8b9c783c83e9e1a79bca9dbd9bc6c9a7226cd"
+ARG FITSSERVLET_SHA256="ba3c4d5af4dfbe42a32b4321eb96fad8db1379c8b00cd2bc7b7b0e4f59cb7e67"
 
-ARG FITS_VERSION="1.5.5"
+ARG FITS_VERSION="1.6.0"
 ARG FITS_FILE="fits-${FITS_VERSION}.zip"
 ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}"
-ARG FITS_SHA256="48be7ad9f27d9cc0b52c63f1aea1a3814e1b6996ca4e8467e77772c187ac955c"
+ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
