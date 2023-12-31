@@ -2,10 +2,10 @@
 FROM java
 
 ARG TARGETARCH
-ARG SOLR_VERSION="8.11.2"
-ARG SOLR_FILE="solr-${SOLR_VERSION}.tgz"
-ARG SOLR_URL="https://archive.apache.org/dist/lucene/solr/${SOLR_VERSION}/${SOLR_FILE}"
-ARG SOLR_FILE_SHA256="54d6ebd392942f0798a60d50a910e26794b2c344ee97c2d9b50e678a7066d3a6"
+ARG SOLR_VERSION=9.4.0
+ARG SOLR_FILE=solr-${SOLR_VERSION}.tgz
+ARG SOLR_URL=https://archive.apache.org/dist/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz
+ARG SOLR_FILE_SHA256=5ff28fe3a9d92804d53c0072a8459bb1d0c280e212a288a9efd31f923fe1a9d4
 
 EXPOSE 8983
 
@@ -30,7 +30,7 @@ RUN create-service-user.sh --name solr /data && \
 # Defaults environment variables to be overloaded.
 ENV \
     SOLR_JAVA_OPTS= \
-    SOLR_JETTY_OPTS= \
+    SOLR_JETTY_OPTS=-Dsolr.jetty.host=0.0.0.0 \
     SOLR_LOG_LEVEL=INFO \
     SOLR_MEMORY=512m
 
