@@ -1,6 +1,6 @@
 # Cantaloupe
 
-Docker image for [Cantaloupe] version 5.0.5.
+Docker image for [Cantaloupe] version 5.0.6.
 
 Please refer to the [Cantaloupe Documentation] for more in-depth information.
 
