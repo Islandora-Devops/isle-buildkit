@@ -52,6 +52,7 @@ function install {
     s6-setuidgid nginx /var/www/matomo/console plugin:activate ExtraTools
 
     # Add additional configurations.
+    add_setting General "trusted_hosts[]" "${MATOMO_DEFAULT_HOST}"
     add_setting General "assume_secure_protocol" "${MATOMO_ASSUME_SECURE_PROTOCOL}"
     add_setting General "proxy_client_headers[]" "${MATOMO_PROXY_CLIENT_HEADERS}"
     add_setting General "proxy_host_headers" "${MATOMO_PROXY_HOST_HEADERS}"
@@ -63,6 +64,7 @@ function install {
       # shellcheck disable=SC2001
       name=$(echo "${site}" | sed -e 's/MATOMO_SITE_\(.*\)_HOST/\1/')
       s6-setuidgid nginx /var/www/matomo/console site:add --name="${name}" --urls="${!site}"
+      add_setting General "trusted_hosts[]" "${!site}"
     done
 }
 
