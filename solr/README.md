@@ -1,6 +1,6 @@
 # Solr
 
-Docker image for [solr] version 9.4.0.
+Docker image for [solr] version 9.4.1.
 
 Please refer to the [Solr Documentation] for more in-depth information.
 
