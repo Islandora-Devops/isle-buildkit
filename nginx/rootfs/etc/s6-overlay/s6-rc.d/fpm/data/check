@@ -2,7 +2,7 @@
 set -e
 
 # Wait for Socket to exist.
-while ! test -S /run/php-fpm82/php-fpm82.sock; do sleep 1; done
+while ! test -S /run/php-fpm83/php-fpm83.sock; do sleep 1; done
 
 # Wait for PID file to exist.
-while ! test -f /run/php-fpm82/php-fpm82.pid; do sleep 1; done
+while ! test -f /run/php-fpm83/php-fpm83.pid; do sleep 1; done

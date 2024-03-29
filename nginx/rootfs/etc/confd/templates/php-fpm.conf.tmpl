@@ -14,13 +14,13 @@
 ; Pid file
 ; Note: the default prefix is /var
 ; Default Value: none
-;pid = run/php-fpm82.pid
+;pid = run/php-fpm83.pid
 
 ; Error log file
 ; If it's set to "syslog", log is sent to syslogd instead of being written
 ; into a local file.
 ; Note: the default prefix is /var
-; Default Value: log/php82/error.log
+; Default Value: log/php83/error.log
 error_log = /dev/stderr
 
 ; syslog_facility is used to specify what type of program is logging the
@@ -33,8 +33,8 @@ error_log = /dev/stderr
 ; syslog_ident is prepended to every message. If you have multiple FPM
 ; instances running on the same server, you can change the default value
 ; which must suit common needs.
-; Default Value: php-fpm82
-;syslog.ident = php-fpm82
+; Default Value: php-fpm83
+;syslog.ident = php-fpm83
 
 ; Log level
 ; Possible Values: alert, error, warning, notice, debug
@@ -140,4 +140,4 @@ daemonize = no
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
 ;  - /usr otherwise
-include=/etc/php82/php-fpm.d/*.conf
+include=/etc/php83/php-fpm.d/*.conf

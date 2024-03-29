@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-exec s6-notifyoncheck -d -t 30000 -n 1 /usr/sbin/php-fpm82 \
-	--pid /var/run/php-fpm82/php-fpm82.pid \
-	--prefix /var/run/php-fpm82 \
-	--fpm-config /etc/php82/php-fpm.conf
+exec s6-notifyoncheck -d -t 30000 -n 1 /usr/sbin/php-fpm83 \
+	--pid /var/run/php-fpm83/php-fpm83.pid \
+	--prefix /var/run/php-fpm83 \
+	--fpm-config /etc/php83/php-fpm.conf
