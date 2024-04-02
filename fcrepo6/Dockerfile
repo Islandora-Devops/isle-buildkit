@@ -2,25 +2,25 @@
 FROM tomcat
 
 ARG TARGETARCH
-ARG FCREPO_VERSION="6.4.1"
-ARG FCREPO_FILE="fcrepo-webapp-${FCREPO_VERSION}.war"
-ARG FCREPO_URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}"
-ARG FCREPO_SHA256="df3cb7bbaed1b0408afe0103adce4b65d2e3e0d87fec4c86ece26598763929c2"
+ARG FCREPO_VERSION=6.5.0
+ARG FCREPO_FILE=fcrepo-webapp-${FCREPO_VERSION}.war
+ARG FCREPO_URL=https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}
+ARG FCREPO_SHA256=dd0ac889f253dbe9fb09aa3f1fe4444fd57b51af34ebaaf23daec72fbdc5cf55
 
-ARG SYN_VERSION="1.1.0"
-ARG SYN_FILE="islandora-syn-${SYN_VERSION}-all.jar"
-ARG SYN_URL="https://github.com/Islandora-CLAW/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}"
-ARG SYN_SHA256="bcad5f872930b1bcc9ea4a176c60e22683297121357336769a21ead9fadcbbd5"
+ARG SYN_VERSION=1.1.1
+ARG SYN_FILE=islandora-syn-${SYN_VERSION}-all.jar
+ARG SYN_URL=https://github.com/Islandora-CLAW/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}
+ARG SYN_SHA256=24c589d16d579c48361d14c346e0d633a6985642f1c116295ed91eb32b283085
 
-ARG IMPORT_EXPORT_VERSION="1.0.1"
-ARG IMPORT_EXPORT_FILE="fcrepo-import-export-${IMPORT_EXPORT_VERSION}.jar"
-ARG IMPORT_EXPORT_URL="https://github.com/fcrepo-exts/fcrepo-import-export/releases/download/fcrepo-import-export-${IMPORT_EXPORT_VERSION}/${IMPORT_EXPORT_FILE}"
-ARG IMPORT_EXPORT_SHA256="89c579d1223c8f3c0da60c4309a06e47f5919c51929d976e60ea525c60cb33d1"
+ARG IMPORT_EXPORT_VERSION=1.2.0
+ARG IMPORT_EXPORT_FILE=fcrepo-import-export-${IMPORT_EXPORT_VERSION}.jar
+ARG IMPORT_EXPORT_URL=https://github.com/fcrepo-exts/fcrepo-import-export/releases/download/fcrepo-import-export-${IMPORT_EXPORT_VERSION}/${IMPORT_EXPORT_FILE}
+ARG IMPORT_EXPORT_SHA256=e767f43b0b4f639042b0e399ebfebdf61957515d585b7f0d2d8aeb9f877b12a0
 
-ARG UPGRADE_UTILS_VERSION="6.0.0-beta-1"
-ARG UPGRADE_UTILS_FILE="fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}.jar"
-ARG UPGRADE_UTILS_URL="https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}/${UPGRADE_UTILS_FILE}"
-ARG UPGRADE_UTILS_SHA256="e8a0bbbabca45ff95b2ffb5c62cad49e02548bc116b80f2747d5215f80d02a0a"
+ARG UPGRADE_UTILS_VERSION=6.3.0
+ARG UPGRADE_UTILS_FILE=fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}.jar
+ARG UPGRADE_UTILS_URL=https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}/${UPGRADE_UTILS_FILE}
+ARG UPGRADE_UTILS_SHA256=a897faeda52322ead9b619dfadab6f77d3f4b3c5baf8ab3f188e8d8769430348
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=fcrepo6-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
