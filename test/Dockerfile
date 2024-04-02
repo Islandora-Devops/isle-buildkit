@@ -2,10 +2,10 @@
 FROM drupal
 
 ARG TARGETARCH
-ARG COMMIT=1.2.0
+ARG COMMIT=1.5.0
 ARG FILE=${COMMIT}.tar.gz
 ARG URL=https://github.com/Islandora/islandora-starter-site/archive/${FILE}
-ARG SHA256=439d78184f63dbf82d5d04fecd5c33388fa29ab9b4d4d054d3bb7bd17c9566a3
+ARG SHA256=600f6af9d8b09815d2f36ea24ed0ddd6be5735ad58dbe262bf2acb6bbace0978
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=test-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
