@@ -1,0 +1,20 @@
+---
+version: "3.8"
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+name: nginx-servicelogsclientip
+services:
+  nginx:
+    <<: *common
+    image: ${NGINX:-islandora/nginx:local}
+    # Set realip as trusting only localhost
+    environment:
+      - NGINX_REAL_IP_HEADER=X-Forwarded-For
+      - NGINX_SET_REAL_IP_FROM=127.0.0.1/32
+    volumes:
+      - ./test.sh:/test.sh
+    command:
+      - /test.sh
