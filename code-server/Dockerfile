@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1.5.1
+FROM nodejs
 FROM drupal
 
 ARG TARGETARCH
@@ -11,6 +12,17 @@ ARG GLIBC_SHA256="276f43ce9b2d5878422bca94ca94e882a7eb263abe171d233ac037201ffcaf
 EXPOSE 8443 \
        9003
 
+RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    download.sh \
+        --url "${GLIBC_URL}" \
+        --sha256 "${GLIBC_SHA256}" \
+    && \
+    apk add "${DOWNLOAD_CACHE_DIRECTORY}/${GLIBC_FILE}" && \
+    mkdir /lib64 && \
+    ln -s /lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 && \
+    cleanup.sh
+
 RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
     --mount=type=cache,id=code-server-composer-${TARGETARCH},sharing=locked,target=/var/lib/nginx/.composer/cache \
     mkdir -p /var/lib/nginx/.composer && \
@@ -22,40 +34,35 @@ RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
 # Include commonly used tools and xdebug.
 # PHPStorm remote requries Glibc.
 RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    --mount=type=bind,from=nodejs,source=/packages,target=/packages \
+    --mount=type=bind,from=nodejs,source=/etc/apk/keys,target=/etc/apk/keys \
     apk add \
+        /packages/nodejs-*.apk \
         alpine-sdk \
         docker-cli \
         htop \
-        nodejs \
+        krb5-dev \
         openssh \
         parallel \
-        php82-pecl-xdebug \
+        php83-pecl-xdebug \
         python3 \
         spdlog \
         sudo \
         unison \
         yarn \
     && \
-    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-    download.sh \
-        --url "${GLIBC_URL}" \
-        --sha256 "${GLIBC_SHA256}" \
-    && \
-    apk add "${DOWNLOAD_CACHE_DIRECTORY}/${GLIBC_FILE}" && \
-    mkdir /lib64 && \
-    ln -s /lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 && \
     cleanup.sh
 
 RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/usr/local/share/.cache/yarn \
     yarn global add node-gyp@9.3.1 && \
-    FORCE_NODE_VERSION=18 yarn global add --ignore-engines --unsafe-perm \
-        @microsoft/1ds-core-js@3.2.9 \
-        code-server@4.11.0 \
-        minimist@1.2.8 \
+    yarn global add --ignore-engines --unsafe-perm \
+        @microsoft/1ds-core-js@^3.2.13 \
+        code-server@4.22.1 \
+        minimist@^1.2.6 \
         node-gyp@9.3.1 \
-        spdlog@0.13.7 \
-        yauzl@2.10.0 \
-        yazl@2.5.1 \
+        @vscode/spdlog@^0.15.0 \
+        yauzl@^2.9.2 \
+        yazl@^2.4.3 \
     && \
     cleanup.sh
 

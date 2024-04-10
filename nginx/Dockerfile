@@ -2,10 +2,10 @@
 FROM base
 
 ARG TARGETARCH
-ARG COMPOSER_VERSION=2.6.5
+ARG COMPOSER_VERSION=2.7.2
 ARG COMPOSER_FILE=composer.phar
 ARG COMPOSER_URL=https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}
-ARG COMPOSER_SHA256=9a18e1a3aadbcb94c1bafd6c4a98ff931f4b43a456ef48575130466e19f05dd6
+ARG COMPOSER_SHA256=049b8e0ed9f264d770a0510858cffbc35401510759edc9a784b3a5c6e020bcac
 
 WORKDIR /var/www
 
@@ -25,36 +25,36 @@ RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cac
     apk add \
         icu-data-full \
         nginx \
-        php82 \
-        php82-ctype \
-        php82-curl \
-        php82-dom \
-        php82-fileinfo \
-        php82-fpm \
-        php82-gd \
-        php82-iconv \
-        php82-intl \
-        php82-json \
-        php82-ldap \
-        php82-mbstring \
-        php82-mysqli \
-        php82-opcache \
-        php82-openssl \
-        php82-pdo \
-        php82-pdo_mysql \
-        php82-pdo_pgsql \
-        php82-phar \
-        php82-session \
-        php82-simplexml \
-        php82-sockets \
-        php82-tokenizer \
-        php82-xml \
-        php82-xmlreader \
-        php82-xmlwriter \
-        php82-xsl \
-        php82-zip \
+        php83 \
+        php83-ctype \
+        php83-curl \
+        php83-dom \
+        php83-fileinfo \
+        php83-fpm \
+        php83-gd \
+        php83-iconv \
+        php83-intl \
+        php83-json \
+        php83-ldap \
+        php83-mbstring \
+        php83-mysqli \
+        php83-opcache \
+        php83-openssl \
+        php83-pdo \
+        php83-pdo_mysql \
+        php83-pdo_pgsql \
+        php83-phar \
+        php83-session \
+        php83-simplexml \
+        php83-sockets \
+        php83-tokenizer \
+        php83-xml \
+        php83-xmlreader \
+        php83-xmlwriter \
+        php83-xsl \
+        php83-zip \
     && \
-    ln -s /usr/bin/php82 /usr/bin/php && \
+    ln -s /usr/bin/php83 /usr/bin/php && \
     addgroup nginx jwt && \
     cleanup.sh
 

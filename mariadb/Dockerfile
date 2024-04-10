@@ -12,7 +12,10 @@ RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/c
         mysql-client \
         mariadb-server-utils \
     && \
-    mkdir -p /var/lib/mysql-files && \
+    mkdir -p \
+        /var/lib/mysql \
+        /var/lib/mysql-files \
+    && \
     chown -R mysql:mysql \
         /var/lib/mysql \
         /var/lib/mysql-files \
