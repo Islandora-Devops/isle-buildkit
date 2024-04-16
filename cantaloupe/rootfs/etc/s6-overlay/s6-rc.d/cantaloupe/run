@@ -6,4 +6,4 @@ set -e
 # actually can write to the folder.
 chown cantaloupe:cantaloupe /data
 
-exec with-contenv s6-setuidgid cantaloupe java -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties -Xms"${CANTALOUPE_HEAP_MIN}" -Xmx"${CANTALOUPE_HEAP_MAX}" --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-exports java.desktop/sun.awt.image=ALL-UNNAMED -Dcom.sun.media.jai.disableMediaLib=true -jar /opt/cantaloupe/cantaloupe.jar
+exec with-contenv s6-setuidgid cantaloupe java -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties -Xms"${CANTALOUPE_HEAP_MIN}" -Xmx"${CANTALOUPE_HEAP_MAX}" "${CANTALOUPE_JAVA_OPTS}" -jar /opt/cantaloupe/cantaloupe.jar
