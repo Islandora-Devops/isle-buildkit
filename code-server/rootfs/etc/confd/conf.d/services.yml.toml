@@ -1,7 +1,0 @@
-[template]
-src = "services.yml.tmpl"
-dest = "/var/www/drupal/web/sites/default/services.yml"
-uid = 100
-gid = 101
-mode = "0644"
-keys = [ "/" ]
