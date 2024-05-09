@@ -17,7 +17,9 @@ RUN --mount=type=cache,id=blazegraph-downloads-${TARGETARCH},sharing=locked,targ
     download.sh \
         --url "${BLAZEGRAPH_URL}" \
         --sha256 "${BLAZEGRAPH_SHA256}" \
-        --dest "/opt/tomcat/webapps/bigdata" 
+        --dest "/opt/tomcat/webapps/bigdata" \
+    && \
+    cleanup.sh
 
 # Remove old files & then install latest log4j-* files
 RUN --mount=type=cache,id=log4j-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
