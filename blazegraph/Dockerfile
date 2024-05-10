@@ -19,16 +19,16 @@ RUN --mount=type=cache,id=blazegraph-downloads-${TARGETARCH},sharing=locked,targ
         --sha256 "${BLAZEGRAPH_SHA256}" \
         --dest "/opt/tomcat/webapps/bigdata" \
     && \
+    ## Remove the outmoded log4j-* files that come with blazegraph
+    rm -f "/opt/tomcat/webapps/bigdata/WEB-INF/lib/log4j-1.2.17.jar" && \
     cleanup.sh
 
-# Remove old files & then install latest log4j-* files
+# Now drop in newer log4j-* files
 RUN --mount=type=cache,id=log4j-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
         --url "${LOG4J_URL}" \
         --sha256 "${LOG4J_FILE_SHA256}" \
     && \
-    ## Remove the outmoded log4j-* files that come with blazegraph
-    rm -f "/opt/tomcat/webapps/bigdata/WEB-INF/lib/log4j-1.2.17.jar" && \
     ## Add new log4j-* files
     unzip -o "${DOWNLOAD_CACHE_DIRECTORY}/${LOG4J_FILE}" -d "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/log4j-1.2-api-${LOG4J_VERSION}.jar" /opt/tomcat/webapps/bigdata/WEB-INF/lib/ && \
