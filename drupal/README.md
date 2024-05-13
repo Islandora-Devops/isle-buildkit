@@ -27,6 +27,7 @@ additional settings, volumes, ports, etc.
 | :----------------------- | :------ | :--------------------------------------------------------------------------------- |
 | DRUPAL_ENABLE_HTTPS      | true    | Inform PHP that `https` should be used.                                            |
 | DRUPAL_REVERSE_PROXY_IPS |         | Use the IP address for the host 'traefik' if found otherwise default to `0.0.0.0`. |
+| DRUPAL_CORS              |         | Set a value for CORS: either <blank> (default), '*', or a single 'http://domain'   |
 
 ### Database Settings
 
