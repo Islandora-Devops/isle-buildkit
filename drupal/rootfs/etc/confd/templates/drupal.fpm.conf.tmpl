@@ -26,6 +26,9 @@ location ~ '\.php$|^/update.php' {
     fastcgi_param HTTPS on;
     fastcgi_param HTTP_SCHEME https;
     {{ end }}
+    {{ if [-z "${DRUPAL_CORS}"] }}
+    add_header Access-Control-Allow-Origin '{{ getenv "DRUPAL_CORS" }}';
+    {{ end }}
     fastcgi_intercept_errors on;
     # Large Islandora repositories global searches end up with HUGE header sizes
     fastcgi_buffers 16 800k;
