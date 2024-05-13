@@ -26,7 +26,7 @@ location ~ '\.php$|^/update.php' {
     fastcgi_param HTTPS on;
     fastcgi_param HTTP_SCHEME https;
     {{ end }}
-    {{ if [-z "${DRUPAL_CORS}"] }}
+    {{ if ne (getenv "DRUPAL_CORS") "" }}
     add_header Access-Control-Allow-Origin '{{ getenv "DRUPAL_CORS" }}';
     {{ end }}
     fastcgi_intercept_errors on;
