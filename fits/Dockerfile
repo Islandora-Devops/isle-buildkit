@@ -12,6 +12,12 @@ ARG FITS_FILE="fits-${FITS_VERSION}.zip"
 ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}"
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
+ARG LOG4J_VERSION="2.22.0"
+ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
+ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
+ARG LOG4J_FILE_SHA256="c6d61ecf2563b1200e02587b89b7c75b58b6e62e6a16cdb6f333c2482167c2dc"
+ARG OLD_LOG4J_VERSION="2.17.1"
+
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
@@ -44,6 +50,24 @@ RUN --mount=type=cache,id=fits-apk-${TARGETARCH},sharing=locked,target=/var/cach
         libzen \
         perl \
     && \
+    cleanup.sh
+
+# Remove old files & then install latest log4j-* files
+RUN --mount=type=cache,id=log4j-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    download.sh \
+        --url "${LOG4J_URL}" \
+        --sha256 "${LOG4J_FILE_SHA256}" \
+    && \
+    ## Remove the outmoded log4j-* files that come with fits
+    rm -f /opt/fits/lib/droid/log4j-1.2.13.jar && \
+    rm -f "/opt/tomcat/webapps/fits/WEB-INF/lib/log4j-api-${OLD_LOG4J_VERSION}.jar" && \
+    rm -f "/opt/tomcat/webapps/fits/WEB-INF/lib/log4j-core-${OLD_LOG4J_VERSION}.jar" && \
+    ## Add new log4j-* files
+    unzip -o "${DOWNLOAD_CACHE_DIRECTORY}/${LOG4J_FILE}" -d "${DOWNLOAD_CACHE_DIRECTORY}" && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/log4j-1.2-api-${LOG4J_VERSION}.jar" /opt/fits/lib/droid/ && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/log4j-1.2-api-${LOG4J_VERSION}.jar" /opt/tomcat/webapps/fits/WEB-INF/lib/ && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/log4j-api-${LOG4J_VERSION}.jar" /opt/tomcat/webapps/fits/WEB-INF/lib/ && \
+    cp "${DOWNLOAD_CACHE_DIRECTORY}/log4j-core-${LOG4J_VERSION}.jar" /opt/tomcat/webapps/fits/WEB-INF/lib/ && \
     cleanup.sh
 
 ENV \
