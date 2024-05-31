@@ -39,7 +39,7 @@ Requires `islandora/base` docker image to build. Please refer to the
 | NGINX_REAL_IP_RECURSIVE       | off             | See https://nginx.org/en/docs/http/ngx_http_realip_module.html         |
 | NGINX_SEND_TIMEOUT            | 60s             | Timeout for transmitting a response to the client                                     |
 | NGINX_SET_REAL_IP_FROM        | 172.0.0.0/8     | Trusted addresses that are known to send correct replacement addresses                |
-| NGINX_SET_REAL_IP_FROM2        | 172.0.0.0/8     | Trusted addresses that are known to send correct replacement addresses                |
+| NGINX_SET_REAL_IP_FROM2       | 172.0.0.0/8     | Trusted addresses that are known to send correct replacement addresses                |
 | NGINX_SET_REAL_IP_FROM3       | 172.0.0.0/8     | Trusted addresses that are known to send correct replacement addresses                |
 | NGINX_WORKER_CONNECTIONS      | 1024            | The maximum number of simultaneous connections that can be opened by a worker process |
 | NGINX_WORKER_PROCESSES        | auto            | Set number of worker processes automatically based on number of CPU cores             |
