@@ -30,7 +30,6 @@ volumes:
     drupal-solr-config: {}
     fcrepo-data: {}
     mariadb-data: {}
-    matomo-data: {}
     solr-data: {}
 
 secrets:
@@ -129,8 +128,6 @@ services:
             DRUPAL_DEFAULT_FCREPO_PORT: 8080
             DRUPAL_DEFAULT_FCREPO_URL: "https://fcrepo.islandora.dev/fcrepo/rest/"
             DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG: "true"
-            DRUPAL_DEFAULT_MATOMO_URL_HTTP: "http://islandora.dev/matomo/"
-            DRUPAL_DEFAULT_MATOMO_URL_HTTPS: "https://islandora.dev/matomo/"
             DRUPAL_DEFAULT_NAME: "Islandora Digital Collections"
             DRUPAL_DEFAULT_PROFILE: "minimal"
             DRUPAL_DEFAULT_SITE_URL: "islandora.dev"
@@ -254,29 +251,6 @@ services:
             traefik.http.services.fcrepo.loadbalancer.server.port: 8080
         volumes:
             - fcrepo-data:/data:rw
-    matomo:
-        <<: *common
-        image: ${REPOSITORY:-local}/matomo:${TAG:-latest}
-        labels:
-            <<: *traefik-https-redirect-middleware
-            traefik.http.middlewares.matomo-custom-request-headers.headers.customrequestheaders.X-Forwarded-Uri: /matomo
-            traefik.http.middlewares.matomo-append-slash.redirectregex.regex: ^(https?://[^/]+/matomo)$$
-            traefik.http.middlewares.matomo-append-slash.redirectregex.replacement: $${1}/
-            traefik.http.middlewares.matomo-strip-prefix.stripprefix.prefixes: /matomo
-            traefik.http.middlewares.matomo.chain.middlewares: matomo-append-slash,matomo-strip-prefix,matomo-custom-request-headers
-            traefik.http.routers.matomo_http.entrypoints: http
-            traefik.http.routers.matomo_http.middlewares: *traefik-https-redirect
-            traefik.http.routers.matomo_http.rule: &traefik-host-matomo Host(`islandora.dev`) && PathPrefix(`/matomo`)
-            traefik.http.routers.matomo_http.service: matomo
-            traefik.http.routers.matomo_https.entrypoints: https
-            traefik.http.routers.matomo_https.middlewares: matomo
-            traefik.http.routers.matomo_https.rule: *traefik-host-matomo
-            traefik.http.routers.matomo_https.tls: true
-            traefik.http.services.matomo.loadbalancer.server.port: 80
-        environment:
-            MATOMO_DEFAULT_HOST: "https://islandora.dev"
-        volumes:
-            - matomo-data:/var/www/matomo:rw
     solr:
         <<: *common
         image: ${REPOSITORY:-local}/solr:${TAG:-latest}

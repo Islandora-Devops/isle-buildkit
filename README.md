@@ -361,7 +361,6 @@ Waiting for installation...
   ActiveMQ                       https://activemq.islandora.dev
   Blazegraph                     https://blazegraph.islandora.dev/bigdata/
   Fedora                         https://fcrepo.islandora.dev/fcrepo/rest/
-  Matomo                         https://islandora.dev/matomo/index.php
   Solr                           https://solr.islandora.dev
   Traefik                        https://traefik.islandora.dev
 ```
