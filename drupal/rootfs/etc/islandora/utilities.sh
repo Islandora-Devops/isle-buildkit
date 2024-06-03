@@ -580,27 +580,6 @@ function create_solr_core_with_default_config {
     create_solr_core "${site}"
 }
 
-# Install matomo and configure.
-function configure_matomo_module {
-    local site site_url site_id matomo_url matomo_http_url
-
-    if ! drush pm-list --format=string --type=module --status=enabled --no-core | grep -q matomo; then
-        echo "matomo is not installed.  Skipping configuration"
-        return 0
-    fi
-
-    site="${1}"
-    shift
-    site_url=$(drupal_site_env "${site}" "SITE_URL")
-    site_id=$(($(site_index "${site}") + 1))
-    matomo_url=$(drupal_site_env "${site}" "MATOMO_URL")
-    matomo_http_url="http${matomo_url#https}"
-
-    drush -l "${site_url}" -y config-set matomo.settings site_id "${site_id}"
-    drush -l "${site_url}" -y config-set matomo.settings url_http "${matomo_http_url}"
-    drush -l "${site_url}" -y config-set matomo.settings url_https "${matomo_url}"
-}
-
 # Configure Openseadragon to point use cantaloupe.
 function configure_openseadragon {
     local site site_url cantaloupe_url
