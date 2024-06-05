@@ -8,7 +8,7 @@ ARG SOLR_URL=https://archive.apache.org/dist/solr/solr/${SOLR_VERSION}/solr-${SO
 ARG SOLR_FILE_SHA256=d8538502019af1945e0b124a4613b46ca43aedcf3f20e9912c482c080407ea21
 ARG OCRHIGHLIGHT_VERSION=0.8.6
 ARG OCRHIGHLIGHT_FILE=solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
-ARG OCRHIGHLIGHT_URL=https://github.com/dbmdz/solr-ocrhighlighting/releases/download/0.8.6/solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
+ARG OCRHIGHLIGHT_URL=https://github.com/dbmdz/solr-ocrhighlighting/releases/download/${OCRHIGHLIGHT_VERSION}/solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
 ARG OCRHIGHLIGHT_FILE_SHA256=3cf22d554003347de5486a1e2b6b624759495122a5b35fef9d8306eeb5e14f61
 ARG OCRHIGHLIGHT_DEST=/opt/solr/server/solr/contrib/ocrhighlighting/lib
 
@@ -30,7 +30,6 @@ RUN --mount=type=cache,id=solr-downloads-${TARGETARCH},sharing=locked,target=/op
     cleanup.sh
 
 RUN --mount=type=cache,id=solr-ocrhighlight-downloads,sharing=locked,target=/opt/downloads \
-    mkdir -p ${OCRHIGHLIGHT_DEST} && \
     download.sh \
         --url "${OCRHIGHLIGHT_URL}" \
         --sha256 "${OCRHIGHLIGHT_FILE_SHA256}" \
