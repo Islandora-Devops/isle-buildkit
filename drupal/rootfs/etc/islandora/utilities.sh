@@ -563,7 +563,7 @@ function create_solr_core {
     # Require a running Solr to create a core.
     wait_for_service "${site}" "SOLR"
 
-    curl -s "http://${host}:${port}/solr/admin/cores?action=CREATE&name=${core}&instanceDir=${core}&config=solrconfig.xml&dataDir=data" &>/dev/null
+    curl -s "http://${host}:${port}/solr/admin/cores?action=CREATE&name=${core}&instanceDir=${core}&config=solrconfig.xml&dataDir=data"
 }
 
 # Generate solr config and create a core for it.
