@@ -299,7 +299,7 @@ services:
                   nocopy: true
     traefik:
         <<: *common
-        image: traefik:v2.8.3
+        image: traefik:v2.11.6
         command: >-
             --api.insecure=true
             --api.dashboard=true
