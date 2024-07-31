@@ -12,11 +12,11 @@ ARG FITS_FILE="fits-${FITS_VERSION}.zip"
 ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}"
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
-ARG LOG4J_VERSION="2.22.0"
+ARG LOG4J_VERSION="2.23.1"
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
-ARG LOG4J_FILE_SHA256="c6d61ecf2563b1200e02587b89b7c75b58b6e62e6a16cdb6f333c2482167c2dc"
-ARG OLD_LOG4J_VERSION="2.17.1"
+ARG LOG4J_FILE_SHA256="c53645414ce68f21dd347439df5852ad16b38cd7227a9d417ebaf411a1c09501"
+ARG OLD_LOG4J_VERSION="2.22.0"
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
