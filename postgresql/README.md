@@ -1,6 +1,6 @@
 # PostgreSQL
 
-Docker image for [PostgreSQL] version 15.1
+Docker image for [PostgreSQL] version 16.3
 
 Please refer to the [PostgreSQL Documentation] for more in-depth information.
 
