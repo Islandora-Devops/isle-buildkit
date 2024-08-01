@@ -1,6 +1,6 @@
 # Handle
 
-Docker image for [Handle] version 9.3.0.
+Docker image for [Handle] version 9.3.1.
 
 Please refer to the [Handle Documentation] for more in-depth information.
 
