@@ -1,6 +1,6 @@
 # Fits
 
-Docker image for [Fits](https://projects.iq.harvard.edu/fits/home) version 1.5.5.
+Docker image for [Fits](https://projects.iq.harvard.edu/fits/home) version 1.6.0.
 
 Please refer to the [Fits Documentation] for more in-depth information.
 
