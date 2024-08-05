@@ -7,7 +7,6 @@
 # - Content is index in Fedora.
 # - Matomo is installed?
 ---
-version: "3.8"
 
 # Common to all services
 x-common: &common

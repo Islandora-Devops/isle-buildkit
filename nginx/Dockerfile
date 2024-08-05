@@ -54,7 +54,6 @@ RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cac
         php83-xsl \
         php83-zip \
     && \
-    ln -s /usr/bin/php83 /usr/bin/php && \
     addgroup nginx jwt && \
     cleanup.sh
 

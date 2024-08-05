@@ -3,7 +3,6 @@
 # Tests that we can bring up the demo site.
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
-version: "3.8"
 
 name: drupal-servicestartswithbackendmysql
 services:
