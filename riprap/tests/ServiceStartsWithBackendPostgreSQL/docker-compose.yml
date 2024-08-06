@@ -1,5 +1,4 @@
 # file: docker-compose.yml
-version: "3.8"
 
 name: riprap-servicestartswithbackendsqlite
 services:

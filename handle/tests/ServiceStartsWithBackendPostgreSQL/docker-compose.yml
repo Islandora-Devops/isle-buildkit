@@ -4,7 +4,6 @@
 # overridden by prefixing them.
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
-version: "3.8"
 
 name: handle-servicestartswithbackendpostgresql
 services:

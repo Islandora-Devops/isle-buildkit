@@ -3,7 +3,6 @@
 # Used for testing environment precedence follows what is expected from:
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
-version: "3.8"
 
 secrets:
   # Secrets are #2 on the precedence list.

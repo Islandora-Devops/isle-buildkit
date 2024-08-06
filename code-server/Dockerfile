@@ -49,21 +49,12 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
         spdlog \
         sudo \
         unison \
-        yarn \
+        npm \
     && \
     cleanup.sh
 
-RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/usr/local/share/.cache/yarn \
-    yarn global add node-gyp@9.3.1 && \
-    yarn global add --ignore-engines --unsafe-perm \
-        @microsoft/1ds-core-js@^3.2.13 \
-        code-server@4.22.1 \
-        minimist@^1.2.6 \
-        node-gyp@9.3.1 \
-        @vscode/spdlog@^0.15.0 \
-        yauzl@^2.9.2 \
-        yazl@^2.4.3 \
-    && \
+RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/root/.npm \
+    CXXFLAGS='-DNODE_API_EXPERIMENTAL_NOGC_ENV_OPT_OUT -U_FORTIFY_SOURCE' npm install --global --unsafe-perm code-server@4.91.1 && \
     cleanup.sh
 
 # Drush requires HOME to be set as such.

@@ -10,7 +10,7 @@ ARG LOG4J_VERSION="2.22.0"
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
 ARG LOG4J_FILE_SHA256="c6d61ecf2563b1200e02587b89b7c75b58b6e62e6a16cdb6f333c2482167c2dc"
-ARG OLD_LOG4J_VERSION="2.17"
+ARG OLD_LOG4J_VERSION="1.2.17"
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=blazegraph-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
@@ -20,7 +20,7 @@ RUN --mount=type=cache,id=blazegraph-downloads-${TARGETARCH},sharing=locked,targ
         --dest "/opt/tomcat/webapps/bigdata" \
     && \
     ## Remove the outmoded log4j-* files that come with blazegraph
-    rm -f "/opt/tomcat/webapps/bigdata/WEB-INF/lib/log4j-1.2.17.jar" && \
+    rm -f "/opt/tomcat/webapps/bigdata/WEB-INF/lib/log4j-${OLD_LOG4J_VERSION}.jar" && \
     cleanup.sh
 
 # Now drop in newer log4j-* files
