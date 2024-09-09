@@ -388,7 +388,7 @@ function update_settings_php {
         fedora_url previous_owner_group
     site="${1}"
     shift
-    drupal_root=$(drush drupal:directory)
+    drupal_root=/var/www/drupal/web
     site_url=$(drupal_site_env "${site}" "SITE_URL")
     driver=$(drupal_site_env "${site}" "DB_DRIVER")
     host=$(drupal_site_env "${site}" "DB_HOST")
