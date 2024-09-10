@@ -4,7 +4,7 @@
 x-common: &common
   restart: "no"
 
-name: matomo-servicestartswithdefaults
+name: milliner-servicestartswithdefaults
 services:
   milliner:
     <<: *common
