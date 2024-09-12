@@ -67,4 +67,4 @@ ENV \
 
 COPY --link rootfs /
 
-RUN chown -R nginx:nginx /var/www
+RUN chown -R nginx:nginx /var/www /usr/share/drush

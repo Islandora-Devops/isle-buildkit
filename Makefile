@@ -77,6 +77,32 @@ build:
 %:
 	$(call executable-exists,$@)
 
+# Prior to building, all folders which might be copied into Docker images must
+# have the executable bit set for all users. So that they can be read by the
+# users we create like 'tomcat'. We can not insure this via Git as it does 
+# not track permissions for folders, so we rely on this hack.
+.PHONY: folder-permissions
+folder-permissions:
+	find . -type d -exec chmod +x {} \;
+
+# Prior to building, all scripts which might be copied into Docker images must
+# have the executable bit set for all users. So that they can be executed by
+# the users we create like 'nginx'. We can not insure this via Git as it does
+# not track executable permissions for "groups" or "others".
+.PHONY: executable-permissons
+executable-permissons:
+	find . -type f \
+    \( \
+      -name "*.sh" \
+      -o -name "run" \
+      -o -name "check" \
+      -o -name "finish" \
+      -o -name "bash.bashrc" \
+      -o -name "drush" \
+      -o -name "composer" \
+    \) \
+    -exec chmod +rx {} \;
+
 # Checks for docker compose plugin.
 .PHONY: docker-compose
 docker-compose: MISSING_DOCKER_PLUGIN_MESSAGE = ${RED}docker compose plugin is not installed${RESET}\n${README_MESSAGE}
@@ -165,7 +191,7 @@ docker-compose.override.yml:
 # Despite being a real target we make it PHONY so it is run everytime as $(TARGET) can change.
 .PHONY: build/bake.json
 .SILENT: build/bake.json
-build/bake.json: | docker-buildx jq build
+build/bake.json: | docker-buildx jq build folder-permissions executable-permissons
   # Generate build plan for the given target and update the contexts if provided by the CI.
 	BRANCH=$(BRANCH) \
 	CACHE_FROM_REPOSITORY=$(CACHE_FROM_REPOSITORY) \
