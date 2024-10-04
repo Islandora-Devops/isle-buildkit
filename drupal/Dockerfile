@@ -40,6 +40,9 @@ ENV \
     DRUPAL_DEFAULT_DB_NAME=drupal_default \
     DRUPAL_DEFAULT_DB_PASSWORD=password \
     DRUPAL_DEFAULT_DB_USER=drupal_default \
+    DRUPAL_DEFAULT_DB_DRIVER=mysql \
+    DRUPAL_DEFAULT_DB_HOST=mariadb \
+    DRUPAL_DEFAULT_DB_PORT=3306 \
     DRUPAL_DEFAULT_EMAIL=webmaster@localhost.com \
     DRUPAL_DEFAULT_FCREPO_HOST=islandora.traefik.me \
     DRUPAL_DEFAULT_FCREPO_PORT=8081 \
