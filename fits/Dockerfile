@@ -41,6 +41,8 @@ RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/op
 # Replace linux shared libraries with ones that target muslibc and are platform specific.
 # Also add perl for exiftool, and platform specific jna so native libs can be loaded.
 #
+# Additionally, Python and Jpylyzer are included for analyzing JP2 files
+#
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=fits-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
@@ -49,7 +51,10 @@ RUN --mount=type=cache,id=fits-apk-${TARGETARCH},sharing=locked,target=/var/cach
         libmediainfo \
         libzen \
         perl \
+        py3-pip \
+        python3 \
     && \
+    pip install --break-system-packages jpylyzer && \
     cleanup.sh
 
 # Remove old files & then install latest log4j-* files
