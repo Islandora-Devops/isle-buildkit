@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
+DRUSH_EXECUTABLE=/var/www/drupal/vendor/bin/drush.php
+if [ -f /var/www/drupal/vendor/bin/drush.php ]; then
+  DRUSH_EXECUTABLE=/var/www/drupal/vendor/bin/drush.php
+fi
+
 # Ensures drush runs as the correct user, and does not run out of memory.
 # Takes precedence due to order of $PATH. Preferred to an alias as it will apply
 # regardless of which shell is used or how it is started (login, interactive, etc)
 if test "$(id -u)" -eq 0; then
 	# If root run as nginx.
-	s6-setuidgid nginx php -d memory_limit=-1 /var/www/drupal/vendor/bin/drush.php "${@}"
+	s6-setuidgid nginx php -d memory_limit=-1 "${DRUSH_EXECUTABLE}" "${@}"
 else
 	# If non-root user, then run as current user
 	# as we do not have permissions to switch user.
-	php -d memory_limit=-1 /var/www/drupal/vendor/bin/drush.php "${@}"
+	php -d memory_limit=-1 "${DRUSH_EXECUTABLE}" "${@}"
 fi
