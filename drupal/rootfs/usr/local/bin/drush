@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-DRUSH_EXECUTABLE=/var/www/drupal/vendor/bin/drush.php
+DRUSH_EXECUTABLE=/var/www/drupal/vendor/bin/drush
 if [ -f /var/www/drupal/vendor/bin/drush.php ]; then
   DRUSH_EXECUTABLE=/var/www/drupal/vendor/bin/drush.php
 fi
