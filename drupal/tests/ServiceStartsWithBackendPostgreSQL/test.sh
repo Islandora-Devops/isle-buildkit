@@ -7,7 +7,7 @@ source /usr/local/share/isle/utilities.sh
 # Install basic Drupal
 cd /var/www/drupal || exit 1
 rm -fr /var/www/drupal/*
-composer create-project drupal/recommended-project:^10.1.2 \
+composer create-project drupal/recommended-project:^10.3 \
     --prefer-dist \
     --no-interaction \
     --stability stable \
@@ -15,7 +15,7 @@ composer create-project drupal/recommended-project:^10.1.2 \
     -- /var/www/drupal
 
 # Install Drush.
-composer require drush/drush:^12.1.3
+composer require drush/drush:^13.3
 
 # Install actual site.
 # shellcheck disable=SC1091
