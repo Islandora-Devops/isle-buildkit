@@ -69,6 +69,8 @@ To build the Docker images using the provided Gradle build scripts requires:
 > N.B The version of `make` that comes with OSX is to old, please update
 > using `brew` etc.
 
+> N.B On Mac OSX you may need to run `docker context use default` before `make bake`
+
 To verify you have all the requirements run the following command.
 
 ```bash
