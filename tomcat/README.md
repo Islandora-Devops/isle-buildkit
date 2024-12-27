@@ -1,6 +1,6 @@
 # Tomcat
 
-Docker image for [Tomcat] version 9.0.91.
+Docker image for [Tomcat] version 9.0.98.
 
 Please refer to the [Tomcat Documentation] for more in-depth information.
 
