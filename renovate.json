@@ -6,7 +6,7 @@
   ],
   "packageRules": [
     {
-      "managers": [
+      "matchManagers": [
         "github-actions",
         "dockerfile",
         "docker-compose",
