@@ -24,7 +24,7 @@
     },
     {
       "groupName": "all non-major dependencies",
-      "matchPackageNames": [
+      "matchDepNames": [
         "alpine-pkg-glibc",
         "apache-activemq",
         "apache-log4j",
