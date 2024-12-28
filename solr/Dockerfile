@@ -2,6 +2,7 @@
 FROM java
 
 ARG TARGETARCH
+# renovate: datasource=github-tags depName=apache-solr packageName=apache/solr
 ARG SOLR_VERSION=9.5.0
 ARG SOLR_FILE=solr-${SOLR_VERSION}.tgz
 ARG SOLR_URL=https://archive.apache.org/dist/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz

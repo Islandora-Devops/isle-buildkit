@@ -50,74 +50,8 @@
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"
       ]
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)activemq/Dockerfile$"
-      ],
-      "matchStrings": [
-        "ARG ACTIVEMQ_VERSION=\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
-      ],
-      "datasourceTemplate": "custom.activemq",
-      "depNameTemplate": "apache-activemq",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)solr/Dockerfile$"
-      ],
-      "matchStrings": [
-        "ARG SOLR_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
-      ],
-      "datasourceTemplate": "custom.solr",
-      "depNameTemplate": "apache-solr",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)tomcat/Dockerfile$"
-      ],
-      "matchStrings": [
-        "ARG TOMCAT_VERSION=\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
-      ],
-      "datasourceTemplate": "custom.tomcat",
-      "depNameTemplate": "apache-tomcat",
-      "versioningTemplate": "semver"
     }
   ],
-  "customDatasources": {
-    "activemq": {
-      "defaultRegistryUrlTemplate": "https://downloads.apache.org/activemq/",
-      "format": "html",
-      "transformTemplates": [
-        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $substring($v,0,1)=\"5\" }),function($v,$i,$a){ { \"version\":$substring($v,0,$length($v)-1) } })] }"
-      ]
-    },
-    "composer": {
-      "defaultRegistryUrlTemplate": "https://getcomposer.org/download/",
-      "format": "html",
-      "transformTemplates": [
-        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $substring($v,0,12)=\"/download/2.\" }),function($v,$i,$a){ { \"version\":$replace($v, \"^/download/([^/]+)/.*$\", \"$1\") } })] }"
-      ]
-    },
-    "solr": {
-      "defaultRegistryUrlTemplate": "https://downloads.apache.org/solr/solr/",
-      "format": "html",
-      "transformTemplates": [
-        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $substring($v,0,1)=\"9\" }),function($v,$i,$a){ { \"version\":$substring($v,0,$length($v)-1) } })] }"
-      ]
-    },
-    "tomcat": {
-      "defaultRegistryUrlTemplate": "https://downloads.apache.org/tomcat/tomcat-9/",
-      "format": "html",
-      "transformTemplates": [
-        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $substring($v,0,1)=\"v\" }),function($v,$i,$a){ { \"version\":$substring($v,1,$length($v)-2) } })] }"
-      ]
-    }
-  },
   "labels": [
     "dependencies"
   ],
