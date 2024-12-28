@@ -23,11 +23,6 @@
       "enabled": false
     },
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest"
-      ],
       "groupName": "all non-major dependencies",
       "matchPackageNames": [
         "*"
