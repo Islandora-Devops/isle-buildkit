@@ -60,6 +60,11 @@ elif [ "$DEP" = "fcrepo-upgrade-utils" ]; then
   ARG="UPGRADE_UTILS_SHA256"
   DOCKERFILE="fcrepo6/Dockerfile"
 
+elif [ "$DEP" = "cantaloupe" ]; then
+  URL="https://github.com/cantaloupe-project/cantaloupe/releases/download/v${VERSION}/cantaloupe-${VERSION}.zip"
+  ARG="CANTALOUPE_SHA256"
+  DOCKERFILE="cantaloupe/Dockerfile"
+
 else
   echo "DEP not found"
   exit 0
