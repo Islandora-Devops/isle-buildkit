@@ -25,10 +25,15 @@
     {
       "groupName": "all non-major dependencies",
       "matchPackageNames": [
+        "alpine-pkg-glibc",
         "apache-activemq",
         "apache-solr",
         "apache-tomcat",
         "custom-composer",
+        "fcrepo",
+        "fcrepo-import-export",
+        "fcrepo-upgrade-utils",
+        "islandora-syn",
         "solr-ocrhighlighting"
       ],
       "postUpgradeTasks": {
