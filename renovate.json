@@ -6,6 +6,22 @@
   ],
   "packageRules": [
     {
+      "matchPackageNames": [
+        "apache/activemq",
+        "apache/logging-log4j2",
+        "fcrepo/fcrepo",
+        "fcrepo-exts/fcrepo-import-export",
+        "fcrepo-exts/fcrepo-upgrade-utils"
+      ],
+      "extractVersion": "^(fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(\/|-)(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "semver"
+    },
+    {
+      "packagePatterns": ["^apache/solr$"],
+      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "semver"
+    },
+    {
       "matchManagers": [
         "github-actions",
         "dockerfile",
@@ -24,6 +40,11 @@
     },
     {
       "groupName": "all non-major dependencies",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
       "matchDepNames": [
         "alpine-pkg-glibc",
         "apache-activemq",
@@ -50,9 +71,10 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "description": "Update _VERSION variables in Dockerfiles",
+      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)(\\s|$)"
       ]
     }
   ],
