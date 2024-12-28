@@ -539,7 +539,7 @@ tomcat
 
 Since renovate does not natively support the ability to extract a sha256 from a file, we need [a custom shell script](./ci/update-sha.sh) in the [postUpgradeTasks](https://docs.renovatebot.com/configuration-options/#postupgradetasks) to calculate the sha256 of our files and update our Dockerfile accordingly.
 
-Post upgrade tasks can only ran on self-hosted Renovate instances, so this forces us to run renovate either locally on a properly configured runner (instead of using their free GitHub app to manage our dependencies). Getting that setup looks like
+Post upgrade tasks can only run on self-hosted Renovate instances, so this forces us to run renovate on a properly configured runner (instead of using mend.io's free GitHub app to manage our dependencies). Getting renovate setup locally looks like
 
 ```
 npm install -g renovate
@@ -547,12 +547,12 @@ export RENOVATE_REPOSITORIES=islandora-devops/isle-buildkit
 export RENOVATE_TOKEN=your-gh-pat
 export RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS='["^bash ci.*"]'
 
-# this will issue a PR with any updates to our docker images
-# that have renovate configured properly
+# this will issue a PR with any updates to
+# our docker images that have renovate configured properly
 renovate --platform=github
 ```
 
-Many downloads from GitHub can used [advanced capture](https://docs.renovatebot.com/modules/manager/regex/#advanced-capture) in the Dockerfile to update the pinned version.
+Versions listed in GitHub tags or releases can use [advanced capture](https://docs.renovatebot.com/modules/manager/regex/#advanced-capture) in the Dockerfile to update the pinned version.
 
 
 #### Updating Composer
