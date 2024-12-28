@@ -22,6 +22,10 @@ elif [ "$DEP" = "apache-solr" ]; then
   URL="https://downloads.apache.org/solr/solr/$VERSION/solr-$VERSION.tgz"
   ARG="SOLR_FILE_SHA256"
   DOCKERFILE="solr/Dockerfile"
+elif [ "$DEP" = "composer" ]; then
+  URL="https://getcomposer.org/download/${VERSION}/composer.phar"
+  ARG="COMPOSER_SHA256"
+  DOCKERFILE="nginx/Dockerfile"
 else
   echo "DEP not found"
   exit 1

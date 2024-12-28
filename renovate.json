@@ -27,7 +27,8 @@
       "matchPackageNames": [
         "apache-activemq",
         "apache-solr",
-        "apache-tomcat"
+        "apache-tomcat",
+        "composer"
       ],
       "postUpgradeTasks": {
         "commands": [
@@ -47,6 +48,18 @@
       ],
       "datasourceTemplate": "custom.activemq",
       "depNameTemplate": "apache-activemq",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)nginx/Dockerfile$"
+      ],
+      "matchStrings": [
+        "ARG COMPOSER_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "custom.composer",
+      "depNameTemplate": "composer",
       "versioningTemplate": "semver"
     },
     {
@@ -80,6 +93,13 @@
       "format": "html",
       "transformTemplates": [
         "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $substring($v,0,1)=\"5\" }),function($v,$i,$a){ { \"version\":$substring($v,0,$length($v)-1) } })] }"
+      ]
+    },
+    "composer": {
+      "defaultRegistryUrlTemplate": "https://getcomposer.org/download/",
+      "format": "html",
+      "transformTemplates": [
+        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $substring($v,0,12)=\"/download/2.\" }),function($v,$i,$a){ { \"version\":$replace($v, \"^/download/([^/]+)/.*$\", \"$1\") } })] }"
       ]
     },
     "solr": {
