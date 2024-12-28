@@ -6,6 +6,8 @@ ARG BLAZEGRAPH_VERSION="CANDIDATE_2_1_5"
 ARG BLAZEGRAPH_FILE="blazegraph.war"
 ARG BLAZEGRAPH_URL="https://github.com/blazegraph/database/releases/download/BLAZEGRAPH_RELEASE_${BLAZEGRAPH_VERSION}/${BLAZEGRAPH_FILE}"
 ARG BLAZEGRAPH_SHA256="b22f1a1aa8e536443db9a57da63720813374ef59e4021cfa9ad0e98f9a420e85"
+
+# renovate: datasource=github-releases depName=apache-log4j packageName=apache/logging-log4j2
 ARG LOG4J_VERSION="2.22.0"
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"

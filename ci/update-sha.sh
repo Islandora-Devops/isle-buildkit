@@ -78,7 +78,7 @@ elif [ "$DEP" = "fits" ]; then
 elif [ "$DEP" = "apache-log4j" ]; then
   URL="https://archive.apache.org/dist/logging/log4j/${VERSION}/apache-log4j-${VERSION}-bin.zip"
   ARG="LOG4J_FILE_SHA256"
-  DOCKERFILE="cantaloupe/Dockerfile"
+  DOCKERFILE="cantaloupe/Dockerfile blazegraph/Dockerfile"
 
 else
   echo "DEP not found"
