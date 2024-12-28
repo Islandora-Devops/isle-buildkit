@@ -65,6 +65,21 @@ elif [ "$DEP" = "cantaloupe" ]; then
   ARG="CANTALOUPE_SHA256"
   DOCKERFILE="cantaloupe/Dockerfile"
 
+elif [ "$DEP" = "fits-servlet" ]; then
+  URL="https://github.com/harvard-lts/FITSservlet/releases/download/${VERSION}/fits-service-${VERSION}.war"
+  ARG="FITSSERVLET_SHA256"
+  DOCKERFILE="cantaloupe/Dockerfile"
+
+elif [ "$DEP" = "fits" ]; then
+  URL="https://github.com/harvard-lts/fits/releases/download/${VERSION}/fits-${VERSION}.zip"
+  ARG="FITS_SHA256"
+  DOCKERFILE="cantaloupe/Dockerfile"
+
+elif [ "$DEP" = "apache-log4j" ]; then
+  URL="https://archive.apache.org/dist/logging/log4j/${VERSION}/apache-log4j-${VERSION}-bin.zip"
+  ARG="LOG4J_FILE_SHA256"
+  DOCKERFILE="cantaloupe/Dockerfile"
+
 else
   echo "DEP not found"
   exit 0

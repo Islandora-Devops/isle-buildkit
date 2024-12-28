@@ -2,16 +2,20 @@
 FROM tomcat
 
 ARG TARGETARCH
+
+# renovate: datasource=github-releases depName=fits-servlet packageName=harvard-lts/FITSservlet
 ARG FITSSERVLET_VERSION="2.1.0"
 ARG FITSSERVLET_FILE="fits-service-${FITSSERVLET_VERSION}.war"
 ARG FITSSERVLET_URL="https://github.com/harvard-lts/FITSservlet/releases/download/${FITSSERVLET_VERSION}/${FITSSERVLET_FILE}"
 ARG FITSSERVLET_SHA256="ba3c4d5af4dfbe42a32b4321eb96fad8db1379c8b00cd2bc7b7b0e4f59cb7e67"
 
+# renovate: datasource=github-releases depName=fits packageName=harvard-lts/fits
 ARG FITS_VERSION="1.6.0"
 ARG FITS_FILE="fits-${FITS_VERSION}.zip"
 ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}"
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
+# renovate: datasource=github-releases depName=apache-log4j packageName=apache/logging-log4j2
 ARG LOG4J_VERSION="2.23.1"
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
