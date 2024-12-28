@@ -25,7 +25,7 @@
     {
       "groupName": "all non-major dependencies",
       "matchPackageNames": [
-        "*"
+        "apache-activemq"
       ],
       "postUpgradeTasks": {
         "commands": [
