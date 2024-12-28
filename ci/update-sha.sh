@@ -26,9 +26,13 @@ elif [ "$DEP" = "composer" ]; then
   URL="https://getcomposer.org/download/${VERSION}/composer.phar"
   ARG="COMPOSER_SHA256"
   DOCKERFILE="nginx/Dockerfile"
+elif [ "$DEP" = "solr-ocrhighlighting" ]; then
+  URL=https://github.com/dbmdz/solr-ocrhighlighting/releases/download/${VERSION}/solr-ocrhighlighting-${VERSION}.jar
+  ARG="OCRHIGHLIGHT_FILE_SHA256"
+  DOCKERFILE="solr/Dockerfile"
 else
   echo "DEP not found"
-  exit 1
+  exit 0
 fi
 
 SHA=$(curl -s "$URL" \
