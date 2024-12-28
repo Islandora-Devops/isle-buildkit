@@ -3,7 +3,7 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=github-tags depName=apache-activemq packageName=apache/activemq
-ARG ACTIVEMQ_VERSION="5.18.5"
+ARG ACTIVEMQ_VERSION=5.18.5
 ARG ACTIVEMQ_FILE="apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz"
 ARG ACTIVEMQ_URL="https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ_FILE}"
 ARG ACTIVEMQ_FILE_SHA256="1190b809a35ceb5fb0273f4a47d4584684d75c43360942be10d9af1fc0a39394"
