@@ -31,3 +31,15 @@ if [ "$DEP" = "apache-activemq" ]; then
     sed -i 's|^ARG ACTIVEMQ_FILE_SHA256=".*"|ARG ACTIVEMQ_FILE_SHA256="'"$SHA"'"|g' activemq/Dockerfile
   fi
 fi
+
+if [ "$DEP" = "apache-solr" ]; then
+  SHA=$(curl -s "https://downloads.apache.org/solr/solr/$VERSION/solr-$VERSION.tgz" \
+    | shasum -a 256 \
+    | awk '{print $1}')
+  echo "$SHA"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' 's|^ARG SOLR_FILE_SHA256=".*"|ARG SOLR_FILE_SHA256="'"$SHA"'"|g' solr/Dockerfile
+  else
+    sed -i 's|^ARG SOLR_FILE_SHA256=".*"|ARG SOLR_FILE_SHA256="'"$SHA"'"|g' solr/Dockerfile
+  fi
+fi

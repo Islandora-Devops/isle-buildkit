@@ -25,7 +25,9 @@
     {
       "groupName": "all non-major dependencies",
       "matchPackageNames": [
-        "apache-activemq"
+        "apache-activemq",
+        "apache-solr",
+        "apache-tomcat"
       ],
       "postUpgradeTasks": {
         "commands": [
@@ -38,18 +40,6 @@
     {
       "customType": "regex",
       "fileMatch": [
-        "(^|/)tomcat/Dockerfile$"
-      ],
-      "matchStrings": [
-        "ARG TOMCAT_VERSION=\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
-      ],
-      "datasourceTemplate": "custom.tomcat",
-      "depNameTemplate": "apache-tomcat",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
         "(^|/)activemq/Dockerfile$"
       ],
       "matchStrings": [
@@ -57,6 +47,30 @@
       ],
       "datasourceTemplate": "custom.activemq",
       "depNameTemplate": "apache-activemq",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)solr/Dockerfile$"
+      ],
+      "matchStrings": [
+        "ARG SOLR_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "custom.solr",
+      "depNameTemplate": "apache-solr",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)tomcat/Dockerfile$"
+      ],
+      "matchStrings": [
+        "ARG TOMCAT_VERSION=\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "datasourceTemplate": "custom.tomcat",
+      "depNameTemplate": "apache-tomcat",
       "versioningTemplate": "semver"
     }
   ],
@@ -66,6 +80,13 @@
       "format": "html",
       "transformTemplates": [
         "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $substring($v,0,1)=\"5\" }),function($v,$i,$a){ { \"version\":$substring($v,0,$length($v)-1) } })] }"
+      ]
+    },
+    "solr": {
+      "defaultRegistryUrlTemplate": "https://downloads.apache.org/solr/solr/",
+      "format": "html",
+      "transformTemplates": [
+        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $substring($v,0,1)=\"9\" }),function($v,$i,$a){ { \"version\":$substring($v,0,$length($v)-1) } })] }"
       ]
     },
     "tomcat": {
