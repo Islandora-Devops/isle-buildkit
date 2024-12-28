@@ -28,8 +28,8 @@
         "apache-activemq",
         "apache-solr",
         "apache-tomcat",
-        "composer",
-        "dbmdz/solr-ocrhighlighting"
+        "custom-composer",
+        "solr-ocrhighlighting"
       ],
       "postUpgradeTasks": {
         "commands": [
@@ -60,7 +60,7 @@
         "ARG COMPOSER_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "datasourceTemplate": "custom.composer",
-      "depNameTemplate": "composer",
+      "depNameTemplate": "custom-composer",
       "versioningTemplate": "semver"
     },
     {
@@ -84,7 +84,7 @@
         "ARG OCRHIGHLIGHT_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "datasource": "github-releases",
-      "depName": "solr-ocrhighlighting",
+      "depNameTemplate": "solr-ocrhighlighting",
       "packageName": "dbmdz/solr-ocrhighlighting"
     },
     {
