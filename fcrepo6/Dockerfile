@@ -2,21 +2,26 @@
 FROM tomcat
 
 ARG TARGETARCH
+
+# renovate: datasource=github-releases depName=fcrepo packageName=fcrepo/fcrepo
 ARG FCREPO_VERSION=6.5.0
 ARG FCREPO_FILE=fcrepo-webapp-${FCREPO_VERSION}.war
 ARG FCREPO_URL=https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}
 ARG FCREPO_SHA256=dd0ac889f253dbe9fb09aa3f1fe4444fd57b51af34ebaaf23daec72fbdc5cf55
 
+# renovate: datasource=github-releases depName=islandora-syn packageName=Islandora/Syn
 ARG SYN_VERSION=1.1.1
 ARG SYN_FILE=islandora-syn-${SYN_VERSION}-all.jar
-ARG SYN_URL=https://github.com/Islandora-CLAW/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}
+ARG SYN_URL=https://github.com/Islandora/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}
 ARG SYN_SHA256=24c589d16d579c48361d14c346e0d633a6985642f1c116295ed91eb32b283085
 
+# renovate: datasource=github-releases depName=fcrepo-import-export packageName=fcrepo-exts/fcrepo-import-export
 ARG IMPORT_EXPORT_VERSION=1.2.0
 ARG IMPORT_EXPORT_FILE=fcrepo-import-export-${IMPORT_EXPORT_VERSION}.jar
 ARG IMPORT_EXPORT_URL=https://github.com/fcrepo-exts/fcrepo-import-export/releases/download/fcrepo-import-export-${IMPORT_EXPORT_VERSION}/${IMPORT_EXPORT_FILE}
 ARG IMPORT_EXPORT_SHA256=e767f43b0b4f639042b0e399ebfebdf61957515d585b7f0d2d8aeb9f877b12a0
 
+# renovate: datasource=github-releases depName=fcrepo-upgrade-utils packageName=fcrepo-exts/fcrepo-upgrade-utils
 ARG UPGRADE_UTILS_VERSION=6.3.0
 ARG UPGRADE_UTILS_FILE=fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}.jar
 ARG UPGRADE_UTILS_URL=https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${UPGRADE_UTILS_VERSION}/${UPGRADE_UTILS_FILE}

@@ -2,6 +2,7 @@
 FROM base
 
 ARG TARGETARCH
+# renovate: datasource=github-releases depName=custom-composer packageName=composer/composer
 ARG COMPOSER_VERSION=2.8.2
 ARG COMPOSER_FILE=composer.phar
 ARG COMPOSER_URL=https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}

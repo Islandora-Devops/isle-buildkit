@@ -41,6 +41,13 @@
   "customManagers": [
     {
       "customType": "regex",
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"
+      ]
+    },
+    {
+      "customType": "regex",
       "fileMatch": [
         "(^|/)activemq/Dockerfile$"
       ],
@@ -54,18 +61,6 @@
     {
       "customType": "regex",
       "fileMatch": [
-        "(^|/)nginx/Dockerfile$"
-      ],
-      "matchStrings": [
-        "ARG COMPOSER_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
-      ],
-      "datasourceTemplate": "custom.composer",
-      "depNameTemplate": "custom-composer",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
         "(^|/)solr/Dockerfile$"
       ],
       "matchStrings": [
@@ -74,18 +69,6 @@
       "datasourceTemplate": "custom.solr",
       "depNameTemplate": "apache-solr",
       "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)solr/Dockerfile$"
-      ],
-      "matchStrings": [
-        "ARG OCRHIGHLIGHT_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
-      ],
-      "datasource": "github-releases",
-      "depNameTemplate": "solr-ocrhighlighting",
-      "packageName": "dbmdz/solr-ocrhighlighting"
     },
     {
       "customType": "regex",

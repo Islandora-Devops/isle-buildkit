@@ -4,6 +4,7 @@ FROM drupal
 
 ARG TARGETARCH
 
+# renovate: datasource=github-releases depName=alpine-pkg-glibc packageName=sgerrand/alpine-pkg-glibc
 ARG GLIBC_VERSION="2.35-r1"
 ARG GLIBC_FILE="glibc-${GLIBC_VERSION}.apk"
 ARG GLIBC_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/${GLIBC_FILE}"
