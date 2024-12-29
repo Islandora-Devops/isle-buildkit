@@ -1,8 +1,10 @@
 {
   "extends": [
     "config:best-practices",
-    ":rebaseStalePrs",
-    "customManagers:dockerfileVersions"
+    ":rebaseStalePrs"
+  ],
+  "enabledManagers": [
+    "custom.regex"
   ],
   "packageRules": [
     {
@@ -20,17 +22,6 @@
       "packagePatterns": ["^apache/solr$"],
       "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
       "versioning": "semver"
-    },
-    {
-      "matchManagers": [
-        "github-actions",
-        "dockerfile",
-        "docker-compose",
-        "gradle",
-        "gradle-wrapper",
-        "composer"
-      ],
-      "enabled": false
     },
     {
       "matchUpdateTypes": [
