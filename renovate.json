@@ -63,7 +63,7 @@
       ],
       "postUpgradeTasks": {
         "commands": [
-          "bash ci/update-sha.sh \"{{{depName}}}\" \"{{{newVersion}}}\""
+          "bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\""
         ]
       }
     }
