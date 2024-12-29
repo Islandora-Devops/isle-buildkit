@@ -49,7 +49,7 @@ elif [ "$DEP" = "fcrepo" ]; then
   URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${NEW_VERSION}/fcrepo-webapp-${NEW_VERSION}.war"
   ARG="FCREPO_SHA256"
   DOCKERFILES=("fcrepo6/Dockerfile")
-  README="fcrepo/README.md"
+  README="fcrepo6/README.md"
 
 elif [ "$DEP" = "islandora-syn" ]; then
   URL="https://github.com/Islandora/Syn/releases/download/v${NEW_VERSION}/islandora-syn-${NEW_VERSION}-all.jar"
@@ -62,7 +62,7 @@ elif [ "$DEP" = "fcrepo-import-export" ]; then
   DOCKERFILES=("fcrepo6/Dockerfile")
 
 elif [ "$DEP" = "fcrepo-upgrade-utils" ]; then
-  URL="https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${NEW_VERSION}/fcrepo-upgrade-utils-${UPGRADE_UTILS_NEW_VERSION}.jar"
+  URL="https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${NEW_VERSION}/fcrepo-upgrade-utils-${NEW_VERSION}.jar"
   ARG="UPGRADE_UTILS_SHA256"
   DOCKERFILES=("fcrepo6/Dockerfile")
 
