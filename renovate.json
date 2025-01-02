@@ -1,0 +1,80 @@
+{
+  "extends": [
+    "config:best-practices",
+    ":rebaseStalePrs"
+  ],
+  "enabledManagers": [
+    "custom.regex"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "apache/activemq",
+        "apache/logging-log4j2",
+        "fcrepo/fcrepo",
+        "fcrepo-exts/fcrepo-import-export",
+        "fcrepo-exts/fcrepo-upgrade-utils"
+      ],
+      "extractVersion": "^(fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(\/|-)(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "semver"
+    },
+    {
+      "packagePatterns": ["^apache/solr$"],
+      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "semver"
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "groupName": "all non-major dependencies",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "matchDepNames": [
+        "alpine-pkg-glibc",
+        "apache-activemq",
+        "apache-log4j",
+        "apache-solr",
+        "apache-tomcat",
+        "cantaloupe",
+        "custom-composer",
+        "fcrepo",
+        "fcrepo-import-export",
+        "fcrepo-upgrade-utils",
+        "fits",
+        "fits-servlet",
+        "islandora-syn",
+        "solr-ocrhighlighting"
+      ],
+      "postUpgradeTasks": {
+        "commands": [
+          "bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\""
+        ]
+      }
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update _VERSION variables in Dockerfiles",
+      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)(\\s|$)"
+      ]
+    }
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "vulnerabilityAlerts": {
+    "enabled": true
+  }
+}

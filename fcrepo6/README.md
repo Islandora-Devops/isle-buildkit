@@ -1,6 +1,6 @@
 # Fcrepo
 
-Docker image for [fcrepo] version 6.5.0
+Docker image for [fcrepo] version 6.5.0.
 
 Please refer to the [Fcrepo Documentation] for more in-depth information.
 
