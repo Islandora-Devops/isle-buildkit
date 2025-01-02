@@ -97,7 +97,7 @@ else
 fi
 
 # update the Dockerfile(s) SHA256 with the file we're downloading
-SHA=$(curl -s "$URL" \
+SHA=$(curl -Ls "$URL" \
   | shasum -a 256 \
   | awk '{print $1}')
 if [[ "$OSTYPE" == "darwin"* ]]; then
