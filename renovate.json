@@ -1,4 +1,5 @@
 {
+  "branchPrefix": "renovate.",
   "extends": [
     "config:best-practices",
     ":rebaseStalePrs"
@@ -15,11 +16,13 @@
         "fcrepo-exts/fcrepo-import-export",
         "fcrepo-exts/fcrepo-upgrade-utils"
       ],
-      "extractVersion": "^(fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(\/|-)(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "extractVersion": "^(fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)(?<version>\\d+\\.\\d+\\.\\d+)$",
       "versioning": "semver"
     },
     {
-      "packagePatterns": ["^apache/solr$"],
+      "matchPackagePatterns": [
+        "^apache/solr$"
+      ],
       "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
       "versioning": "semver"
     },
@@ -63,7 +66,10 @@
     {
       "customType": "regex",
       "description": "Update _VERSION variables in Dockerfiles",
-      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile\\.[^/]*$"
+      ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)(\\s|$)"
       ]
