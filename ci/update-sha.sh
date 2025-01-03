@@ -91,6 +91,11 @@ elif [ "$DEP" = "apache-log4j" ]; then
     "fits/Dockerfile"
   )
 
+elif [ "$DEP" = "islandora-starter-site" ]; then
+  URL=https://github.com/Islandora-Devops/islandora-starter-site/archive/${NEW_VERSION}.tar.gz
+  ARG="SHA256"
+  DOCKERFILES=("test/Dockerfile")
+
 else
   echo "DEP not found"
   exit 0
