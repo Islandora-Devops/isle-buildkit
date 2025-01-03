@@ -7,6 +7,15 @@
   "enabledManagers": [
     "custom.regex"
   ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/tests/**",
+    "**/__fixtures__/**"
+  ],
   "packageRules": [
     {
       "matchPackageNames": [
@@ -66,7 +75,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update _(VERSION|COMMIT) variables in Dockerfiles",
+      "description": "Update (COMMIT|_VERSION) variables in Dockerfiles",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile\\.[^/]*$"
