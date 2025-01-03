@@ -63,6 +63,7 @@
         "fits-servlet",
         "islandora-syn",
         "islandora-starter-site",
+        "s6-overlay",
         "solr-ocrhighlighting"
       ],
       "postUpgradeTasks": {

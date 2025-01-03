@@ -11,6 +11,21 @@ ARG=""
 DOCKERFILES=()
 README=""
 
+# Function to update the Dockerfile(s) ARG SHA256 value
+update_dockerfile_sha() {
+  local URL="$1"
+  local ARG="$2"
+  local DOCKERFILES=("${@:3}")
+  local SHA
+  SHA=$(curl -Ls "$URL" | shasum -a 256 | awk '{print $1}')
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
+  else
+    sed -i 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
+  fi
+}
+
 echo "Updating SHA for $DEP@$NEW_VERSION"
 
 if [ "$DEP" = "apache-tomcat" ]; then
@@ -97,20 +112,29 @@ elif [ "$DEP" = "islandora-starter-site" ]; then
   ARG="SHA256"
   DOCKERFILES=("test/Dockerfile")
 
+elif [ "$DEP" = "s6-overlay" ]; then
+  BASE_URL="https://github.com/just-containers/s6-overlay/releases/download/v${NEW_VERSION}"
+  declare -A URLS_AND_ARGS=(
+    ["S6_OVERLAY_NOARCH_SHA256"]="$BASE_URL/s6-overlay-noarch.tar.xz"
+    ["S6_OVERLAY_SYMLINKS_ARCH_SHA256"]="$BASE_URL/s6-overlay-symlinks-arch.tar.xz"
+    ["S6_OVERLAY_SYMLINKS_NOARCH_SHA256"]="$BASE_URL/s6-overlay-symlinks-noarch.tar.xz"
+    ["S6_OVERLAY_AMD64_SHA256"]="$BASE_URL/s6-overlay-x86_64.tar.xz"
+    ["S6_OVERLAY_ARM64_SHA256"]="$BASE_URL/s6-overlay-aarch64.tar.xz"
+  )
+
+  for ARG in "${!URLS_AND_ARGS[@]}"; do
+    URL="${URLS_AND_ARGS[$ARG]}"
+    update_dockerfile_sha "$URL" "$ARG" "base/Dockerfile"
+  done
+
+  exit 0
+
 else
   echo "DEP not found"
   exit 0
 fi
 
-# update the Dockerfile(s) SHA256 with the file we're downloading
-SHA=$(curl -Ls "$URL" \
-  | shasum -a 256 \
-  | awk '{print $1}')
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  sed -i '' 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
-else
-  sed -i 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
-fi
+update_dockerfile_sha "$URL" "$ARG" "${DOCKERFILES[@]}"
 
 # update the README to specify the new version
 if [ "$README" != "" ]; then

@@ -2,7 +2,8 @@
 FROM alpine
 
 ARG TARGETARCH
-ARG S6_VERSION="3.2.0.0"
+# renovate: datasource=github-releases depName=s6-overlay packageName=just-containers/s6-overlay
+ARG S6_VERSION=3.2.0.0
 ARG S6_BASE_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}"
 ARG S6_OVERLAY_NOARCH=s6-overlay-noarch.tar.xz
 ARG S6_OVERLAY_NOARCH_SHA256="4b0c0907e6762814c31850e0e6c6762c385571d4656eb8725852b0b1586713b6"

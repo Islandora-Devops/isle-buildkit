@@ -527,6 +527,7 @@ Currently these docker images have some depenencies managed by renovate:
 
 ```
 activemq
+base
 blazegraph
 cantaloupe
 code-server
@@ -534,6 +535,7 @@ fcrepo6
 fits
 nginx
 solr
+test
 tomcat
 ```
 
