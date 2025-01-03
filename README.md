@@ -533,6 +533,7 @@ cantaloupe
 code-server
 fcrepo6
 fits
+handle
 nginx
 solr
 test
