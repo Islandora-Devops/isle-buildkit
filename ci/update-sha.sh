@@ -5,6 +5,7 @@ set -eou pipefail
 DEP=$1
 OLD_VERSION=$2
 NEW_VERSION=$3
+NEW_DIGEST=$4
 URL=""
 ARG=""
 DOCKERFILES=()
@@ -92,7 +93,7 @@ elif [ "$DEP" = "apache-log4j" ]; then
   )
 
 elif [ "$DEP" = "islandora-starter-site" ]; then
-  URL=https://github.com/Islandora-Devops/islandora-starter-site/archive/${NEW_VERSION}.tar.gz
+  URL=https://github.com/Islandora-Devops/islandora-starter-site/archive/${NEW_DIGEST}.tar.gz
   ARG="SHA256"
   DOCKERFILES=("test/Dockerfile")
 

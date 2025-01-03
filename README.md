@@ -545,7 +545,7 @@ Post upgrade tasks can only run on self-hosted Renovate instances, so this force
 npm install -g renovate
 export RENOVATE_REPOSITORIES=islandora-devops/isle-buildkit
 export RENOVATE_TOKEN=your-gh-pat
-export RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS='["bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\""]'
+export RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS='["bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""]'
 
 # this will issue a PR with any updates to
 # our docker images that have renovate configured properly
