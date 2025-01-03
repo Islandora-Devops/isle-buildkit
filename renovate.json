@@ -23,17 +23,16 @@
         "apache/logging-log4j2",
         "fcrepo/fcrepo",
         "fcrepo-exts/fcrepo-import-export",
-        "fcrepo-exts/fcrepo-upgrade-utils"
+        "fcrepo-exts/fcrepo-upgrade-utils",
+        "pgjdbc/pgjdbc"
       ],
-      "extractVersion": "^(fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)(?<version>\\d+\\.\\d+\\.\\d+)$",
-      "versioning": "semver"
+      "extractVersion": "^(REL|fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)?(?<version>\\d+\\.\\d+\\.\\d+)$"
     },
     {
       "matchPackagePatterns": [
         "^apache/solr$"
       ],
-      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
-      "versioning": "semver"
+      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$"
     },
     {
       "matchPackagePatterns": [
@@ -68,6 +67,8 @@
         "fcrepo-upgrade-utils",
         "fits",
         "fits-servlet",
+        "jdbc-mysql",
+        "jdbc-postgres",
         "islandora-syn",
         "islandora-starter-site",
         "s6-overlay",
