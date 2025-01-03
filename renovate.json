@@ -36,6 +36,13 @@
       "versioning": "semver"
     },
     {
+      "matchPackagePatterns": [
+        "^just-containers/s6-overlay$"
+      ],
+      "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "regex:^(?:v)?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)?$"
+    },
+    {
       "matchUpdateTypes": [
         "major"
       ],
