@@ -67,6 +67,7 @@
         "fcrepo-upgrade-utils",
         "fits",
         "fits-servlet",
+        "handle",
         "jdbc-mysql",
         "jdbc-postgres",
         "islandora-syn",
@@ -93,8 +94,29 @@
         "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)(\\s|$)",
         "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?) branch=(?<currentValue>.+?)\\s(?:ENV|ARG) COMMIT=(?<currentDigest>.+?)(\\s|$)"
       ]
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)handle/Dockerfile$"
+      ],
+      "matchStrings": [
+        "ARG HANDLE_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "custom.handle",
+      "depNameTemplate": "handle",
+      "versioningTemplate": "semver"
     }
   ],
+  "customDatasources": {
+    "handle": {
+      "defaultRegistryUrlTemplate": "https://handle.net/hnr-source/",
+      "format": "html",
+      "transformTemplates": [
+        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $match($v, /^handle-\\d+\\.\\d+\\.\\d+-distribution\\.tar\\.gz$/) }),function($v,$i,$a){ { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+/).match } })] }"
+      ]
+    }
+  },
   "labels": [
     "dependencies"
   ],

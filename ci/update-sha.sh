@@ -112,6 +112,11 @@ elif [ "$DEP" = "islandora-starter-site" ]; then
   ARG="SHA256"
   DOCKERFILES=("test/Dockerfile")
 
+elif [ "$DEP" = "handle" ]; then
+  URL="https://handle.net/hnr-source/handle-${NEW_VERSION}-distribution.tar.gz"
+  ARG=HANDLE_FILE_SHA256
+  DOCKERFILES=("handle/Dockerfile")
+
 elif [ "$DEP" = "jdbc-mysql" ]; then
   URL="https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-${NEW_VERSION}.tar.gz"
   ARG=MYSQL_DRIVER_FILE_SHA256
