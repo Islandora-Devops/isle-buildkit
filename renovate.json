@@ -7,6 +7,15 @@
   "enabledManagers": [
     "custom.regex"
   ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/tests/**",
+    "**/__fixtures__/**"
+  ],
   "packageRules": [
     {
       "matchPackageNames": [
@@ -14,17 +23,23 @@
         "apache/logging-log4j2",
         "fcrepo/fcrepo",
         "fcrepo-exts/fcrepo-import-export",
-        "fcrepo-exts/fcrepo-upgrade-utils"
+        "fcrepo-exts/fcrepo-upgrade-utils",
+        "pgjdbc/pgjdbc"
       ],
-      "extractVersion": "^(fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)(?<version>\\d+\\.\\d+\\.\\d+)$",
-      "versioning": "semver"
+      "extractVersion": "^(REL|fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)?(?<version>\\d+\\.\\d+\\.\\d+)$"
     },
     {
       "matchPackagePatterns": [
         "^apache/solr$"
       ],
-      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
-      "versioning": "semver"
+      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$"
+    },
+    {
+      "matchPackagePatterns": [
+        "^just-containers/s6-overlay$"
+      ],
+      "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "regex:^(?:v)?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)?$"
     },
     {
       "matchUpdateTypes": [
@@ -52,12 +67,17 @@
         "fcrepo-upgrade-utils",
         "fits",
         "fits-servlet",
+        "handle",
+        "jdbc-mysql",
+        "jdbc-postgres",
         "islandora-syn",
+        "islandora-starter-site",
+        "s6-overlay",
         "solr-ocrhighlighting"
       ],
       "postUpgradeTasks": {
         "commands": [
-          "bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\""
+          "bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""
         ]
       }
     }
@@ -65,16 +85,38 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update _VERSION variables in Dockerfiles",
+      "description": "Update (COMMIT|_VERSION) variables in Dockerfiles",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile\\.[^/]*$"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)(\\s|$)"
+        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)(\\s|$)",
+        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?) branch=(?<currentValue>.+?)\\s(?:ENV|ARG) COMMIT=(?<currentDigest>.+?)(\\s|$)"
       ]
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)handle/Dockerfile$"
+      ],
+      "matchStrings": [
+        "ARG HANDLE_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "custom.handle",
+      "depNameTemplate": "handle",
+      "versioningTemplate": "semver"
     }
   ],
+  "customDatasources": {
+    "handle": {
+      "defaultRegistryUrlTemplate": "https://handle.net/hnr-source/",
+      "format": "html",
+      "transformTemplates": [
+        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $match($v, /^handle-\\d+\\.\\d+\\.\\d+-distribution\\.tar\\.gz$/) }),function($v,$i,$a){ { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+/).match } })] }"
+      ]
+    }
+  },
   "labels": [
     "dependencies"
   ],
