@@ -10,7 +10,6 @@ env:
   LOG_LEVEL: debug
   RENOVATE_REPOSITORIES: islandora-devops/isle-buildkit
   RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS: '["bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""]'
-  RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
 jobs:
   run:
     runs-on: ubuntu-24.04
@@ -21,4 +20,11 @@ jobs:
         with:
           node-version: 20
 
-      - run: npx renovate --platform=github
+      - name: run renovate
+        run: |
+          # fetch GitHub App token for this repo
+          echo "${{ secrets.GH_APP_PRIV_KEY }}" | base64 -d > private-key.pem
+          export RENOVATE_TOKEN=$(./ci/fetch-app-token.sh ${{ secrets.GH_APP_ID }} ${{ secrets.GH_APP_INSTALLATION_ID }} private-key.pem)
+
+          # run renovate with our token
+          npx renovate --platform=github
