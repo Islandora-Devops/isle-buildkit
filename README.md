@@ -524,7 +524,7 @@ shasum -a 256 ${ALPACA_FILE}
 Several dependencies in this repo can be automatically updated using [renovate](https://www.mend.io/renovate/). Most dependencies are managed using [advanced capture](https://docs.renovatebot.com/modules/manager/regex/#advanced-capture) in the Dockerfile.
 
 
-Currently these docker images have some depenencies managed by renovate:
+Currently these docker images have some dependencies managed by renovate:
 
 ```
 activemq
@@ -549,15 +549,18 @@ Post upgrade tasks can only run on self-hosted Renovate instances, so this force
 
 We have [a GitHub Action](./.github/workflows/renovate.yml) that runs on a schedule (or can be triggered manually) to automate generating renovate updates.
 
-That action requires a GitHub App (`isle-buildkit-renovate`) to be installed in the Islandora-Devops repo. This app is needed to generate an access token to allow renovate to create PRs for us in the GitHub workflow. During installation, the app was restricted to only this repo. This is all configurable in the GitHub UI by Islandora-Devops admins.
+That action requires a GitHub App (`isle-buildkit-renovate`) to be installed in the Islandora-Devops GitHub org. This app is needed to generate a GitHub access token to allow renovate to create PRs for us in the GitHub workflow. During installation, the app was restricted to only this repo. This is all configurable in the GitHub UI by Islandora-Devops admins.
 
 The action requires three secrets.
 
-- The `GH_APP_INSTALLATION_ID` secret is the number found in the URL on [the GitHub Apps installation page for the Islandora-Devops org](https://github.com/organizations/Islandora-Devops/settings/installations) for the 
+- The `GH_APP_INSTALLATION_ID` secret is the number found in the URL on [the GitHub Apps installation page for the Islandora-Devops org](https://github.com/organizations/Islandora-Devops/settings/installations) for the `isle-buildkit-renovate` app
 
 - The two other secrets `GH_APP_ID` and `GH_APP_PRIV_KEY` can be found on [the GitHub App settings](https://github.com/organizations/Islandora-Devops/settings/apps/isle-buildkit-renovate)
   - The value of `GH_APP_ID` is shown at the top of the page at the above URL
-  - The value of `GH_APP_PRIV_KEY` is a base64 encoded string of a private key created at the bottom of the page in the above UI. Creating a new key will download the key to your local machine. You can then generate the value needed by the GitHub Action by running e.g. `base64 -i ~/Downloads/isle-buildkit-renovate.2025-01-06.private-key.pem` and pasting that value into https://github.com/Islandora-Devops/isle-buildkit/settings/secrets/actions/GH_APP_PRIV_KEY. **This value is probably the only truly secret value out of the three**. If this value is ever exposed it should be rotated by deleting the existing private key and generating a new one.
+  - The value of `GH_APP_PRIV_KEY` is a base64 encoded string of a private key created at the bottom of the page in the above UI (i.e. app settings). Creating a new key will download the key to your local machine. You can then generate the value needed by the GitHub Action by running e.g. `base64 -i ~/Downloads/isle-buildkit-renovate.2025-01-06.private-key.pem` and pasting that value into https://github.com/Islandora-Devops/isle-buildkit/settings/secrets/actions/GH_APP_PRIV_KEY.
+
+> [!IMPORTANT]
+> The `GH_APP_PRIV_KEY` value is the only truly secret value out of the three secrets needed by the action. If this value is ever exposed it must be rotated by deleting the existing private key and generating a new key.
 
 ##### Running renovate (manually for debugging)
 
