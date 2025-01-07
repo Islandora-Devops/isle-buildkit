@@ -29,17 +29,17 @@
       "extractVersion": "^(REL|fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)?(?<version>\\d+\\.\\d+\\.\\d+)$"
     },
     {
-      "matchPackagePatterns": [
-        "^apache/solr$"
-      ],
-      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$"
+      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "matchPackageNames": [
+        "/^apache/solr$/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "^just-containers/s6-overlay$"
-      ],
       "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)$",
-      "versioning": "regex:^(?:v)?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)?$"
+      "versioning": "regex:^(?:v)?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)?$",
+      "matchPackageNames": [
+        "/^just-containers/s6-overlay$/"
+      ]
     },
     {
       "matchUpdateTypes": [
