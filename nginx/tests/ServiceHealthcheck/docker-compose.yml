@@ -1,0 +1,19 @@
+---
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+name: nginx-servicehealthcheck
+services:
+  nginx:
+    <<: *common
+    image: ${NGINX:-islandora/nginx:local}
+    healthcheck:
+      interval: 10s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
