@@ -33,3 +33,5 @@ ENV \
     MYSQL_TRANSACTION_ISOLATION=READ-COMMITTED
 
 COPY --link rootfs /
+
+HEALTHCHECK CMD mysqladmin ping --socket=/var/run/mysqld/mysqld.sock2 | grep -q alive

@@ -93,3 +93,5 @@ ENV \
     SOLR_HOCR_PLUGIN_PATH=/opt/solr/server/solr/contrib/ocrhighlighting/lib
 
 COPY --link rootfs /
+
+HEALTHCHECK CMD curl -s http://localhost/status | grep -q pool
