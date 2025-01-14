@@ -5,10 +5,14 @@ x-common: &common
   restart: "no"
 
 services:
-  nginx:
+  activemq:
     <<: *common
-    image: ${NGINX:-islandora/nginx:local}
+    image: ${ACTIVEMQ:-islandora/activemq:local}
+  fcrepo6:
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
+    image: ${FCREPO6:-islandora/fcrepo6:local}
+    depends_on:
+      - activemq

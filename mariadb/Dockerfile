@@ -34,4 +34,4 @@ ENV \
 
 COPY --link rootfs /
 
-HEALTHCHECK CMD mysqladmin ping --socket=/var/run/mysqld/mysqld.sock2 | grep -q alive
+HEALTHCHECK CMD mysqladmin ping --socket=/var/run/mysqld/mysqld.sock | grep -q alive

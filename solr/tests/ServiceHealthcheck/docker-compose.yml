@@ -5,9 +5,9 @@ x-common: &common
   restart: "no"
 
 services:
-  nginx:
+  solr:
     <<: *common
-    image: ${NGINX:-islandora/nginx:local}
+    image: ${SOLR:-islandora/solr:local}
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:
