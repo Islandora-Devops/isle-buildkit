@@ -30,6 +30,7 @@ tasks.named<DockerComposeUp>("test") {
                     }
 
                     if (foundHealthyService) {
+                        println("Service is healthy. Exiting test...")
                         project.exec {
                             commandLine = baseArguments + listOf("stop")
                             standardOutput = outputStream
