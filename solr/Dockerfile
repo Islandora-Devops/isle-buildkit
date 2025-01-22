@@ -3,10 +3,10 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=github-tags depName=apache-solr packageName=apache/solr
-ARG SOLR_VERSION=9.7.0
+ARG SOLR_VERSION=9.8.0
 ARG SOLR_FILE=solr-${SOLR_VERSION}.tgz
 ARG SOLR_URL=https://archive.apache.org/dist/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz
-ARG SOLR_FILE_SHA256="38548b86fa4e3c87883875952da124bf7d742cb8f7b25d37a1176833588e8552"
+ARG SOLR_FILE_SHA256="9948dcf798c196b834c4cbb420d1ea5995479431669d266c33d46548b67e69e1"
 # renovate: datasource=github-releases depName=solr-ocrhighlighting packageName=dbmdz/solr-ocrhighlighting
 ARG OCRHIGHLIGHT_VERSION=0.9.1
 ARG OCRHIGHLIGHT_FILE=solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
