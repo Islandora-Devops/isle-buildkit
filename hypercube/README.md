@@ -1,6 +1,6 @@
 # Hypercube
 
-Docker image for [Hypercube].
+Docker image for [Hypercube], built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
 
 ## Dependencies
 

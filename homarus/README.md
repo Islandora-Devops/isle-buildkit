@@ -1,6 +1,6 @@
 # Homarus
 
-Docker image for [Homarus].
+Docker image for [Homarus], built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
 
 ## Dependencies
 

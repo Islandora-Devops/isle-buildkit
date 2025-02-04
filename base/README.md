@@ -1,7 +1,8 @@
 # Base
 
-Base Docker image from which almost all others are derived. It is not meant to
-be run on its own.
+Base Docker image from which almost all others are derived, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+
+It is not meant to be run on its own.
 
 It's based off off [Alpine Linux], and includes [s6 overlay] and [confd].
 

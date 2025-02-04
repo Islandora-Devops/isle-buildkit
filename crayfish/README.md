@@ -1,6 +1,6 @@
 # Crayfish
 
-Docker image for [Crayfish] (**unreleased version**).
+Docker image for [Crayfish] (**unreleased version**), built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
 
 Acts as base Docker image for Crayfish based micro-services. It is not meant to
 be run on its own it is only used to cache the download.

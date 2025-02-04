@@ -1,6 +1,6 @@
 # Fcrepo
 
-Docker image for [fcrepo] version 6.5.1.
+Docker image for [fcrepo] version 6.5.1, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
 
 Please refer to the [Fcrepo Documentation] for more in-depth information.
 

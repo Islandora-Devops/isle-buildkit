@@ -1,6 +1,6 @@
 # Fits
 
-Docker image for [Fits](https://projects.iq.harvard.edu/fits/home) version 1.6.0.
+Docker image for [Fits](https://projects.iq.harvard.edu/fits/home) version 1.6.0, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
 
 Please refer to the [Fits Documentation] for more in-depth information.
 
