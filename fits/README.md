@@ -2,6 +2,8 @@
 
 Docker image for [Fits](https://projects.iq.harvard.edu/fits/home) version 1.6.0.
 
+Built from [Islandora-DevOps/isle-buildkit fits](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/fits)
+
 Please refer to the [Fits Documentation] for more in-depth information.
 
 As a quick example this will bring up an instance of [Fits](https://projects.iq.harvard.edu/fits/home), and allow you

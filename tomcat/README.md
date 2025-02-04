@@ -2,6 +2,8 @@
 
 Docker image for [Tomcat] version 9.0.98.
 
+Built from [Islandora-DevOps/isle-buildkit tomcat](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/tomcat)
+
 Please refer to the [Tomcat Documentation] for more in-depth information.
 
 As a quick example this will bring up an instance of [Tomcat], and allow you

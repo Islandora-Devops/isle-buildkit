@@ -2,6 +2,8 @@
 
 Docker image for [Drupal].
 
+Built from [Islandora-DevOps/isle-buildkit drupal](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/drupal)
+
 Acts as base Docker image for Drupal based projects, it doesn't install Drupal
 as consumers of this image are expected to provide their own composer file.
 Instead it provides startup scripts that allow Drupal to be installed when the

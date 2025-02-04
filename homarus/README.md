@@ -2,6 +2,8 @@
 
 Docker image for [Homarus].
 
+Built from [Islandora-DevOps/isle-buildkit homarus](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/homarus)
+
 ## Dependencies
 
 Requires `islandora/crayfish` docker image to build. Please refer to the

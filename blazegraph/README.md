@@ -2,6 +2,8 @@
 
 Docker image for [Blazegraph] version 2.1.5.
 
+Built from [Islandora-DevOps/isle-buildkit blazegraph](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/blazegraph)
+
 Please refer to the [Blazegraph Documentation] for more in-depth information.
 
 As a quick example this will bring up an instance of [Blazegraph], and allow you
