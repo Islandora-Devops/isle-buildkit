@@ -1,6 +1,6 @@
 # PostgreSQL
 
-Docker image for [PostgreSQL] version 163, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+Docker image for [PostgreSQL] version 16.3, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
 
 Please refer to the [PostgreSQL Documentation] for more in-depth information.
 

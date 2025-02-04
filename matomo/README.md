@@ -1,6 +1,6 @@
 # Matomo
 
-Docker image for [Matomo] version 4.151, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+Docker image for [Matomo] version 4.15.1, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
 
 Please refer to the [Matomo Documentation] for more in-depth information.
 
