@@ -1,6 +1,8 @@
 # Cantaloupe
 
-Docker image for [Cantaloupe] version 5.0.6, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+Docker image for [Cantaloupe] version 5.0.6.
+
+Built from [Islandora-DevOps/isle-buildkit cantaloupe](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/cantaloupe)
 
 Please refer to the [Cantaloupe Documentation] for more in-depth information.
 

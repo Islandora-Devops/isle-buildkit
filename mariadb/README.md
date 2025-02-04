@@ -1,6 +1,8 @@
 # MariaDB
 
-Docker image for [MariaDB] version 10.11.6, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+Docker image for [MariaDB] version 10.11.6
+
+Built from [Islandora-DevOps/isle-buildkit mariadb](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/mariadb)
 
 Please refer to the [MariaDB Documentation] for more in-depth information.
 

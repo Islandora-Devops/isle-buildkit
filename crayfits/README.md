@@ -1,6 +1,8 @@
 # Crayfits
 
-Docker image for [CrayFits] (**unreleased version**), built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+Docker image for [CrayFits] (**unreleased version**).
+
+Built from [Islandora-DevOps/isle-buildkit crayfits](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/crayfits)
 
 Acts as base Docker image for CrayFits based micro-services. It is not meant to
 be run on its own.

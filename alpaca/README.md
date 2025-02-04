@@ -1,6 +1,8 @@
 # Alpaca
 
-Docker image for [Alpaca] version 2.2.0, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+Docker image for [Alpaca] version 2.2.0.
+
+Built from [Islandora-DevOps/isle-buildkit alpaca](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/alpaca)
 
 Please refer to the [Alpaca Documentation] for more in-depth information.
 

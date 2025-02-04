@@ -1,6 +1,8 @@
 # Milliner
 
-Docker image for [Milliner], built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+Docker image for [Milliner].
+
+Built from [Islandora-DevOps/isle-buildkit milliner](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/milliner)
 
 ## Dependencies
 

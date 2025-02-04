@@ -1,6 +1,8 @@
 # Riprap
 
-Docker image for [Riprap] (**unreleased version**) micro-service, built from [Islandora-DevOps/isle-buildkit](https://github.com/Islandora-DevOps/isle-buildkit/).
+Docker image for [Riprap] (**unreleased version**) micro-service.
+
+Built from [Islandora-DevOps/isle-buildkit riprap](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/riprap)
 
 Please refer to the [Riprap Documentation] for more in-depth information.
 
