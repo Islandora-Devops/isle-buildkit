@@ -4,6 +4,7 @@
 x-common: &common
   restart: "no"
 
+name: nginx-servicehealthcheck
 services:
   nginx:
     <<: *common

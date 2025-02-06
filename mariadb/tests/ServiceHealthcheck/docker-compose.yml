@@ -4,6 +4,7 @@
 x-common: &common
   restart: "no"
 
+name: mariadb-servicehealthcheck
 services:
   mariadb:
     <<: *common
