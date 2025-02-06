@@ -2,6 +2,8 @@
 
 Docker image for [PostgreSQL] version 16.3
 
+Built from [Islandora-DevOps/isle-buildkit postgresql](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/postgresql)
+
 Please refer to the [PostgreSQL Documentation] for more in-depth information.
 
 As a quick example this will bring up an instance of PostgreSQL, and allow you to
