@@ -67,9 +67,9 @@ additional settings, volumes, ports, etc.
 | CANTALOUPE_ENDPOINT_ADMIN_ENABLED                                                      | "false"                                                          |
 | CANTALOUPE_ENDPOINT_ADMIN_SECRET                                                       |                                                                  |
 | CANTALOUPE_ENDPOINT_ADMIN_USERNAME                                                     | "admin"                                                          |
-| CANTALOUPE_ENDPOINT_API_ENABLED                                                        | "false"                                                          |
-| CANTALOUPE_ENDPOINT_API_SECRET                                                         |                                                                  |
-| CANTALOUPE_ENDPOINT_API_USERNAME                                                       |                                                                  |
+| CANTALOUPE_ENDPOINT_API_ENABLED                                                        | "true"                                                           |
+| CANTALOUPE_ENDPOINT_API_SECRET                                                         | random 16 char string                                            |
+| CANTALOUPE_ENDPOINT_API_USERNAME                                                       | "islandora"                                                      |
 | CANTALOUPE_ENDPOINT_HEALTH_DEPENDENCY_CHECK                                            | "false"                                                          |
 | CANTALOUPE_ENDPOINT_IIIF_1_ENABLED                                                     | "false"                                                          |
 | CANTALOUPE_ENDPOINT_IIIF_2_ENABLED                                                     | "true"                                                           |
