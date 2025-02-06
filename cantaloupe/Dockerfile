@@ -1,7 +1,20 @@
 # syntax=docker/dockerfile:1.5.1
-FROM java
+FROM base
 
 ARG TARGETARCH
+
+# FOR TESTING PURPOSES ONLY DO NOT MERGE.
+RUN --mount=type=cache,id=cantaloupe-java-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk update && \
+    apk add \
+        openjdk22@testing \
+        maven \
+    && \
+    cleanup.sh
+
+ENV JAVA_HOME=/usr/lib/jvm/default-jvm
+
 # renovate: datasource=github-releases depName=cantaloupe packageName=cantaloupe-project/cantaloupe
 ARG CANTALOUPE_VERSION=5.0.6
 ARG CANTALOUPE_FILE="cantaloupe-${CANTALOUPE_VERSION}.zip"
