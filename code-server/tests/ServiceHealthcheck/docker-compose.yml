@@ -1,0 +1,15 @@
+---
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+name: code-server-servicehealthcheck
+services:
+  code-server:
+    <<: *common
+    image: ${CODE_SERVER:-islandora/code-server:local}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

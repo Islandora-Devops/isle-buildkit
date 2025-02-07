@@ -9,7 +9,7 @@ tasks.named<DockerComposeUp>("test") {
     doFirst {
         supplyAsync(
             {
-                val maxAttempts = 10
+                val maxAttempts = 20
                 val delayBetweenAttempts = 5000L // 5 seconds in milliseconds
                 var attempt = 0
                 var foundHealthyService = false
