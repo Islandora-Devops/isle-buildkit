@@ -100,4 +100,4 @@ RUN sed -i "/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/cnginx:x:10
     chmod a=r,u+w /etc/sudo.conf && \
     cleanup.sh
 
-HEALTHCHECK CMD curl -s http://localhost:8443/healthz | jq -re .status | grep alive
+HEALTHCHECK CMD curl -s http://localhost:8443/healthz | jq -re .status

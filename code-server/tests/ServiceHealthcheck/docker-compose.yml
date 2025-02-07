@@ -6,7 +6,7 @@ x-common: &common
 
 name: code-server-servicehealthcheck
 services:
-  codeserver:
+  code-server:
     <<: *common
     image: ${CODE_SERVER:-islandora/code-server:local}
     volumes:
