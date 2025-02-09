@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM java
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/cantaloupe
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=cantaloupe packageName=cantaloupe-project/cantaloupe
 ARG CANTALOUPE_VERSION=5.0.6

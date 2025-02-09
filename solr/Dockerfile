@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM java
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/solr
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 # renovate: datasource=github-tags depName=apache-solr packageName=apache/solr
 ARG SOLR_VERSION=9.7.0

@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM tomcat
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/blazegraph
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 ARG BLAZEGRAPH_VERSION="CANDIDATE_2_1_5"
 ARG BLAZEGRAPH_FILE="blazegraph.war"

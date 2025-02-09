@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM alpine
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/base
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=s6-overlay packageName=just-containers/s6-overlay
 ARG S6_VERSION=3.2.0.2

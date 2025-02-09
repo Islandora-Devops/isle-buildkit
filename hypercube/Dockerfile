@@ -2,6 +2,9 @@
 FROM leptonica
 FROM crayfish AS hypercube
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/hypercube
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 
 EXPOSE 8000

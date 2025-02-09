@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM nginx
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/drupal
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 
 EXPOSE 80

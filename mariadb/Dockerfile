@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM base
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/mariadb
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 
 EXPOSE 3306
@@ -27,7 +30,7 @@ RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/c
 # hardware.
 ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=600000
 
-ENV \ 
+ENV \
     # Default Mariadb value of 16 MB (bytes)
     MYSQL_MAX_ALLOWED_PACKET=16777216 \
     MYSQL_TRANSACTION_ISOLATION=READ-COMMITTED

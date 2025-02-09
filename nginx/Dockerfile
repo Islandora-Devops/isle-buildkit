@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM base
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/nginx
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=custom-composer packageName=composer/composer
 ARG COMPOSER_VERSION=2.8.4

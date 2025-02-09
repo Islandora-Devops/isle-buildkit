@@ -2,6 +2,9 @@
 FROM imagemagick
 FROM crayfish
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/houdini
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 
 EXPOSE 8000

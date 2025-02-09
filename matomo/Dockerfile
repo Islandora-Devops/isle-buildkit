@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM nginx
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/matomo
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 
 ARG MATOMO_VERSION="5.0.3"

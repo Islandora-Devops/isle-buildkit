@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM crayfish
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/homarus
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 
 EXPOSE 8000

@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM tomcat
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/fcrepo6
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 
 # renovate: datasource=github-releases depName=fcrepo packageName=fcrepo/fcrepo

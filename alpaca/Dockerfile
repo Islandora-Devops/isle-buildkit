@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM java
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/alpaca
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 ARG ALPACA_VERSION="2.2.0"
 ARG ALPACA_FILE="islandora-alpaca-app-${ALPACA_VERSION}-all.jar"

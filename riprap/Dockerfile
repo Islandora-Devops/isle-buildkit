@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM nginx as download
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/riprap
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 ARG COMMIT=6e38c75c1af3ee92a4fc54f8b8e36bc294812421
 ARG FILE=${COMMIT}.tar.gz

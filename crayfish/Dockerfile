@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM nginx
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/crayfish
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 # When updating this commit also update the lock files in rootfs/var/www/crayfish.
 ARG TARGETARCH
 ARG COMMIT=6ba190c3ffebabb83e977c6515ecfd022692f6e5

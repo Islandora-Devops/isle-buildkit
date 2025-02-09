@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.5.1
 FROM drupal
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/test
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 # renovate: datasource=git-refs depName=islandora-starter-site packageName=https://github.com/islandora-devops/islandora-starter-site branch=main
 ARG COMMIT=082032e325509950b3df535fd1630b5492af4f36

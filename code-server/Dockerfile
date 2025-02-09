@@ -2,6 +2,9 @@
 FROM nodejs
 FROM drupal
 
+LABEL org.opencontainers.image.source=https://github.com/Islandora-DevOps/isle-buildkit/tree/main/code-server
+LABEL org.opencontainers.image.url=https://github.com/Islandora-DevOps/isle-buildkit/
+
 ARG TARGETARCH
 
 # renovate: datasource=github-releases depName=alpine-pkg-glibc packageName=sgerrand/alpine-pkg-glibc
