@@ -1,5 +1,4 @@
 # syntax=docker/dockerfile:1.5.1
-FROM imagemagick
 FROM crayfish
 
 ARG TARGETARCH
