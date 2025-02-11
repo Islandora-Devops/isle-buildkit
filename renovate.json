@@ -5,7 +5,8 @@
     ":rebaseStalePrs"
   ],
   "enabledManagers": [
-    "custom.regex"
+    "custom.regex",
+    "github-actions"
   ],
   "ignorePaths": [
     "**/node_modules/**",
@@ -106,6 +107,16 @@
       "datasourceTemplate": "custom.handle",
       "depNameTemplate": "handle",
       "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^Dockerfile$",
+      ],
+      "matchStrings": [
+        "\\s+#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=(?<currentValue>.*)\\s",
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ],
   "customDatasources": {

@@ -42,6 +42,22 @@ RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/op
     rm /opt/fits/lib/jna-* && \
     cleanup.sh
 
+ENV \
+    # renovate: datasource=repology depName=alpine_3_20/file
+    FILE_VERSION=5.45-r1 \
+    # renovate: datasource=repology depName=alpine_3_20/java-jna
+    JNA_VERSION=5.11.0-r1 \
+    # renovate: datasource=repology depName=alpine_3_20/libmediainfo
+    LIBMEDIAINFO_VERSION=24.04-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/libzen
+    LIBZEN_VERSION=0.4.41-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/perl
+    PERL_VERSION=5.38.3-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/py3-pip
+    PIP_VERSION=24.0-r2	 \
+    # renovate: datasource=repology depName=alpine_3_20/python3
+    PYTHON_VERSION=3.12.9-r0
+  
 # Replace linux shared libraries with ones that target muslibc and are platform specific.
 # Also add perl for exiftool, and platform specific jna so native libs can be loaded.
 #
@@ -50,13 +66,13 @@ RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/op
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=fits-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
-        file \
-        java-jna \
-        libmediainfo \
-        libzen \
-        perl \
-        py3-pip \
-        python3 \
+        file=="${FILE_VERSION}" \
+        java-jna=="${JNA_VERSION}" \
+        libmediainfo=="${LIBMEDIAINFO_VERSION}" \
+        libzen=="${LIBZEN_VERSION}" \
+        perl=="${PERL_VERSION}" \
+        py3-pip=="${PIP_VERSION}" \
+        python3=="${PYTHON_VERSION}" \
     && \
     pip install --break-system-packages jpylyzer && \
     cleanup.sh

@@ -21,39 +21,46 @@ RUN --mount=type=cache,id=download-downloads-${TARGETARCH},sharing=locked,target
     chmod a+x /usr/bin/composer && \
     cleanup.sh
 
+ENV \
+    # renovate: datasource=repology depName=alpine_3_20/icu-data-full
+    ICU_VERSION=74.2-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/nginx
+    NGINX_VERSION=1.26.2-r0	\
+    # renovate: datasource=repology depName=alpine_3_20/php83
+    PHP_VERSION=8.3.15-r0
+
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
-        icu-data-full \
-        nginx \
-        php83 \
-        php83-ctype \
-        php83-curl \
-        php83-dom \
-        php83-fileinfo \
-        php83-fpm \
-        php83-gd \
-        php83-iconv \
-        php83-intl \
-        php83-json \
-        php83-ldap \
-        php83-mbstring \
-        php83-mysqli \
-        php83-opcache \
-        php83-openssl \
-        php83-pdo \
-        php83-pdo_mysql \
-        php83-pdo_pgsql \
-        php83-phar \
-        php83-session \
-        php83-simplexml \
-        php83-sockets \
-        php83-tokenizer \
-        php83-xml \
-        php83-xmlreader \
-        php83-xmlwriter \
-        php83-xsl \
-        php83-zip \
+        icu-data-full=="${ICU_VERSION}" \
+        nginx=="${NGINX_VERSION}" \
+        php83=="${PHP_VERSION}" \
+        php83-ctype=="${PHP_VERSION}" \
+        php83-curl=="${PHP_VERSION}" \
+        php83-dom=="${PHP_VERSION}" \
+        php83-fileinfo=="${PHP_VERSION}" \
+        php83-fpm=="${PHP_VERSION}" \
+        php83-gd=="${PHP_VERSION}" \
+        php83-iconv=="${PHP_VERSION}" \
+        php83-intl=="${PHP_VERSION}" \
+        php83-ldap=="${PHP_VERSION}" \
+        php83-mbstring=="${PHP_VERSION}" \
+        php83-mysqli=="${PHP_VERSION}" \
+        php83-opcache=="${PHP_VERSION}" \
+        php83-openssl=="${PHP_VERSION}" \
+        php83-pdo=="${PHP_VERSION}" \
+        php83-pdo_mysql=="${PHP_VERSION}" \
+        php83-pdo_pgsql=="${PHP_VERSION}" \
+        php83-phar=="${PHP_VERSION}" \
+        php83-session=="${PHP_VERSION}" \
+        php83-simplexml=="${PHP_VERSION}" \
+        php83-sockets=="${PHP_VERSION}" \
+        php83-tokenizer=="${PHP_VERSION}" \
+        php83-xml=="${PHP_VERSION}" \
+        php83-xmlreader=="${PHP_VERSION}" \
+        php83-xmlwriter=="${PHP_VERSION}" \
+        php83-xsl=="${PHP_VERSION}" \
+        php83-zip=="${PHP_VERSION}" \
     && \
     addgroup nginx jwt && \
     cleanup.sh

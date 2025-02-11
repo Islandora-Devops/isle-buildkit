@@ -32,6 +32,32 @@ RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
     composer install -n -d /var/lib/nginx/.composer && \
     cleanup.sh
 
+ENV \
+    # renovate: datasource=repology depName=alpine_3_20/alpine-sdk
+    ALPINE_SDK_VERSION=1.0-r1 \
+    # renovate: datasource=repology depName=alpine_3_20/docker-cli
+    DOCKER_CLI_VERSION=26.1.5-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/htop
+    HTOP_VERSION=3.3.0-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/krb5-dev
+    KRB5_DEV_VERSION=1.21.3-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/openssh
+    OPENSSH_VERSION=9.7_p1-r4 \
+    # renovate: datasource=repology depName=alpine_3_20/parallel
+    PARALLEL_VERSION=20240422-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/php83-pecl-xdebug
+    PHP_XDEBUG_VERSION=3.3.2-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/python3
+    PYTHON_VERSION=3.12.9-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/spdlog
+    SPDLOG_VERSION=1.14.1-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/sudo
+    SUDO_VERSION=1.9.15_p5-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/unison
+    UNISON_VERSION=2.53.5-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/npm
+    NPM_VERSION=10.9.1-r0
+
 # Include commonly used tools and xdebug.
 # PHPStorm remote requries Glibc.
 RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
@@ -39,18 +65,18 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
     --mount=type=bind,from=nodejs,source=/etc/apk/keys,target=/etc/apk/keys \
     apk add \
         /packages/nodejs-*.apk \
-        alpine-sdk \
-        docker-cli \
-        htop \
-        krb5-dev \
-        openssh \
-        parallel \
-        php83-pecl-xdebug \
-        python3 \
-        spdlog \
-        sudo \
-        unison \
-        npm \
+        alpine-sdk=="${ALPINE_SDK_VERSION}" \
+        docker-cli=="${DOCKER_CLI_VERSION}" \
+        htop=="${HTOP_VERSION}" \
+        krb5-dev=="${KRB5_DEV_VERSION}" \
+        openssh=="${OPENSSH_VERSION}" \
+        parallel=="${PARALLEL_VERSION}" \
+        php83-pecl-xdebug=="${PHP_XDEBUG_VERSION}" \
+        python3=="${PYTHON_VERSION}" \
+        spdlog=="${SPDLOG_VERSION}" \
+        sudo=="${SUDO_VERSION}" \
+        unison=="${UNISON_VERSION}" \
+        npm=="${NPM_VERSION}" \
     && \
     cleanup.sh
 

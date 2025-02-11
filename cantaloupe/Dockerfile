@@ -29,15 +29,23 @@ RUN --mount=type=cache,id=cantaloupe-downloads-${TARGETARCH},sharing=locked,targ
     mv "/opt/cantaloupe/cantaloupe-${CANTALOUPE_VERSION}.jar" "/opt/cantaloupe/cantaloupe.jar" && \
     cleanup.sh
 
+ENV \
+    # renovate: datasource=repology depName=alpine_3_20/ffmpeg
+    FFMPEG_VERSION=6.1.1-r8 \
+    # renovate: datasource=repology depName=alpine_3_20/openjpeg-tools
+    OPENJPG_TOOLS_VERSION=2.5.2-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/libjpeg-turbo
+    LIBJPEG_TURBO_VERSION=3.0.3-r0
+
 # Opted for OpenJPG over Kakadu but that could be changed.
 # For reference see: https://cantaloupe-project.github.io/manual/5.0/processors.html
 #
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=cantaloupe-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
-        ffmpeg \
-        openjpeg-tools \
-        libjpeg-turbo \
+        ffmpeg=="${FFMPEG_VERSION}" \
+        openjpeg-tools=="${OPENJPG_TOOLS_VERSION}" \
+        libjpeg-turbo=="${LIBJPEG_TURBO_VERSION}" \
     && \
     mkdir -p /opt/libjpeg-turbo/lib && \
     ln -s /usr/lib/libturbojpeg.so.0 /opt/libjpeg-turbo/lib/libturbojpeg.so && \
