@@ -92,7 +92,7 @@
         "(^|/)Dockerfile\\.[^/]*$"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)(\\s|$)",
+        "([ ]+)?# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG)? .+?_VERSION=(?<currentValue>.+?)(\\s|$)",
         "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?) branch=(?<currentValue>.+?)\\s(?:ENV|ARG) COMMIT=(?<currentDigest>.+?)(\\s|$)"
       ]
     },
@@ -107,16 +107,6 @@
       "datasourceTemplate": "custom.handle",
       "depNameTemplate": "handle",
       "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "^Dockerfile$"
-      ],
-      "matchStrings": [
-        "(\\s+)?#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?(\\s+)?(ARG)?.*?_VERSION=(?<currentValue>.*)\\s"
-      ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}loose{{/if}}"
     }
   ],
   "customDatasources": {
