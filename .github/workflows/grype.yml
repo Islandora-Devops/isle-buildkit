@@ -25,16 +25,16 @@ jobs:
         with:
           username: ${{ secrets.registry_user }}
           password: ${{ secrets.registry_password }}
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3
         with:
           distribution: temurin
           java-version: 11
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@a8f75513eafdebd8141bd1cd4e30fcd194af8dfa # v2
         with:
           cache-read-only: false
           arguments: ${{ inputs.image }}:grype ${{ inputs.digest }} --info
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         if: always()
         with:
           name: ${{ inputs.image }} Grype Reports
