@@ -13,9 +13,13 @@ RUN --mount=type=cache,id=homarus-composer-${TARGETARCH},sharing=locked,target=/
     ln -s /var/www/crayfish/Homarus/public /var/www/html && \
     cleanup.sh
 
+ARG \
+    # renovate: datasource=repology depName=alpine_3_20/ffmpeg
+    FFMPEG_VERSION=6.1.1-r8
+
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=homarus-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
-    apk add ffmpeg && \
+    apk add ffmpeg=="${FFMPEG_VERSION}" && \
     addgroup nginx jwt && \
     cleanup.sh
 

@@ -21,28 +21,64 @@ LABEL License="MIT License"
 # Start s6
 ENTRYPOINT [ "/init" ]
 
+ARG \
+  # renovate: datasource=repology depName=alpine_3_20/bash
+  BASH_VERSION=5.2.26-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/curl
+  CURL_VERSION=8.11.1-r1 \
+  # renovate: datasource=repology depName=alpine_3_20/git
+  GIT_VERSION=2.45.3-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/gnupg
+  GNUPG_VERSION=2.4.5-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/gzip
+  GZIP_VERSION=1.13-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/jq
+  JQ_VERSION=1.7.1-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/mariadb-client
+  MARIADB_CLIENT_VERSION=10.11.10-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/mysql-client
+  MYSQL_CLIENT_VERSION=10.11.10-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/netcat-openbsd	
+  NETCAT_OPENBSD_VERSION=1.226-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/openssl
+  OPENSSL_VERSION=3.3.2-r2 \
+  # renovate: datasource=repology depName=alpine_3_20/patch
+  PATCH_VERSION=2.7.6-r10 \
+  # renovate: datasource=repology depName=alpine_3_20/postgresql16-client
+  POSTGRES_CLIENT_VERSION=16.6-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/procps-ng
+  PROCPS_VERSION=4.0.4-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/shadow
+  SHADOW_VERSION=4.15.1-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/util-linux
+  UTIL_LINUX_VERSION=2.40.1-r1 \
+  # renovate: datasource=repology depName=alpine_3_20/wget
+  WGET_VERSION=1.24.5-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/yq-go
+  YQ_VERSION=4.44.1-r2
+
 # Install packages and tools required by all downstream images.
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=base-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     ln -s /var/cache/apk /etc/apk/cache && \
     apk add \
-        bash \
-        curl \
-        git \
-        gnupg \
-        gzip \
-        jq \
-        mariadb-client \
-        mysql-client \
-        netcat-openbsd \
-        openssl \
-        patch \
-        postgresql-client \
-        procps \
-        shadow \
-        util-linux \
-        wget \
-        yq \
+        bash=="${BASH_VERSION}" \
+        curl=="${CURL_VERSION}" \
+        git=="${GIT_VERSION}" \
+        gnupg=="${GNUPG_VERSION}" \
+        gzip=="${GZIP_VERSION}" \
+        jq=="${JQ_VERSION}" \
+        mariadb-client=="${MARIADB_CLIENT_VERSION}" \
+        mysql-client=="${MYSQL_CLIENT_VERSION}" \
+        netcat-openbsd=="${NETCAT_OPENBSD_VERSION}" \
+        openssl=="${OPENSSL_VERSION}" \
+        patch=="${PATCH_VERSION}" \
+        postgresql16-client=="${POSTGRES_CLIENT_VERSION}" \
+        procps=="${PROCPS_VERSION}" \
+        shadow=="${SHADOW_VERSION}" \
+        util-linux=="${UTIL_LINUX_VERSION}" \
+        wget=="${WGET_VERSION}" \
+        yq=="${YQ_VERSION}" \
     && \
     addgroup -g 2000 jwt && \
     echo '' > /root/.ash_history

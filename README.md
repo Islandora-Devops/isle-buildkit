@@ -521,25 +521,11 @@ shasum -a 256 ${ALPACA_FILE}
 
 #### Renovate
 
-Several dependencies in this repo can be automatically updated using [renovate](https://www.mend.io/renovate/). Most dependencies are managed using [advanced capture](https://docs.renovatebot.com/modules/manager/regex/#advanced-capture) in the Dockerfile.
+Many dependencies in this repo are automatically updated using [renovate](https://www.mend.io/renovate/). Most dependencies are managed using [advanced capture](https://docs.renovatebot.com/modules/manager/regex/#advanced-capture) in the Dockerfile. We utilize the following datasources to receive automatic updates:
 
-
-Currently these docker images have some dependencies managed by renovate:
-
-```
-activemq
-base
-blazegraph
-cantaloupe
-code-server
-fcrepo6
-fits
-handle
-nginx
-solr
-test
-tomcat
-```
+- [repology](https://docs.renovatebot.com/modules/datasource/repology/) to update pinned OS packages installed via `apk`
+- [github-releases](https://docs.renovatebot.com/modules/datasource/github-releases/) and [github-tags](https://docs.renovatebot.com/modules/datasource/github-tags/) for software we install manually
+- [git-refs](https://docs.renovatebot.com/modules/datasource/git-refs/) when we pin to a specific commit on a branch
 
 Since renovate does not natively support the ability to extract a sha256 from a file, we need [a custom shell script](./ci/update-sha.sh) in the [postUpgradeTasks](https://docs.renovatebot.com/configuration-options/#postupgradetasks) to calculate the sha256 of our files and update our Dockerfile accordingly.
 
