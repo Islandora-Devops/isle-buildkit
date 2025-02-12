@@ -21,7 +21,7 @@ LABEL License="MIT License"
 # Start s6
 ENTRYPOINT [ "/init" ]
 
-ENV \
+ARG \
   # renovate: datasource=repology depName=alpine_3_20/bash
   BASH_VERSION=5.2.26-r0 \
   # renovate: datasource=repology depName=alpine_3_20/curl

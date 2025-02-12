@@ -32,7 +32,7 @@ RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
     composer install -n -d /var/lib/nginx/.composer && \
     cleanup.sh
 
-ENV \
+ARG \
     # renovate: datasource=repology depName=alpine_3_20/alpine-sdk
     ALPINE_SDK_VERSION=1.0-r1 \
     # renovate: datasource=repology depName=alpine_3_20/docker-cli

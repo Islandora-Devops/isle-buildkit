@@ -29,7 +29,7 @@ RUN --mount=type=cache,id=cantaloupe-downloads-${TARGETARCH},sharing=locked,targ
     mv "/opt/cantaloupe/cantaloupe-${CANTALOUPE_VERSION}.jar" "/opt/cantaloupe/cantaloupe.jar" && \
     cleanup.sh
 
-ENV \
+ARG \
     # renovate: datasource=repology depName=alpine_3_20/ffmpeg
     FFMPEG_VERSION=6.1.1-r8 \
     # renovate: datasource=repology depName=alpine_3_20/openjpeg-tools

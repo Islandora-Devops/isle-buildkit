@@ -42,7 +42,7 @@ RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/op
     rm /opt/fits/lib/jna-* && \
     cleanup.sh
 
-ENV \
+ARG \
     # renovate: datasource=repology depName=alpine_3_20/file
     FILE_VERSION=5.45-r1 \
     # renovate: datasource=repology depName=alpine_3_20/java-jna

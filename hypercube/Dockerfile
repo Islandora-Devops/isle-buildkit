@@ -14,7 +14,7 @@ RUN --mount=type=cache,id=hypercube-composer-${TARGETARCH},sharing=locked,target
     ln -s /var/www/crayfish/Hypercube/public /var/www/html && \
     cleanup.sh
 
-ENV \
+ARG \
     # renovate: datasource=repology depName=alpine_3_20/poppler-utils
     POPPLER_VERSION=24.02.0-r2 \
     # renovate: datasource=repology depName=alpine_3_20/tesseract-ocr

@@ -11,7 +11,7 @@ EXPOSE 8000
 
 WORKDIR /var/www/riprap
 
-ENV \
+ARG \
     # renovate: datasource=repology depName=alpine_3_20/php83
     PHP_VERSION=8.3.15-r0
 

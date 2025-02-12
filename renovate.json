@@ -114,7 +114,7 @@
         "^Dockerfile$"
       ],
       "matchStrings": [
-        "(\\s+)?#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?(\\s+)?(ENV)?.*?_VERSION=(?<currentValue>.*)\\s"
+        "(\\s+)?#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?(\\s+)?(ARG)?.*?_VERSION=(?<currentValue>.*)\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}loose{{/if}}"
     }

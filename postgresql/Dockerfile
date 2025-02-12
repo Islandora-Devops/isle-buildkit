@@ -5,7 +5,7 @@ ARG TARGETARCH
 
 EXPOSE 5432
 
-ENV \
+ARG \
     # renovate: datasource=repology depName=alpine_3_20/postgresql16
     POSTGRESQL_VERSION=16.6-r0 
 

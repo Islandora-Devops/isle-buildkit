@@ -5,7 +5,7 @@ ARG TARGETARCH
 
 EXPOSE 3306
 
-ENV \
+ARG \
   # renovate: datasource=repology depName=alpine_3_20/mariadb
   MARIADB_VERSION=10.11.10-r0
 

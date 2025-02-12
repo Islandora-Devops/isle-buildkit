@@ -13,7 +13,7 @@ RUN --mount=type=cache,id=homarus-composer-${TARGETARCH},sharing=locked,target=/
     ln -s /var/www/crayfish/Homarus/public /var/www/html && \
     cleanup.sh
 
-ENV \
+ARG \
     # renovate: datasource=repology depName=alpine_3_20/ffmpeg
     FFMPEG_VERSION=6.1.1-r8
 

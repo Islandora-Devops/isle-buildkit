@@ -21,7 +21,7 @@ RUN --mount=type=cache,id=download-downloads-${TARGETARCH},sharing=locked,target
     chmod a+x /usr/bin/composer && \
     cleanup.sh
 
-ENV \
+ARG \
     # renovate: datasource=repology depName=alpine_3_20/icu-data-full
     ICU_VERSION=74.2-r0 \
     # renovate: datasource=repology depName=alpine_3_20/nginx
