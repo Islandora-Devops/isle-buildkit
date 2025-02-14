@@ -19,6 +19,12 @@
   ],
   "packageRules": [
     {
+      "matchDatasources": [
+        "repology"
+      ],
+      "versioning": "loose"
+    },
+    {
       "groupName": "apk-packages",
       "matchDatasources": [
         "repology"
@@ -27,8 +33,7 @@
         "minor",
         "patch",
         "digest"
-      ],
-      "versioning": "loose"
+      ]
     },
     {
       "matchPackageNames": [
