@@ -524,6 +524,7 @@ shasum -a 256 ${ALPACA_FILE}
 Many dependencies in this repo are automatically updated using [renovate](https://www.mend.io/renovate/). Most dependencies are managed using [advanced capture](https://docs.renovatebot.com/modules/manager/regex/#advanced-capture) in the Dockerfile. We utilize the following datasources to receive automatic updates:
 
 - [repology](https://docs.renovatebot.com/modules/datasource/repology/) to update pinned OS packages installed via `apk`
+  - these dependencies are automatically merged when our CI tests pass using [automerge](https://docs.renovatebot.com/key-concepts/automerge/#automerging-and-scheduling)
 - [github-releases](https://docs.renovatebot.com/modules/datasource/github-releases/) and [github-tags](https://docs.renovatebot.com/modules/datasource/github-tags/) for software we install manually
 - [git-refs](https://docs.renovatebot.com/modules/datasource/git-refs/) when we pin to a specific commit on a branch
 
@@ -563,6 +564,11 @@ export RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS='["bash ci/update-sha.sh \"{{{depN
 renovate --platform=github
 ```
 
+##### Testing renovate changes in GitHub
+
+If you want to test changes to renovate, doing so can be difficult since renovate typically only reads the `main` branch of a repository to define its rules.
+
+However, we have a workflow dispatch rule in our renovate bot that allows setting which branch to run renovate against as the base branch. So if you have a change to renovate you want to understand how it will work, you can make the changes in a PR, then visit the [run renovate](https://github.com/Islandora-Devops/isle-buildkit/actions/workflows/renovate.yml) GitHub UI and click "Run workflow" **being sure to select your PR branch**. This will run renovate as if your PR is in the main branch.
 
 #### Updating Composer
 
