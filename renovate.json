@@ -33,6 +33,11 @@
         "minor",
         "patch",
         "digest"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "requiredStatusChecks": [
+        "test-test/test"
       ]
     },
     {
