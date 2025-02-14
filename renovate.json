@@ -19,6 +19,18 @@
   ],
   "packageRules": [
     {
+      "groupName": "apk-packages",
+      "matchDatasources": [
+        "repology"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "versioning": "loose"
+    },
+    {
       "matchPackageNames": [
         "apache/activemq",
         "apache/logging-log4j2",

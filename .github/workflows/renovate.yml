@@ -2,9 +2,9 @@ name: run renovate
 
 on:
   workflow_dispatch:
-  # Monday mornings
+  # every morning
   schedule:
-    - cron: '15 1 * * 1'
+    - cron: '15 6 * * *'
 
 env:
   LOG_LEVEL: debug
