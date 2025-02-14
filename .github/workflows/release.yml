@@ -10,15 +10,17 @@ permissions:
   actions: write
 jobs:
   release:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && !contains(github.event.pull_request.title, '[skip-release]')
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' # v4
         with:
           fetch-depth: 0
+
       - name: install autotag binary
         run: curl -sL https://git.io/autotag-install | sudo sh -s -- -b /usr/bin
+
       - name: create release
         run: |-
           TAG=$(autotag)
