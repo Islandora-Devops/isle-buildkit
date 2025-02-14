@@ -35,10 +35,7 @@
         "digest"
       ],
       "automerge": true,
-      "automergeType": "pr",
-      "requiredStatusChecks": [
-        "test-test/test"
-      ]
+      "automergeType": "pr"
     },
     {
       "matchPackageNames": [
