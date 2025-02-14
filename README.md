@@ -568,7 +568,7 @@ renovate --platform=github
 
 If you want to test changes to renovate, doing so can be difficult since renovate typically only reads the `main` branch of a repository to define its rules.
 
-However, we have a workflow dispatch rule in our renovate bot that allows setting which branch to run renovate against as the base branch. So if you have a change to renovate you want to understand how it will work, you can make the changes in a PR, then visit the [run renovate](https://github.com/Islandora-Devops/isle-buildkit/actions/workflows/renovate.yml) GitHub UI and click "Run workflow" **being sure to select your PR branch**. This will run renovate as if your PR is in the main branch.
+However, we have a workflow dispatch rule in our renovate bot that allows setting which branch to run renovate against as the base branch. So if you have a change to renovate you want to understand how it will work, you can make the changes in a PR, then visit the [run renovate](https://github.com/Islandora-Devops/isle-buildkit/actions/workflows/renovate.yml) GitHub UI and click "Run workflow" **being sure to select your PR branch**. This will run renovate as if your PR is in the main branch. This will likely result in PRs being made against your test PR, but you can just manually update the PR to use the main branch instead - though it likely will get cleared up after you merge your renovate testing PR.
 
 #### Updating Composer
 
