@@ -33,7 +33,9 @@
         "minor",
         "patch",
         "digest"
-      ]
+      ],
+      "automerge": true,
+      "automergeType": "pr"
     },
     {
       "matchPackageNames": [

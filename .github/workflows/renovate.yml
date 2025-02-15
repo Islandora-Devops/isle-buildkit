@@ -1,6 +1,14 @@
 name: run renovate
 
 on:
+  push:
+    branches:
+      - main
+  pull_request_target:
+    branches:
+      - main
+    types:
+      - closed
   workflow_dispatch:
   # every morning
   schedule:
@@ -23,10 +31,14 @@ jobs:
           node-version: 20
 
       - name: run renovate
+        env:
+          BASE_BRANCH: ${{ github.event_name == 'schedule' && 'main' || github.ref_name }}
         run: |
           # fetch GitHub App token for this repo
           echo "${{ secrets.GH_APP_PRIV_KEY }}" | base64 -d > private-key.pem
           export RENOVATE_TOKEN=$(./ci/fetch-app-token.sh ${{ secrets.GH_APP_ID }} ${{ secrets.GH_APP_INSTALLATION_ID }} private-key.pem)
 
           # run renovate with our token
-          npx renovate --platform=github
+          # using branch set in workflow dispatch to allow testing PRs
+          echo "Running renovate against ${BASE_BRANCH}"
+          npx renovate --platform=github --base-branch "$BASE_BRANCH"
