@@ -40,5 +40,7 @@ jobs:
 
           # run renovate with our token
           # using branch set in workflow dispatch to allow testing PRs
-          echo "Running renovate against ${BASE_BRANCH}"
-          npx renovate --platform=github --base-branch "$BASE_BRANCH"
+          # see https://docs.renovatebot.com/configuration-options/#basebranches
+          export RENOVATE_BASE_BRANCHES=$(jq -c -n --arg branch "$BASE_BRANCH" '[$branch]')
+          echo "Running renovate against ${RENOVATE_BASE_BRANCHES}"
+          npx renovate --platform=github
