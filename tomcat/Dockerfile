@@ -3,8 +3,8 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=github-tags depName=apache-tomcat packageName=apache/tomcat
-ARG TOMCAT_VERSION=9.0.98
-ARG TOMCAT_FILE_SHA256="1d9a1104c2e235a5baff6e9ca8e28be3d864803fafc478f5c13c2ae6a5ed3d6f"
+ARG TOMCAT_VERSION=9.0.100
+ARG TOMCAT_FILE_SHA256="1253158c45a31a8168b41436512acc2292e94a3468b1bd8e4d0a7a79dcc1f5ff"
 
 EXPOSE 8080
 
