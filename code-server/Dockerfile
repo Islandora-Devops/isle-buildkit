@@ -42,7 +42,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_20/krb5-dev
     KRB5_DEV_VERSION=1.21.3-r0 \
     # renovate: datasource=repology depName=alpine_3_20/openssh
-    OPENSSH_VERSION=9.7_p1-r4 \
+    OPENSSH_VERSION=9.7_p1-r5 \
     # renovate: datasource=repology depName=alpine_3_20/parallel
     PARALLEL_VERSION=20240422-r0 \
     # renovate: datasource=repology depName=alpine_3_20/php83-pecl-xdebug

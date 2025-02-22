@@ -45,7 +45,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_20/patch
   PATCH_VERSION=2.7.6-r10 \
   # renovate: datasource=repology depName=alpine_3_20/postgresql16-client
-  POSTGRES_CLIENT_VERSION=16.6-r0 \
+  POSTGRES_CLIENT_VERSION=16.8-r0 \
   # renovate: datasource=repology depName=alpine_3_20/procps-ng
   PROCPS_VERSION=4.0.4-r0 \
   # renovate: datasource=repology depName=alpine_3_20/shadow
