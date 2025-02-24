@@ -46,7 +46,9 @@ RUN --mount=type=cache,id=cantaloupe-apk-${TARGETARCH},sharing=locked,target=/va
         ffmpeg=="${FFMPEG_VERSION}" \
         openjpeg-tools=="${OPENJPG_TOOLS_VERSION}" \
         libjpeg-turbo=="${LIBJPEG_TURBO_VERSION}" \
+        libturbojpeg=="${LIBJPEG_TURBO_VERSION}" \
     && \
+    test -e /usr/lib/libturbojpeg.so.0 && \
     mkdir -p /opt/libjpeg-turbo/lib && \
     ln -s /usr/lib/libturbojpeg.so.0 /opt/libjpeg-turbo/lib/libturbojpeg.so && \
     create-service-user.sh --name cantaloupe --group jwt /data /opt/cantaloupe/logs && \
