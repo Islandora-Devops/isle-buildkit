@@ -3,15 +3,15 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=github-tags depName=apache-solr packageName=apache/solr
-ARG SOLR_VERSION=9.7.0
+ARG SOLR_VERSION=9.8.0
 ARG SOLR_FILE=solr-${SOLR_VERSION}.tgz
 ARG SOLR_URL=https://archive.apache.org/dist/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz
-ARG SOLR_FILE_SHA256="38548b86fa4e3c87883875952da124bf7d742cb8f7b25d37a1176833588e8552"
+ARG SOLR_FILE_SHA256="9948dcf798c196b834c4cbb420d1ea5995479431669d266c33d46548b67e69e1"
 # renovate: datasource=github-releases depName=solr-ocrhighlighting packageName=dbmdz/solr-ocrhighlighting
-ARG OCRHIGHLIGHT_VERSION=0.9.1
+ARG OCRHIGHLIGHT_VERSION=0.9.2
 ARG OCRHIGHLIGHT_FILE=solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
 ARG OCRHIGHLIGHT_URL=https://github.com/dbmdz/solr-ocrhighlighting/releases/download/${OCRHIGHLIGHT_VERSION}/solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
-ARG OCRHIGHLIGHT_FILE_SHA256="91be01fe52553ea774b9a6804b149ab2fc9b8937eb19d91455b0b17c865c2971"
+ARG OCRHIGHLIGHT_FILE_SHA256="e47ccc180fb0eecb9b68fa8506bbe0b22d416758a5277bce58073e898f9e07fb"
 ARG OCRHIGHLIGHT_DEST=/opt/solr/server/solr/contrib/ocrhighlighting/lib
 
 EXPOSE 8983
