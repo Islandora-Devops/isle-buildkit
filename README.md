@@ -463,7 +463,6 @@ The following docker images are provided:
 - [hypercube]
 - [java]
 - [mariadb]
-- [matomo]
 - [milliner]
 - [nginx]
 - [postgresql]
@@ -746,8 +745,7 @@ are arranged in a hierarchy, that roughly follows below:
         │   └── riprap
         ├── crayfits
         ├── drupal
-        │   └── test
-        └── matomo
+            └── test
 ```
 
 [imagemagick] & [leptonica] stand outside of the hierarchy as they are use only
@@ -912,7 +910,6 @@ adding the following, and restarting `Docker`:
 [hypercube]: ./hypercube/README.md
 [java]: ./java/README.md
 [mariadb]: ./mariadb/README.md
-[matomo]: ./matomo/README.md
 [milliner]: ./milliner/README.md
 [nginx]: ./nginx/README.md
 [postgresql]: ./postgresql/README.md

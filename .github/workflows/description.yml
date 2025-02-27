@@ -154,14 +154,6 @@ jobs:
           repository: ${{ vars.repository }}/mariadb
           readme-filepath: ./mariadb/README.md
 
-      - name: Matomo - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v3
-        with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
-          repository: ${{ vars.repository }}/matomo
-          readme-filepath: ./matomo/README.md
-
       - name: Milliner - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
         with:
