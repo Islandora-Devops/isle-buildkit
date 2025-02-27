@@ -1,0 +1,149 @@
+{
+  "branchPrefix": "renovate.",
+  "extends": [
+    "config:best-practices",
+    ":rebaseStalePrs"
+  ],
+  "enabledManagers": [
+    "custom.regex",
+    "github-actions"
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/tests/**",
+    "**/__fixtures__/**"
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "repology"
+      ],
+      "versioning": "loose"
+    },
+    {
+      "groupName": "apk-packages",
+      "matchDatasources": [
+        "repology"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchPackageNames": [
+        "apache/activemq",
+        "apache/logging-log4j2",
+        "fcrepo/fcrepo",
+        "fcrepo-exts/fcrepo-import-export",
+        "fcrepo-exts/fcrepo-upgrade-utils",
+        "pgjdbc/pgjdbc"
+      ],
+      "extractVersion": "^(REL|fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)?(?<version>\\d+\\.\\d+\\.\\d+)$"
+    },
+    {
+      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "matchPackageNames": [
+        "/^apache/solr$/"
+      ]
+    },
+    {
+      "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)$",
+      "versioning": "regex:^(?:v)?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)?$",
+      "matchPackageNames": [
+        "/^just-containers/s6-overlay$/"
+      ]
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "groupName": "all non-major dependencies",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "matchDepNames": [
+        "alpine-pkg-glibc",
+        "apache-activemq",
+        "apache-log4j",
+        "apache-solr",
+        "apache-tomcat",
+        "cantaloupe",
+        "custom-composer",
+        "fcrepo",
+        "fcrepo-import-export",
+        "fcrepo-upgrade-utils",
+        "fits",
+        "fits-servlet",
+        "handle",
+        "jdbc-mysql",
+        "jdbc-postgres",
+        "islandora-syn",
+        "islandora-starter-site",
+        "s6-overlay",
+        "solr-ocrhighlighting"
+      ],
+      "postUpgradeTasks": {
+        "commands": [
+          "bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""
+        ]
+      }
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update (COMMIT|_VERSION) variables in Dockerfiles",
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile\\.[^/]*$"
+      ],
+      "matchStrings": [
+        "([ ]+)?# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG)? .+?_VERSION=(?<currentValue>.+?)(\\s|$)",
+        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?) branch=(?<currentValue>.+?)\\s(?:ENV|ARG) COMMIT=(?<currentDigest>.+?)(\\s|$)"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}loose{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)handle/Dockerfile$"
+      ],
+      "matchStrings": [
+        "ARG HANDLE_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "custom.handle",
+      "depNameTemplate": "handle",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "customDatasources": {
+    "handle": {
+      "defaultRegistryUrlTemplate": "https://handle.net/hnr-source/",
+      "format": "html",
+      "transformTemplates": [
+        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $match($v, /^handle-\\d+\\.\\d+\\.\\d+-distribution\\.tar\\.gz$/) }),function($v,$i,$a){ { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+/).match } })] }"
+      ]
+    }
+  },
+  "labels": [
+    "dependencies"
+  ],
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "vulnerabilityAlerts": {
+    "enabled": true
+  }
+}

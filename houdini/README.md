@@ -2,6 +2,8 @@
 
 Docker image for [Houdini].
 
+Built from [Islandora-DevOps/isle-buildkit houdini](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/houdini)
+
 ## Dependencies
 
 Requires `islandora/crayfish` docker image to build. Please refer to the

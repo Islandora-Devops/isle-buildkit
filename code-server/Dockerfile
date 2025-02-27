@@ -4,7 +4,8 @@ FROM drupal
 
 ARG TARGETARCH
 
-ARG GLIBC_VERSION="2.35-r1"
+# renovate: datasource=github-releases depName=alpine-pkg-glibc packageName=sgerrand/alpine-pkg-glibc
+ARG GLIBC_VERSION=2.35-r1
 ARG GLIBC_FILE="glibc-${GLIBC_VERSION}.apk"
 ARG GLIBC_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/${GLIBC_FILE}"
 ARG GLIBC_SHA256="276f43ce9b2d5878422bca94ca94e882a7eb263abe171d233ac037201ffcaf06"
@@ -31,6 +32,32 @@ RUN --mount=type=bind,source=rootfs/var/lib/nginx/.composer,target=/composer \
     composer install -n -d /var/lib/nginx/.composer && \
     cleanup.sh
 
+ARG \
+    # renovate: datasource=repology depName=alpine_3_20/alpine-sdk
+    ALPINE_SDK_VERSION=1.0-r1 \
+    # renovate: datasource=repology depName=alpine_3_20/docker-cli
+    DOCKER_CLI_VERSION=26.1.5-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/htop
+    HTOP_VERSION=3.3.0-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/krb5-dev
+    KRB5_DEV_VERSION=1.21.3-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/openssh
+    OPENSSH_VERSION=9.7_p1-r5 \
+    # renovate: datasource=repology depName=alpine_3_20/parallel
+    PARALLEL_VERSION=20240422-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/php83-pecl-xdebug
+    PHP_XDEBUG_VERSION=3.3.2-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/python3
+    PYTHON_VERSION=3.12.9-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/spdlog
+    SPDLOG_VERSION=1.14.1-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/sudo
+    SUDO_VERSION=1.9.15_p5-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/unison
+    UNISON_VERSION=2.53.5-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/npm
+    NPM_VERSION=10.9.1-r0
+
 # Include commonly used tools and xdebug.
 # PHPStorm remote requries Glibc.
 RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
@@ -38,32 +65,23 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
     --mount=type=bind,from=nodejs,source=/etc/apk/keys,target=/etc/apk/keys \
     apk add \
         /packages/nodejs-*.apk \
-        alpine-sdk \
-        docker-cli \
-        htop \
-        krb5-dev \
-        openssh \
-        parallel \
-        php83-pecl-xdebug \
-        python3 \
-        spdlog \
-        sudo \
-        unison \
-        yarn \
+        alpine-sdk=="${ALPINE_SDK_VERSION}" \
+        docker-cli=="${DOCKER_CLI_VERSION}" \
+        htop=="${HTOP_VERSION}" \
+        krb5-dev=="${KRB5_DEV_VERSION}" \
+        openssh=="${OPENSSH_VERSION}" \
+        parallel=="${PARALLEL_VERSION}" \
+        php83-pecl-xdebug=="${PHP_XDEBUG_VERSION}" \
+        python3=="${PYTHON_VERSION}" \
+        spdlog=="${SPDLOG_VERSION}" \
+        sudo=="${SUDO_VERSION}" \
+        unison=="${UNISON_VERSION}" \
+        npm=="${NPM_VERSION}" \
     && \
     cleanup.sh
 
-RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/usr/local/share/.cache/yarn \
-    yarn global add node-gyp@9.3.1 && \
-    yarn global add --ignore-engines --unsafe-perm \
-        @microsoft/1ds-core-js@^3.2.13 \
-        code-server@4.22.1 \
-        minimist@^1.2.6 \
-        node-gyp@9.3.1 \
-        @vscode/spdlog@^0.15.0 \
-        yauzl@^2.9.2 \
-        yazl@^2.4.3 \
-    && \
+RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/root/.npm \
+    CXXFLAGS='-DNODE_API_EXPERIMENTAL_NOGC_ENV_OPT_OUT -U_FORTIFY_SOURCE' npm install --global --unsafe-perm code-server@4.91.1 && \
     cleanup.sh
 
 # Drush requires HOME to be set as such.
@@ -107,3 +125,5 @@ RUN sed -i "/nginx:x:100:101:nginx:\/var\/lib\/nginx:\/sbin\/nologin/cnginx:x:10
     chown -R nginx:nginx /var/lib/nginx && \
     chmod a=r,u+w /etc/sudo.conf && \
     cleanup.sh
+
+HEALTHCHECK CMD curl -s http://localhost:8443/healthz | jq -re .status

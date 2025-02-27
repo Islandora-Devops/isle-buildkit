@@ -1,6 +1,8 @@
 # Nginx
 
-Docker image for [Nginx] version 1.22.1 and [FPM] version 8.1.15.
+Docker image for [Nginx] version 1.24.0 and [FPM] version 8.3.8.
+
+Built from [Islandora-DevOps/isle-buildkit nginx](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/nginx)
 
 Please refer to the [Nginx Documentation] and [FPM Documentation] for more
 in-depth information.

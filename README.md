@@ -21,6 +21,7 @@
 - [Docker Images](#docker-images)
   - [Updating Dependencies](#updating-dependencies)
     - [Updating Composer](#updating-composer)
+    - [Renovate](#renovate)
   - [Updating Configuration](#updating-configuration)
 - [Design Considerations](#design-considerations)
   - [Confd](#confd)
@@ -68,6 +69,8 @@ To build the Docker images using the provided Gradle build scripts requires:
 
 > N.B The version of `make` that comes with OSX is to old, please update
 > using `brew` etc.
+
+> N.B On Mac OSX you may need to run `docker context use default` before `make bake`
 
 To verify you have all the requirements run the following command.
 
@@ -513,6 +516,57 @@ shasum -a 256 ${ALPACA_FILE}
 
 > N.B. Please read the release notes the new version and account for any changes
 > to configuration that are required, as well as test locally.
+
+#### Renovate
+
+Many dependencies in this repo are automatically updated using [renovate](https://www.mend.io/renovate/). Most dependencies are managed using [advanced capture](https://docs.renovatebot.com/modules/manager/regex/#advanced-capture) in the Dockerfile. We utilize the following datasources to receive automatic updates:
+
+- [repology](https://docs.renovatebot.com/modules/datasource/repology/) to update pinned OS packages installed via `apk`
+  - these dependencies are automatically merged when our CI tests pass using [automerge](https://docs.renovatebot.com/key-concepts/automerge/#automerging-and-scheduling)
+- [github-releases](https://docs.renovatebot.com/modules/datasource/github-releases/) and [github-tags](https://docs.renovatebot.com/modules/datasource/github-tags/) for software we install manually
+- [git-refs](https://docs.renovatebot.com/modules/datasource/git-refs/) when we pin to a specific commit on a branch
+
+Since renovate does not natively support the ability to extract a sha256 from a file, we need [a custom shell script](./ci/update-sha.sh) in the [postUpgradeTasks](https://docs.renovatebot.com/configuration-options/#postupgradetasks) to calculate the sha256 of our files and update our Dockerfile accordingly.
+
+Post upgrade tasks can only run on self-hosted Renovate instances, so this forces us to run renovate on a properly configured runner (instead of using mend.io's free GitHub app to manage our dependencies).
+
+##### Running renovate (automated)
+
+We have [a GitHub Action](./.github/workflows/renovate.yml) that runs on a schedule (or can be triggered manually) to automate generating renovate updates.
+
+That action requires a GitHub App (`isle-buildkit-renovate`) to be installed in the Islandora-Devops GitHub org. This app is needed to generate a GitHub access token to allow renovate to create PRs for us in the GitHub workflow. During installation, the app was restricted to only this repo. This is all configurable in the GitHub UI by Islandora-Devops admins.
+
+The action requires three secrets.
+
+- The `GH_APP_INSTALLATION_ID` secret is the number found in the URL on [the GitHub Apps installation page for the Islandora-Devops org](https://github.com/organizations/Islandora-Devops/settings/installations) for the `isle-buildkit-renovate` app
+
+- The two other secrets `GH_APP_ID` and `GH_APP_PRIV_KEY` can be found on [the GitHub App settings](https://github.com/organizations/Islandora-Devops/settings/apps/isle-buildkit-renovate)
+  - The value of `GH_APP_ID` is shown at the top of the page at the above URL
+  - The value of `GH_APP_PRIV_KEY` is a base64 encoded string of a private key created at the bottom of the page in the above UI (i.e. app settings). Creating a new key will download the key to your local machine. You can then generate the value needed by the GitHub Action by running e.g. `base64 -i ~/Downloads/isle-buildkit-renovate.2025-01-06.private-key.pem` and pasting that value into https://github.com/Islandora-Devops/isle-buildkit/settings/secrets/actions/GH_APP_PRIV_KEY.
+
+> [!IMPORTANT]
+> The `GH_APP_PRIV_KEY` value is the only truly secret value out of the three secrets needed by the action. If this value is ever exposed it must be rotated by deleting the existing private key and generating a new key.
+
+##### Running renovate (manually for debugging)
+
+First, generate a GitHub token. Instructions can be found at https://docs.renovatebot.com/modules/platform/github/#running-using-a-fine-grained-token
+
+```
+npm install -g renovate
+export RENOVATE_REPOSITORIES=islandora-devops/isle-buildkit
+export RENOVATE_TOKEN=your-gh-pat
+export RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS='["bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""]'
+
+# this will issue a PR with any updates to
+# our docker images that have renovate configured properly
+renovate --platform=github
+```
+
+##### Testing renovate changes in GitHub
+
+If you want to test changes to renovate, doing so can be difficult since renovate typically only reads the `main` branch of a repository to define its rules.
+
+However, we have a workflow dispatch rule in our renovate bot that allows setting which branch to run renovate against as the base branch. So if you have a change to renovate you want to understand how it will work, you can make the changes in a PR, then visit the [run renovate](https://github.com/Islandora-Devops/isle-buildkit/actions/workflows/renovate.yml) GitHub UI and click "Run workflow" **being sure to select your PR branch**. This will run renovate as if your PR is in the main branch. This will likely result in PRs being made against your test PR, but you can just manually update the PR to use the main branch instead - though it likely will get cleared up after you merge your renovate testing PR.
 
 #### Updating Composer
 

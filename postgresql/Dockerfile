@@ -5,11 +5,14 @@ ARG TARGETARCH
 
 EXPOSE 5432
 
+ARG \
+    # renovate: datasource=repology depName=alpine_3_20/postgresql16
+    POSTGRESQL_VERSION=16.8-r0 
+
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=postgresql-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
-        postgresql \
-        postgresql-client \
+        postgresql16=="${POSTGRESQL_VERSION}" \
     && \
     mkdir -p /var/lib/postgresql/data /etc/postgresql && \
     chown -R postgres:postgres /var/lib/postgresql && \

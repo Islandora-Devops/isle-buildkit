@@ -162,7 +162,7 @@
       "type": "command",
       "command": "shellCommand.execute",
       "args": {
-        "command": "drush pm-list --field=path | sort -u | xargs -I{} echo $(drush drupal:directory)/{}",
+        "command": "drush pm-list --field=path | sort -u | xargs -I{} echo /var/www/drupal/web/{}",
         "cwd": "/var/www/drupal",
         "description": "Select Module/Theme"
       }

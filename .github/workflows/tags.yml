@@ -11,7 +11,7 @@ on:
         value: ${{ jobs.tags.outputs.tags }}
 jobs:
   tags:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       tags: ${{ steps.tags.outputs.tags }}
     steps:

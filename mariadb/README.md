@@ -1,6 +1,8 @@
 # MariaDB
 
-Docker image for [MariaDB] version 10.6.12
+Docker image for [MariaDB] version 10.11.6
+
+Built from [Islandora-DevOps/isle-buildkit mariadb](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/mariadb)
 
 Please refer to the [MariaDB Documentation] for more in-depth information.
 
@@ -41,7 +43,7 @@ default database connection configuration.
 | :------------------- | :------ | :------------------------------------------------------------------------------------ |
 | MYSQL_ROOT_PASSWORD  |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
 | MYSQL_ROOT_USER      |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
-| MYSQL_MAX_ALLOWED_PACKET | 16777216 | Max packet length to send to or receive from the server, [documentation](https://mariadb.com/docs/server/ref/mdb/system-variables/max_allowed_packet/) 
+| MYSQL_MAX_ALLOWED_PACKET | 16777216 | Max packet length to send to or receive from the server, [documentation](https://mariadb.com/docs/server/ref/mdb/system-variables/max_allowed_packet/)
 | MYSQL_TRANSACTION_ISOLATION | READ-COMMITTED | The isolation level for transactions.
 
 ## Logs

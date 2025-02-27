@@ -239,7 +239,7 @@ function install_site {
         use_existing_config_arg
     site="${1}"
     shift
-    drupal_root=$(drush drupal:directory)
+    drupal_root=/var/www/drupal/web
     driver=$(drupal_site_env "${site}" "DB_DRIVER")
     host=$(drupal_site_env "${site}" "DB_HOST")
     port=$(drupal_site_env "${site}" "DB_PORT")
@@ -343,7 +343,7 @@ function allow_settings_modifications {
     local site drupal_root subdir site_directory
     site="${1}"
     shift
-    drupal_root=$(drush drupal:directory)
+    drupal_root=/var/www/drupal/web
     subdir=$(drupal_site_env "${site}" "SUBDIR")
     site_directory=$(realpath "${drupal_root}/sites/${subdir}")
 
@@ -366,7 +366,7 @@ function restore_settings_ownership {
     shift
     previous_owner_group="${1}"
     shift
-    drupal_root=$(drush drupal:directory)
+    drupal_root=/var/www/drupal/web
     subdir=$(drupal_site_env "${site}" "SUBDIR")
     site_directory=$(realpath "${drupal_root}/sites/${subdir}")
 
@@ -388,7 +388,7 @@ function update_settings_php {
         fedora_url previous_owner_group
     site="${1}"
     shift
-    drupal_root=$(drush drupal:directory)
+    drupal_root=/var/www/drupal/web
     site_url=$(drupal_site_env "${site}" "SITE_URL")
     driver=$(drupal_site_env "${site}" "DB_DRIVER")
     host=$(drupal_site_env "${site}" "DB_HOST")
@@ -563,7 +563,7 @@ function create_solr_core {
     # Require a running Solr to create a core.
     wait_for_service "${site}" "SOLR"
 
-    curl -s "http://${host}:${port}/solr/admin/cores?action=CREATE&name=${core}&instanceDir=${core}&config=solrconfig.xml&dataDir=data" &>/dev/null
+    curl -s "http://${host}:${port}/solr/admin/cores?action=CREATE&name=${core}&instanceDir=${core}&config=solrconfig.xml&dataDir=data"
 }
 
 # Generate solr config and create a core for it.
@@ -644,7 +644,7 @@ function set_site_uuid {
     site="${1}"
     shift
     site_url=$(drupal_site_env "${site}" "SITE_URL")
-    drupal_root=$(drush drupal:directory)
+    drupal_root=/var/www/drupal/web
     # Handle the case if config_dir is a relative path.
     config_dir=$(realpath "$(drush --root="${drupal_root}" php:eval "echo \Drupal\Core\Site\Settings::get('config_sync_directory');")")
     uuid=$(awk '/uuid/ { print $2 }' "${config_dir:?}/system.site.yml")

@@ -4,7 +4,7 @@ set -e
 ARGS=(-m "${SOLR_MEMORY}")
 
 if [[ -n "${SOLR_JETTY_OPTS}" ]]; then
-  ARGS+=(-j "${SOLR_JETTY_OPTS}")
+  ARGS+=(--jvm-opts "${SOLR_JETTY_OPTS}")
 fi
 
 if [[ -n "${SOLR_JAVA_OPTS}" ]]; then

@@ -2,10 +2,15 @@
 FROM java
 
 ARG TARGETARCH
-ARG CANTALOUPE_VERSION="5.0.6"
+# renovate: datasource=github-releases depName=cantaloupe packageName=cantaloupe-project/cantaloupe
+ARG CANTALOUPE_VERSION=5.0.6
 ARG CANTALOUPE_FILE="cantaloupe-${CANTALOUPE_VERSION}.zip"
 ARG CANTALOUPE_URL="https://github.com/cantaloupe-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/${CANTALOUPE_FILE}"
 ARG CANTALOUPE_SHA256="35311eb0d4d6f0578cab42fd5e51d6150e62821cb3b4ee3a265e2befbeeb5897"
+
+ARG LIBJPEG_TURBO_VERSION=2.1.5.1
+ARG LIBJPEG_TURBO_URL="https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/${LIBJPEG_TURBO_VERSION}.zip"
+ARG LIBJPEG_TURBO_SHA256="a9e670ea30064f36d5a20481c1f33eedf80b7e76c6e3f75c7e7189b200a7a216"
 
 EXPOSE 8182
 
@@ -26,7 +31,26 @@ RUN --mount=type=cache,id=cantaloupe-downloads-${TARGETARCH},sharing=locked,targ
         deps \
     && \
     mv "/opt/cantaloupe/cantaloupe-${CANTALOUPE_VERSION}.jar" "/opt/cantaloupe/cantaloupe.jar" && \
+    apk add cmake make alpine-sdk && \
+    download.sh \
+        --url "${LIBJPEG_TURBO_URL}" \
+        --sha256 "${LIBJPEG_TURBO_SHA256}" \
+        --dest "/opt/libjpeg-turbo" \
+        --strip && \
+    cd /opt/libjpeg-turbo && \
+    cmake -G"Unix Makefiles" -DWITH_JAVA=1 && \
+    make && \
+    test -e "/opt/libjpeg-turbo/libturbojpeg.so.0.2.0" && \
+    mkdir /opt/libjpeg-turbo/lib && \
+    ln -s "/opt/libjpeg-turbo/libturbojpeg.so.0.2.0" /opt/libjpeg-turbo/lib/libturbojpeg.so && \
+    apk del cmake make alpine-sdk && \
     cleanup.sh
+
+ARG \
+    # renovate: datasource=repology depName=alpine_3_20/ffmpeg
+    FFMPEG_VERSION=6.1.1-r8 \
+    # renovate: datasource=repology depName=alpine_3_20/openjpeg-tools
+    OPENJPG_TOOLS_VERSION=2.5.2-r0
 
 # Opted for OpenJPG over Kakadu but that could be changed.
 # For reference see: https://cantaloupe-project.github.io/manual/5.0/processors.html
@@ -34,12 +58,8 @@ RUN --mount=type=cache,id=cantaloupe-downloads-${TARGETARCH},sharing=locked,targ
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=cantaloupe-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
-        ffmpeg \
-        openjpeg-tools \
-        libjpeg-turbo \
-    && \
-    mkdir -p /opt/libjpeg-turbo/lib && \
-    ln -s /usr/lib/libturbojpeg.so.0 /opt/libjpeg-turbo/lib/libturbojpeg.so && \
+        ffmpeg=="${FFMPEG_VERSION}" \
+        openjpeg-tools=="${OPENJPG_TOOLS_VERSION}" && \
     create-service-user.sh --name cantaloupe --group jwt /data /opt/cantaloupe/logs && \
     cleanup.sh
 
@@ -82,9 +102,9 @@ ENV \
     CANTALOUPE_ENDPOINT_ADMIN_ENABLED="false" \
     CANTALOUPE_ENDPOINT_ADMIN_SECRET= \
     CANTALOUPE_ENDPOINT_ADMIN_USERNAME="admin" \
-    CANTALOUPE_ENDPOINT_API_ENABLED="false" \
+    CANTALOUPE_ENDPOINT_API_ENABLED="true" \
     CANTALOUPE_ENDPOINT_API_SECRET= \
-    CANTALOUPE_ENDPOINT_API_USERNAME= \
+    CANTALOUPE_ENDPOINT_API_USERNAME=islandora \
     CANTALOUPE_ENDPOINT_HEALTH_DEPENDENCY_CHECK="false" \
     CANTALOUPE_ENDPOINT_IIIF_1_ENABLED="false" \
     CANTALOUPE_ENDPOINT_IIIF_2_ENABLED="true" \
@@ -270,3 +290,7 @@ ENV \
     CANTALOUPE_TEMP_PATHNAME=
 
 COPY --link rootfs /
+
+HEALTHCHECK CMD curl -s \
+  -u "${CANTALOUPE_ENDPOINT_API_USERNAME}:$(cat /var/run/s6/container_environment/CANTALOUPE_ENDPOINT_API_SECRET)" \
+  http://localhost:8182/health | jq .color | grep -q GREEN

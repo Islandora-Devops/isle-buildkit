@@ -6,7 +6,6 @@
 # - Content is index in Solr.
 # - Content is index in Fedora.
 ---
-version: "3.8"
 
 # Common to all services
 x-common: &common

@@ -9,9 +9,6 @@ WORKDIR /var/www/drupal
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=drupal-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
-    apk add \
-      patch \
-    && \
     mkdir -p \
         /var/www/drupal/config \
         /var/www/drupal/web/libraries \
@@ -65,4 +62,4 @@ ENV \
 
 COPY --link rootfs /
 
-RUN chown -R nginx:nginx /var/www
+RUN chown -R nginx:nginx /var/www /usr/share/drush

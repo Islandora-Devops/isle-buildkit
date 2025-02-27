@@ -2,21 +2,25 @@
 FROM tomcat
 
 ARG TARGETARCH
-ARG FITSSERVLET_VERSION="2.1.0"
+
+# renovate: datasource=github-releases depName=fits-servlet packageName=harvard-lts/FITSservlet
+ARG FITSSERVLET_VERSION=2.1.0
 ARG FITSSERVLET_FILE="fits-service-${FITSSERVLET_VERSION}.war"
 ARG FITSSERVLET_URL="https://github.com/harvard-lts/FITSservlet/releases/download/${FITSSERVLET_VERSION}/${FITSSERVLET_FILE}"
 ARG FITSSERVLET_SHA256="ba3c4d5af4dfbe42a32b4321eb96fad8db1379c8b00cd2bc7b7b0e4f59cb7e67"
 
-ARG FITS_VERSION="1.6.0"
+# renovate: datasource=github-releases depName=fits packageName=harvard-lts/fits
+ARG FITS_VERSION=1.6.0
 ARG FITS_FILE="fits-${FITS_VERSION}.zip"
 ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}"
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
-ARG LOG4J_VERSION="2.22.0"
+# renovate: datasource=github-releases depName=apache-log4j packageName=apache/logging-log4j2
+ARG LOG4J_VERSION=2.24.3
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
-ARG LOG4J_FILE_SHA256="c6d61ecf2563b1200e02587b89b7c75b58b6e62e6a16cdb6f333c2482167c2dc"
-ARG OLD_LOG4J_VERSION="2.17.1"
+ARG LOG4J_FILE_SHA256="359ef2d7278b67a72053239c1c8cdba44a5681097835d010982470e121c2338a"
+ARG OLD_LOG4J_VERSION="2.22.0"
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
@@ -38,18 +42,39 @@ RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/op
     rm /opt/fits/lib/jna-* && \
     cleanup.sh
 
+ARG \
+    # renovate: datasource=repology depName=alpine_3_20/file
+    FILE_VERSION=5.45-r1 \
+    # renovate: datasource=repology depName=alpine_3_20/java-jna
+    JNA_VERSION=5.11.0-r1 \
+    # renovate: datasource=repology depName=alpine_3_20/libmediainfo
+    LIBMEDIAINFO_VERSION=24.04-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/libzen
+    LIBZEN_VERSION=0.4.41-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/perl
+    PERL_VERSION=5.38.3-r0 \
+    # renovate: datasource=repology depName=alpine_3_20/py3-pip
+    PIP_VERSION=24.0-r2	 \
+    # renovate: datasource=repology depName=alpine_3_20/python3
+    PYTHON_VERSION=3.12.9-r0
+  
 # Replace linux shared libraries with ones that target muslibc and are platform specific.
 # Also add perl for exiftool, and platform specific jna so native libs can be loaded.
+#
+# Additionally, Python and Jpylyzer are included for analyzing JP2 files
 #
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=fits-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
-        file \
-        java-jna \
-        libmediainfo \
-        libzen \
-        perl \
+        file=="${FILE_VERSION}" \
+        java-jna=="${JNA_VERSION}" \
+        libmediainfo=="${LIBMEDIAINFO_VERSION}" \
+        libzen=="${LIBZEN_VERSION}" \
+        perl=="${PERL_VERSION}" \
+        py3-pip=="${PIP_VERSION}" \
+        python3=="${PYTHON_VERSION}" \
     && \
+    pip install --break-system-packages jpylyzer && \
     cleanup.sh
 
 # Remove old files & then install latest log4j-* files

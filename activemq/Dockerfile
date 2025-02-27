@@ -2,10 +2,11 @@
 FROM java
 
 ARG TARGETARCH
-ARG ACTIVEMQ_VERSION="5.18.3"
+# renovate: datasource=github-tags depName=apache-activemq packageName=apache/activemq
+ARG ACTIVEMQ_VERSION=5.18.6
 ARG ACTIVEMQ_FILE="apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz"
 ARG ACTIVEMQ_URL="https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ_FILE}"
-ARG ACTIVEMQ_FILE_SHA256="943381aa6d340707de6c42eadbf7b41b7fdf93df604156d972d50c4da783544f"
+ARG ACTIVEMQ_FILE_SHA256="b1363696e4e014423f6ab22f1ece4bf14ee32b80bfa5bdbae7dd4026a47ff03a"
 
 EXPOSE 61616 5672 61613 1883 61614 8161
 
@@ -35,3 +36,9 @@ COPY --link rootfs /
 
 RUN create-service-user.sh --name activemq && \
     cleanup.sh
+
+HEALTHCHECK CMD curl -s \
+    -u admin:"$(cat /var/run/s6/container_environment/ACTIVEMQ_WEB_ADMIN_PASSWORD)" \
+    -H origin:localhost \
+    "http://localhost:8161/api/jolokia/read/org.apache.activemq:type=Broker,brokerName=localhost,service=Health/CurrentStatus" \
+    | jq .value | grep -q Good

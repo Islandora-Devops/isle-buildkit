@@ -2,6 +2,8 @@
 
 Docker image for [Milliner].
 
+Built from [Islandora-DevOps/isle-buildkit milliner](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/milliner)
+
 ## Dependencies
 
 Requires `islandora/crayfish` docker image to build. Please refer to the

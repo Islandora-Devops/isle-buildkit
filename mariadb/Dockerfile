@@ -5,12 +5,15 @@ ARG TARGETARCH
 
 EXPOSE 3306
 
+ARG \
+  # renovate: datasource=repology depName=alpine_3_20/mariadb
+  MARIADB_VERSION=10.11.11-r0
+
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
-        mariadb \
-        mysql-client \
-        mariadb-server-utils \
+        mariadb=="${MARIADB_VERSION}" \
+        mariadb-server-utils=="${MARIADB_VERSION}" \
     && \
     mkdir -p \
         /var/lib/mysql \
@@ -33,3 +36,5 @@ ENV \
     MYSQL_TRANSACTION_ISOLATION=READ-COMMITTED
 
 COPY --link rootfs /
+
+HEALTHCHECK CMD mysqladmin ping --socket=/var/run/mysqld/mysqld.sock | grep -q alive

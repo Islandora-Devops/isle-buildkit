@@ -2,46 +2,83 @@
 FROM alpine
 
 ARG TARGETARCH
-ARG S6_VERSION="3.1.6.2"
+# renovate: datasource=github-releases depName=s6-overlay packageName=just-containers/s6-overlay
+ARG S6_VERSION=3.2.0.2
 ARG S6_BASE_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}"
 ARG S6_OVERLAY_NOARCH=s6-overlay-noarch.tar.xz
-ARG S6_OVERLAY_NOARCH_SHA256="05af2536ec4fb23f087a43ce305f8962512890d7c71572ed88852ab91d1434e3"
+ARG S6_OVERLAY_NOARCH_SHA256="6dbcde158a3e78b9bb141d7bcb5ccb421e563523babbe2c64470e76f4fd02dae"
 ARG S6_OVERLAY_SYMLINKS_ARCH=s6-overlay-symlinks-arch.tar.xz
-ARG S6_OVERLAY_SYMLINKS_ARCH_SHA256="532507ac3eb81b3ce5c7fb76b57a3b61f6a583970de44e76aa43a0eb9a656cbd"
+ARG S6_OVERLAY_SYMLINKS_ARCH_SHA256="a50ca9cc9c773bfcee362a96a0c68aeef1088d6873ff2968edcb5c840b89a19b"
 ARG S6_OVERLAY_SYMLINKS_NOARCH=s6-overlay-symlinks-noarch.tar.xz
-ARG S6_OVERLAY_SYMLINKS_NOARCH_SHA256="dfa08e1600a4d119621178e09c5a899df6d4c613e4a0082c01b12a51d21fe84c"
+ARG S6_OVERLAY_SYMLINKS_NOARCH_SHA256="da9552471ac9d324f07f22b546dfc36f0a76897d36a0f69952813feaec864a37"
 ARG S6_OVERLAY_AMD64=s6-overlay-x86_64.tar.xz
-ARG S6_OVERLAY_AMD64_SHA256="95081f11c56e5a351e9ccab4e70c2b1c3d7d056d82b72502b942762112c03d1c"
+ARG S6_OVERLAY_AMD64_SHA256="59289456ab1761e277bd456a95e737c06b03ede99158beb24f12b165a904f478"
 ARG S6_OVERLAY_ARM64=s6-overlay-aarch64.tar.xz
-ARG S6_OVERLAY_ARM64_SHA256="3fc0bae418a0e3811b3deeadfca9cc2f0869fb2f4787ab8a53f6944067d140ee"
+ARG S6_OVERLAY_ARM64_SHA256="8b22a2eaca4bf0b27a43d36e65c89d2701738f628d1abd0cea5569619f66f785"
 
 LABEL License="MIT License"
 
 # Start s6
 ENTRYPOINT [ "/init" ]
 
+ARG \
+  # renovate: datasource=repology depName=alpine_3_20/bash
+  BASH_VERSION=5.2.26-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/curl
+  CURL_VERSION=8.12.1-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/git
+  GIT_VERSION=2.45.3-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/gnupg
+  GNUPG_VERSION=2.4.5-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/gzip
+  GZIP_VERSION=1.13-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/jq
+  JQ_VERSION=1.7.1-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/mariadb-client
+  MARIADB_CLIENT_VERSION=10.11.11-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/mysql-client
+  MYSQL_CLIENT_VERSION=10.11.11-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/netcat-openbsd	
+  NETCAT_OPENBSD_VERSION=1.226-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/openssl
+  OPENSSL_VERSION=3.3.3-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/patch
+  PATCH_VERSION=2.7.6-r10 \
+  # renovate: datasource=repology depName=alpine_3_20/postgresql16-client
+  POSTGRES_CLIENT_VERSION=16.8-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/procps-ng
+  PROCPS_VERSION=4.0.4-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/shadow
+  SHADOW_VERSION=4.15.1-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/util-linux
+  UTIL_LINUX_VERSION=2.40.1-r1 \
+  # renovate: datasource=repology depName=alpine_3_20/wget
+  WGET_VERSION=1.24.5-r0 \
+  # renovate: datasource=repology depName=alpine_3_20/yq-go
+  YQ_VERSION=4.44.1-r2
+
 # Install packages and tools required by all downstream images.
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=base-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     ln -s /var/cache/apk /etc/apk/cache && \
     apk add \
-        bash \
-        curl \
-        git \
-        gnupg \
-        gzip \
-        jq \
-        mariadb-client \
-        mysql-client \
-        netcat-openbsd \
-        openssl \
-        patch \
-        postgresql-client \
-        procps \
-        shadow \
-        util-linux \
-        wget \
-        yq \
+        bash=="${BASH_VERSION}" \
+        curl=="${CURL_VERSION}" \
+        git=="${GIT_VERSION}" \
+        gnupg=="${GNUPG_VERSION}" \
+        gzip=="${GZIP_VERSION}" \
+        jq=="${JQ_VERSION}" \
+        mariadb-client=="${MARIADB_CLIENT_VERSION}" \
+        mysql-client=="${MYSQL_CLIENT_VERSION}" \
+        netcat-openbsd=="${NETCAT_OPENBSD_VERSION}" \
+        openssl=="${OPENSSL_VERSION}" \
+        patch=="${PATCH_VERSION}" \
+        postgresql16-client=="${POSTGRES_CLIENT_VERSION}" \
+        procps=="${PROCPS_VERSION}" \
+        shadow=="${SHADOW_VERSION}" \
+        util-linux=="${UTIL_LINUX_VERSION}" \
+        wget=="${WGET_VERSION}" \
+        yq=="${YQ_VERSION}" \
     && \
     addgroup -g 2000 jwt && \
     echo '' > /root/.ash_history
