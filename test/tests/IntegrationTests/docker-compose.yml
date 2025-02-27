@@ -5,7 +5,6 @@
 # - Derivatives get created.
 # - Content is index in Solr.
 # - Content is index in Fedora.
-# - Matomo is installed?
 ---
 
 # Common to all services
@@ -64,8 +63,6 @@ services:
             DRUPAL_DEFAULT_FCREPO_PORT: 8080
             DRUPAL_DEFAULT_FCREPO_URL: "http://fcrepo:8080/fcrepo/rest/"
             DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG: "true"
-            DRUPAL_DEFAULT_MATOMO_URL_HTTP: "http://test/matomo/"
-            DRUPAL_DEFAULT_MATOMO_URL_HTTPS: "https://test/matomo/"
             DRUPAL_DEFAULT_NAME: "Islandora Digital Collections"
             DRUPAL_DEFAULT_PROFILE: "minimal"
             DRUPAL_DEFAULT_SITE_URL: "test"
