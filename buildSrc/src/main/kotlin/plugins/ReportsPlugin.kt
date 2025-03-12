@@ -70,7 +70,7 @@ class ReportsPlugin : Plugin<Project> {
                 "run",
                 "--rm",
                 "-u", "${uid.get()}:${gid.get()}",
-                "-e", "GRYPE_DB_CACHE_DIR=/cache",
+                "-e", "XDG_CACHE_HOME=/cache",
                 "-v", "${database.get().asFile.absolutePath}:/cache",
                 "-v", "/tmp:/tmp",
                 image.get(),
@@ -198,7 +198,7 @@ class ReportsPlugin : Plugin<Project> {
                     // Arguments to docker.
                     val command = mutableListOf(
                         "docker", "container", "run", "--rm", "-i",
-                        "-e", "GRYPE_DB_CACHE_DIR=/cache",
+                        "-e", "XDG_CACHE_HOME=/cache",
                         "-e", "GRYPE_DB_AUTO_UPDATE=false",
                         "-v", "${database.get().asFile.absolutePath}:/cache",
                     )
