@@ -3,10 +3,10 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=github-tags depName=apache-activemq packageName=apache/activemq
-ARG ACTIVEMQ_VERSION=5.18.6
+ARG ACTIVEMQ_VERSION=5.19.0
 ARG ACTIVEMQ_FILE="apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz"
 ARG ACTIVEMQ_URL="https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ_FILE}"
-ARG ACTIVEMQ_FILE_SHA256="b1363696e4e014423f6ab22f1ece4bf14ee32b80bfa5bdbae7dd4026a47ff03a"
+ARG ACTIVEMQ_FILE_SHA256="5ed946596ff8e93d0001219bef1cc379e09c1dc5bb49f11981dae6c0674d223d"
 
 EXPOSE 61616 5672 61613 1883 61614 8161
 
