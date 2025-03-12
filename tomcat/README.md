@@ -1,6 +1,6 @@
 # Tomcat
 
-Docker image for [Tomcat] version 9.0.100.
+Docker image for [Tomcat] version 9.0.102.
 
 Built from [Islandora-DevOps/isle-buildkit tomcat](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/tomcat)
 
