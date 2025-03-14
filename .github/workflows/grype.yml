@@ -9,9 +9,9 @@ on:
         required: true
         type: string
     secrets:
-      registry_user:
+      REGISTRY_USER:
         required: true
-      registry_password:
+      REGISTRY_PASSWORD:
         required: true
 jobs:
   grype:
@@ -23,8 +23,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
       - uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3
         with:
           distribution: temurin

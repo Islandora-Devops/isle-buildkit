@@ -21,191 +21,191 @@ jobs:
       - name: ActiveMQ - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/activemq
           readme-filepath: ./activemq/README.md
 
       - name: Alpaca - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/alpaca
           readme-filepath: ./alpaca/README.md
 
       - name: Base - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/base
           readme-filepath: ./base/README.md
 
       - name: Blazegraph - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/blazegraph
           readme-filepath: ./blazegraph/README.md
 
       - name: cantaloupe - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/cantaloupe
           readme-filepath: ./cantaloupe/README.dockerhub.md
 
       - name: Code-Server - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/code-server
           readme-filepath: ./code-server/README.md
 
       - name: Crayfish - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/crayfish
           readme-filepath: ./crayfish/README.md
 
       - name: CrayFits - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/crayfits
           readme-filepath: ./crayfits/README.md
 
       - name: Drupal - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/drupal
           readme-filepath: ./drupal/README.md
 
       - name: Fcrepo6 - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/fcrepo6
           readme-filepath: ./fcrepo6/README.md
 
       - name: Fits - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/fits
           readme-filepath: ./fits/README.md
 
       - name: Handle - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/handle
           readme-filepath: ./handle/README.md
 
       - name: Homarus - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/homarus
           readme-filepath: ./homarus/README.md
 
       - name: Houdini - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/houdini
           readme-filepath: ./houdini/README.md
 
       - name: hypercube - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/hypercube
           readme-filepath: ./hypercube/README.md
 
       - name: Java - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/java
           readme-filepath: ./java/README.md
 
       - name: MariaDB - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/mariadb
           readme-filepath: ./mariadb/README.md
 
       - name: Milliner - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/milliner
           readme-filepath: ./milliner/README.md
 
       - name: Nginx - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/nginx
           readme-filepath: ./nginx/README.md
 
       - name: PostgreSQL - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/postgresql
           readme-filepath: ./postgresql/README.md
 
       - name: RipRap - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/riprap
           readme-filepath: ./riprap/README.md
 
       - name: Solr - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/solr
           readme-filepath: ./solr/README.md
 
       - name: Test - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/tomcat
           readme-filepath: ./test/README.md
 
       - name: Tomcat - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@dc67fad7001ef9e8e3c124cb7a64e16d0a63d864 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/tomcat
           readme-filepath: ./tomcat/README.md
