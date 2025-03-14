@@ -3,10 +3,10 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=cantaloupe packageName=cantaloupe-project/cantaloupe
-ARG CANTALOUPE_VERSION=5.0.6
+ARG CANTALOUPE_VERSION=5.0.7
 ARG CANTALOUPE_FILE="cantaloupe-${CANTALOUPE_VERSION}.zip"
 ARG CANTALOUPE_URL="https://github.com/cantaloupe-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/${CANTALOUPE_FILE}"
-ARG CANTALOUPE_SHA256="35311eb0d4d6f0578cab42fd5e51d6150e62821cb3b4ee3a265e2befbeeb5897"
+ARG CANTALOUPE_SHA256="0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
 
 ARG LIBJPEG_TURBO_VERSION=2.1.5.1
 ARG LIBJPEG_TURBO_URL="https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/${LIBJPEG_TURBO_VERSION}.zip"
