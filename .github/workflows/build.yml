@@ -22,9 +22,9 @@ on:
         description: "Context to use in dependent images"
         value: ${{ jobs.build.outputs.context }}
     secrets:
-      registry_user:
+      REGISTRY_USER:
         required: true
-      registry_password:
+      REGISTRY_PASSWORD:
         required: true
 jobs:
   build:
@@ -50,8 +50,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - id: build
         name: Build and push
