@@ -17,13 +17,15 @@ update_dockerfile_sha() {
   local ARG="$2"
   local DOCKERFILES=("${@:3}")
   local SHA
-  SHA=$(curl -Ls "$URL" | shasum -a 256 | awk '{print $1}')
+  curl -fLs "$URL" -o curl.resp || echo "Request failed with exit code $?"
+  SHA=$(shasum -a 256 curl.resp | awk '{print $1}')
 
   if [[ "$OSTYPE" == "darwin"* ]]; then
     sed -i '' 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
   else
     sed -i 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
   fi
+  rm curl.resp
 }
 
 echo "Updating SHA for $DEP@$NEW_VERSION"

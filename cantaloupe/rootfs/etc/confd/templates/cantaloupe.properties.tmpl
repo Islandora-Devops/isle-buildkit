@@ -126,6 +126,8 @@ endpoint.api.enabled = {{ getenv "CANTALOUPE_ENDPOINT_API_ENABLED" }}
 endpoint.api.username = {{ getenv "CANTALOUPE_ENDPOINT_API_USERNAME" }}
 endpoint.api.secret = {{ getenv "CANTALOUPE_ENDPOINT_API_SECRET" }}
 
+endpoint.health.enabled = {{ getenv "CANTALOUPE_ENDPOINT_HEALTH_ENABLED" }}
+
 # If true, sources and caches will be checked, resulting in a more robust
 # but slower health check. Set this to false if these services already have
 # their own health checks.

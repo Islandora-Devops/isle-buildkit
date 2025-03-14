@@ -95,6 +95,9 @@
         "s6-overlay",
         "solr-ocrhighlighting"
       ],
+      "schedule": [
+        "after 10am on Wednesday"
+      ],
       "postUpgradeTasks": {
         "commands": [
           "bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""
