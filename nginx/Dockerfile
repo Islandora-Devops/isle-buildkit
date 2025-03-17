@@ -25,7 +25,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_20/icu-data-full
     ICU_VERSION=74.2-r0 \
     # renovate: datasource=repology depName=alpine_3_20/nginx
-    NGINX_VERSION=1.26.2-r0	\
+    NGINX_VERSION=1.26.3-r0	\
     # renovate: datasource=repology depName=alpine_3_20/php83
     PHP_VERSION=8.3.15-r0
 
