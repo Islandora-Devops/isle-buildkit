@@ -67,9 +67,9 @@
       ],
       "groupName": null,
       "matchPackageNames": [
-        "*",
+        "*"
       ],
-      "prConcurrentLimit": 1,
+      "prConcurrentLimit": 1
     },
     {
       "groupName": "all non-major dependencies",
