@@ -65,7 +65,11 @@
       "matchUpdateTypes": [
         "major"
       ],
-      "enabled": false
+      "groupName": null,
+      "matchPackageNames": [
+        "*",
+      ],
+      "prConcurrentLimit": 1,
     },
     {
       "groupName": "all non-major dependencies",
