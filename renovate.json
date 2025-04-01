@@ -78,6 +78,11 @@
         "patch",
         "digest"
       ],
+      "schedule": [
+        "after 10am on Wednesday"
+      ]
+    },
+    {
       "matchDepNames": [
         "alpine-pkg-glibc",
         "apache-activemq",
@@ -98,9 +103,6 @@
         "islandora-starter-site",
         "s6-overlay",
         "solr-ocrhighlighting"
-      ],
-      "schedule": [
-        "after 10am on Wednesday"
       ],
       "postUpgradeTasks": {
         "commands": [
