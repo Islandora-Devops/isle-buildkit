@@ -2,6 +2,7 @@
 FROM java
 
 ARG TARGETARCH
+# renovate: datasource=custom.handle depName=handle packageName=handle
 ARG HANDLE_VERSION=9.3.1
 ARG HANDLE_FILE="handle-${HANDLE_VERSION}-distribution.tar.gz"
 ARG HANDLE_URL="https://handle.net/hnr-source/${HANDLE_FILE}"
