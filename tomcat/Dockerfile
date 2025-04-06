@@ -2,7 +2,7 @@
 FROM java
 
 ARG TARGETARCH
-# renovate: datasource=github-tags depName=apache-tomcat packageName=apache/tomcat
+# renovate: datasource=apache-downloads depName=apache-tomcat packageName=tomcat/tomcat-9
 ARG TOMCAT_VERSION=9.0.102
 ARG TOMCAT_FILE_SHA256="23e0a3b16d53a121c8c86b0ea4e6967d1a4ab689ccf6490ce09eae57ac394787"
 

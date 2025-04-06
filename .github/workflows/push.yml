@@ -1,6 +1,9 @@
 name: Build and Push Docker Images
 on:
   push:
+    paths-ignore:
+      - "renovate.json"
+      - "**/*.md"
   workflow_dispatch:
     inputs:
       tag:
