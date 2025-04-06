@@ -116,18 +116,6 @@
         "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?) branch=(?<currentValue>.+?)\\s(?:ENV|ARG) COMMIT=(?<currentDigest>.+?)(\\s|$)"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}loose{{/if}}"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "(^|/)handle/Dockerfile$"
-      ],
-      "matchStrings": [
-        "ARG HANDLE_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"
-      ],
-      "datasourceTemplate": "custom.handle",
-      "depNameTemplate": "handle",
-      "versioningTemplate": "semver"
     }
   ],
   "customDatasources": {

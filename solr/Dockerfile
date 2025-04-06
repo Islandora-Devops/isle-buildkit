@@ -2,7 +2,7 @@
 FROM java
 
 ARG TARGETARCH
-# renovate: datasource=apache-downloads depName=apache-solr packageName=solr/solr
+# renovate: datasource=custom.apache-downloads depName=apache-solr packageName=solr/solr
 ARG SOLR_VERSION=9.8.1
 ARG SOLR_FILE=solr-${SOLR_VERSION}.tgz
 ARG SOLR_URL=https://archive.apache.org/dist/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz

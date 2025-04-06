@@ -15,7 +15,7 @@ ARG FITS_FILE="fits-${FITS_VERSION}.zip"
 ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}"
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
-# renovate: datasource=apache-downloads depName=apache-log4j packageName=logging/log4j
+# renovate: datasource=custom.apache-downloads depName=apache-log4j packageName=logging/log4j
 ARG LOG4J_VERSION=2.24.3
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
