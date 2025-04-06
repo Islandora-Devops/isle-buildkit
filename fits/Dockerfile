@@ -15,7 +15,7 @@ ARG FITS_FILE="fits-${FITS_VERSION}.zip"
 ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSION}/${FITS_FILE}"
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
-# renovate: datasource=github-releases depName=apache-log4j packageName=apache/logging-log4j2
+# renovate: datasource=apache-downloads depName=apache-log4j packageName=logging/log4j
 ARG LOG4J_VERSION=2.24.3
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
@@ -57,7 +57,7 @@ ARG \
     PIP_VERSION=24.0-r2	 \
     # renovate: datasource=repology depName=alpine_3_20/python3
     PYTHON_VERSION=3.12.9-r0
-  
+
 # Replace linux shared libraries with ones that target muslibc and are platform specific.
 # Also add perl for exiftool, and platform specific jna so native libs can be loaded.
 #

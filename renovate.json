@@ -39,20 +39,12 @@
     },
     {
       "matchPackageNames": [
-        "apache/activemq",
-        "apache/logging-log4j2",
         "fcrepo/fcrepo",
         "fcrepo-exts/fcrepo-import-export",
         "fcrepo-exts/fcrepo-upgrade-utils",
         "pgjdbc/pgjdbc"
       ],
-      "extractVersion": "^(REL|fcrepo|activemq|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)?(?<version>\\d+\\.\\d+\\.\\d+)$"
-    },
-    {
-      "extractVersion": "^releases/solr/(?<version>\\d+\\.\\d+\\.\\d+)$",
-      "matchPackageNames": [
-        "/^apache/solr$/"
-      ]
+      "extractVersion": "^(REL|fcrepo|rel|fcrepo-import-export|fcrepo-upgrade-utils)(/|-)?(?<version>\\d+\\.\\d+\\.\\d+)$"
     },
     {
       "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)$",
@@ -139,6 +131,13 @@
     }
   ],
   "customDatasources": {
+    "apache-downloads": {
+      "defaultRegistryUrlTemplate": "https://downloads.apache.org/{{ packageName }}/",
+      "format": "html",
+      "transformTemplates": [
+        "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $match($v, /^(v)?\\d+\\.\\d+\\.\\d+(\\/)?$/) }),function($v,$i,$a){ { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+/).match } })] }"
+       ]
+    },
     "handle": {
       "defaultRegistryUrlTemplate": "https://handle.net/hnr-source/",
       "format": "html",
