@@ -48,7 +48,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_20/php83-pecl-xdebug
     PHP_XDEBUG_VERSION=3.3.2-r0 \
     # renovate: datasource=repology depName=alpine_3_20/python3
-    PYTHON_VERSION=3.12.9-r0 \
+    PYTHON_VERSION=3.12.10-r0 \
     # renovate: datasource=repology depName=alpine_3_20/spdlog
     SPDLOG_VERSION=1.14.1-r0 \
     # renovate: datasource=repology depName=alpine_3_20/sudo
