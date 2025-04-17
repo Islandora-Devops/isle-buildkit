@@ -65,6 +65,10 @@
     },
     {
       "groupName": "all non-major dependencies",
+      "matchDatasources": [
+        "*",
+        "!repology"
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch",
