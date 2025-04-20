@@ -5,7 +5,7 @@ ARG TARGETARCH
 
 ARG \
   # renovate: datasource=repology depName=alpine_3_20/openjdk17
-  OPENJDK_VERSION=17.0.14_p7-r0 \
+  OPENJDK_VERSION=17.0.15_p6-r0 \
   # renovate: datasource=repology depName=alpine_3_20/maven
   MAVEN_VERSION=3.9.6-r0
 
