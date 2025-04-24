@@ -28,6 +28,20 @@ update_dockerfile_sha() {
   rm curl.resp
 }
 
+update_readme() {
+  local README="$1"
+  local OLD_VERSION="$2"
+  local NEW_VERSION="$3"
+  # update the README to specify the new version
+  if [ "$README" != "" ]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      sed -i '' "s/${OLD_VERSION}\.$/${NEW_VERSION}\./" "$README"
+    else
+      sed -i "s/${OLD_VERSION}\.$/${NEW_VERSION}\./" "$README"
+    fi
+  fi
+}
+
 echo "Updating SHA for $DEP@$NEW_VERSION"
 
 if [ "$DEP" = "apache-tomcat" ]; then
@@ -145,19 +159,13 @@ elif [ "$DEP" = "s6-overlay" ]; then
   done
 
   exit 0
-
+elif [ "$DEP" = "vscode" ]; then
+  update_readme "code-server/README.md" "$OLD_VERSION" "$NEW_VERSION"
+  exit 0
 else
   echo "DEP not found"
   exit 0
 fi
 
 update_dockerfile_sha "$URL" "$ARG" "${DOCKERFILES[@]}"
-
-# update the README to specify the new version
-if [ "$README" != "" ]; then
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i '' "s/${OLD_VERSION}\.$/${NEW_VERSION}\./" "$README"
-  else
-    sed -i "s/${OLD_VERSION}\.$/${NEW_VERSION}\./" "$README"
-  fi
-fi
+update_readme "$README" "$OLD_VERSION" "$NEW_VERSION"
