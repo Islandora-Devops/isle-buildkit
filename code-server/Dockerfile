@@ -80,8 +80,10 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
     && \
     cleanup.sh
 
+# renovate: datasource=github-releases depName=vscode packageName=coder/code-server
+ARG CODE_SERVER_VERSION=4.99.3
 RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/root/.npm \
-    CXXFLAGS='-DNODE_API_EXPERIMENTAL_NOGC_ENV_OPT_OUT -U_FORTIFY_SOURCE' npm install --global --unsafe-perm code-server@4.91.1 && \
+    CXXFLAGS='-DNODE_API_EXPERIMENTAL_NOGC_ENV_OPT_OUT -U_FORTIFY_SOURCE' npm install --global --unsafe-perm "code-server@${CODE_SERVER_VERSION}" && \
     cleanup.sh
 
 # Drush requires HOME to be set as such.
