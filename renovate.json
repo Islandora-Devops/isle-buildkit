@@ -98,7 +98,8 @@
         "islandora-syn",
         "islandora-starter-site",
         "s6-overlay",
-        "solr-ocrhighlighting"
+        "solr-ocrhighlighting",
+        "vscode"
       ],
       "postUpgradeTasks": {
         "commands": [
