@@ -311,7 +311,7 @@ target "code-server-common" {
   context = "code-server"
   contexts = {
     # Produced by this repository <https://github.com/Islandora-Devops/isle-nodejs>.
-    nodejs = "docker-image://islandora/nodejs:alpine-3.20.2-nodejs-20.15.1-r0@sha256:4f377ed5bbb832c51ee9f4b898555ffae0dfdd21f4becc5ac7e26cdf235ed004"
+    nodejs = "docker-image://islandora/nodejs:alpine-3.20.2-nodejs-20.18.3-r0@sha256:709e29832b5fb87278990ef462eb8197c4725e45902f5d716b7c9497db6521bb"
   }
 }
 
