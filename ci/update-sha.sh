@@ -104,6 +104,16 @@ elif [ "$DEP" = "cantaloupe" ]; then
   DOCKERFILES=("cantaloupe/Dockerfile")
   README="cantaloupe/README.md"
 
+elif [ "$DEP" = "grok" ]; then
+  URL="https://github.com/GrokImageCompression/grok/archive/refs/tags/v${NEW_VERSION}.zip"
+  ARG="GROK_SHA256"
+  DOCKERFILES=("cantaloupe/Dockerfile")
+
+elif [ "$DEP" = "cli11" ]; then
+  URL="https://github.com/CLIUtils/CLI11/archive/refs/tags/v${NEW_VERSION}.zip"
+  ARG="CLI11_SHA256"
+  DOCKERFILES=("cantaloupe/Dockerfile")
+
 elif [ "$DEP" = "fits-servlet" ]; then
   URL="https://github.com/harvard-lts/FITSservlet/releases/download/${NEW_VERSION}/fits-service-${NEW_VERSION}.war"
   ARG="FITSSERVLET_SHA256"

@@ -12,6 +12,17 @@ ARG LIBJPEG_TURBO_VERSION=2.1.5.1
 ARG LIBJPEG_TURBO_URL="https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/${LIBJPEG_TURBO_VERSION}.zip"
 ARG LIBJPEG_TURBO_SHA256="a9e670ea30064f36d5a20481c1f33eedf80b7e76c6e3f75c7e7189b200a7a216"
 
+# renovate: datasource=github-releases depName=cli11 packageName=CLIUtils/CLI11
+ARG CLI11_VERSION=2.5.0
+ARG CLI11_URL="https://github.com/CLIUtils/CLI11/archive/refs/tags/v${CLI11_VERSION}.zip"
+ARG CLI11_SHA256="887270cae374a0b9e22b39647f9fc4bc742587fb26d6a221da2d2bbcf3109b0b"
+
+# renovate: datasource=github-releases depName=grok packageName=GrokImageCompression/grok
+ARG GROK_VERSION=14.3.0
+ARG GROK_URL="https://github.com/GrokImageCompression/grok/archive/refs/tags/v${GROK_VERSION}.zip"
+ARG GROK_SHA256="db77c715d2c5b3722384f14974fb617770b7bea29ace1016ab8b8be33dd7a45b"
+
+
 EXPOSE 8182
 
 WORKDIR /opt/cantaloupe
@@ -62,6 +73,58 @@ RUN --mount=type=cache,id=cantaloupe-apk-${TARGETARCH},sharing=locked,target=/va
         openjpeg-tools=="${OPENJPG_TOOLS_VERSION}" && \
     create-service-user.sh --name cantaloupe --group jwt /data /opt/cantaloupe/logs && \
     cleanup.sh
+
+
+RUN apk add --no-cache \
+        gcc \
+        g++ \
+        cmake \
+        make \
+        exiftool \
+        lcms2-dev \
+        libjpeg-turbo \
+        libpng-dev \
+        zstd-dev \
+        tiff-dev \
+        jpeg-dev \
+        zlib-dev \
+        libwebp-dev \
+    && download.sh \
+        --url "${CLI11_URL}" \
+        --sha256 "${CLI11_SHA256}" \
+        --dest "/opt/cli11" \
+        --strip \
+    && mkdir /opt/cli11/build \
+    && cd /opt/cli11/build \
+    && cmake .. \
+    && make \
+    && make install \
+    && cd /opt/cantaloupe \
+    && rm -rf /opt/cli11 \
+    && download.sh \
+        --url "${GROK_URL}" \
+        --sha256 "${GROK_SHA256}" \
+        --dest "/opt/grok" \
+        --strip \
+    && cd /opt/grok \
+    && cmake -DBUILD_TESTING=OFF  . \
+    && make install \
+    && cd /opt/cantaloupe \
+    && rm -rf /opt/grok \
+    && apk del \
+        gcc \
+        g++ \
+        cmake \
+        make \
+        exiftool \
+        lcms2-dev \
+        libjpeg-turbo \
+        libpng-dev \
+        zstd-dev \
+        tiff-dev \
+        jpeg-dev \
+        zlib-dev \
+        libwebp-dev
 
 ENV \
     CANTALOUPE_AZURESTORAGECACHE_ACCOUNT_KEY= \
@@ -245,7 +308,7 @@ ENV \
     CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_FALLBACK="Java2dProcessor" \
     CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_FLV="FfmpegProcessor" \
     CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_GIF="Java2dProcessor" \
-    CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_JP2="OpenJpegProcessor" \
+    CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_JP2="GrokProcessor" \
     CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_JPG="TurboJpegProcessor" \
     CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MOV="FfmpegProcessor" \
     CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MP4="FfmpegProcessor" \
