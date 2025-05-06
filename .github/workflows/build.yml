@@ -89,17 +89,13 @@ jobs:
         id: build-push-manifest
         run: |
           FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
-          IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${FIRST_TAG}"
-          docker buildx imagetools create \
-            -t "${IMAGE}" \
-            "${IMAGE}-amd64" \
-            "${IMAGE}-arm64"
+          BASE_IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${FIRST_TAG}"
           for TAG in ${{ inputs.tags }}; do
-            if [ "$TAG" = "$FIRST_TAG" ]; then
-              continue
-            fi
-            docker image tag "$IMAGE" "${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
-            docker push "${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
+            IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
+            docker buildx imagetools create \
+              -t "${IMAGE}" \
+              "${BASE_IMAGE}-amd64" \
+              "${BASE_IMAGE}-arm64"
           done
 
           DIGEST=$(docker buildx imagetools inspect "$IMAGE" | grep Digest | awk '{print $2}')
