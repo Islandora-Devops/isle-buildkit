@@ -2,9 +2,9 @@
 FROM java
 
 ARG TARGETARCH
-# renovate: datasource=github-tags depName=apache-tomcat packageName=apache/tomcat
-ARG TOMCAT_VERSION=9.0.98
-ARG TOMCAT_FILE_SHA256="1d9a1104c2e235a5baff6e9ca8e28be3d864803fafc478f5c13c2ae6a5ed3d6f"
+# renovate: datasource=custom.apache-downloads depName=apache-tomcat packageName=tomcat/tomcat-9
+ARG TOMCAT_VERSION=9.0.104
+ARG TOMCAT_FILE_SHA256="fa19751c8f81b294dde346ad93517bded84f40885c442e0a7130da982a22abae"
 
 EXPOSE 8080
 

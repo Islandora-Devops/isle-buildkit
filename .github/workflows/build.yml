@@ -22,13 +22,13 @@ on:
         description: "Context to use in dependent images"
         value: ${{ jobs.build.outputs.context }}
     secrets:
-      registry_user:
+      REGISTRY_USER:
         required: true
-      registry_password:
+      REGISTRY_PASSWORD:
         required: true
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       digest: ${{ steps.build.outputs.digest }}
       context: ${{ steps.build.outputs.context }}
@@ -37,21 +37,21 @@ jobs:
         uses: 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' # v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@4574d27a4764455b42196d70a065bc6853246a25 # v3
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@f7ce87c1d6bead3e36075b2ce75da1f6cc28aaca # v3
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3
         with:
           driver-opts: |
             image=moby/buildkit:v0.11.1
             network=host
 
       - name: Login to Docker Hub
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
         with:
-          username: ${{ secrets.registry_user }}
-          password: ${{ secrets.registry_password }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - id: build
         name: Build and push

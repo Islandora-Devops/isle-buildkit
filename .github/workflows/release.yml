@@ -19,7 +19,18 @@ jobs:
           fetch-depth: 0
 
       - name: install autotag binary
-        run: curl -sL https://git.io/autotag-install | sudo sh -s -- -b /usr/bin
+        run: |
+          gh release download "$TAG" --repo "$REPO" --pattern "$BINARY"
+          echo "$SHA256  $BINARY" | shasum -a 256 -c
+
+          chmod +x "$BINARY"
+          sudo mv "$BINARY" /usr/bin/autotag
+        env:
+          REPO: autotag-dev/autotag
+          BINARY: autotag_linux_amd64
+          TAG: v1.4.1
+          SHA256: 7b34c34316b8dd57b43ca0b08454ba57baf6472bef4e5ea46215b6ef5cd96146
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: create release
         run: |-

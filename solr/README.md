@@ -1,6 +1,6 @@
 # Solr
 
-Docker image for [solr] version 9.7.0.
+Docker image for [solr] version 9.8.1.
 
 Built from [Islandora-DevOps/isle-buildkit solr](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/solr)
 
@@ -21,12 +21,12 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Default                     | Description                                                                    |
-| :------------------- | :-------------------------- | :----------------------------------------------------------------------------- |
-| SOLR_JAVA_OPTS       |                             | Additional parameters to pass to the JVM when starting Solr                    |
-| SOLR_JETTY_OPTS      | `-Dsolr.jetty.host=0.0.0.0` | Additional parameters to pass to Jetty when starting Solr.                     |
-| SOLR_LOG_LEVEL       | `INFO`                      | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
-| SOLR_MEMORY          | `512m`                      | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
+| Environment Variable | Default                                                    | Description                                                                    |
+| :------------------- | :--------------------------------------------------------- | :----------------------------------------------------------------------------- |
+| SOLR_JAVA_OPTS       |                                                            | Additional parameters to pass to the JVM when starting Solr                    |
+| SOLR_JETTY_OPTS      | `-Dsolr.jetty.host=0.0.0.0 -Dsolr.config.lib.enabled=true` | Additional parameters to pass to Jetty when starting Solr.                     |
+| SOLR_LOG_LEVEL       | `INFO`                                                     | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+| SOLR_MEMORY          | `512m`                                                     | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
 
 ## Ports
 

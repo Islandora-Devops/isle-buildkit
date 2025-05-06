@@ -42,13 +42,13 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_20/krb5-dev
     KRB5_DEV_VERSION=1.21.3-r0 \
     # renovate: datasource=repology depName=alpine_3_20/openssh
-    OPENSSH_VERSION=9.7_p1-r4 \
+    OPENSSH_VERSION=9.7_p1-r5 \
     # renovate: datasource=repology depName=alpine_3_20/parallel
     PARALLEL_VERSION=20240422-r0 \
     # renovate: datasource=repology depName=alpine_3_20/php83-pecl-xdebug
     PHP_XDEBUG_VERSION=3.3.2-r0 \
     # renovate: datasource=repology depName=alpine_3_20/python3
-    PYTHON_VERSION=3.12.9-r0 \
+    PYTHON_VERSION=3.12.10-r0 \
     # renovate: datasource=repology depName=alpine_3_20/spdlog
     SPDLOG_VERSION=1.14.1-r0 \
     # renovate: datasource=repology depName=alpine_3_20/sudo
@@ -80,8 +80,13 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
     && \
     cleanup.sh
 
+# renovate: datasource=github-releases depName=vscode packageName=coder/code-server
+ARG CODE_SERVER_VERSION=4.99.4
 RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/root/.npm \
-    CXXFLAGS='-DNODE_API_EXPERIMENTAL_NOGC_ENV_OPT_OUT -U_FORTIFY_SOURCE' npm install --global --unsafe-perm code-server@4.91.1 && \
+    mkdir -p /opt/code-server && \
+    cd /opt/code-server && \
+    CXXFLAGS='-U_FORTIFY_SOURCE' npm install --unsafe-perm "code-server@${CODE_SERVER_VERSION}" --verbose && \
+    ln -s /opt/code-server/node_modules/.bin/code-server /usr/local/bin/code-server && \
     cleanup.sh
 
 # Drush requires HOME to be set as such.
@@ -98,13 +103,13 @@ ENV \
 COPY --link rootfs /
 
 # Install Editor plugins from bind mounted folder (Not available on online marketplace).
-RUN --mount=type=bind,source=/extensions,target=/extensions \
-    declare -a PIDS=() EXTENSIONS=(/extensions/*.vsix); \
-    EXTENSIONS+=(\
+RUN EXTENSIONS=(\
+        augustocdias.tasks-shell-input \ 
         bmewburn.vscode-intelephense-client \
         felixfbecker.php-debug \
-        streetsidesoftware.code-spell-checker \
         mblode.twig-language-2 \
+        streetsidesoftware.code-spell-checker \
+        ValeryanM.vscode-phpsab \
     ) && \
     mkdir -p /opt/code-server/data /opt/code-server/extensions; \
     for extension in "${EXTENSIONS[@]}"; \

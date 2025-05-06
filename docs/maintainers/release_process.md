@@ -47,7 +47,6 @@ Reporting results from testing process:
 
 When testing isle-buildkit
 * `git clone git@github.com:Islandora-Devops/isle-buildkit.git` to local laptop
-* `git checkout `/matomo-volume-redux`
 * `./gradlew build`
 
 #### Results

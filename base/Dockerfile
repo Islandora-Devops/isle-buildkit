@@ -35,9 +35,9 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_20/jq
   JQ_VERSION=1.7.1-r0 \
   # renovate: datasource=repology depName=alpine_3_20/mariadb-client
-  MARIADB_CLIENT_VERSION=10.11.10-r0 \
+  MARIADB_CLIENT_VERSION=10.11.11-r0 \
   # renovate: datasource=repology depName=alpine_3_20/mysql-client
-  MYSQL_CLIENT_VERSION=10.11.10-r0 \
+  MYSQL_CLIENT_VERSION=10.11.11-r0 \
   # renovate: datasource=repology depName=alpine_3_20/netcat-openbsd	
   NETCAT_OPENBSD_VERSION=1.226-r0 \
   # renovate: datasource=repology depName=alpine_3_20/openssl
@@ -45,7 +45,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_20/patch
   PATCH_VERSION=2.7.6-r10 \
   # renovate: datasource=repology depName=alpine_3_20/postgresql16-client
-  POSTGRES_CLIENT_VERSION=16.6-r0 \
+  POSTGRES_CLIENT_VERSION=16.8-r0 \
   # renovate: datasource=repology depName=alpine_3_20/procps-ng
   PROCPS_VERSION=4.0.4-r0 \
   # renovate: datasource=repology depName=alpine_3_20/shadow

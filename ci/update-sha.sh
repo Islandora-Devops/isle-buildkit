@@ -17,12 +17,28 @@ update_dockerfile_sha() {
   local ARG="$2"
   local DOCKERFILES=("${@:3}")
   local SHA
-  SHA=$(curl -Ls "$URL" | shasum -a 256 | awk '{print $1}')
+  curl -fLs "$URL" -o curl.resp || echo "Request failed with exit code $?"
+  SHA=$(shasum -a 256 curl.resp | awk '{print $1}')
 
   if [[ "$OSTYPE" == "darwin"* ]]; then
     sed -i '' 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
   else
     sed -i 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
+  fi
+  rm curl.resp
+}
+
+update_readme() {
+  local README="$1"
+  local OLD_VERSION="$2"
+  local NEW_VERSION="$3"
+  # update the README to specify the new version
+  if [ "$README" != "" ]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      sed -i '' "s/${OLD_VERSION}\.$/${NEW_VERSION}\./" "$README"
+    else
+      sed -i "s/${OLD_VERSION}\.$/${NEW_VERSION}\./" "$README"
+    fi
   fi
 }
 
@@ -143,19 +159,13 @@ elif [ "$DEP" = "s6-overlay" ]; then
   done
 
   exit 0
-
+elif [ "$DEP" = "vscode" ]; then
+  update_readme "code-server/README.md" "$OLD_VERSION" "$NEW_VERSION"
+  exit 0
 else
   echo "DEP not found"
   exit 0
 fi
 
 update_dockerfile_sha "$URL" "$ARG" "${DOCKERFILES[@]}"
-
-# update the README to specify the new version
-if [ "$README" != "" ]; then
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i '' "s/${OLD_VERSION}\.$/${NEW_VERSION}\./" "$README"
-  else
-    sed -i "s/${OLD_VERSION}\.$/${NEW_VERSION}\./" "$README"
-  fi
-fi
+update_readme "$README" "$OLD_VERSION" "$NEW_VERSION"

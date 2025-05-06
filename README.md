@@ -364,7 +364,6 @@ Waiting for installation...
   ActiveMQ                       https://activemq.islandora.dev
   Blazegraph                     https://blazegraph.islandora.dev/bigdata/
   Fedora                         https://fcrepo.islandora.dev/fcrepo/rest/
-  Matomo                         https://islandora.dev/matomo/index.php
   Solr                           https://solr.islandora.dev
   Traefik                        https://traefik.islandora.dev
 ```
@@ -467,7 +466,6 @@ The following docker images are provided:
 - [hypercube]
 - [java]
 - [mariadb]
-- [matomo]
 - [milliner]
 - [nginx]
 - [postgresql]
@@ -527,6 +525,9 @@ Many dependencies in this repo are automatically updated using [renovate](https:
   - these dependencies are automatically merged when our CI tests pass using [automerge](https://docs.renovatebot.com/key-concepts/automerge/#automerging-and-scheduling)
 - [github-releases](https://docs.renovatebot.com/modules/datasource/github-releases/) and [github-tags](https://docs.renovatebot.com/modules/datasource/github-tags/) for software we install manually
 - [git-refs](https://docs.renovatebot.com/modules/datasource/git-refs/) when we pin to a specific commit on a branch
+- [apache-downloads](https://docs.renovatebot.com/modules/datasource/custom) a custom data source that parses the HTML list of releases ([e.g. solr/solr](https://downloads.apache.org/solr/solr/)). This was done since using apache's GitHub repos is not a good indicator when apache cuts a release for their software. Apache's GitHub repos often have tags before apache officially releases their software, resulting in preemptive PRs from renovate before the release is available.
+
+##### Why isle-buildkit can't use Renovate's GitHub app to track updates
 
 Since renovate does not natively support the ability to extract a sha256 from a file, we need [a custom shell script](./ci/update-sha.sh) in the [postUpgradeTasks](https://docs.renovatebot.com/configuration-options/#postupgradetasks) to calculate the sha256 of our files and update our Dockerfile accordingly.
 
@@ -801,8 +802,7 @@ are arranged in a hierarchy, that roughly follows below:
         │   └── riprap
         ├── crayfits
         ├── drupal
-        │   └── test
-        └── matomo
+            └── test
 ```
 
 [imagemagick] & [leptonica] stand outside of the hierarchy as they are use only
@@ -967,7 +967,6 @@ adding the following, and restarting `Docker`:
 [hypercube]: ./hypercube/README.md
 [java]: ./java/README.md
 [mariadb]: ./mariadb/README.md
-[matomo]: ./matomo/README.md
 [milliner]: ./milliner/README.md
 [nginx]: ./nginx/README.md
 [postgresql]: ./postgresql/README.md

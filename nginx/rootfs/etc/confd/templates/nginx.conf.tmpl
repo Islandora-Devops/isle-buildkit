@@ -25,6 +25,9 @@ http {
         # Includes mapping of file name extensions to MIME types of responses
         # and defines the default type.
         include /etc/nginx/mime.types;
+        types {
+          application/javascript mjs;
+        }
         default_type application/octet-stream;
 
         # Name servers used to resolve names of upstream servers into addresses.

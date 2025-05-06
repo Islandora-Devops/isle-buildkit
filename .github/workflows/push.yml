@@ -1,6 +1,9 @@
 name: Build and Push Docker Images
 on:
   push:
+    paths-ignore:
+      - "renovate.json"
+      - "**/*.md"
   workflow_dispatch:
     inputs:
       tag:
@@ -171,15 +174,6 @@ jobs:
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
     needs: [tags, base]
-  matomo:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.nginx.outputs.context }}
-      image: matomo
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-    secrets: inherit
-    needs: [tags, nginx]
   milliner:
     uses: ./.github/workflows/build.yml
     with:
@@ -389,17 +383,6 @@ jobs:
       image: mariadb
     secrets: inherit
     needs: [mariadb]
-  test-matomo:
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: >-
-        ${{ needs.mariadb.outputs.digest }}
-        ${{ needs.matomo.outputs.digest }}
-      image: matomo
-    secrets: inherit
-    needs:
-      - mariadb
-      - matomo
   test-milliner:
     uses: ./.github/workflows/test.yml
     with:
@@ -604,13 +587,6 @@ jobs:
       image: mariadb
     secrets: inherit
     needs: [mariadb]
-  grype-matomo:
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.matomo.outputs.digest }}
-      image: matomo
-    secrets: inherit
-    needs: [matomo]
   grype-milliner:
     uses: ./.github/workflows/grype.yml
     with:

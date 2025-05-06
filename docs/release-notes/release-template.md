@@ -61,7 +61,6 @@ hypercube
 imagemagick
 java
 mariadb
-matomo
 milliner
 nginx
 postgresql

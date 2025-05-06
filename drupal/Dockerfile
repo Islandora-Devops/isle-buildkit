@@ -45,8 +45,6 @@ ENV \
     DRUPAL_DEFAULT_INSTALL_EXISTING_CONFIG=false \
     DRUPAL_DEFAULT_INSTALL=true \
     DRUPAL_DEFAULT_LOCALE=en \
-    DRUPAL_DEFAULT_MATOMO_URL_HTTP=http://islandora.traefik.me/matomo/ \
-    DRUPAL_DEFAULT_MATOMO_URL_HTTPS=https://islandora.traefik.me/matomo/ \
     DRUPAL_DEFAULT_NAME=Default \
     DRUPAL_DEFAULT_PROFILE=standard \
     DRUPAL_DEFAULT_SALT=9PPaL0CxZAIcq0l9wxgDGlCZrp7JdT_x7v9gVzpdbUjMt1PqDz3uD0Zy-i16DuJ1-Htuq5hqeg \

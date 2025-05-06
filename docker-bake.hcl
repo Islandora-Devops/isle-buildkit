@@ -21,7 +21,6 @@ IMAGES = [
   "hypercube",
   "java",
   "mariadb",
-  "matomo",
   "milliner",
   "nginx",
   "postgresql",
@@ -48,7 +47,6 @@ DEPENDENCIES = {
   hypercube = ["crayfish"]
   java = ["base"]
   mariadb = ["base"]
-  matomo = ["nginx"]
   milliner = ["crayfish"]
   nginx = ["base"]
   postgresql = ["base"]
@@ -223,10 +221,6 @@ group "mariadb-ci" {
   targets = arches("mariadb", "ci")
 }
 
-group "matomo-ci" {
-  targets = arches("matomo", "ci")
-}
-
 group "milliner-ci" {
   targets = arches("milliner", "ci")
 }
@@ -317,7 +311,7 @@ target "code-server-common" {
   context = "code-server"
   contexts = {
     # Produced by this repository <https://github.com/Islandora-Devops/isle-nodejs>.
-    nodejs = "docker-image://islandora/nodejs:alpine-3.20.2-nodejs-20.15.1-r0@sha256:4f377ed5bbb832c51ee9f4b898555ffae0dfdd21f4becc5ac7e26cdf235ed004"
+    nodejs = "docker-image://islandora/nodejs:alpine-3.20.2-nodejs-20.18.3-r0@sha256:709e29832b5fb87278990ef462eb8197c4725e45902f5d716b7c9497db6521bb"
   }
 }
 
@@ -382,11 +376,6 @@ target "java-common" {
 target "mariadb-common" {
   inherits = ["common"]
   context = "mariadb"
-}
-
-target "matomo-common" {
-  inherits = ["common"]
-  context = "matomo"
 }
 
 target "milliner-common" {
@@ -543,13 +532,6 @@ target "mariadb" {
   contexts = dependencies("mariadb", "")
   cache-from = cacheFrom("mariadb", hostArch())
   tags = tags("mariadb", "")
-}
-
-target "matomo" {
-  inherits = ["matomo-common"]
-  contexts = dependencies("matomo", "")
-  cache-from = cacheFrom("matomo", hostArch())
-  tags = tags("matomo", "")
 }
 
 target "milliner" {
@@ -722,13 +704,6 @@ target "mariadb-amd64" {
   tags = tags("mariadb", "amd64")
 }
 
-target "matomo-amd64" {
-  inherits = ["matomo-common", "amd64-common"]
-  contexts = dependencies("matomo", "amd64")
-  cache-from = cacheFrom("matomo", "amd64")
-  tags = tags("matomo", "amd64")
-}
-
 target "milliner-amd64" {
   inherits = ["milliner-common", "amd64-common"]
   contexts = dependencies("milliner", "amd64")
@@ -899,13 +874,6 @@ target "mariadb-arm64" {
   tags = tags("mariadb", "arm64")
 }
 
-target "matomo-arm64" {
-  inherits = ["matomo-common", "arm64-common"]
-  contexts = dependencies("matomo", "arm64")
-  cache-from = cacheFrom("matomo", "arm64")
-  tags = tags("matomo", "arm64")
-}
-
 target "milliner-arm64" {
   inherits = ["milliner-common", "arm64-common"]
   contexts = dependencies("milliner", "arm64")
@@ -1059,12 +1027,6 @@ target "mariadb-amd64-ci" {
   cache-to = cacheTo("mariadb", "amd64")
 }
 
-target "matomo-amd64-ci" {
-  inherits = ["matomo-amd64"]
-  contexts = dependencies("matomo", "amd64-ci")
-  cache-to = cacheTo("matomo", "amd64")
-}
-
 target "milliner-amd64-ci" {
   inherits = ["milliner-amd64"]
   contexts = dependencies("milliner", "amd64-ci")
@@ -1211,12 +1173,6 @@ target "mariadb-arm64-ci" {
   inherits = ["mariadb-arm64"]
   contexts = dependencies("mariadb", "arm64-ci")
   cache-to = cacheTo("mariadb", "arm64")
-}
-
-target "matomo-arm64-ci" {
-  inherits = ["matomo-arm64"]
-  contexts = dependencies("matomo", "arm64-ci")
-  cache-to = cacheTo("matomo", "arm64")
 }
 
 target "milliner-arm64-ci" {
