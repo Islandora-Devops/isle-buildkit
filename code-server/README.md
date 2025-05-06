@@ -1,6 +1,6 @@
 # Coder
 
-Docker image for [code-server] 4.99.3.
+Docker image for [code-server] 4.99.4.
 
 Built from [Islandora-DevOps/isle-buildkit code-server](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/code-server)
 
