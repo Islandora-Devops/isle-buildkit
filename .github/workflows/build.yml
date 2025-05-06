@@ -59,15 +59,14 @@ jobs:
         name: Build and push
         run: |
           set -ex
-          for TAG in ${{ inputs.tags }}; do
-            make push \
-              "PROGRESS=plain" \
-              "BUILDER=${{ steps.buildx.outputs.name }}" \
-              "TARGET=${{ inputs.image }}-ci" \
-              "REPOSITORY=${{ inputs.repository }}" \
-              "TAGS=${TAG}" \
-              "CONTEXTS=${{ inputs.contexts }}"
-          done
+          FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
+          make push \
+            "PROGRESS=plain" \
+            "BUILDER=${{ steps.buildx.outputs.name }}" \
+            "TARGET=${{ inputs.image }}-ci" \
+            "REPOSITORY=${{ inputs.repository }}" \
+            "TAGS=${FIRST_TAG}" \
+            "CONTEXTS=${{ inputs.contexts }}"
   merge:
     runs-on: ubuntu-24.04
     outputs:
@@ -89,13 +88,20 @@ jobs:
       - name: Create and push manifest list
         id: build-push-manifest
         run: |
+          FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
+          IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${FIRST_TAG}"
+          docker buildx imagetools create \
+            -t "${IMAGE}" \
+            "${IMAGE}-amd64" \
+            "${IMAGE}-arm64"
           for TAG in ${{ inputs.tags }}; do
-            IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
-            docker buildx imagetools create \
-              -t "${IMAGE}" \
-              "${IMAGE}-amd64" \
-              "${IMAGE}-arm64"
+            if [ "$TAG" = "$FIRST_TAG" ]; then
+              continue
+            fi
+            docker image tag "$IMAGE" "${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
+            docker push "${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
           done
+
           DIGEST=$(docker buildx imagetools inspect "$IMAGE" | grep Digest | awk '{print $2}')
           echo "digest=-Pisle.${{ inputs.image }}.digest=${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
           echo "context=docker-image://${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
