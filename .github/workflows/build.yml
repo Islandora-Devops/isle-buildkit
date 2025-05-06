@@ -32,7 +32,7 @@ jobs:
   build:
     strategy:
       matrix:
-        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+        runner: [ubuntu-22.04, ubuntu-22.04-arm]
     name: build-${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}
     permissions:
