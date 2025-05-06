@@ -32,7 +32,7 @@ jobs:
   build:
     strategy:
       matrix:
-        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+        runner: [ubuntu-22.04, ubuntu-22.04-arm]
     name: build-${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}
     permissions:
@@ -60,10 +60,14 @@ jobs:
         run: |
           set -ex
           FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
+          PLATFORM="amd64"
+          if [ "${{ matrix.runner }}" = "ubuntu-24.04-arm"]; then
+            PLATFORM="arm64"
+          fi
           make push \
             "PROGRESS=plain" \
             "BUILDER=${{ steps.buildx.outputs.name }}" \
-            "TARGET=${{ inputs.image }}-ci" \
+            "TARGET=${{ inputs.image }}-$PLATFORM" \
             "REPOSITORY=${{ inputs.repository }}" \
             "TAGS=${FIRST_TAG}" \
             "CONTEXTS=${{ inputs.contexts }}"
@@ -101,3 +105,4 @@ jobs:
           DIGEST=$(docker buildx imagetools inspect "$IMAGE" | grep Digest | awk '{print $2}')
           echo "digest=-Pisle.${{ inputs.image }}.digest=${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
           echo "context=docker-image://${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
+
