@@ -19,10 +19,13 @@ IMAGES = [
   "homarus",
   "houdini",
   "hypercube",
+  "imagemagick",
   "java",
+  "leptonica",
   "mariadb",
   "milliner",
   "nginx",
+  "nodejs",
   "postgresql",
   "riprap",
   "solr",
@@ -35,7 +38,7 @@ DEPENDENCIES = {
   alpaca = ["java"]
   blazegraph = ["tomcat"]
   cantaloupe = ["java"]
-  code-server = ["drupal"]
+  code-server = ["drupal", "nodejs"]
   crayfish = ["nginx"]
   crayfits = ["crayfish"]
   drupal = ["nginx"]
@@ -43,8 +46,8 @@ DEPENDENCIES = {
   fits = ["tomcat"]
   handle = ["java"]
   homarus = ["crayfish"]
-  houdini = ["crayfish"]
-  hypercube = ["crayfish"]
+  houdini = ["crayfish", "imagemagick"]
+  hypercube = ["crayfish", "leptonica"]
   java = ["base"]
   mariadb = ["base"]
   milliner = ["crayfish"]
@@ -141,114 +144,6 @@ group "arm64" {
   targets = targets("arm64")
 }
 
-group "ci" {
-  targets = [ "amd64-ci", "arm64-ci" ]
-}
-
-group "amd64-ci" {
-  targets = targets("amd64-ci")
-}
-
-group "arm64-ci" {
-  targets = targets("arm64-ci")
-}
-
-group "activemq-ci" {
-  targets = arches("activemq", "ci")
-}
-
-group "alpaca-ci" {
-  targets = arches("alpaca", "ci")
-}
-
-group "base-ci" {
-  targets = arches("base", "ci")
-}
-
-group "blazegraph-ci" {
-  targets = arches("blazegraph", "ci")
-}
-
-group "cantaloupe-ci" {
-  targets = arches("cantaloupe", "ci")
-}
-
-group "code-server-ci" {
-  targets = arches("code-server", "ci")
-}
-
-group "crayfish-ci" {
-  targets = arches("crayfish", "ci")
-}
-
-group "crayfits-ci" {
-  targets = arches("crayfits", "ci")
-}
-
-group "drupal-ci" {
-  targets = arches("drupal", "ci")
-}
-
-group "fcrepo6-ci" {
-  targets = arches("fcrepo6", "ci")
-}
-
-group "fits-ci" {
-  targets = arches("fits", "ci")
-}
-
-group "handle-ci" {
-  targets = arches("handle", "ci")
-}
-
-group "homarus-ci" {
-  targets = arches("homarus", "ci")
-}
-
-group "houdini-ci" {
-  targets = arches("houdini", "ci")
-}
-
-group "hypercube-ci" {
-  targets = arches("hypercube", "ci")
-}
-
-group "java-ci" {
-  targets = arches("java", "ci")
-}
-
-group "mariadb-ci" {
-  targets = arches("mariadb", "ci")
-}
-
-group "milliner-ci" {
-  targets = arches("milliner", "ci")
-}
-
-group "nginx-ci" {
-  targets = arches("nginx", "ci")
-}
-
-group "postgresql-ci" {
-  targets = arches("postgresql", "ci")
-}
-
-group "riprap-ci" {
-  targets = arches("riprap", "ci")
-}
-
-group "solr-ci" {
-  targets = arches("solr", "ci")
-}
-
-group "test-ci" {
-  targets = arches("test", "ci")
-}
-
-group "tomcat-ci" {
-  targets = arches("tomcat", "ci")
-}
-
 ###############################################################################
 # Common target properties.
 ###############################################################################
@@ -289,9 +184,6 @@ target "base-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    # N.B. This should match the value used in:
-    # - <https://github.com/Islandora-Devops/isle-imagemagick>
-    # - <https://github.com/Islandora-Devops/isle-leptonica>
     alpine = "docker-image://alpine:3.20.2@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5"
   }
 }
@@ -309,10 +201,6 @@ target "cantaloupe-common" {
 target "code-server-common" {
   inherits = ["common"]
   context = "code-server"
-  contexts = {
-    # Produced by this repository <https://github.com/Islandora-Devops/isle-nodejs>.
-    nodejs = "docker-image://islandora/nodejs:alpine-3.20.2-nodejs-20.18.3-r0@sha256:709e29832b5fb87278990ef462eb8197c4725e45902f5d716b7c9497db6521bb"
-  }
 }
 
 target "crayfish-common" {
@@ -353,24 +241,38 @@ target "homarus-common" {
 target "houdini-common" {
   inherits = ["common"]
   context = "houdini"
-  contexts = {
-    # Produced by this repository <https://github.com/Islandora-Devops/isle-imagemagick>.
-    imagemagick = "docker-image://islandora/imagemagick:alpine-3.20.2-imagemagick-7.1.1.36-r0@sha256:a1fa03a18e7e232e380d070d196dc2c0e0a8762dd385640b932e28fcacfd9b05"
-  }
 }
 
 target "hypercube-common" {
   inherits = ["common"]
   context = "hypercube"
+}
+
+target "imagemagick-common" {
+  inherits = ["common"]
+  context = "imagemagick"
   contexts = {
-    # Produced by this repository <https://github.com/Islandora-Devops/isle-leptonica>.
-    leptonica = "docker-image://islandora/leptonica:alpine-3.20.2-leptonica-1.84.1-r0@sha256:9e9e46a328d8b55a61a352a6b06ff175f98e40cd5773c9bf93aac58fb56b65f7"
+    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
+    # It will be the digest printed when you do: docker pull alpine:3.17.1
+    # Not the one displayed on DockerHub.
+    alpine = "docker-image://alpine:3.20.2@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5"
   }
 }
 
 target "java-common" {
   inherits = ["common"]
   context = "java"
+}
+
+target "leptonica-common" {
+  inherits = ["common"]
+  context = "leptonica"
+  contexts = {
+    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
+    # It will be the digest printed when you do: docker pull alpine:3.17.1
+    # Not the one displayed on DockerHub.
+    alpine = "docker-image://alpine:3.20.2@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5"
+  }
 }
 
 target "mariadb-common" {
@@ -386,6 +288,17 @@ target "milliner-common" {
 target "nginx-common" {
   inherits = ["common"]
   context = "nginx"
+}
+
+target "nodejs-common" {
+  inherits = ["common"]
+  context = "nodejs"
+  contexts = {
+    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
+    # It will be the digest printed when you do: docker pull alpine:3.17.1
+    # Not the one displayed on DockerHub.
+    alpine = "docker-image://alpine:3.20.2@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5"
+  }
 }
 
 target "postgresql-common" {
@@ -520,11 +433,23 @@ target "hypercube" {
   tags = tags("hypercube", "")
 }
 
+target "imagemagick" {
+  inherits = ["imagemagick-common"]
+  cache-from = cacheFrom("imagemagick", hostArch())
+  tags = tags("imagemagick", "")
+}
+
 target "java" {
   inherits = ["java-common"]
   contexts = dependencies("java", "")
   cache-from = cacheFrom("java", hostArch())
   tags = tags("java", "")
+}
+
+target "leptonica" {
+  inherits = ["leptonica-common"]
+  cache-from = cacheFrom("leptonica", hostArch())
+  tags = tags("leptonica", "")
 }
 
 target "mariadb" {
@@ -546,6 +471,12 @@ target "nginx" {
   contexts = dependencies("nginx", "")
   cache-from = cacheFrom("nginx", hostArch())
   tags = tags("nginx", "")
+}
+
+target "nodejs" {
+  inherits = ["nodejs-common"]
+  cache-from = cacheFrom("nodejs", hostArch())
+  tags = tags("nodejs", "")
 }
 
 target "postgresql" {
@@ -690,11 +621,23 @@ target "hypercube-amd64" {
   tags = tags("hypercube", "amd64")
 }
 
+target "imagemagick-amd64" {
+  inherits = ["imagemagick-common", "amd64-common"]
+  cache-from = cacheFrom("imagemagick", "amd64")
+  tags = tags("imagemagick", "amd64")
+}
+
 target "java-amd64" {
   inherits = ["java-common", "amd64-common"]
   contexts = dependencies("java", "amd64")
   cache-from = cacheFrom("java", "amd64")
   tags = tags("java", "amd64")
+}
+
+target "leptonica-amd64" {
+  inherits = ["leptonica-common", "amd64-common"]
+  cache-from = cacheFrom("leptonica", "amd64")
+  tags = tags("leptonica", "amd64")
 }
 
 target "mariadb-amd64" {
@@ -716,6 +659,12 @@ target "nginx-amd64" {
   contexts = dependencies("nginx", "amd64")
   cache-from = cacheFrom("nginx", "amd64")
   tags = tags("nginx", "amd64")
+}
+
+target "nodejs-amd64" {
+  inherits = ["nodejs-common", "amd64-common"]
+  cache-from = cacheFrom("nodejs", "amd64")
+  tags = tags("nodejs", "amd64")
 }
 
 target "postgresql-amd64" {
@@ -860,11 +809,23 @@ target "hypercube-arm64" {
   tags = tags("hypercube", "arm64")
 }
 
+target "imagemagick-arm64" {
+  inherits = ["imagemagick-common", "arm64-common"]
+  cache-from = cacheFrom("imagemagick", "arm64")
+  tags = tags("imagemagick", "arm64")
+}
+
 target "java-arm64" {
   inherits = ["java-common", "arm64-common"]
   contexts = dependencies("java", "arm64")
   cache-from = cacheFrom("java", "arm64")
   tags = tags("java", "arm64")
+}
+
+target "leptonica-arm64" {
+  inherits = ["leptonica-common", "arm64-common"]
+  cache-from = cacheFrom("leptonica", "arm64")
+  tags = tags("leptonica", "arm64")
 }
 
 target "mariadb-arm64" {
@@ -886,6 +847,12 @@ target "nginx-arm64" {
   contexts = dependencies("nginx", "arm64")
   cache-from = cacheFrom("nginx", "arm64")
   tags = tags("nginx", "arm64")
+}
+
+target "nodejs-arm64" {
+  inherits = ["nodejs-common", "arm64-common"]
+  cache-from = cacheFrom("nodejs", "arm64")
+  tags = tags("nodejs", "arm64")
 }
 
 target "postgresql-arm64" {
@@ -921,298 +888,4 @@ target "tomcat-arm64" {
   contexts = dependencies("tomcat", "arm64")
   cache-from = cacheFrom("tomcat", "arm64")
   tags = tags("tomcat", "arm64")
-}
-
-###############################################################################
-# CI linux/amd64 targets.
-###############################################################################
-target "activemq-amd64-ci" {
-  inherits = ["activemq-amd64"]
-  contexts = dependencies("activemq", "amd64-ci")
-  cache-to = cacheTo("activemq", "amd64")
-}
-
-target "alpaca-amd64-ci" {
-  inherits = ["alpaca-amd64"]
-  contexts = dependencies("alpaca", "amd64-ci")
-  cache-to = cacheTo("alpaca", "amd64")
-}
-
-target "base-amd64-ci" {
-  inherits = ["base-amd64"]
-  cache-to = cacheTo("base", "amd64")
-}
-
-target "blazegraph-amd64-ci" {
-  inherits = ["blazegraph-amd64"]
-  contexts = dependencies("blazegraph", "amd64-ci")
-  cache-to = cacheTo("blazegraph", "amd64")
-}
-
-target "cantaloupe-amd64-ci" {
-  inherits = ["cantaloupe-amd64"]
-  contexts = dependencies("cantaloupe", "amd64-ci")
-  cache-to = cacheTo("cantaloupe", "amd64")
-}
-
-target "code-server-amd64-ci" {
-  inherits = ["code-server-amd64"]
-  contexts = dependencies("code-server", "amd64-ci")
-  cache-to = cacheTo("code-server", "amd64")
-}
-
-target "crayfish-amd64-ci" {
-  inherits = ["crayfish-amd64"]
-  contexts = dependencies("crayfish", "amd64-ci")
-  cache-to = cacheTo("crayfish", "amd64")
-}
-
-target "crayfits-amd64-ci" {
-  inherits = ["crayfits-amd64"]
-  contexts = dependencies("crayfits", "amd64-ci")
-  cache-to = cacheTo("crayfits", "amd64")
-}
-
-target "drupal-amd64-ci" {
-  inherits = ["drupal-amd64"]
-  contexts = dependencies("drupal", "amd64-ci")
-  cache-to = cacheTo("drupal", "amd64")
-}
-
-target "fcrepo6-amd64-ci" {
-  inherits = ["fcrepo6-amd64"]
-  contexts = dependencies("fcrepo6", "amd64-ci")
-  cache-to = cacheTo("fcrepo6", "amd64")
-}
-
-target "fits-amd64-ci" {
-  inherits = ["fits-amd64"]
-  contexts = dependencies("fits", "amd64-ci")
-  cache-to = cacheTo("fits", "amd64")
-}
-
-target "handle-amd64-ci" {
-  inherits = ["handle-amd64"]
-  contexts = dependencies("handle", "amd64-ci")
-  cache-to = cacheTo("handle", "amd64")
-}
-
-target "homarus-amd64-ci" {
-  inherits = ["homarus-amd64"]
-  contexts = dependencies("homarus", "amd64-ci")
-  cache-to = cacheTo("homarus", "amd64")
-}
-
-target "houdini-amd64-ci" {
-  inherits = ["houdini-amd64"]
-  contexts = dependencies("houdini", "amd64-ci")
-  cache-to = cacheTo("houdini", "amd64")
-}
-
-target "hypercube-amd64-ci" {
-  inherits = ["hypercube-amd64"]
-  contexts = dependencies("hypercube", "amd64-ci")
-  cache-to = cacheTo("hypercube", "amd64")
-}
-
-target "java-amd64-ci" {
-  inherits = ["java-amd64"]
-  contexts = dependencies("java", "amd64-ci")
-  cache-to = cacheTo("java", "amd64")
-}
-
-target "mariadb-amd64-ci" {
-  inherits = ["mariadb-amd64"]
-  contexts = dependencies("mariadb", "amd64-ci")
-  cache-to = cacheTo("mariadb", "amd64")
-}
-
-target "milliner-amd64-ci" {
-  inherits = ["milliner-amd64"]
-  contexts = dependencies("milliner", "amd64-ci")
-  cache-to = cacheTo("milliner", "amd64")
-}
-
-target "nginx-amd64-ci" {
-  inherits = ["nginx-amd64"]
-  contexts = dependencies("nginx", "amd64-ci")
-  cache-to = cacheTo("nginx", "amd64")
-}
-
-target "postgresql-amd64-ci" {
-  inherits = ["postgresql-amd64"]
-  contexts = dependencies("postgresql", "amd64-ci")
-  cache-to = cacheTo("postgresql", "amd64")
-}
-
-target "riprap-amd64-ci" {
-  inherits = ["riprap-amd64"]
-  contexts = dependencies("riprap", "amd64-ci")
-  cache-to = cacheTo("riprap", "amd64")
-}
-
-target "solr-amd64-ci" {
-  inherits = ["solr-amd64"]
-  contexts = dependencies("solr", "amd64-ci")
-  cache-to = cacheTo("solr", "amd64")
-}
-
-target "test-amd64-ci" {
-  inherits = ["test-amd64"]
-  contexts = dependencies("test", "amd64-ci")
-  cache-to = cacheTo("test", "amd64")
-}
-
-target "tomcat-amd64-ci" {
-  inherits = ["tomcat-amd64"]
-  contexts = dependencies("tomcat", "amd64-ci")
-  cache-to = cacheTo("tomcat", "amd64")
-}
-
-###############################################################################
-# CI linux/arm64 targets.
-#
-# Sets `cache-to` (requires authentication against the image registry).
-###############################################################################
-target "activemq-arm64-ci" {
-  inherits = ["activemq-arm64"]
-  contexts = dependencies("activemq", "arm64-ci")
-  cache-to = cacheTo("activemq", "arm64")
-}
-
-target "alpaca-arm64-ci" {
-  inherits = ["alpaca-arm64"]
-  contexts = dependencies("alpaca", "arm64-ci")
-  cache-to = cacheTo("alpaca", "arm64")
-}
-
-target "base-arm64-ci" {
-  inherits = ["base-arm64"]
-  cache-to = cacheTo("base", "arm64")
-}
-
-target "blazegraph-arm64-ci" {
-  inherits = ["blazegraph-arm64"]
-  contexts = dependencies("blazegraph", "arm64-ci")
-  cache-to = cacheTo("blazegraph", "arm64")
-}
-
-target "cantaloupe-arm64-ci" {
-  inherits = ["cantaloupe-arm64"]
-  contexts = dependencies("cantaloupe", "arm64-ci")
-  cache-to = cacheTo("cantaloupe", "arm64")
-}
-
-target "code-server-arm64-ci" {
-  inherits = ["code-server-arm64"]
-  contexts = dependencies("code-server", "arm64-ci")
-  cache-to = cacheTo("code-server", "arm64")
-}
-
-target "crayfish-arm64-ci" {
-  inherits = ["crayfish-arm64"]
-  contexts = dependencies("crayfish", "arm64-ci")
-  cache-to = cacheTo("crayfish", "arm64")
-}
-
-target "crayfits-arm64-ci" {
-  inherits = ["crayfits-arm64"]
-  contexts = dependencies("crayfits", "arm64-ci")
-  cache-to = cacheTo("crayfits", "arm64")
-}
-
-target "drupal-arm64-ci" {
-  inherits = ["drupal-arm64"]
-  contexts = dependencies("drupal", "arm64-ci")
-  cache-to = cacheTo("drupal", "arm64")
-}
-
-target "fcrepo6-arm64-ci" {
-  inherits = ["fcrepo6-arm64"]
-  contexts = dependencies("fcrepo6", "arm64-ci")
-  cache-to = cacheTo("fcrepo6", "arm64")
-}
-
-target "fits-arm64-ci" {
-  inherits = ["fits-arm64"]
-  contexts = dependencies("fits", "arm64-ci")
-  cache-to = cacheTo("fits", "arm64")
-}
-
-target "handle-arm64-ci" {
-  inherits = ["handle-arm64"]
-  contexts = dependencies("handle", "arm64-ci")
-  cache-to = cacheTo("handle", "arm64")
-}
-
-target "homarus-arm64-ci" {
-  inherits = ["homarus-arm64"]
-  contexts = dependencies("homarus", "arm64-ci")
-  cache-to = cacheTo("homarus", "arm64")
-}
-
-target "houdini-arm64-ci" {
-  inherits = ["houdini-arm64"]
-  contexts = dependencies("houdini", "arm64-ci")
-  cache-to = cacheTo("houdini", "arm64")
-}
-
-target "hypercube-arm64-ci" {
-  inherits = ["hypercube-arm64"]
-  contexts = dependencies("hypercube", "arm64-ci")
-  cache-to = cacheTo("hypercube", "arm64")
-}
-
-target "java-arm64-ci" {
-  inherits = ["java-arm64"]
-  contexts = dependencies("java", "arm64-ci")
-  cache-to = cacheTo("java", "arm64")
-}
-
-target "mariadb-arm64-ci" {
-  inherits = ["mariadb-arm64"]
-  contexts = dependencies("mariadb", "arm64-ci")
-  cache-to = cacheTo("mariadb", "arm64")
-}
-
-target "milliner-arm64-ci" {
-  inherits = ["milliner-arm64"]
-  contexts = dependencies("milliner", "arm64-ci")
-  cache-to = cacheTo("milliner", "arm64")
-}
-
-target "nginx-arm64-ci" {
-  inherits = ["nginx-arm64"]
-  contexts = dependencies("nginx", "arm64-ci")
-  cache-to = cacheTo("nginx", "arm64")
-}
-
-target "postgresql-arm64-ci" {
-  inherits = ["postgresql-arm64"]
-  contexts = dependencies("postgresql", "arm64-ci")
-  cache-to = cacheTo("postgresql", "arm64")
-}
-
-target "riprap-arm64-ci" {
-  inherits = ["riprap-arm64"]
-  contexts = dependencies("riprap", "arm64-ci")
-  cache-to = cacheTo("riprap", "arm64")
-}
-
-target "solr-arm64-ci" {
-  inherits = ["solr-arm64"]
-  contexts = dependencies("solr", "arm64-ci")
-  cache-to = cacheTo("solr", "arm64")
-}
-
-target "test-arm64-ci" {
-  inherits = ["test-arm64"]
-  contexts = dependencies("test", "arm64-ci")
-  cache-to = cacheTo("test", "arm64")
-}
-
-target "tomcat-arm64-ci" {
-  inherits = ["tomcat-arm64"]
-  contexts = dependencies("tomcat", "arm64-ci")
-  cache-to = cacheTo("tomcat", "arm64")
 }

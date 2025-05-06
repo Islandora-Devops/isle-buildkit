@@ -1,0 +1,294 @@
+# Adapted from: https://git.alpinelinux.org/aports/tree/community/nodejs/APKBUILD
+# Contributor: Nigel Banks <nigel.g.banks@gmail.com>
+# Contributor: Jose-Luis Rivas <ghostbar@riseup.net>
+# Contributor: Jakub Jirutka <jakub@jirutka.cz>
+# Contributor: Dave Esaias <dave@containership.io>
+# Contributor: Tadahisa Kamijo <kamijin@live.jp>
+# Contributor: Eivind Uggedal <eu@eju.no>
+# Maintainer: Jakub Jirutka <jakub@jirutka.cz>
+# secfixes:
+#   20.18.2-r0:
+#     - CVE-2025-23083
+#     - CVE-2025-23084
+#     - CVE-2025-23085
+#   20.15.1-r0:
+#     - CVE-2024-22018
+#     - CVE-2024-22020
+#     - CVE-2024-36137
+#   20.12.1-r0:
+#     - CVE-2024-27982
+#     - CVE-2024-27983
+#   18.18.2-r0:
+#     - CVE-2023-45143
+#     - CVE-2023-38552
+#     - CVE-2023-39333
+#   18.17.1-r0:
+#     - CVE-2023-32002
+#     - CVE-2023-32006
+#     - CVE-2023-32559
+#   18.14.1-r0:
+#     - CVE-2023-23918
+#     - CVE-2023-23919
+#     - CVE-2023-23920
+#     - CVE-2023-23936
+#     - CVE-2023-24807
+#   18.12.1-r0:
+#     - CVE-2022-3602
+#     - CVE-2022-3786
+#     - CVE-2022-43548
+#   16.17.1-r0:
+#     - CVE-2022-32213
+#     - CVE-2022-32214
+#     - CVE-2022-32215
+#     - CVE-2022-35255
+#     - CVE-2022-35256
+#   16.13.2-r0:
+#     - CVE-2021-44531
+#     - CVE-2021-44532
+#     - CVE-2021-44533
+#     - CVE-2022-21824
+#   14.18.1-r0:
+#     - CVE-2021-22959
+#     - CVE-2021-22960
+#   14.17.6-r0:
+#     - CVE-2021-37701
+#     - CVE-2021-37712
+#     - CVE-2021-37713
+#     - CVE-2021-39134
+#     - CVE-2021-39135
+#   14.17.5-r0:
+#     - CVE-2021-3672
+#     - CVE-2021-22931
+#     - CVE-2021-22939
+#   14.17.4-r0:
+#     - CVE-2021-22930
+#   14.16.1-r0:
+#     - CVE-2020-7774
+#   14.16.0-r0:
+#     - CVE-2021-22883
+#     - CVE-2021-22884
+#   14.15.5-r0:
+#     - CVE-2021-21148
+#   14.15.4-r0:
+#     - CVE-2020-8265
+#     - CVE-2020-8287
+#   14.15.1-r0:
+#     - CVE-2020-8277
+#   12.18.4-r0:
+#     - CVE-2020-8201
+#     - CVE-2020-8252
+#   12.18.0-r0:
+#     - CVE-2020-8172
+#     - CVE-2020-11080
+#     - CVE-2020-8174
+#   12.15.0-r0:
+#     - CVE-2019-15606
+#     - CVE-2019-15605
+#     - CVE-2019-15604
+#   10.16.3-r0:
+#     - CVE-2019-9511
+#     - CVE-2019-9512
+#     - CVE-2019-9513
+#     - CVE-2019-9514
+#     - CVE-2019-9515
+#     - CVE-2019-9516
+#     - CVE-2019-9517
+#     - CVE-2019-9518
+#   10.15.3-r0:
+#     - CVE-2019-5737
+#   10.14.0-r0:
+#     - CVE-2018-12121
+#     - CVE-2018-12122
+#     - CVE-2018-12123
+#     - CVE-2018-0735
+#     - CVE-2018-0734
+#   8.11.4-r0:
+#     - CVE-2018-12115
+#   8.11.3-r0:
+#     - CVE-2018-7167
+#     - CVE-2018-7161
+#     - CVE-2018-1000168
+#   8.11.0-r0:
+#     - CVE-2018-7158
+#     - CVE-2018-7159
+#     - CVE-2018-7160
+#   8.9.3-r0:
+#     - CVE-2017-15896
+#     - CVE-2017-15897
+#   6.11.5-r0:
+#     - CVE-2017-14919
+#   6.11.1-r0:
+#     - CVE-2017-1000381
+#   0:
+#     - CVE-2021-43803
+#     - CVE-2022-32212
+#     - CVE-2023-44487
+#     - CVE-2024-36138
+#     - CVE-2024-37372
+#     - CVE-2025-22150
+pkgname=nodejs
+# Note: Update only to even-numbered versions (e.g. 6.y.z, 8.y.z)!
+# Odd-numbered versions are supported only for 9 months by upstream.
+pkgver=20.18.3
+pkgrel=0
+pkgdesc="JavaScript runtime built on V8 engine - LTS version"
+url="https://nodejs.org/"
+arch="all"
+license="MIT"
+depends="ca-certificates"
+makedepends="
+	ada-dev
+	base64-dev
+	brotli-dev
+	c-ares-dev
+	icu-dev
+	linux-headers
+	nghttp2-dev
+	openssl-dev
+	py3-jinja2
+	python3
+	samurai
+	simdjson-dev
+	simdutf-dev
+	zlib-dev
+	"
+install="$pkgname.post-upgrade"
+subpackages="$pkgname-dev $pkgname-doc"
+provider_priority=100  # highest priority (other provider is nodejs-current)
+provides="nodejs-lts=$pkgver-r$pkgrel"  # for backward compatibility
+replaces="nodejs-current nodejs-lts"  # nodejs-lts for backward compatibility
+source="https://nodejs.org/dist/v$pkgver/node-v$pkgver.tar.gz
+	ada.gyp
+	base64.gyp
+	dynamic-linking.patch
+	disable-running-gyp-on-shared-deps.patch
+	$pkgname.pc.in
+	"
+builddir="$srcdir/node-v$pkgver"
+
+prepare() {
+	default_prepare
+
+	# openssl.cnf is required for build.
+	mv deps/openssl/nodejs-openssl.cnf .
+
+	# Remove bundled dependencies that we're not using.
+	#
+	# NOTE: nghttp3 and ngtcp2 are only used when building with OpenSSL
+	#  that supports QUIC. After the QUIC support is added to openssl, add
+	#  options --shared-nghttp3 and --shared-ngtcp2.
+	rm -rf deps/ada/* \
+		deps/base64/* \
+		deps/brotli \
+		deps/cares \
+		deps/corepack \
+		deps/nghttp2 \
+		deps/nghttp3 \
+		deps/ngtcp2 \
+		deps/openssl/* \
+		deps/simdjson \
+		deps/v8/third_party/jinja2 \
+		deps/zlib \
+		tools/inspector_protocol/jinja2
+
+	mv nodejs-openssl.cnf deps/openssl/
+
+	cp "$srcdir"/base64.gyp deps/base64/
+	cp "$srcdir"/ada.gyp deps/ada/
+}
+
+build() {
+	# Add defines recommended in libuv readme.
+	local common_flags="-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+
+	# -Os overwrites the optimizations enabled by BUILDTYPE=Release.
+	# Compiling with O2 instead of Os increases binary size by ~10%
+	# (53.1 MiB -> 58.6 MiB), but also increases performance by ~20%
+	# according to v8/web-tooling-benchmark. Node.js is quite huge anyway;
+	# there are better options for size constrained environments.
+	export CFLAGS="${CFLAGS/-Os} $common_flags"
+	export CXXFLAGS="${CXXFLAGS/-Os} $common_flags"
+	export CPPFLAGS="${CPPFLAGS/-Os} $common_flags"
+
+	# When building shared libnode.so, the resulting package size is +15 %
+	# (~8 MiB), so we rather build it twice to keep the node binary smaller
+	# (there are currently no packages using libnode.so).
+	msg 'Building node binary'
+	_build
+	cp out/Release/node out/
+
+	msg 'Building libnode.so'
+	_build --shared
+	cp out/Release/lib/libnode.so* out/Release/
+
+	sed "s/@VERSION@/$pkgver/" "$srcdir"/$pkgname.pc.in > out/Release/$pkgname.pc
+}
+
+_build() {
+	# NOTE: We use bundled libuv because they don't care much about backward
+	# compatibility and it has happened several times in past that we
+	# couldn't upgrade nodejs package in stable branches to fix CVEs due to
+	# libuv incompatibility.
+	#
+	# NOTE: We don't package the bundled npm - it's a separate project with
+	# its own release cycle and version numbering, so it's better to keep
+	# it in a standalone aport.
+	#
+	# TODO: Fix and enable corepack.
+	python3 configure.py \
+		--prefix=/usr \
+		--ninja \
+		--enable-lto \
+		--shared-ada \
+		--shared-brotli \
+		--shared-zlib \
+		--shared-openssl \
+		--shared-cares \
+		--shared-nghttp2 \
+		--shared-simdjson \
+		--shared-simdutf \
+		--openssl-use-def-ca-store \
+		--with-icu-default-data-dir=$(icu-config --icudatadir) \
+		--with-intl=system-icu \
+		--without-corepack \
+		--without-npm \
+		"$@"
+
+	make -j $(nproc) BUILDTYPE=Release
+}
+
+# TODO Run provided test suite.
+check() {
+	cd "$builddir"/out/Release
+
+	./node -e 'console.log("Hello, world!")'
+	./node -e "require('assert').equal(process.versions.node, '$pkgver')"
+	./node -e 'require("assert").equal(
+		Buffer.from(Buffer.from("foo").toString("base64"), "base64").toString("ascii"),
+		"foo")'
+}
+
+package() {
+	make -j $(nproc) DESTDIR="$pkgdir" install
+
+	# node binary built without libnode.so.
+	install -D -m755 out/node -t "$pkgdir"/usr/bin/
+
+	install -D -m644 out/Release/$pkgname.pc -t "$pkgdir"/usr/lib/pkgconfig/
+
+	(cd "$pkgdir"/usr/lib; ln -sf libnode.so.* libnode.so)
+}
+
+dev() {
+	provides="nodejs-lts-dev=$pkgver"  # for backward compatibility
+	default_dev
+}
+
+sha512sums="
+d6ede785e7bd62e6b28239c61452129b473bddaa3cbfa426d308e1330abb0e625232395b2c9dd345f36eb1543247eae0c702d27de707a18e5b7f3bdc7716c30a  node-v20.18.3.tar.gz
+529f0b16c5e0403b7dde66ef0d672059322b565299746a62a808aa3953858f0118f9fd216167a63e1a4676ba67f2a6e8f55314b72e017fa6d8e9bdfecb02cd3c  ada.gyp
+bb0f74d8fb1ef07fd457670b9073a3cecadb3ac7d4fea008e8f17c091a62d15ef50646be457a50ac24c4129085d4da21beedd03af0739dded5d636916482f082  base64.gyp
+3b409e7d6e73780d82781c3c7f26c2905c4fa972136537d5757c35d87ba07dd0a2a9a7b3b0f602f6c055d672b7d89730774649ed1b009b3dd2dce3eee7475eb0  disable-running-gyp-on-shared-deps.patch
+5d006ac6841c551efecd2410ce426675d3523456490bb56395fab06c7e59c2da666f6928b54610480147f79da40fb436a3b8ad7c66083ca253f3f6ea49259640  dynamic-linking.patch
+f908fa93f6194ec4f6c5e9d76ed7c918721c7f5d46afcc12de1f84683c185401a27a174b7a7c6a76085a4d0826f964e7088bf5596d4e6901a15bf751846299a6  nodejs.pc.in
+"

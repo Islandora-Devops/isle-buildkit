@@ -74,7 +74,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, drupal]
+    needs: [tags, drupal, nodejs]
   crayfish:
     uses: ./.github/workflows/build.yml
     with:
@@ -146,7 +146,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, crayfish]
+    needs: [tags, crayfish, imagemagick]
   hypercube:
     uses: ./.github/workflows/build.yml
     with:
@@ -155,12 +155,30 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, crayfish]
+    needs: [tags, crayfish, leptonica]
+  imagemagick:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: imagemagick
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, base]
   java:
     uses: ./.github/workflows/build.yml
     with:
       contexts: ${{ needs.base.outputs.context }}
       image: java
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, base]
+  leptonica:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: leptonica
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
@@ -188,6 +206,15 @@ jobs:
     with:
       contexts: ${{ needs.base.outputs.context }}
       image: nginx
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, base]
+  nodejs:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: nodejs
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
