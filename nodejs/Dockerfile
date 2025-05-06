@@ -15,7 +15,8 @@ RUN --mount=type=cache,id=nodejs-apk-${TARGETARCH},sharing=locked,target=/var/ca
     adduser -G abuild -g "Alpine Package Builder" -s /bin/ash -D builder && \
     echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     su - builder -c "abuild-keygen -ain" && \
-    su - builder -c "abuild-apk update"
+    su - builder -c "abuild-apk update" && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 
 USER builder
 
