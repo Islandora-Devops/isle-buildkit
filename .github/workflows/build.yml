@@ -59,13 +59,15 @@ jobs:
         name: Build and push
         run: |
           set -ex
-          make push \
-            "PROGRESS=plain" \
-            "BUILDER=${{ steps.buildx.outputs.name }}" \
-            "TARGET=${{ inputs.image }}-ci" \
-            "REPOSITORY=${{ inputs.repository }}" \
-            "TAGS=${{ inputs.tags }}" \
-            "CONTEXTS=${{ inputs.contexts }}"
+          for TAG in ${{ inputs.tags }}; do
+            make push \
+              "PROGRESS=plain" \
+              "BUILDER=${{ steps.buildx.outputs.name }}" \
+              "TARGET=${{ inputs.image }}-ci" \
+              "REPOSITORY=${{ inputs.repository }}" \
+              "TAGS=${TAG}" \
+              "CONTEXTS=${{ inputs.contexts }}"
+          done
   merge:
     runs-on: ubuntu-24.04
     outputs:
@@ -87,11 +89,13 @@ jobs:
       - name: Create and push manifest list
         id: build-push-manifest
         run: |
-          IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${{ inputs.tags }}"
-          docker buildx imagetools create \
-            -t "${IMAGE}" \
-            "${IMAGE}-amd64" \
-            "${IMAGE}-arm64"
+          for TAG in ${{ inputs.tags }}; do
+            IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
+            docker buildx imagetools create \
+              -t "${IMAGE}" \
+              "${IMAGE}-amd64" \
+              "${IMAGE}-arm64"
+          done
           DIGEST=$(docker buildx imagetools inspect "$IMAGE" | grep Digest | awk '{print $2}')
           echo "digest=-Pisle.${{ inputs.image }}.digest=${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
           echo "context=docker-image://${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
