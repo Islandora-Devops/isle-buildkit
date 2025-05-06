@@ -210,7 +210,7 @@ additional settings, volumes, ports, etc.
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_FALLBACK                                  | "Java2dProcessor"                                                |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_FLV                                       | "FfmpegProcessor"                                                |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_GIF                                       | "Java2dProcessor"                                                |
-| CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_JP2                                       | "OpenJpegProcessor"                                              |
+| CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_JP2                                       | "GrokProcessor"                                                  |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_JPG                                       | "TurboJpegProcessor"                                             |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MOV                                       | "FfmpegProcessor"                                                |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MP4                                       | "FfmpegProcessor"                                                |
