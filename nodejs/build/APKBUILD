@@ -148,8 +148,6 @@ makedepends="
 	py3-jinja2
 	python3
 	samurai
-	simdjson-dev
-	simdutf-dev
 	zlib-dev
 	"
 install="$pkgname.post-upgrade"
@@ -186,7 +184,6 @@ prepare() {
 		deps/nghttp3 \
 		deps/ngtcp2 \
 		deps/openssl/* \
-		deps/simdjson \
 		deps/v8/third_party/jinja2 \
 		deps/zlib \
 		tools/inspector_protocol/jinja2
@@ -245,8 +242,6 @@ _build() {
 		--shared-openssl \
 		--shared-cares \
 		--shared-nghttp2 \
-		--shared-simdjson \
-		--shared-simdutf \
 		--openssl-use-def-ca-store \
 		--with-icu-default-data-dir=$(icu-config --icudatadir) \
 		--with-intl=system-icu \
