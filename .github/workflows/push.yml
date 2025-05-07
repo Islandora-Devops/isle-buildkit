@@ -164,7 +164,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, base]
+    needs: [tags]
   java:
     uses: ./.github/workflows/build.yml
     with:
@@ -182,7 +182,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, base]
+    needs: [tags]
   mariadb:
     uses: ./.github/workflows/build.yml
     with:
@@ -218,7 +218,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, base]
+    needs: [tags]
   postgresql:
     uses: ./.github/workflows/build.yml
     with:
