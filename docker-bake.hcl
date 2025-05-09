@@ -19,10 +19,13 @@ IMAGES = [
   "homarus",
   "houdini",
   "hypercube",
+  "imagemagick",
   "java",
+  "leptonica",
   "mariadb",
   "milliner",
   "nginx",
+  "nodejs",
   "postgresql",
   "riprap",
   "solr",
@@ -35,7 +38,7 @@ DEPENDENCIES = {
   alpaca = ["java"]
   blazegraph = ["tomcat"]
   cantaloupe = ["java"]
-  code-server = ["drupal"]
+  code-server = ["drupal", "nodejs"]
   crayfish = ["nginx"]
   crayfits = ["crayfish"]
   drupal = ["nginx"]
@@ -43,8 +46,8 @@ DEPENDENCIES = {
   fits = ["tomcat"]
   handle = ["java"]
   homarus = ["crayfish"]
-  houdini = ["crayfish"]
-  hypercube = ["crayfish"]
+  houdini = ["crayfish", "imagemagick"]
+  hypercube = ["crayfish", "leptonica"]
   java = ["base"]
   mariadb = ["base"]
   milliner = ["crayfish"]
@@ -141,7 +144,6 @@ group "arm64" {
   targets = targets("arm64")
 }
 
-
 ###############################################################################
 # Common target properties.
 ###############################################################################
@@ -182,10 +184,7 @@ target "base-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    # N.B. This should match the value used in:
-    # - <https://github.com/Islandora-Devops/isle-imagemagick>
-    # - <https://github.com/Islandora-Devops/isle-leptonica>
-    alpine = "docker-image://alpine:3.20.2@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5"
+    alpine = "docker-image://alpine:3.20.6@sha256:de4fe7064d8f98419ea6b49190df1abbf43450c1702eeb864fe9ced453c1cc5f"
   }
 }
 
@@ -202,10 +201,6 @@ target "cantaloupe-common" {
 target "code-server-common" {
   inherits = ["common"]
   context = "code-server"
-  contexts = {
-    # Produced by this repository <https://github.com/Islandora-Devops/isle-nodejs>.
-    nodejs = "docker-image://islandora/nodejs:alpine-3.20.2-nodejs-20.18.3-r0@sha256:709e29832b5fb87278990ef462eb8197c4725e45902f5d716b7c9497db6521bb"
-  }
 }
 
 target "crayfish-common" {
@@ -246,24 +241,38 @@ target "homarus-common" {
 target "houdini-common" {
   inherits = ["common"]
   context = "houdini"
-  contexts = {
-    # Produced by this repository <https://github.com/Islandora-Devops/isle-imagemagick>.
-    imagemagick = "docker-image://islandora/imagemagick:alpine-3.20.2-imagemagick-7.1.1.36-r0@sha256:a1fa03a18e7e232e380d070d196dc2c0e0a8762dd385640b932e28fcacfd9b05"
-  }
 }
 
 target "hypercube-common" {
   inherits = ["common"]
   context = "hypercube"
+}
+
+target "imagemagick-common" {
+  inherits = ["common"]
+  context = "imagemagick"
   contexts = {
-    # Produced by this repository <https://github.com/Islandora-Devops/isle-leptonica>.
-    leptonica = "docker-image://islandora/leptonica:alpine-3.20.2-leptonica-1.84.1-r0@sha256:9e9e46a328d8b55a61a352a6b06ff175f98e40cd5773c9bf93aac58fb56b65f7"
+    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
+    # It will be the digest printed when you do: docker pull alpine:3.17.1
+    # Not the one displayed on DockerHub.
+    alpine = "docker-image://alpine:3.20.6@sha256:de4fe7064d8f98419ea6b49190df1abbf43450c1702eeb864fe9ced453c1cc5f"
   }
 }
 
 target "java-common" {
   inherits = ["common"]
   context = "java"
+}
+
+target "leptonica-common" {
+  inherits = ["common"]
+  context = "leptonica"
+  contexts = {
+    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
+    # It will be the digest printed when you do: docker pull alpine:3.17.1
+    # Not the one displayed on DockerHub.
+    alpine = "docker-image://alpine:3.20.6@sha256:de4fe7064d8f98419ea6b49190df1abbf43450c1702eeb864fe9ced453c1cc5f"
+  }
 }
 
 target "mariadb-common" {
@@ -279,6 +288,17 @@ target "milliner-common" {
 target "nginx-common" {
   inherits = ["common"]
   context = "nginx"
+}
+
+target "nodejs-common" {
+  inherits = ["common"]
+  context = "nodejs"
+  contexts = {
+    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
+    # It will be the digest printed when you do: docker pull alpine:3.17.1
+    # Not the one displayed on DockerHub.
+    alpine = "docker-image://alpine:3.20.6@sha256:de4fe7064d8f98419ea6b49190df1abbf43450c1702eeb864fe9ced453c1cc5f"
+  }
 }
 
 target "postgresql-common" {
@@ -413,11 +433,23 @@ target "hypercube" {
   tags = tags("hypercube", "")
 }
 
+target "imagemagick" {
+  inherits = ["imagemagick-common"]
+  cache-from = cacheFrom("imagemagick", hostArch())
+  tags = tags("imagemagick", "")
+}
+
 target "java" {
   inherits = ["java-common"]
   contexts = dependencies("java", "")
   cache-from = cacheFrom("java", hostArch())
   tags = tags("java", "")
+}
+
+target "leptonica" {
+  inherits = ["leptonica-common"]
+  cache-from = cacheFrom("leptonica", hostArch())
+  tags = tags("leptonica", "")
 }
 
 target "mariadb" {
@@ -439,6 +471,12 @@ target "nginx" {
   contexts = dependencies("nginx", "")
   cache-from = cacheFrom("nginx", hostArch())
   tags = tags("nginx", "")
+}
+
+target "nodejs" {
+  inherits = ["nodejs-common"]
+  cache-from = cacheFrom("nodejs", hostArch())
+  tags = tags("nodejs", "")
 }
 
 target "postgresql" {
@@ -583,11 +621,23 @@ target "hypercube-amd64" {
   tags = tags("hypercube", "amd64")
 }
 
+target "imagemagick-amd64" {
+  inherits = ["imagemagick-common", "amd64-common"]
+  cache-from = cacheFrom("imagemagick", "amd64")
+  tags = tags("imagemagick", "amd64")
+}
+
 target "java-amd64" {
   inherits = ["java-common", "amd64-common"]
   contexts = dependencies("java", "amd64")
   cache-from = cacheFrom("java", "amd64")
   tags = tags("java", "amd64")
+}
+
+target "leptonica-amd64" {
+  inherits = ["leptonica-common", "amd64-common"]
+  cache-from = cacheFrom("leptonica", "amd64")
+  tags = tags("leptonica", "amd64")
 }
 
 target "mariadb-amd64" {
@@ -609,6 +659,12 @@ target "nginx-amd64" {
   contexts = dependencies("nginx", "amd64")
   cache-from = cacheFrom("nginx", "amd64")
   tags = tags("nginx", "amd64")
+}
+
+target "nodejs-amd64" {
+  inherits = ["nodejs-common", "amd64-common"]
+  cache-from = cacheFrom("nodejs", "amd64")
+  tags = tags("nodejs", "amd64")
 }
 
 target "postgresql-amd64" {
@@ -753,11 +809,23 @@ target "hypercube-arm64" {
   tags = tags("hypercube", "arm64")
 }
 
+target "imagemagick-arm64" {
+  inherits = ["imagemagick-common", "arm64-common"]
+  cache-from = cacheFrom("imagemagick", "arm64")
+  tags = tags("imagemagick", "arm64")
+}
+
 target "java-arm64" {
   inherits = ["java-common", "arm64-common"]
   contexts = dependencies("java", "arm64")
   cache-from = cacheFrom("java", "arm64")
   tags = tags("java", "arm64")
+}
+
+target "leptonica-arm64" {
+  inherits = ["leptonica-common", "arm64-common"]
+  cache-from = cacheFrom("leptonica", "arm64")
+  tags = tags("leptonica", "arm64")
 }
 
 target "mariadb-arm64" {
@@ -779,6 +847,12 @@ target "nginx-arm64" {
   contexts = dependencies("nginx", "arm64")
   cache-from = cacheFrom("nginx", "arm64")
   tags = tags("nginx", "arm64")
+}
+
+target "nodejs-arm64" {
+  inherits = ["nodejs-common", "arm64-common"]
+  cache-from = cacheFrom("nodejs", "arm64")
+  tags = tags("nodejs", "arm64")
 }
 
 target "postgresql-arm64" {
