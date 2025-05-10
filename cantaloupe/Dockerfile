@@ -18,9 +18,9 @@ ARG CLI11_URL="https://github.com/CLIUtils/CLI11/archive/refs/tags/v${CLI11_VERS
 ARG CLI11_SHA256="887270cae374a0b9e22b39647f9fc4bc742587fb26d6a221da2d2bbcf3109b0b"
 
 # renovate: datasource=github-releases depName=grok packageName=GrokImageCompression/grok
-ARG GROK_VERSION=15.0.0
+ARG GROK_VERSION=14.3.0
 ARG GROK_URL="https://github.com/GrokImageCompression/grok/archive/refs/tags/v${GROK_VERSION}.zip"
-ARG GROK_SHA256="79c40bb5adbfff6eaa7b9914a89cc6cca0e2a4c30a30cdb33966360db717a585"
+ARG GROK_SHA256="db77c715d2c5b3722384f14974fb617770b7bea29ace1016ab8b8be33dd7a45b"
 
 
 EXPOSE 8182
