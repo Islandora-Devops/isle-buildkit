@@ -1,0 +1,25 @@
+# file: docker-compose.yml
+#
+# Tests the following:
+# - Site starts.
+# - Derivatives get created.
+# - Content is index in Solr.
+# - Content is index in Fedora.
+---
+
+name: cantaloupe-integrationtests
+services:
+  # replicate ISLE's IIIF setup
+  # by making the images available over http
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - ./types.conf:/etc/nginx/conf.d/types.conf
+      - ./fixtures:/usr/share/nginx/html
+  cantaloupe:
+    image: ${CANTALOUPE:-islandora/cantaloupe:local}
+    volumes:
+      - ./fixtures:/images # mount images so we know what to test
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
