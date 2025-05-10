@@ -1,10 +1,8 @@
 # file: docker-compose.yml
 #
 # Tests the following:
-# - Site starts.
-# - Derivatives get created.
-# - Content is index in Solr.
-# - Content is index in Fedora.
+# - Cantaloupe starts.
+# - Each file in our fixtures directory can have a derivative created by cantaloupe.
 ---
 
 name: cantaloupe-integrationtests
