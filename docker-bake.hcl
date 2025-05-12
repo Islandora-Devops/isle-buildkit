@@ -25,7 +25,6 @@ IMAGES = [
   "mariadb",
   "milliner",
   "nginx",
-  "nodejs",
   "postgresql",
   "riprap",
   "solr",
@@ -38,7 +37,7 @@ DEPENDENCIES = {
   alpaca = ["java"]
   blazegraph = ["tomcat"]
   cantaloupe = ["java"]
-  code-server = ["drupal", "nodejs"]
+  code-server = ["drupal"]
   crayfish = ["nginx"]
   crayfits = ["crayfish"]
   drupal = ["nginx"]
@@ -201,6 +200,10 @@ target "cantaloupe-common" {
 target "code-server-common" {
   inherits = ["common"]
   context = "code-server"
+  contexts = {
+    # Produced by this repository <https://github.com/Islandora-Devops/isle-nodejs>.
+    nodejs = "docker-image://islandora/nodejs:alpine-3.20.2-nodejs-20.18.3-r0@sha256:709e29832b5fb87278990ef462eb8197c4725e45902f5d716b7c9497db6521bb"
+  }
 }
 
 target "crayfish-common" {
@@ -288,17 +291,6 @@ target "milliner-common" {
 target "nginx-common" {
   inherits = ["common"]
   context = "nginx"
-}
-
-target "nodejs-common" {
-  inherits = ["common"]
-  context = "nodejs"
-  contexts = {
-    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
-    # It will be the digest printed when you do: docker pull alpine:3.17.1
-    # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.20.6@sha256:de4fe7064d8f98419ea6b49190df1abbf43450c1702eeb864fe9ced453c1cc5f"
-  }
 }
 
 target "postgresql-common" {
@@ -471,12 +463,6 @@ target "nginx" {
   contexts = dependencies("nginx", "")
   cache-from = cacheFrom("nginx", hostArch())
   tags = tags("nginx", "")
-}
-
-target "nodejs" {
-  inherits = ["nodejs-common"]
-  cache-from = cacheFrom("nodejs", hostArch())
-  tags = tags("nodejs", "")
 }
 
 target "postgresql" {
@@ -661,12 +647,6 @@ target "nginx-amd64" {
   tags = tags("nginx", "amd64")
 }
 
-target "nodejs-amd64" {
-  inherits = ["nodejs-common", "amd64-common"]
-  cache-from = cacheFrom("nodejs", "amd64")
-  tags = tags("nodejs", "amd64")
-}
-
 target "postgresql-amd64" {
   inherits = ["postgresql-common", "amd64-common"]
   contexts = dependencies("postgresql", "amd64")
@@ -847,12 +827,6 @@ target "nginx-arm64" {
   contexts = dependencies("nginx", "arm64")
   cache-from = cacheFrom("nginx", "arm64")
   tags = tags("nginx", "arm64")
-}
-
-target "nodejs-arm64" {
-  inherits = ["nodejs-common", "arm64-common"]
-  cache-from = cacheFrom("nodejs", "arm64")
-  tags = tags("nodejs", "arm64")
 }
 
 target "postgresql-arm64" {
