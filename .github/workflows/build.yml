@@ -1,4 +1,5 @@
 name: Build
+
 on:
   workflow_call:
     inputs:
@@ -17,27 +18,28 @@ on:
     outputs:
       digest:
         description: "Digest argument for Gradle"
-        value: ${{ jobs.build.outputs.digest }}
+        value: ${{ jobs.merge.outputs.digest }}
       context:
         description: "Context to use in dependent images"
-        value: ${{ jobs.build.outputs.context }}
+        value: ${{ jobs.merge.outputs.context }}
     secrets:
       REGISTRY_USER:
         required: true
       REGISTRY_PASSWORD:
         required: true
+
 jobs:
   build:
-    runs-on: ubuntu-24.04
-    outputs:
-      digest: ${{ steps.build.outputs.digest }}
-      context: ${{ steps.build.outputs.context }}
+    strategy:
+      matrix:
+        runner: [ubuntu-22.04, ubuntu-22.04-arm]
+    name: build-${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' # v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
+        uses: "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683" # v4
 
       - name: Set up Docker Buildx
         id: buildx
@@ -57,6 +59,50 @@ jobs:
         name: Build and push
         run: |
           set -ex
-          make push manifest "PROGRESS=plain" "BUILDER=${{ steps.buildx.outputs.name }}" "TARGET=${{ inputs.image }}-ci" "REPOSITORY=${{ inputs.repository }}" "TAGS=${{ inputs.tags }}" "CONTEXTS=${{ inputs.contexts }}"
-          echo "digest=-Pisle.${{ inputs.image }}.digest=${{ inputs.repository }}/${{ inputs.image }}@sha256:$(cat build/${{ inputs.image }}.digest)" >> $GITHUB_OUTPUT
-          echo "context=docker-image://${{ inputs.repository }}/${{ inputs.image }}@sha256:$(cat build/${{ inputs.image }}.digest)" >> $GITHUB_OUTPUT
+          FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
+          PLATFORM="amd64"
+          if [ "${{ matrix.runner }}" = "ubuntu-22.04-arm" ]; then
+            PLATFORM="arm64"
+          fi
+          make push \
+            "PROGRESS=plain" \
+            "BUILDER=${{ steps.buildx.outputs.name }}" \
+            "TARGET=${{ inputs.image }}-$PLATFORM" \
+            "REPOSITORY=${{ inputs.repository }}" \
+            "TAGS=${FIRST_TAG}" \
+            "CONTEXTS=${{ inputs.contexts }}"
+  merge:
+    runs-on: ubuntu-24.04
+    outputs:
+      digest: ${{ steps.build-push-manifest.outputs.digest }}
+      context: ${{ steps.build-push-manifest.outputs.context }}
+    needs:
+      - build
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
+        with:
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3
+
+      - name: Create and push manifest list
+        id: build-push-manifest
+        run: |
+          FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
+          BASE_IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${FIRST_TAG}"
+          for TAG in ${{ inputs.tags }}; do
+            IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
+            docker buildx imagetools create \
+              -t "${IMAGE}" \
+              "${BASE_IMAGE}-amd64" \
+              "${BASE_IMAGE}-arm64"
+          done
+
+          DIGEST=$(docker buildx imagetools inspect "$IMAGE" | grep Digest | awk '{print $2}')
+          echo "digest=-Pisle.${{ inputs.image }}.digest=${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
+          echo "context=docker-image://${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
+
