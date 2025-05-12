@@ -1,0 +1,23 @@
+# file: docker-compose.yml
+#
+# Tests the following:
+# - Cantaloupe starts.
+# - Each file in our fixtures directory can have a derivative created by cantaloupe.
+---
+
+name: cantaloupe-integrationtests
+services:
+  # replicate ISLE's IIIF setup
+  # by making the images available over http
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - ./types.conf:/etc/nginx/conf.d/types.conf
+      - ./fixtures:/usr/share/nginx/html
+  cantaloupe:
+    image: ${CANTALOUPE:-islandora/cantaloupe:local}
+    volumes:
+      - ./fixtures:/images # mount images so we know what to test
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
