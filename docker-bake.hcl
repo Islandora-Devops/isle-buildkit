@@ -30,6 +30,7 @@ IMAGES = [
   "solr",
   "test",
   "tomcat",
+  "transkribus",
 ]
 
 DEPENDENCIES = {
@@ -56,6 +57,7 @@ DEPENDENCIES = {
   solr = ["java"]
   test = ["drupal"]
   tomcat = ["java"]
+  transkribus = []
 }
 
 ###############################################################################
@@ -322,6 +324,11 @@ target "tomcat-common" {
   context = "tomcat"
 }
 
+target "transkribus-common" {
+  inherits = ["common"]
+  context = "transkribus"
+}
+
 ###############################################################################
 # Default Image targets for local builds.
 ###############################################################################
@@ -502,6 +509,13 @@ target "tomcat" {
   contexts = dependencies("tomcat", "")
   cache-from = cacheFrom("tomcat", hostArch())
   tags = tags("tomcat", "")
+}
+
+target "transkribus" {
+  inherits = ["transkribus-common"]
+  contexts = dependencies("transkribus", "")
+  cache-from = cacheFrom("transkribus", hostArch())
+  tags = tags("transkribus", "")
 }
 
 ###############################################################################
@@ -686,6 +700,13 @@ target "tomcat-amd64" {
   tags = tags("tomcat", "amd64")
 }
 
+target "transkribus-amd64" {
+  inherits = ["transkribus-common", "amd64-common"]
+  contexts = dependencies("transkribus", "amd64")
+  cache-from = cacheFrom("transkribus", "amd64")
+  tags = tags("transkribus", "amd64")
+}
+
 ###############################################################################
 # linux/arm64 targets.
 ###############################################################################
@@ -866,4 +887,11 @@ target "tomcat-arm64" {
   contexts = dependencies("tomcat", "arm64")
   cache-from = cacheFrom("tomcat", "arm64")
   tags = tags("tomcat", "arm64")
+}
+
+target "transkribus-arm64" {
+  inherits = ["transkribus-common", "arm64-common"]
+  contexts = dependencies("transkribus", "arm64")
+  cache-from = cacheFrom("transkribus", "arm64")
+  tags = tags("transkribus", "arm64")
 }
