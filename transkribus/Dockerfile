@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine3.21 AS build
 
-ARG IMAGEMAGICK_VERSION=7.1.0-16
-ARG IMAGEMAGICK_SHA256=2a0a8e1a52476349764e24fd7c3568d1256ff72defcfe66764afb2237c64e421
+ARG IMAGEMAGICK_VERSION=7.1.1-47
+ARG IMAGEMAGICK_SHA256=6eb2f2adda0b768af2e6abb14f0a2f9187d623420b8430c9d64216bd40c646bf
 
 # build imagemagick with jp2 support
 RUN apk add build-base \
@@ -38,6 +38,12 @@ RUN apk add openjpeg jpeg-dev libbz2 libgomp libxml2-dev xz-dev
 # install xslt transformer
 RUN apk add nodejs npm
 RUN npm install -g xslt3
+
+ENV \
+    ASPNETCORE_URLS=http://transkribus:5000/ \
+	ALTO_TO_HOCR_SEF_PATH=alto_to_hocr.sef.json \
+	USE_JWT_AUTHENTICATION=true \
+	CONNECTION_STRING="Filename=transkribus-process.db"
 
 WORKDIR /app
 COPY --from=build /app ./
