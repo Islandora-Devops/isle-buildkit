@@ -28,6 +28,7 @@ IMAGES = [
   "solr",
   "test",
   "tomcat",
+  "transkribus",
 ]
 
 DEPENDENCIES = {
@@ -54,6 +55,7 @@ DEPENDENCIES = {
   solr = ["java"]
   test = ["drupal"]
   tomcat = ["java"]
+  transkribus = []
 }
 
 ###############################################################################
@@ -249,6 +251,10 @@ group "tomcat-ci" {
   targets = arches("tomcat", "ci")
 }
 
+group "transkribus-ci" {
+  targets = arches("transkribus", "ci")
+}
+
 ###############################################################################
 # Common target properties.
 ###############################################################################
@@ -411,6 +417,11 @@ target "test-common" {
 target "tomcat-common" {
   inherits = ["common"]
   context = "tomcat"
+}
+
+target "transkribus-common" {
+  inherits = ["common"]
+  context = "transkribus"
 }
 
 ###############################################################################
@@ -583,6 +594,13 @@ target "tomcat" {
   tags = tags("tomcat", "")
 }
 
+target "transkribus" {
+  inherits = ["transkribus-common"]
+  contexts = dependencies("transkribus", "")
+  cache-from = cacheFrom("transkribus", hostArch())
+  tags = tags("transkribus", "")
+}
+
 ###############################################################################
 # linux/amd64 targets.
 ###############################################################################
@@ -751,6 +769,13 @@ target "tomcat-amd64" {
   contexts = dependencies("tomcat", "amd64")
   cache-from = cacheFrom("tomcat", "amd64")
   tags = tags("tomcat", "amd64")
+}
+
+target "transkribus-amd64" {
+  inherits = ["transkribus-common", "amd64-common"]
+  contexts = dependencies("transkribus", "amd64")
+  cache-from = cacheFrom("transkribus", "amd64")
+  tags = tags("transkribus", "amd64")
 }
 
 ###############################################################################
@@ -923,6 +948,13 @@ target "tomcat-arm64" {
   tags = tags("tomcat", "arm64")
 }
 
+target "transkribus-arm64" {
+  inherits = ["transkribus-common", "arm64-common"]
+  contexts = dependencies("transkribus", "arm64")
+  cache-from = cacheFrom("transkribus", "arm64")
+  tags = tags("transkribus", "arm64")
+}
+
 ###############################################################################
 # CI linux/amd64 targets.
 ###############################################################################
@@ -1067,6 +1099,12 @@ target "tomcat-amd64-ci" {
   inherits = ["tomcat-amd64"]
   contexts = dependencies("tomcat", "amd64-ci")
   cache-to = cacheTo("tomcat", "amd64")
+}
+
+target "transkribus-amd64-ci" {
+  inherits = ["transkribus-amd64"]
+  contexts = dependencies("transkribus", "amd64-ci")
+  cache-to = cacheTo("transkribus", "amd64")
 }
 
 ###############################################################################
@@ -1215,4 +1253,10 @@ target "tomcat-arm64-ci" {
   inherits = ["tomcat-arm64"]
   contexts = dependencies("tomcat", "arm64-ci")
   cache-to = cacheTo("tomcat", "arm64")
+}
+
+target "transkribus-arm64-ci" {
+  inherits = ["transkribus-arm64"]
+  contexts = dependencies("transkribus", "arm64-ci")
+  cache-to = cacheTo("transkribus", "arm64")
 }

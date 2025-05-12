@@ -65,6 +65,9 @@ services:
     milliner:
         <<: *common
         image: ${REPOSITORY:-local}/milliner:${TAG:-latest}
+    transkribus:
+        <<: *common
+        image: ${REPOSITORY:-local}/transkribus:${TAG:-latest}
     activemq:
         <<: *common
         image: ${REPOSITORY:-local}/activemq:${TAG:-latest}
