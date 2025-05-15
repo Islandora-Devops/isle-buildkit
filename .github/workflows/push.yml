@@ -146,7 +146,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, crayfish]
+    needs: [tags, crayfish, imagemagick]
   hypercube:
     uses: ./.github/workflows/build.yml
     with:
@@ -155,7 +155,16 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, crayfish]
+    needs: [tags, crayfish, leptonica]
+  imagemagick:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: imagemagick
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags]
   java:
     uses: ./.github/workflows/build.yml
     with:
@@ -165,6 +174,15 @@ jobs:
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
     needs: [tags, base]
+  leptonica:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: leptonica
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags]
   mariadb:
     uses: ./.github/workflows/build.yml
     with:
