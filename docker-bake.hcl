@@ -27,6 +27,7 @@ IMAGES = [
   "nginx",
   "postgresql",
   "riprap",
+  "scyllaridae",
   "solr",
   "test",
   "tomcat",
@@ -39,20 +40,21 @@ DEPENDENCIES = {
   cantaloupe = ["java"]
   code-server = ["drupal"]
   crayfish = ["nginx"]
-  crayfits = ["crayfish"]
+  crayfits = ["scyllaridae"]
   drupal = ["nginx"]
   fcrepo6 = ["tomcat"]
   fits = ["tomcat"]
   handle = ["java"]
-  homarus = ["crayfish"]
-  houdini = ["crayfish", "imagemagick"]
-  hypercube = ["crayfish", "leptonica"]
+  homarus = ["scyllaridae"]
+  houdini = ["scyllaridae", "imagemagick"]
+  hypercube = ["scyllaridae", "leptonica"]
   java = ["base"]
   mariadb = ["base"]
   milliner = ["crayfish"]
   nginx = ["base"]
   postgresql = ["base"]
   riprap = ["nginx"]
+  scyllaridae = ["base"]
   solr = ["java"]
   test = ["drupal"]
   tomcat = ["java"]
@@ -303,6 +305,11 @@ target "riprap-common" {
   context = "riprap"
 }
 
+target "scyllaridae-common" {
+  inherits = ["common"]
+  context = "scyllaridae"
+}
+
 target "solr-common" {
   inherits = ["common"]
   context = "solr"
@@ -477,6 +484,13 @@ target "riprap" {
   contexts = dependencies("riprap", "")
   cache-from = cacheFrom("riprap", hostArch())
   tags = tags("riprap", "")
+}
+
+target "scyllaridae" {
+  inherits = ["scyllaridae-common"]
+  contexts = dependencies("scyllaridae", "")
+  cache-from = cacheFrom("scyllaridae", hostArch())
+  tags = tags("scyllaridae", "")
 }
 
 target "solr" {
@@ -661,6 +675,13 @@ target "riprap-amd64" {
   tags = tags("riprap", "amd64")
 }
 
+target "scyllaridae-amd64" {
+  inherits = ["scyllaridae-common", "amd64-common"]
+  contexts = dependencies("scyllaridae", "amd64")
+  cache-from = cacheFrom("scyllaridae", "amd64")
+  tags = tags("scyllaridae", "amd64")
+}
+
 target "solr-amd64" {
   inherits = ["solr-common", "amd64-common"]
   contexts = dependencies("solr", "amd64")
@@ -841,6 +862,13 @@ target "riprap-arm64" {
   contexts = dependencies("riprap", "arm64")
   cache-from = cacheFrom("riprap", "arm64")
   tags = tags("riprap", "arm64")
+}
+
+target "scyllaridae-arm64" {
+  inherits = ["scyllaridae-common", "arm64-common"]
+  contexts = dependencies("scyllaridae", "arm64")
+  cache-from = cacheFrom("scyllaridae", "arm64")
+  tags = tags("scyllaridae", "arm64")
 }
 
 target "solr-arm64" {

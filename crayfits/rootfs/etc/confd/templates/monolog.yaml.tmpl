@@ -1,8 +1,0 @@
-monolog:
-  handlers:
-    crayfits:
-      type: stream
-      path: "php://stderr"
-      # Valid log levels are:
-      # debug, info, notice, warning, error, critical, alert, emergency, none
-      level: {{ getenv "CRAYFITS_LOG_LEVEL" }}

@@ -1,18 +1,12 @@
 # syntax=docker/dockerfile:1.5.1
 FROM leptonica
-FROM crayfish AS hypercube
+FROM scyllaridae AS hypercube
 
 ARG TARGETARCH
 
-EXPOSE 8000
+EXPOSE 8080
 
-WORKDIR /var/www/crayfish/Hypercube
-
-# Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=hypercube-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
-    composer install -d /var/www/crayfish/Hypercube && \
-    ln -s /var/www/crayfish/Hypercube/public /var/www/html && \
-    cleanup.sh
+WORKDIR /app
 
 ARG \
     # renovate: datasource=repology depName=alpine_3_20/poppler-utils

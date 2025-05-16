@@ -1,18 +1,12 @@
 # syntax=docker/dockerfile:1.5.1
 FROM imagemagick
-FROM crayfish
+FROM scyllaridae
 
 ARG TARGETARCH
 
-EXPOSE 8000
+EXPOSE 8080
 
-WORKDIR /var/www/crayfish/Houdini
-
-# Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=houdini-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
-    composer install -d /var/www/crayfish/Houdini && \
-    ln -s /var/www/crayfish/Houdini/public /var/www/html && \
-    cleanup.sh
+WORKDIR /app
 
 # Platform specific does require arch specific identifier.
 # Though platform information is included via the FROM imagemagick.
