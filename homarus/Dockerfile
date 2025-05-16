@@ -17,5 +17,3 @@ RUN --mount=type=cache,id=homarus-apk-${TARGETARCH},sharing=locked,target=/var/c
     cleanup.sh
 
 COPY --link rootfs /
-
-RUN chown -R nginx:nginx /var/www
