@@ -13,7 +13,6 @@ WORKDIR /app
 RUN --mount=type=bind,from=imagemagick,source=/packages,target=/packages \
     --mount=type=bind,from=imagemagick,source=/etc/apk/keys,target=/etc/apk/keys \
     apk add /packages/imagemagick-*.apk && \
-    addgroup nginx jwt && \
     cleanup.sh
 
 COPY --link rootfs /
