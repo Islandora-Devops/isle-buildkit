@@ -92,7 +92,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, nginx]
+    needs: [tags, scyllaridae]
   drupal:
     uses: ./.github/workflows/build.yml
     with:
@@ -137,7 +137,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, crayfish]
+    needs: [tags, scyllaridae]
   houdini:
     uses: ./.github/workflows/build.yml
     with:
@@ -146,7 +146,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, crayfish, imagemagick]
+    needs: [tags, scyllaridae, imagemagick]
   hypercube:
     uses: ./.github/workflows/build.yml
     with:
@@ -155,7 +155,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [tags, crayfish, leptonica]
+    needs: [tags, scyllaridae, leptonica]
   imagemagick:
     uses: ./.github/workflows/build.yml
     with:
@@ -228,6 +228,15 @@ jobs:
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
     needs: [tags, nginx]
+  scyllaridae:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: scyllaridae
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [tags, base]
   solr:
     uses: ./.github/workflows/build.yml
     with:
