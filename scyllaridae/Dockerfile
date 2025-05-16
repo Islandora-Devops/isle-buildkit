@@ -24,6 +24,7 @@ RUN create-service-user.sh --name scyllaridae && \
 ENV \
   SCYLLARIDAE_YML_PATH=/app/scyllaridae.yml \
   JWKS_URI=https://islandora.dev/oauth/discovery/keys \
-  SKIP_JWT_VERIFY="true"
+  SKIP_JWT_VERIFY="true" \
+  LOG_LEVEL=info
 
 COPY --link rootfs /

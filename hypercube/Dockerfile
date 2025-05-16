@@ -32,13 +32,6 @@ RUN --mount=type=cache,id=hypercube-apk-${TARGETARCH},sharing=locked,target=/var
         tesseract-ocr-data-deu=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-jpn=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-rus=="${TESSERACT_VERSION}" \
-    && \
-    addgroup nginx jwt && \
-    cleanup.sh
-
-ENV HYPERCUBE_FCREPO_URL=fcrepo:8080/fcrepo/rest \
-    HYPERCUBE_LOG_LEVEL=info
+    && cleanup.sh
 
 COPY --link rootfs /
-
-RUN chown -R nginx:nginx /var/www

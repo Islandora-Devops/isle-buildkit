@@ -14,13 +14,7 @@ ARG \
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=homarus-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add ffmpeg=="${FFMPEG_VERSION}" && \
-    addgroup nginx jwt && \
     cleanup.sh
-
-ENV \
-    HOMARUS_APIX_MIDDLEWARE_ENABLED=false \
-    HOMARUS_FCREPO_URL=http://fcrepo:8080/fcrepo/rest \
-    HOMARUS_LOG_LEVEL=info
 
 COPY --link rootfs /
 

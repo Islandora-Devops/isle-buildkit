@@ -16,10 +16,4 @@ RUN --mount=type=bind,from=imagemagick,source=/packages,target=/packages \
     addgroup nginx jwt && \
     cleanup.sh
 
-ENV \
-    HOUDINI_FCREPO_URL=http://fcrepo:8080/fcrepo/rest \
-    HOUDINI_LOG_LEVEL=info
-
 COPY --link rootfs /
-
-RUN chown -R nginx:nginx /var/www

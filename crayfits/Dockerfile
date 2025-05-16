@@ -8,7 +8,6 @@ EXPOSE 8080
 WORKDIR /app
 
 ENV \
-    CRAYFITS_LOG_LEVEL=info \
     CRAYFITS_WEBSERVICE_URI=http://fits:8080/fits/examine
 
 COPY --link rootfs /
