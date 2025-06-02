@@ -2,6 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine3.21 AS build
 
 ARG IMAGEMAGICK_VERSION=7.1.1-47
 ARG IMAGEMAGICK_SHA256=6eb2f2adda0b768af2e6abb14f0a2f9187d623420b8430c9d64216bd40c646bf
+ARG TRANSKRIBUS_PROCESS_VERSION=1.1.0
 
 # build imagemagick with jp2 support
 RUN apk add build-base \
@@ -23,9 +24,9 @@ RUN cd ImageMagick-${IMAGEMAGICK_VERSION} && ./configure --with-jpeg --with-open
 
 # build transkribus microservice
 WORKDIR /source
-RUN apk add git
-RUN git clone https://github.com/ulsdevteam/transkribus-process.git .
-RUN dotnet publish -c Release -o /app
+ADD https://github.com/ulsdevteam/transkribus-process/archive/refs/tags/v${TRANSKRIBUS_PROCESS_VERSION}.tar.gz .
+RUN tar xzvf v${TRANSKRIBUS_PROCESS_VERSION}.tar.gz
+RUN cd transkribus-process-${TRANSKRIBUS_PROCESS_VERSION} && dotnet publish -c Release -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.21 AS runtime
 
