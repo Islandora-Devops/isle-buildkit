@@ -57,7 +57,7 @@ DEPENDENCIES = {
   solr = ["java"]
   test = ["drupal"]
   tomcat = ["java"]
-  transkribus = []
+  transkribus = ["base", "imagemagick"]
 }
 
 ###############################################################################
