@@ -13,3 +13,5 @@ Uses port 5000 by default, this can be changed using the `ASPNETCORE_URLS` envir
 ## Settings
 
 JWT authentication is enabled by default, and can be configured by setting `USE_JWT_AUTHENTICATION` to true or false.
+
+Credentials (`TRANSKRIBUS_USERNAME` and `TRANSKRIBUS_PASSWORD`) for the Transkribus API can be passed to the container as secrets or environment variables.
