@@ -123,18 +123,6 @@
         "# renovate: datasource=(?<datasource>[a-z-\\.]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?) branch=(?<currentValue>.+?)\\s(?:ENV|ARG) COMMIT=(?<currentDigest>.+?)(\\s|$)"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}loose{{/if}}"
-    },
-    {
-      "customType": "regex",
-      "description": "Update alpine",
-      "managerFilePatterns": [
-        "/(^|/|\\.)docker-bake\\.hcl$/"
-      ],
-      "matchStrings": [
-        "\\s+alpine\\s=\\s\"docker-image:\\/\\/(?<depName>alpine):(?<currentValue>[\\w\\.-]+)@sha256:(?<currentDigest>[a-f0-9]{64})\""
-      ],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
     }
   ],
   "customDatasources": {
