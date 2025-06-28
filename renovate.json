@@ -75,7 +75,7 @@
         "digest"
       ],
       "schedule": [
-        "after 10am on Wednesday"
+        "* 10 * * 3"
       ]
     },
     {
