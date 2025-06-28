@@ -27,6 +27,7 @@ additional settings, volumes, ports, etc.
 | SOLR_JETTY_OPTS      | `-Dsolr.jetty.host=0.0.0.0 -Dsolr.config.lib.enabled=true` | Additional parameters to pass to Jetty when starting Solr.                     |
 | SOLR_LOG_LEVEL       | `INFO`                                                     | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
 | SOLR_MEMORY          | `512m`                                                     | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
+| SOLR_MODULES         | `extraction,langid,ltr,analysis-extras`                    | Solr modules to enable                                                         |
 
 ## Ports
 
