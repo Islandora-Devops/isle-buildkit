@@ -80,8 +80,7 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
     && \
     cleanup.sh
 
-# renovate: datasource=github-releases depName=vscode packageName=coder/code-server
-ARG CODE_SERVER_VERSION=4.101.2
+ARG CODE_SERVER_VERSION=4.99.4
 RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/root/.npm \
     mkdir -p /opt/code-server && \
     cd /opt/code-server && \
