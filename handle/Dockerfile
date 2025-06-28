@@ -3,10 +3,10 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=custom.handle depName=handle packageName=handle
-ARG HANDLE_VERSION=9.3.1
+ARG HANDLE_VERSION=9.3.2
 ARG HANDLE_FILE="handle-${HANDLE_VERSION}-distribution.tar.gz"
 ARG HANDLE_URL="https://handle.net/hnr-source/${HANDLE_FILE}"
-ARG HANDLE_FILE_SHA256="03c659511acb0f11a89d7f8993f47b156c3b93b288ef64a3170e09a32c526417"
+ARG HANDLE_FILE_SHA256="b3d03ef44740e34c0adfef4356f1308bb7886aaba6b22e7e019138d9850eb29e"
 
 # renovate: datasource=github-tags depName=jdbc-mysql packageName=mysql/mysql-connector-j
 ARG MYSQL_DRIVER_VERSION=9.3.0
@@ -15,10 +15,10 @@ ARG MYSQL_DRIVER_URL="https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_DR
 ARG MYSQL_DRIVER_FILE_SHA256="9ccb1f8f7fc3f0bd0cf97b3586202088e4e4e88573eebbf9e2e36b2f65985d31"
 
 # renovate: datasource=github-releases depName=jdbc-postgres packageName=pgjdbc/pgjdbc
-ARG POSTGRES_DRIVER_VERSION=42.7.5
+ARG POSTGRES_DRIVER_VERSION=42.7.7
 ARG POSTGRES_DRIVER_FILE="postgresql-${POSTGRES_DRIVER_VERSION}.jar"
 ARG POSTGRES_DRIVER_URL="https://jdbc.postgresql.org/download/${POSTGRES_DRIVER_FILE}"
-ARG POSTGRES_DRIVER_FILE_SHA256="69020b3bd20984543e817393f2e6c01a890ef2e37a77dd11d6d8508181d079ab"
+ARG POSTGRES_DRIVER_FILE_SHA256="157963d60ae66d607e09466e8c0cdf8087e9cb20d0159899ffca96bca2528460"
 
 EXPOSE 8000/tcp 2641/tcp 2641/udp
 
