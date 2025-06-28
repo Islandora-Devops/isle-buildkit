@@ -8,11 +8,6 @@ on:
   schedule:
     - cron: '15 10 * * *'
 
-env:
-  LOG_LEVEL: debug
-  RENOVATE_PLATFORM: github
-  RENOVATE_REPOSITORIES: islandora-devops/isle-buildkit
-  RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS: '["bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""]'
 jobs:
   run:
     runs-on: ubuntu-24.04
@@ -36,11 +31,11 @@ jobs:
           export RENOVATE_BASE_BRANCHES=$(jq -c -n --arg branch "$BASE_BRANCH" '[$branch]')
           echo "Running renovate against ${RENOVATE_BASE_BRANCHES}"
           docker run \
-            --env LOG_LEVEL \
-            --env RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS \
+            --env LOG_LEVEL=debug \
+            --env RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS='["bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""]' \
+            --env RENOVATE_PLATFORM=github \
+            --env RENOVATE_REPOSITORIES=islandora-devops/isle-buildkit \
             --env RENOVATE_BASE_BRANCHES \
-            --env RENOVATE_PLATFORM \
-            --env RENOVATE_REPOSITORIES \
             --env RENOVATE_TOKEN \
             --rm \
             -v $(pwd):/usr/src/app \
