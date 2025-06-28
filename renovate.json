@@ -114,9 +114,9 @@
     {
       "customType": "regex",
       "description": "Update (COMMIT|_VERSION) variables in Dockerfiles",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile\\.[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile\\.[^/]*$/"
       ],
       "matchStrings": [
         "([ ]+)?# renovate: datasource=(?<datasource>[a-z-\\.]+?) depName=(?<depName>.+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG)? .+?_VERSION=(?<currentValue>.+?)(\\s|$)",
@@ -127,8 +127,8 @@
     {
       "customType": "regex",
       "description": "Update alpine",
-      "fileMatch": [
-        "(^|/|\\.)docker-bake\\.hcl$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)docker-bake\\.hcl$/"
       ],
       "matchStrings": [
         "\\s+alpine\\s=\\s\"docker-image:\\/\\/(?<depName>alpine):(?<currentValue>[\\w\\.-]+)@sha256:(?<currentDigest>[a-f0-9]{64})\""
@@ -143,7 +143,7 @@
       "format": "html",
       "transformTemplates": [
         "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $match($v, /^(v)?\\d+\\.\\d+\\.\\d+(\\/)?$/) }),function($v,$i,$a){ { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+/).match } })] }"
-       ]
+      ]
     },
     "handle": {
       "defaultRegistryUrlTemplate": "https://handle.net/hnr-source/",
