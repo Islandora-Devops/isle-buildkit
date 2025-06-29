@@ -3,10 +3,10 @@ FROM drupal
 
 ARG TARGETARCH
 # renovate: datasource=git-refs depName=islandora-starter-site packageName=https://github.com/islandora-devops/islandora-starter-site branch=main
-ARG COMMIT=35c632485a65bbd2f5412b640b7e437294f39b20
+ARG COMMIT=aec7f66c21570484eb45f98aeb67bbe6d88c8d05
 ARG FILE=${COMMIT}.tar.gz
 ARG URL=https://github.com/Islandora/islandora-starter-site/archive/${FILE}
-ARG SHA256="6a5482a4b935fc527119c57b8cba69983bedd1b6dee0d5228550128e1ad1d07a"
+ARG SHA256="5a0995e036f790f5d1557078c56273871f6c9e9d73759718cc534590a049824c"
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=test-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \

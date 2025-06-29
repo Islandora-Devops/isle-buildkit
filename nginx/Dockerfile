@@ -3,10 +3,10 @@ FROM base
 
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=custom-composer packageName=composer/composer
-ARG COMPOSER_VERSION=2.8.8
+ARG COMPOSER_VERSION=2.8.9
 ARG COMPOSER_FILE=composer.phar
 ARG COMPOSER_URL=https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}
-ARG COMPOSER_SHA256="957263e284b9f7a13d7f475dc65f3614d151b0c4dcc7e8761f7e7f749447fb68"
+ARG COMPOSER_SHA256="8e8829ec2b97fcb05158236984bc252bef902e7b8ff65555a1eeda4ec13fb82b"
 
 WORKDIR /var/www
 
