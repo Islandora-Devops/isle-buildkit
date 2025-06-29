@@ -263,7 +263,7 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
-    needs: [base, imagemagick]
+    needs: [tags, base, imagemagick]
   #############################################################################
   ## Tests.
   #############################################################################
