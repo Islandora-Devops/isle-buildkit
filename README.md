@@ -974,6 +974,7 @@ adding the following, and restarting `Docker`:
 [solr]: ./solr/README.md
 [test]: ./test/README.md
 [tomcat]: ./tomcat/README.md
+[transkribus]: /transkribus/README.md
 
 [Alpine Docker Image]: https://hub.docker.com/_/alpine
 [Ansible]: https://docs.ansible.com/ansible/latest/user_guide/index.html#getting-started

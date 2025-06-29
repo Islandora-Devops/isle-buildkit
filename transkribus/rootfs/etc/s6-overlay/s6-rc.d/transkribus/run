@@ -1,0 +1,22 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash
+set -e
+
+# When bind mounting we need to ensure that we
+# actually can write to the folder.
+chown transkribus:transkribus /data
+
+# Set the HOME directory to the data directory.
+# This is so that Data Protection keys are stored in the data directory.
+export \
+    HOME="/data" \
+    ALTO_TO_HOCR_SEF_PATH="${TRANSKRIBUS_ALTO_TO_HOCR_SEF_PATH}" \
+    ASPNETCORE_CONTENTROOT="/opt/transkribus" \
+    ASPNETCORE_URLS="${TRANSKRIBUS_ASPNETCORE_URLS}" \
+    CONNECTION_STRING="${TRANSKRIBUS_CONNECTION_STRING}" \
+    TRANSKRIBUS_PASSWORD="${TRANSKRIBUS_SERVICE_PASSWORD}" \
+    TRANSKRIBUS_USERNAME="${TRANSKRIBUS_SERVICE_USERNAME}" \
+    USE_JWT_AUTHENTICATION="${TRANSKRIBUS_USE_JWT_AUTHENTICATION}"
+
+cd /opt/transkribus
+exec s6-setuidgid transkribus dotnet transkribus-process.dll msvc

@@ -1,0 +1,15 @@
+---
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+name: transkribus-servicestartswithdefaults
+services:
+  transkribus:
+    <<: *common
+    image: ${TRANSKRIBUS:-islandora/transkribus:local}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
