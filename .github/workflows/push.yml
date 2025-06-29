@@ -255,6 +255,15 @@ jobs:
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
     needs: [tags, java]
+  transkribus:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.imagemagick.outputs.context }}
+      image: transkribus
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    needs: [base, imagemagick]
   #############################################################################
   ## Tests.
   #############################################################################
@@ -482,6 +491,13 @@ jobs:
       image: tomcat
     secrets: inherit
     needs: [tomcat]
+  test-transkribus:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.transkribus.outputs.digest }}
+      image: transkribus
+    secrets: inherit
+    needs: [transkribus]
   #############################################################################
   ## Grype.
   #############################################################################
@@ -654,3 +670,10 @@ jobs:
       image: tomcat
     secrets: inherit
     needs: [tomcat]
+  grype-transkribus:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.transkribus.outputs.digest }}
+      image: transkribus
+    secrets: inherit
+    needs: [transkribus]
