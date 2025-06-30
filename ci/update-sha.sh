@@ -153,6 +153,12 @@ elif [ "$DEP" = "jdbc-postgres" ]; then
   ARG=POSTGRES_DRIVER_FILE_SHA256
   DOCKERFILES=("handle/Dockerfile")
 
+elif [ "$DEP" = "transkribus-process" ]; then
+  URL="https://github.com/ulsdevteam/transkribus-process/archive/refs/tags/v${NEW_VERSION}.tar.gz"
+  ARG="TRANSKRIBUS_PROCESS_SHA256"
+  DOCKERFILES=("transkribus/Dockerfile")
+  README="transkribus/README.md"
+
 elif [ "$DEP" = "s6-overlay" ]; then
   BASE_URL="https://github.com/just-containers/s6-overlay/releases/download/v${NEW_VERSION}"
   declare -A URLS_AND_ARGS=(
