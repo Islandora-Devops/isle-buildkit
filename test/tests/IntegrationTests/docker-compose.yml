@@ -67,7 +67,7 @@ services:
             DRUPAL_DEFAULT_PROFILE: "minimal"
             DRUPAL_DEFAULT_SITE_URL: "test"
             DRUPAL_DEFAULT_SOLR_CORE: "default"
-            DRUPAL_DRUSH_URI: "http://test" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
+            DRUSH_OPTIONS_URI: "http://test" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
             DRUPAL_ENABLE_HTTPS: false
         volumes:
             - drupal-solr-config:/opt/solr/server/solr/default:ro
