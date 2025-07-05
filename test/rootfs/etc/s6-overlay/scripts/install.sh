@@ -46,13 +46,13 @@ function wait_for_dequeue {
 
 function configure {
     # Starter site post install steps.
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cache:rebuild
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" user:role:add fedoraadmin admin
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" pm:uninstall pgsql sqlite
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cache:rebuild
+    drush --root=/var/www/drupal --uri="${DRUSH_OPTIONS_URI}" cache:rebuild
+    drush --root=/var/www/drupal --uri="${DRUSH_OPTIONS_URI}" user:role:add fedoraadmin admin
+    drush --root=/var/www/drupal --uri="${DRUSH_OPTIONS_URI}" pm:uninstall pgsql sqlite
+    drush --root=/var/www/drupal --uri="${DRUSH_OPTIONS_URI}" cache:rebuild
 
     # Ingest sample content.
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" pm:enable sample_content -y
+    drush --root=/var/www/drupal --uri="${DRUSH_OPTIONS_URI}" pm:enable sample_content -y
 
     # Add check to wait for queue's to empty.
     wait_for_dequeue
@@ -61,8 +61,8 @@ function configure {
     drush search-api:index
 
     # Cache must be last as clearing the cache while adding content can cause deadlocks.
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cron || true
-    drush --root=/var/www/drupal --uri="${DRUPAL_DRUSH_URI}" cache:rebuild
+    drush --root=/var/www/drupal --uri="${DRUSH_OPTIONS_URI}" cron || true
+    drush --root=/var/www/drupal --uri="${DRUSH_OPTIONS_URI}" cache:rebuild
 }
 
 function install {
