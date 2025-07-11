@@ -23,7 +23,7 @@ RUN --mount=type=cache,id=download-downloads-${TARGETARCH},sharing=locked,target
 
 ARG \
     # renovate: datasource=repology depName=alpine_3_20/icu-data-full
-    ICU_VERSION=74.2-r0 \
+    ICU_VERSION=74.2-r1 \
     # renovate: datasource=repology depName=alpine_3_20/nginx
     NGINX_VERSION=1.26.3-r0	\
     # renovate: datasource=repology depName=alpine_3_20/php83
