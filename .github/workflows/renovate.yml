@@ -5,25 +5,16 @@ on:
     branches:
       - main
   workflow_dispatch:
-  # every morning
   schedule:
-    - cron: '15 6 * * *'
+    - cron: '15 10 * * *'
 
-env:
-  LOG_LEVEL: debug
-  RENOVATE_REPOSITORIES: islandora-devops/isle-buildkit
-  RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS: '["bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""]'
 jobs:
   run:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: 20
 
       - name: run renovate
         env:
@@ -32,10 +23,20 @@ jobs:
           # fetch GitHub App token for this repo
           echo "${{ secrets.GH_APP_PRIV_KEY }}" | base64 -d > private-key.pem
           export RENOVATE_TOKEN=$(./ci/fetch-app-token.sh ${{ secrets.GH_APP_ID }} ${{ secrets.GH_APP_INSTALLATION_ID }} private-key.pem)
+          echo "::add-mask::$RENOVATE_TOKEN"
 
           # run renovate with our token
           # using branch set in workflow dispatch to allow testing PRs
           # see https://docs.renovatebot.com/configuration-options/#basebranches
           export RENOVATE_BASE_BRANCHES=$(jq -c -n --arg branch "$BASE_BRANCH" '[$branch]')
           echo "Running renovate against ${RENOVATE_BASE_BRANCHES}"
-          npx renovate --platform=github
+          docker run \
+            --env LOG_LEVEL=debug \
+            --env RENOVATE_ALLOWED_COMMANDS='["^bash ci/update-sha.sh .*$"]' \
+            --env RENOVATE_PLATFORM=github \
+            --env RENOVATE_REPOSITORIES=islandora-devops/isle-buildkit \
+            --env RENOVATE_BASE_BRANCHES \
+            --env RENOVATE_TOKEN \
+            --rm \
+            -v $(pwd):/usr/src/app \
+            renovate/renovate

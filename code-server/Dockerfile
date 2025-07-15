@@ -48,7 +48,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_20/php83-pecl-xdebug
     PHP_XDEBUG_VERSION=3.3.2-r0 \
     # renovate: datasource=repology depName=alpine_3_20/python3
-    PYTHON_VERSION=3.12.10-r0 \
+    PYTHON_VERSION=3.12.11-r0 \
     # renovate: datasource=repology depName=alpine_3_20/spdlog
     SPDLOG_VERSION=1.14.1-r0 \
     # renovate: datasource=repology depName=alpine_3_20/sudo
@@ -80,7 +80,6 @@ RUN --mount=type=cache,id=code-server-apk-${TARGETARCH},sharing=locked,target=/v
     && \
     cleanup.sh
 
-# renovate: datasource=github-releases depName=vscode packageName=coder/code-server
 ARG CODE_SERVER_VERSION=4.99.4
 RUN --mount=type=cache,id=code-server-npm-${TARGETARCH},sharing=locked,target=/root/.npm \
     mkdir -p /opt/code-server && \

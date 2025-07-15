@@ -56,7 +56,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_20/py3-pip
     PIP_VERSION=24.0-r2	 \
     # renovate: datasource=repology depName=alpine_3_20/python3
-    PYTHON_VERSION=3.12.10-r0
+    PYTHON_VERSION=3.12.11-r0
 
 # Replace linux shared libraries with ones that target muslibc and are platform specific.
 # Also add perl for exiftool, and platform specific jna so native libs can be loaded.

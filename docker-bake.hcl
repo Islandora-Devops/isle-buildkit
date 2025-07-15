@@ -150,10 +150,14 @@ group "arm64" {
 ###############################################################################
 target "common" {
   args = {
-    # Required for reproduciable builds.
+    # Required for reproducible builds.
     # Requires Buildkit 0.11+
     # See: https://reproducible-builds.org/docs/source-date-epoch/
     SOURCE_DATE_EPOCH = "${SOURCE_DATE_EPOCH}",
+  }
+  labels = {
+    "org.opencontainers.image.url" = "https://github.com/Islandora-DevOps/isle-buildkit/"
+    "org.opencontainers.image.source" = "https://github.com/Islandora-DevOps/isle-buildkit/"
   }
 }
 
