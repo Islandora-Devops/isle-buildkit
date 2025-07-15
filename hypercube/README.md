@@ -1,6 +1,6 @@
 # Hypercube
 
-Docker image for [Hypercube].
+Docker image for [Hypercube]. Tesseract as a microservice
 
 Built from [Islandora-DevOps/isle-buildkit hypercube](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/hypercube)
 

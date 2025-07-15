@@ -1,6 +1,6 @@
 # Homarus
 
-Docker image for [Homarus].
+Docker image for [Homarus]. FFmpeg as a microservice.
 
 Built from [Islandora-DevOps/isle-buildkit homarus](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/homarus)
 
