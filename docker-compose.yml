@@ -65,6 +65,9 @@ services:
     milliner:
         <<: *common
         image: ${REPOSITORY:-local}/milliner:${TAG:-latest}
+    transkribus:
+        <<: *common
+        image: ${REPOSITORY:-local}/transkribus:${TAG:-latest}
     activemq:
         <<: *common
         image: ${REPOSITORY:-local}/activemq:${TAG:-latest}
@@ -130,7 +133,7 @@ services:
             DRUPAL_DEFAULT_PROFILE: "minimal"
             DRUPAL_DEFAULT_SITE_URL: "islandora.dev"
             DRUPAL_DEFAULT_SOLR_CORE: "default"
-            DRUPAL_DRUSH_URI: "https://islandora.dev" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
+            DRUSH_OPTIONS_URI: "https://islandora.dev" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
         volumes:
             # Allow code-server to serve Drupal / override it.
             - &drupal-root

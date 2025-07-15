@@ -3,8 +3,8 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=custom.apache-downloads depName=apache-tomcat packageName=tomcat/tomcat-9
-ARG TOMCAT_VERSION=9.0.104
-ARG TOMCAT_FILE_SHA256="fa19751c8f81b294dde346ad93517bded84f40885c442e0a7130da982a22abae"
+ARG TOMCAT_VERSION=9.0.107
+ARG TOMCAT_FILE_SHA256="d3caa0ad0a65b4931a7d3aeca24e5541cf743ba5fa9e51abda5b3a31d0b4857d"
 
 EXPOSE 8080
 

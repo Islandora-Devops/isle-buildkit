@@ -101,6 +101,7 @@
         "islandora-starter-site",
         "s6-overlay",
         "solr-ocrhighlighting",
+        "transkribus-process",
         "vscode"
       ],
       "postUpgradeTasks": {

@@ -27,7 +27,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_20/curl
   CURL_VERSION=8.12.1-r0 \
   # renovate: datasource=repology depName=alpine_3_20/git
-  GIT_VERSION=2.45.3-r0 \
+  GIT_VERSION=2.45.4-r0 \
   # renovate: datasource=repology depName=alpine_3_20/gnupg
   GNUPG_VERSION=2.4.5-r0 \
   # renovate: datasource=repology depName=alpine_3_20/gzip
@@ -41,7 +41,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_20/netcat-openbsd	
   NETCAT_OPENBSD_VERSION=1.226-r0 \
   # renovate: datasource=repology depName=alpine_3_20/openssl
-  OPENSSL_VERSION=3.3.3-r0 \
+  OPENSSL_VERSION=3.3.4-r0 \
   # renovate: datasource=repology depName=alpine_3_20/patch
   PATCH_VERSION=2.7.6-r10 \
   # renovate: datasource=repology depName=alpine_3_20/postgresql16-client
