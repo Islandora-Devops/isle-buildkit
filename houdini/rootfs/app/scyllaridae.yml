@@ -1,4 +1,3 @@
-forwardAuth: true
 allowedMimeTypes:
   - "application/pdf"
   - "image/*"
@@ -9,4 +8,3 @@ cmdByMimeType:
       - "%source-mime-ext"
       - "%destination-mime-ext"
       - "%args"
-

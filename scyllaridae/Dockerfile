@@ -2,10 +2,10 @@
 FROM base
 
 ARG TARGETARCH
-ARG SCYLLARIDAE_VERSION=3.1.0
+ARG SCYLLARIDAE_VERSION=4.1.0
 ARG SCYLLARIDAE_URL="https://github.com/lehigh-university-libraries/scyllaridae/releases/download/${SCYLLARIDAE_VERSION}/"
-ARG SCYLLARIDAE_AMD64_SHA256="4009ecfcafed81f62ae07a583be7da134212e822d2addc428b84247e4a56575e"
-ARG SCYLLARIDAE_ARM64_SHA256="ecad3ba9e9851d41b96c384a5ce44998ebbf6580c215ade0c423813ab1db0756"
+ARG SCYLLARIDAE_AMD64_SHA256="e744962ee448c4dcca039b00403d3189c9b2225aead31a61bf91510a77b47d9c"
+ARG SCYLLARIDAE_ARM64_SHA256="aa0850f4fffcbafe32b0c7fd8d0b6df3774a2d5c2e1080cd8f7e1556057cb873"
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=crayfish-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
@@ -22,7 +22,6 @@ RUN create-service-user.sh --name scyllaridae && \
     cleanup.sh
 
 ENV \
-  SCYLLARIDAE_YML_PATH=/app/scyllaridae.yml \
   JWKS_URI=https://islandora.dev/oauth/discovery/keys \
   SKIP_JWT_VERIFY="true" \
   LOG_LEVEL=info

@@ -39,7 +39,7 @@ if [ "$DESTINATION_EXT" = "mp4" ]; then
     "$OUTPUT_FILE"
   )
   echo "${cmd[@]}" >&2
-  "${cmd[@]}" > /dev/null
+  "${cmd[@]}" >&2
 else
   cmd=(
     ffmpeg -loglevel error
@@ -51,12 +51,12 @@ else
     "$OUTPUT_FILE"
   )
   echo "${cmd[@]}" >&2
-  "${cmd[@]}" > /dev/null
+  "${cmd[@]}" >&2
 fi
 
 if [ ! -f "$OUTPUT_FILE" ] || [ ! -s "$OUTPUT_FILE" ]; then
+  echo "No outputfile created. Command must have failed" >&2
   exit 1
 fi
 
 cat "$OUTPUT_FILE"
-

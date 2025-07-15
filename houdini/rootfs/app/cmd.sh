@@ -24,7 +24,7 @@ elif [ "$SOURCE_EXT" = "tiff" ]; then
   INPUT="-[0]"
 fi
 
-magick "$INPUT" "${ARGS[@]}" "$OUTPUT"
+magick "$INPUT" "${ARGS[@]}" "$OUTPUT" >&2
 
 EXIT_CODE=0
 timeout 5 identify -verbose "$OUTPUT" > /dev/null 2>&1 || EXIT_CODE=$?
@@ -33,5 +33,5 @@ if [ $EXIT_CODE != 1 ]; then
   exit 0
 fi
 
+echo "Unable to identify file" >&2
 exit "$EXIT_CODE"
-
