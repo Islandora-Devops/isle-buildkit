@@ -7,7 +7,7 @@ EXPOSE 5432
 
 ARG \
     # renovate: datasource=repology depName=alpine_3_20/postgresql16
-    POSTGRESQL_VERSION=16.9-r0 
+    POSTGRESQL_VERSION=16.10-r0 
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=postgresql-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
