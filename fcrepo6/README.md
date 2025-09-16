@@ -45,6 +45,7 @@ additional settings, volumes, ports, etc.
 | FCREPO_S3_USER               |                      | AWS User for S3 Storage                                                              |
 | FCREPO_S3_PASSWORD           |                      | AWS Secret Token for S3 Storage                                                      |
 | FCREPO_S3_PREFIX             |                      | AWS Prefix for S3 Storage                                                            |
+| FCREPO_S3_ENDPOINT           |                      | Allows setting custom endpoint for non-AWS S3                                        |
 | FCREPO_PERSISTENCE_TYPE      | file                 | The object store type. Only `file`, `mysql`, `postgresql` are supported at this time |
 | FCREPO_DISABLE_SYN           | false                | Enable or disable authentication via [Syn](https://github.com/Islandora/Syn)         |
 
