@@ -6,7 +6,7 @@ ARG TARGETARCH
 EXPOSE 5432
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/postgresql16
+    # renovate: datasource=repology depName=alpine_3_22/postgresql16
     POSTGRESQL_VERSION=16.10-r0 
 
 # Platform specific does require arch specific identifier.

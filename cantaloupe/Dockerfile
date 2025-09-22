@@ -58,9 +58,9 @@ RUN --mount=type=cache,id=cantaloupe-downloads-${TARGETARCH},sharing=locked,targ
     cleanup.sh
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/ffmpeg
-    FFMPEG_VERSION=6.1.1-r8 \
-    # renovate: datasource=repology depName=alpine_3_20/openjpeg-tools
+    # renovate: datasource=repology depName=alpine_3_22/ffmpeg
+    FFMPEG_VERSION=6.1.2-r2 \
+    # renovate: datasource=repology depName=alpine_3_22/openjpeg-tools
     OPENJPG_TOOLS_VERSION=2.5.2-r0
 
 # Opted for OpenJPG over Kakadu but that could be changed.

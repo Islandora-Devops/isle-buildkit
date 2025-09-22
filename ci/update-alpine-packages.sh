@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 # Alpine package version updater for Dockerfiles
 # Usage: ./update-alpine-packages.sh <old_version> <new_version> [directory]
 # Example: ./update-alpine-packages.sh alpine_3_20 alpine_3_22 .
-
-set -euo pipefail
 
 # Colors for output
 RED='\033[0;31m'
@@ -293,4 +293,3 @@ setup_macos_compatibility
 
 # Run main function
 main "$@"
-

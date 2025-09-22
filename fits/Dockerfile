@@ -43,19 +43,19 @@ RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/op
     cleanup.sh
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/file
-    FILE_VERSION=5.45-r1 \
-    # renovate: datasource=repology depName=alpine_3_20/java-jna
-    JNA_VERSION=5.11.0-r1 \
-    # renovate: datasource=repology depName=alpine_3_20/libmediainfo
-    LIBMEDIAINFO_VERSION=24.04-r0 \
-    # renovate: datasource=repology depName=alpine_3_20/libzen
+    # renovate: datasource=repology depName=alpine_3_22/file
+    FILE_VERSION=5.46-r2 \
+    # renovate: datasource=repology depName=alpine_3_22/java-jna
+    JNA_VERSION=5.15.0-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/libmediainfo
+    LIBMEDIAINFO_VERSION=25.03-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/libzen
     LIBZEN_VERSION=0.4.41-r0 \
-    # renovate: datasource=repology depName=alpine_3_20/perl
-    PERL_VERSION=5.38.5-r0 \
-    # renovate: datasource=repology depName=alpine_3_20/py3-pip
-    PIP_VERSION=24.0-r2	 \
-    # renovate: datasource=repology depName=alpine_3_20/python3
+    # renovate: datasource=repology depName=alpine_3_22/perl
+    PERL_VERSION=5.40.3-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/py3-pip
+    PIP_VERSION=25.1.1-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/python3
     PYTHON_VERSION=3.12.11-r0
 
 # Replace linux shared libraries with ones that target muslibc and are platform specific.

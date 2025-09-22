@@ -14,8 +14,8 @@ RUN --mount=type=cache,id=homarus-composer-${TARGETARCH},sharing=locked,target=/
     cleanup.sh
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/ffmpeg
-    FFMPEG_VERSION=6.1.1-r8
+    # renovate: datasource=repology depName=alpine_3_22/ffmpeg
+    FFMPEG_VERSION=6.1.2-r2
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=homarus-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
