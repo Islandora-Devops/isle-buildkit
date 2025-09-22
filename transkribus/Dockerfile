@@ -74,3 +74,4 @@ ENV \
 
 COPY --from=build /opt/transkribus /opt/transkribus
 
+COPY --link rootfs /
