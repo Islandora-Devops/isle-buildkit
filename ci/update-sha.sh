@@ -72,11 +72,6 @@ elif [ "$DEP" = "solr-ocrhighlighting" ]; then
   ARG="OCRHIGHLIGHT_FILE_SHA256"
   DOCKERFILES=("solr/Dockerfile")
 
-elif [ "$DEP" = "alpine-pkg-glibc" ]; then
-  URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${NEW_VERSION}/glibc-${NEW_VERSION}.apk"
-  ARG="GLIBC_SHA256"
-  DOCKERFILES=("code-server/Dockerfile")
-
 elif [ "$DEP" = "fcrepo" ]; then
   URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${NEW_VERSION}/fcrepo-webapp-${NEW_VERSION}.war"
   ARG="FCREPO_SHA256"
@@ -174,9 +169,6 @@ elif [ "$DEP" = "s6-overlay" ]; then
     update_dockerfile_sha "$URL" "$ARG" "base/Dockerfile"
   done
 
-  exit 0
-elif [ "$DEP" = "vscode" ]; then
-  update_readme "code-server/README.md" "$OLD_VERSION" "$NEW_VERSION"
   exit 0
 else
   echo "DEP not found"

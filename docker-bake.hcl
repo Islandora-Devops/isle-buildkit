@@ -9,7 +9,6 @@ IMAGES = [
   "base",
   "blazegraph",
   "cantaloupe",
-  "code-server",
   "crayfish",
   "crayfits",
   "drupal",
@@ -38,7 +37,6 @@ DEPENDENCIES = {
   alpaca = ["java"]
   blazegraph = ["tomcat"]
   cantaloupe = ["java"]
-  code-server = ["drupal"]
   crayfish = ["nginx"]
   crayfits = ["crayfish"]
   drupal = ["nginx"]
@@ -189,7 +187,7 @@ target "base-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.20.6@sha256:de4fe7064d8f98419ea6b49190df1abbf43450c1702eeb864fe9ced453c1cc5f"
+    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
   }
 }
 
@@ -201,15 +199,6 @@ target "blazegraph-common" {
 target "cantaloupe-common" {
   inherits = ["common"]
   context = "cantaloupe"
-}
-
-target "code-server-common" {
-  inherits = ["common"]
-  context = "code-server"
-  contexts = {
-    # Produced by this repository <https://github.com/Islandora-Devops/isle-nodejs>.
-    nodejs = "docker-image://islandora/nodejs:alpine-3.20.2-nodejs-20.18.3-r0@sha256:709e29832b5fb87278990ef462eb8197c4725e45902f5d716b7c9497db6521bb"
-  }
 }
 
 target "crayfish-common" {
@@ -264,7 +253,7 @@ target "imagemagick-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.20.6@sha256:de4fe7064d8f98419ea6b49190df1abbf43450c1702eeb864fe9ced453c1cc5f"
+    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
   }
 }
 
@@ -280,7 +269,7 @@ target "leptonica-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.20.6@sha256:de4fe7064d8f98419ea6b49190df1abbf43450c1702eeb864fe9ced453c1cc5f"
+    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
   }
 }
 
@@ -364,13 +353,6 @@ target "cantaloupe" {
   contexts = dependencies("cantaloupe", "")
   cache-from = cacheFrom("cantaloupe", hostArch())
   tags = tags("cantaloupe", "")
-}
-
-target "code-server" {
-  inherits = ["code-server-common"]
-  contexts = dependencies("code-server", "")
-  cache-from = cacheFrom("code-server", hostArch())
-  tags = tags("code-server", "")
 }
 
 target "crayfish" {
@@ -555,13 +537,6 @@ target "cantaloupe-amd64" {
   tags = tags("cantaloupe", "amd64")
 }
 
-target "code-server-amd64" {
-  inherits = ["code-server-common", "amd64-common"]
-  contexts = dependencies("code-server", "amd64")
-  cache-from = cacheFrom("code-server", "amd64")
-  tags = tags("code-server", "amd64")
-}
-
 target "crayfish-amd64" {
   inherits = ["crayfish-common", "amd64-common"]
   contexts = dependencies("crayfish", "amd64")
@@ -742,13 +717,6 @@ target "cantaloupe-arm64" {
   contexts = dependencies("cantaloupe", "arm64")
   cache-from = cacheFrom("cantaloupe", "arm64")
   tags = tags("cantaloupe", "arm64")
-}
-
-target "code-server-arm64" {
-  inherits = ["code-server-common", "arm64-common"]
-  contexts = dependencies("code-server", "arm64")
-  cache-from = cacheFrom("code-server", "arm64")
-  tags = tags("code-server", "arm64")
 }
 
 target "crayfish-arm64" {
