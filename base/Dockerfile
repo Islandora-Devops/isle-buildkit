@@ -22,40 +22,40 @@ LABEL License="MIT License"
 ENTRYPOINT [ "/init" ]
 
 ARG \
-  # renovate: datasource=repology depName=alpine_3_20/bash
-  BASH_VERSION=5.2.26-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/curl
-  CURL_VERSION=8.12.1-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/git
-  GIT_VERSION=2.45.4-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/gnupg
-  GNUPG_VERSION=2.4.5-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/gzip
-  GZIP_VERSION=1.13-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/jq
-  JQ_VERSION=1.7.1-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/mariadb-client
-  MARIADB_CLIENT_VERSION=10.11.14-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/mysql-client
-  MYSQL_CLIENT_VERSION=10.11.14-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/netcat-openbsd	
-  NETCAT_OPENBSD_VERSION=1.226-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/openssl
-  OPENSSL_VERSION=3.3.4-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/patch
-  PATCH_VERSION=2.7.6-r10 \
-  # renovate: datasource=repology depName=alpine_3_20/postgresql16-client
+  # renovate: datasource=repology depName=alpine_3_22/bash
+  BASH_VERSION=5.2.37-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/curl
+  CURL_VERSION=8.14.1-r1 \
+  # renovate: datasource=repology depName=alpine_3_22/git
+  GIT_VERSION=2.49.1-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/gnupg
+  GNUPG_VERSION=2.4.7-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/gzip
+  GZIP_VERSION=1.14-r1 \
+  # renovate: datasource=repology depName=alpine_3_22/jq
+  JQ_VERSION=1.8.0-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/mariadb-client
+  MARIADB_CLIENT_VERSION=11.4.8-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/mysql-client
+  MYSQL_CLIENT_VERSION=11.4.8-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/netcat-openbsd	
+  NETCAT_OPENBSD_VERSION=1.229.1-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/openssl
+  OPENSSL_VERSION=3.5.2-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/patch
+  PATCH_VERSION=2.8-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/postgresql16-client
   POSTGRES_CLIENT_VERSION=16.10-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/procps-ng
-  PROCPS_VERSION=4.0.4-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/shadow
-  SHADOW_VERSION=4.15.1-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/util-linux
-  UTIL_LINUX_VERSION=2.40.1-r1 \
-  # renovate: datasource=repology depName=alpine_3_20/wget
-  WGET_VERSION=1.24.5-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/yq-go
-  YQ_VERSION=4.44.1-r2
+  # renovate: datasource=repology depName=alpine_3_22/procps-ng
+  PROCPS_VERSION=4.0.4-r3 \
+  # renovate: datasource=repology depName=alpine_3_22/shadow
+  SHADOW_VERSION=4.17.3-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/util-linux
+  UTIL_LINUX_VERSION=2.41-r9 \
+  # renovate: datasource=repology depName=alpine_3_22/wget
+  WGET_VERSION=1.25.0-r1 \
+  # renovate: datasource=repology depName=alpine_3_22/yq-go
+  YQ_VERSION=4.47.2-r0
 
 # Install packages and tools required by all downstream images.
 # Platform specific does require arch specific identifier.
