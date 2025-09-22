@@ -24,6 +24,8 @@ ENTRYPOINT [ "/init" ]
 ARG \
   # renovate: datasource=repology depName=alpine_3_22/bash
   BASH_VERSION=5.2.37-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/ca-certificates
+  CA_CERTIFICATES_VERSION=20250619-r0 \
   # renovate: datasource=repology depName=alpine_3_22/curl
   CURL_VERSION=8.14.1-r1 \
   # renovate: datasource=repology depName=alpine_3_22/git
@@ -63,6 +65,7 @@ RUN --mount=type=cache,id=base-apk-${TARGETARCH},sharing=locked,target=/var/cach
     ln -s /var/cache/apk /etc/apk/cache && \
     apk add \
         bash=="${BASH_VERSION}" \
+        ca-certificates=="${CA_CERTIFICATES_VERSION}" \
         curl=="${CURL_VERSION}" \
         git=="${GIT_VERSION}" \
         gnupg=="${GNUPG_VERSION}" \
