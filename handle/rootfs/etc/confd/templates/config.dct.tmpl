@@ -49,11 +49,13 @@
     "case_sensitive" = "{{ getenv "HANDLE_CASE_SENSITIVE" }}"
     "allow_recursion" = "no"
     "allow_list_hdls" = "yes"
+    {{ if ne  (getenv "HANDLE_AUTO_HOME") "no" }}
 
     "auto_homed_prefixes" = (
       "0.NA/{{ getenv "HANDLE_PREFIX" }}"
     )
 
+    {{ end }}
     {{ if eq (getenv "HANDLE_PERSISTENCE_TYPE" ) "bdbje" }}
     storage_type = bdbje
     {{ else }}

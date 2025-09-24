@@ -64,6 +64,7 @@ RUN create-service-user.sh --name handle /opt/keys/handle /var/handle /var/handl
 ENV \
     HANDLE_ADMIN_FULL_ACCESS=yes \
     HANDLE_ALLOW_NA_ADMINS=yes \
+    HANDLE_AUTO_HOME=yes \
     HANDLE_CASE_SENSITIVE=no \
     HANDLE_DB_NAME=handle \
     HANDLE_DB_PASSWORD=password \
