@@ -12,8 +12,8 @@ EXPOSE 8000
 WORKDIR /var/www/riprap
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/php83
-    PHP_VERSION=8.3.15-r0
+    # renovate: datasource=repology depName=alpine_3_22/php83
+    PHP_VERSION=8.3.24-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=riprap-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \

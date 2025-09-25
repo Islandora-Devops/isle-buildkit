@@ -1,7 +1,0 @@
-[template]
-src = "tasks.json.tmpl"
-dest = "/var/www/drupal/.vscode/tasks.json"
-uid = 100
-gid = 101
-mode = "0644"
-keys = [ "/" ]

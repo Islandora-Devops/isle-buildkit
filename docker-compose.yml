@@ -21,7 +21,6 @@ volumes:
     activemq-data: {}
     blazegraph-data: {}
     cantaloupe-data: {}
-    code-server-data: {}
     drupal-private-files: {}
     drupal-public-files: {}
     drupal-root: {}
@@ -135,7 +134,6 @@ services:
             DRUPAL_DEFAULT_SOLR_CORE: "default"
             DRUSH_OPTIONS_URI: "https://islandora.dev" # Used by docker/drupal/rootfs/usr/local/share/custom/install.sh
         volumes:
-            # Allow code-server to serve Drupal / override it.
             - &drupal-root
               type: volume
               source: drupal-root
@@ -150,83 +148,6 @@ services:
               target: /var/www/drupal/private
             - &drupal-custom-modules ./test/rootfs/var/www/drupal/web/modules/custom/sample_content:/var/www/drupal/web/modules/custom/sample_content:rw
             - drupal-solr-config:/opt/solr/server/solr/default:ro
-    ide:
-        <<: *common
-        image: ${REPOSITORY}/code-server:${TAG}
-        labels:
-            <<: *traefik-https-redirect-middleware
-            # All Drupal traefik is routed through the IDE so that XDebug can be
-            # easily used.
-            traefik.http.routers.drupal_http.entrypoints: http
-            traefik.http.routers.drupal_http.middlewares: *traefik-https-redirect
-            traefik.http.routers.drupal_http.rule: &traefik-host-drupal Host(`islandora.dev`)
-            traefik.http.routers.drupal_http.service: drupal
-            traefik.http.routers.drupal_https.entrypoints: https
-            traefik.http.routers.drupal_https.rule: *traefik-host-drupal
-            traefik.http.routers.drupal_https.service: drupal
-            traefik.http.routers.drupal_https.tls: true
-            traefik.http.services.drupal.loadbalancer.server.port: 80
-            traefik.http.routers.ide_http.entrypoints: http
-            traefik.http.routers.ide_http.middlewares: *traefik-https-redirect
-            traefik.http.routers.ide_http.rule: &traefik-host-ide Host(`ide.islandora.dev`)
-            traefik.http.routers.ide_http.service: ide
-            traefik.http.routers.ide_https.entrypoints: https
-            traefik.http.routers.ide_https.rule: *traefik-host-ide
-            traefik.http.routers.ide_https.service: ide
-            traefik.http.routers.ide_https.tls: true
-            traefik.http.services.ide.loadbalancer.server.port: 8443
-            traefik.tcp.routers.ssh.entrypoints: ssh
-            traefik.tcp.routers.ssh.rule: HostSNI(`*`)
-            traefik.tcp.routers.ssh.service: ssh
-            traefik.tcp.services.ssh.loadbalancer.server.port: 22
-
-        environment:
-            <<: *drupal-environment
-            # Allow XDebug to be used with Drush as well.
-            # Use the following command in the IDE shell to enable it:
-            # export XDEBUG_SESSION=1
-            DRUSH_ALLOW_XDEBUG: 1
-            XDEBUG_MODE: debug
-            # Do not request a password for accessing the IDE.
-            CODE_SERVER_AUTHENTICATION: none
-            # Bump up time outs to allow for debugging.
-            NGINX_CLIENT_BODY_TIMEOUT: 600s
-            NGINX_FASTCGI_CONNECT_TIMEOUT: 600s
-            NGINX_FASTCGI_READ_TIMEOUT: 1200s
-            NGINX_FASTCGI_SEND_TIMEOUT: 600s
-            NGINX_KEEPALIVE_TIMEOUT: 750s
-            NGINX_LINGERING_TIMEOUT: 50s
-            NGINX_PROXY_CONNECT_TIMEOUT: 600s
-            NGINX_PROXY_READ_TIMEOUT: 600s
-            NGINX_PROXY_SEND_TIMEOUT: 600s
-            NGINX_SEND_TIMEOUT: 600s
-            PHP_DEFAULT_SOCKET_TIMEOUT: 600
-            PHP_MAX_EXECUTION_TIME: 300
-            PHP_MAX_INPUT_TIME: 600
-            PHP_PROCESS_CONTROL_TIMEOUT: 600
-            PHP_REQUEST_TERMINATE_TIMEOUT: 600
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-            # Mount and serve contents of Drupal site.
-            - <<: *drupal-root
-              volume:
-                  nocopy: true
-            # Mount and serve Drupal public files.
-            - <<: *drupal-public-files
-              volume:
-                  nocopy: true
-            # Mount and serve Drupal private files.
-            - <<: *drupal-private-files
-              volume:
-                  nocopy: true
-            # Volumes for code-server cache.
-            - type: volume
-              source: code-server-data
-              target: /opt/code-server/data
-            - *drupal-custom-modules
-        # Ensure drupal mounts the shared volumes first.
-        depends_on:
-            - drupal
     fcrepo:
         <<: *common
         image: ${REPOSITORY}/fcrepo6:${TAG}
@@ -318,4 +239,3 @@ services:
             - drupal
             - fcrepo
             - solr
-            - ide

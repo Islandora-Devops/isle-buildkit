@@ -22,12 +22,12 @@ RUN --mount=type=cache,id=download-downloads-${TARGETARCH},sharing=locked,target
     cleanup.sh
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/icu-data-full
-    ICU_VERSION=74.2-r1 \
-    # renovate: datasource=repology depName=alpine_3_20/nginx
-    NGINX_VERSION=1.26.3-r0	\
-    # renovate: datasource=repology depName=alpine_3_20/php83
-    PHP_VERSION=8.3.15-r0
+    # renovate: datasource=repology depName=alpine_3_22/icu-data-full
+    ICU_VERSION=76.1-r1 \
+    # renovate: datasource=repology depName=alpine_3_22/nginx
+    NGINX_VERSION=1.28.0-r3 \
+    # renovate: datasource=repology depName=alpine_3_22/php83
+    PHP_VERSION=8.3.24-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
