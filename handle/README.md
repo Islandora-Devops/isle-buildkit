@@ -35,6 +35,7 @@ Requires `islandora/java` docker image to build. Please refer to the
 | HANDLE_ADMIN_PRIVATE_KEY_PEM | See rootfs/etc/defaults/HANDLE_ADMIN_PRIVATE_KEY_PEM | Please read the handle documentation for how this is use                                            |
 | HANDLE_ADMIN_PUBLIC_KEY_PEM  | See rootfs/etc/defaults/HANDLE_ADMIN_PUBLIC_KEY_PEM  | Please read the handle documentation for how this is use                                            |
 | HANDLE_ALLOW_NA_ADMINS       | yes                                                  | "yes" or "no". Allow admins from GHR?                                                               |
+| HANDLE_AUTO_HOME             | yes                                                  | "yes" or "no".  Controls whether the `auto_homed_prefixes` clause is included in the server configuration (config.dct).                                                         |
 | HANDLE_CASE_SENSITIVE        | no                                                   | "yes" or "no". Whether or not handles are case sensitive                                            |
 | HANDLE_DB_NAME               | handle                                               | The name of the handle database                                                                     |
 | HANDLE_DB_PASSWORD           | password                                             | The database users password                                                                         |
