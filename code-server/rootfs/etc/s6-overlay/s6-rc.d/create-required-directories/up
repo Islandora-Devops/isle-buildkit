@@ -1,2 +1,0 @@
-# Some directories must exist prior to rendering templates.
-/etc/s6-overlay/scripts/create-required-directories.sh

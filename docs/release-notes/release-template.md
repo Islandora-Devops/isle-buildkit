@@ -47,7 +47,6 @@ activemq
 alpaca
 blazegraph
 cantaloupe
-code-server
 composer
 crayfish
 crayfits

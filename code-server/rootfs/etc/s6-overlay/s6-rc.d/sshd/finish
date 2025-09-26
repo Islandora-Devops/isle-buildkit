@@ -1,2 +1,0 @@
-#!/command/execlineb -S2
-/usr/local/share/s6/finish ${1} ${2}

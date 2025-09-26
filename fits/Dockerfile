@@ -16,10 +16,10 @@ ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSI
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
 # renovate: datasource=custom.apache-downloads depName=apache-log4j packageName=logging/log4j
-ARG LOG4J_VERSION=2.25.1
+ARG LOG4J_VERSION=2.25.2
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
-ARG LOG4J_FILE_SHA256="f7ad107a3f584328ce3064623182bcc8995d711bf56f51c9c1507a01e2e7006b"
+ARG LOG4J_FILE_SHA256="a35f091992aa72f9e4161fc60eb67272001ce00fe47e6ffdde9054327aa6db86"
 ARG OLD_LOG4J_VERSION="2.22.0"
 
 # Platform agnostic does not require arch specific identifier.
@@ -43,19 +43,19 @@ RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/op
     cleanup.sh
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/file
-    FILE_VERSION=5.45-r1 \
-    # renovate: datasource=repology depName=alpine_3_20/java-jna
-    JNA_VERSION=5.11.0-r1 \
-    # renovate: datasource=repology depName=alpine_3_20/libmediainfo
-    LIBMEDIAINFO_VERSION=24.04-r0 \
-    # renovate: datasource=repology depName=alpine_3_20/libzen
+    # renovate: datasource=repology depName=alpine_3_22/file
+    FILE_VERSION=5.46-r2 \
+    # renovate: datasource=repology depName=alpine_3_22/java-jna
+    JNA_VERSION=5.15.0-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/libmediainfo
+    LIBMEDIAINFO_VERSION=25.03-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/libzen
     LIBZEN_VERSION=0.4.41-r0 \
-    # renovate: datasource=repology depName=alpine_3_20/perl
-    PERL_VERSION=5.38.3-r1 \
-    # renovate: datasource=repology depName=alpine_3_20/py3-pip
-    PIP_VERSION=24.0-r2	 \
-    # renovate: datasource=repology depName=alpine_3_20/python3
+    # renovate: datasource=repology depName=alpine_3_22/perl
+    PERL_VERSION=5.40.3-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/py3-pip
+    PIP_VERSION=25.1.1-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/python3
     PYTHON_VERSION=3.12.11-r0
 
 # Replace linux shared libraries with ones that target muslibc and are platform specific.

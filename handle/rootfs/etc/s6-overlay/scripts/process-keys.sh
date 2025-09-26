@@ -21,4 +21,4 @@ convert_key "admin.public.key" "admpub.bin"
 s6-env -i HANDLE_PUBLICKEY_BASE64="$(openssl base64 -A </var/handle/pubkey.bin)" s6-dumpenv -- /var/run/s6/container_environment
 
 # The HANDLE_PUBLICKEY_BASE64 is referenced in confd templates so we must re-render them.
-confd-render-templates.sh -- -onetime -sync-only
+/command/with-contenv confd-render-templates.sh -- -onetime -sync-only

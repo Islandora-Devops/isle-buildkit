@@ -9,10 +9,10 @@ EXPOSE 8080
 WORKDIR /app
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/poppler-utils
-    POPPLER_VERSION=24.02.0-r2 \
-    # renovate: datasource=repology depName=alpine_3_20/tesseract-ocr
-    TESSERACT_VERSION=5.3.4-r0
+    # renovate: datasource=repology depName=alpine_3_22/poppler-utils
+    POPPLER_VERSION=25.04.0-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/tesseract-ocr
+    TESSERACT_VERSION=5.5.0-r2
 
 # Platform specific does require arch specific identifier.
 # Though platform information is included via the FROM leptonica.

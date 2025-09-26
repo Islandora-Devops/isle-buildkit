@@ -4,10 +4,10 @@ FROM base
 ARG TARGETARCH
 
 ARG \
-  # renovate: datasource=repology depName=alpine_3_20/openjdk17
-  OPENJDK_VERSION=17.0.15_p6-r0 \
-  # renovate: datasource=repology depName=alpine_3_20/maven
-  MAVEN_VERSION=3.9.6-r0
+  # renovate: datasource=repology depName=alpine_3_22/openjdk17
+  OPENJDK_VERSION=17.0.16_p8-r0 \
+  # renovate: datasource=repology depName=alpine_3_22/maven
+  MAVEN_VERSION=3.9.9-r0
 
 # Install packages and tools required by all downstream images.
 #

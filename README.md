@@ -16,8 +16,6 @@
 - [Testing](#testing)
   - [Test Specific Image](#test-specific-image)
 - [Running](#running)
-  - [IDE](#ide)
-  - [PHPStorm](#phpstorm)
 - [Docker Images](#docker-images)
   - [Updating Dependencies](#updating-dependencies)
     - [Updating Composer](#updating-composer)
@@ -360,7 +358,6 @@ Waiting for installation...
 
   Services Available:
   Drupal                         https://islandora.dev
-  IDE                            https://ide.islandora.dev
   ActiveMQ                       https://activemq.islandora.dev
   Blazegraph                     https://blazegraph.islandora.dev/bigdata/
   Fedora                         https://fcrepo.islandora.dev/fcrepo/rest/
@@ -386,65 +383,6 @@ environment:
 ```bash
 make down up
 ```
-
-### IDE
-
-An `IDE` is provided at <http://ide.islandora.dev> which includes:
-
-- Intellisense & Code Completion
-- Build tasks for performing lints & other common actions (accessible via `CTRL-B` or `CMD-B`)
-- Integrated Debugger (`XDebug`)
-- `PHPCS` / `PHPCBF`
-- etc...
-
-To enable `XDebug` when using `drush` via the built-in terminal enter the
-following command before invoking `drush`:
-
-```bash
-export XDEBUG_SESSION=1
-```
-
-For web requests, you must also send an `XDEBUG_SESSION` cookie with your
-request, this can be toggled on and off via a browser plugin such as the
-following.
-
-- [Chrome](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc?hl=en)
-- [Firefox](https://addons.mozilla.org/en-GB/firefox/addon/xdebug-helper-for-firefox/)
-
-
-### PHPStorm
-
-PHPStorm and alternative IDE's which allow for remote development via SSH are
-also supported.
-
-Add the following to your `~/.ssh/config` file:
-
-```txt
-Host islandora.dev
-  ForwardAgent yes
-  PasswordAuthentication yes
-  Port 2222
-  PreferredAuthentications password
-  PubkeyAuthentication no
-  StrictHostKeyChecking no
-  User nginx
-  UserKnownHostsFile /dev/null
-```
-
-You should now be able to ssh like so (assuming you've already brought the
-docker compose environment up):
-
-```bash
-ssh islandora.dev
-```
-
-You can then connect via the PHP remote development feature.
-
-![PHPStorm](./docs/assets/phpstorm.gif)
-
-> N.B. PHPStorm remote is not supported form Arm architectures so the above will
-> not work on M1 macbooks and later.
-
 
 ## Docker Images
 

@@ -66,15 +66,6 @@ jobs:
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
     needs: [tags, java]
-  code-server:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.drupal.outputs.context }}
-      image: code-server
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-    secrets: inherit
-    needs: [tags, drupal]
   crayfish:
     uses: ./.github/workflows/build.yml
     with:
@@ -315,13 +306,6 @@ jobs:
       image: cantaloupe
     secrets: inherit
     needs: [cantaloupe]
-  test-code-server:
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: ${{ needs.code-server.outputs.digest }}
-      image: code-server
-    secrets: inherit
-    needs: [code-server]
   test-crayfish:
     uses: ./.github/workflows/test.yml
     with:
@@ -545,13 +529,6 @@ jobs:
       image: cantaloupe
     secrets: inherit
     needs: [cantaloupe]
-  grype-code-server:
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.code-server.outputs.digest }}
-      image: code-server
-    secrets: inherit
-    needs: [code-server]
   grype-crayfish:
     uses: ./.github/workflows/grype.yml
     with:

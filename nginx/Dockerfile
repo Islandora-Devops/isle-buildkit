@@ -3,10 +3,10 @@ FROM base
 
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=custom-composer packageName=composer/composer
-ARG COMPOSER_VERSION=2.8.10
+ARG COMPOSER_VERSION=2.8.12
 ARG COMPOSER_FILE=composer.phar
 ARG COMPOSER_URL=https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}
-ARG COMPOSER_SHA256="28dbb6bd8bef31479c7985b774c130a8bda37dbe63c35b56f6cb6bc377427573"
+ARG COMPOSER_SHA256="f446ea719708bb85fcbf4ef18def5d0515f1f9b4d703f6d820c9c1656e10a2f2"
 
 WORKDIR /var/www
 
@@ -22,12 +22,12 @@ RUN --mount=type=cache,id=download-downloads-${TARGETARCH},sharing=locked,target
     cleanup.sh
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_20/icu-data-full
-    ICU_VERSION=74.2-r1 \
-    # renovate: datasource=repology depName=alpine_3_20/nginx
-    NGINX_VERSION=1.26.3-r0	\
-    # renovate: datasource=repology depName=alpine_3_20/php83
-    PHP_VERSION=8.3.15-r0
+    # renovate: datasource=repology depName=alpine_3_22/icu-data-full
+    ICU_VERSION=76.1-r1 \
+    # renovate: datasource=repology depName=alpine_3_22/nginx
+    NGINX_VERSION=1.28.0-r3 \
+    # renovate: datasource=repology depName=alpine_3_22/php83
+    PHP_VERSION=8.3.26-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \

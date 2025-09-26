@@ -1,7 +1,0 @@
-[template]
-src = "settings.json.tmpl"
-dest = "/var/www/drupal/.vscode/settings.json"
-uid = 100
-gid = 101
-mode = "0644"
-keys = [ "/" ]
