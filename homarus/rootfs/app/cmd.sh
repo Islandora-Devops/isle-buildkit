@@ -5,9 +5,10 @@ set -eou pipefail
 SOURCE_EXT="$1"
 DESTINATION_EXT="$2"
 ARGS=()
-if [ "$#" -eq 3 ]; then
-  IFS=' ' read -r -a ARGS <<< "$3"
+if [ "$#" -gt 2 ]; then
+  ARGS=("${@:3}")
 fi
+
 
 TMP_DIR=$(mktemp -d)
 INPUT_FILE="$TMP_DIR/input.$SOURCE_EXT"
@@ -39,7 +40,27 @@ if [ "$DESTINATION_EXT" = "mp4" ]; then
     "$OUTPUT_FILE"
   )
   echo "${cmd[@]}" >&2
-  "${cmd[@]}" >&2
+  "${cmd[@]}" > /dev/null
+elif [ "$DESTINATION_EXT" = "jpg" ] || [ "$DESTINATION_EXT" = "png" ] ; then
+  cmd=(
+    ffmpeg -loglevel error
+    -f "$SOURCE_EXT"
+    -i "$INPUT_FILE"
+  )
+
+  # Add audio visualization for image output from audio input
+  if [[ "$SOURCE_EXT" =~ ^(mp3|wav|flac|aac|ogg|m4a)$ ]]; then
+    cmd+=(-filter_complex "showwavespic=colors=#FFC627" -frames:v 1)
+  fi
+
+  cmd+=(
+    "${ARGS[@]}"
+    -f image2pipe
+    -vcodec "${DESTINATION_EXT/#jpg/mjpeg}"
+    "$OUTPUT_FILE"
+  )
+  echo "${cmd[@]}" >&2
+  "${cmd[@]}" > /dev/null
 else
   cmd=(
     ffmpeg -loglevel error
@@ -51,11 +72,10 @@ else
     "$OUTPUT_FILE"
   )
   echo "${cmd[@]}" >&2
-  "${cmd[@]}" >&2
+  "${cmd[@]}" > /dev/null
 fi
 
 if [ ! -f "$OUTPUT_FILE" ] || [ ! -s "$OUTPUT_FILE" ]; then
-  echo "No outputfile created. Command must have failed" >&2
   exit 1
 fi
 

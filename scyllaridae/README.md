@@ -20,18 +20,10 @@ additional settings, volumes, ports, etc.
 ## Settings
 
 
-| Environment Variable | Default                                    | Description                                                       |
-| :------------------- | :----------------------------------------- | :---------------------------------------------------------------- |
-| LOG_LEVEL            | info                                       | Log level. Possible Values: debug, info, notice, warning, error   |
-| SKIP_JWT_VERIFY      | "true"                                     | Set to `"false"` to force JWT verification on event messages      |
-| JWKS_URI             | https://islandora.dev/oauth/discovery/keys | URL to JSON Web Key Set for JWT verification                      |
+| Environment Variable    | Default                                    | Description                                                       |
+| :---------------------- | :----------------------------------------- | :---------------------------------------------------------------- |
+| `SCYLLARIDAE_LOG_LEVEL` |  `INFO`                                    | Log level. Possible Values: debug, info, notice, warning, error   |
+| `SCYLLARIDAE_PORT`      | `8080`                                     | What port to listen on inside the container                       |
+| `SCYLLARIDAE_YML_PATH`  | `/app/scyllaridae.yml`                     | Location of the scyllaridea YML file                              |
 
-### JWT Settings
-
-[scyllaridae] makes use of JWT for authentication.
-
-By default, JWT verification is skipped with `SKIP_JWT_VERIFY=true`. JWT verification can be enabled by setting `SKIP_JWT_VERIFY=false`
-and setting `JWKS_URI=https://$DOMAIN/oauth/discovery/keys`. This relies on the Drupal module [drupal/islandora_jwks](https://www.drupal.org/project/islandora_jwks)
-being installed on your Islandora Drupal site.
-
-[scyllaridae]: https://github.com/lehigh-university-libraries/scyllaridae
+[scyllaridae]: https://github.com/islandora/scyllaridae

@@ -5,36 +5,9 @@ allowedMimeTypes:
   - "image/jpeg"
   - "image/png"
 cmdByMimeType:
-  "image/jpeg":
-    cmd: ffmpeg
-    args:
-      - "-f"
-      - "%source-mime-ext"
-      - "-i"
-      - "-"
-      - "%args"
-      - "-f"
-      - "image2pipe"
-      - "-vcodec"
-      - "mjpeg"
-      - "-"
-  "image/png":
-    cmd: ffmpeg
-    args:
-      - "-f"
-      - "%source-mime-ext"
-      - "-i"
-      - "-"
-      - "%args"
-      - "-f"
-      - "image2pipe"
-      - "-vcodec"
-      - "png"
-      - "-"
   default:
     cmd: /app/cmd.sh
     args:
       - "%source-mime-ext"
       - "%destination-mime-ext"
       - "%args"
-
