@@ -1,6 +1,6 @@
 # Crayfish
 
-Docker image for [scyllaridae] 4.1.0.
+Docker image for [scyllaridae] 5.1.0.
 
 Acts as base Docker image for scyllaridae based micro-services. It is not meant to
 be run on its own it is only used to cache the download.
