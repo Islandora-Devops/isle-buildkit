@@ -8,8 +8,9 @@ source /usr/local/share/isle/utilities.sh
 # The URL of the crayfits service
 URL="http://localhost:8080"
 
-# Wait for Houdini service to be ready
+# Wait for Crayfits service to be ready
 wait_20x "$URL/healthcheck"
+wait_20x "http://fits:8080"
 
 # Install file utility for checking file type
 apk update && apk add file
