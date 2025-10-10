@@ -26,25 +26,25 @@ additional settings, volumes, ports, etc.
 | ALPACA_DERIVATIVE_FITS_ENABLED            | true                                                      |                                                                         |
 | ALPACA_DERIVATIVE_FITS_MAX_CONSUMERS      | -1                                                        |                                                                         |
 | ALPACA_DERIVATIVE_FITS_QUEUE              | queue:islandora-connector-fits                            | ActiveMQ Queue to consume from                                          |
-| ALPACA_DERIVATIVE_FITS_URL                | http://crayfits:8000                                      | Url of micro-service                                                    |
+| ALPACA_DERIVATIVE_FITS_URL                | http://crayfits:8080/                                     | Url of micro-service                                                    |
 | ALPACA_DERIVATIVE_HOMARUS_ASYNC_CONSUMER  | true                                                      |                                                                         |
 | ALPACA_DERIVATIVE_HOMARUS_CONSUMERS       | -1                                                        |                                                                         |
 | ALPACA_DERIVATIVE_HOMARUS_ENABLED         | true                                                      |                                                                         |
 | ALPACA_DERIVATIVE_HOMARUS_MAX_CONSUMERS   | -1                                                        |                                                                         |
 | ALPACA_DERIVATIVE_HOMARUS_QUEUE           | queue:islandora-connector-homarus                         | ActiveMQ Queue to consume from                                          |
-| ALPACA_DERIVATIVE_HOMARUS_URL             | http://homarus:8000/convert                               | Url of micro-service                                                    |
+| ALPACA_DERIVATIVE_HOMARUS_URL             | http://homarus:8080/                                      | Url of micro-service                                                    |
 | ALPACA_DERIVATIVE_HOUDINI_ASYNC_CONSUMER  | true                                                      |                                                                         |
 | ALPACA_DERIVATIVE_HOUDINI_CONSUMERS       | -1                                                        |                                                                         |
 | ALPACA_DERIVATIVE_HOUDINI_ENABLED         | true                                                      |                                                                         |
 | ALPACA_DERIVATIVE_HOUDINI_MAX_CONSUMERS   | -1                                                        |                                                                         |
 | ALPACA_DERIVATIVE_HOUDINI_QUEUE           | queue:islandora-connector-houdini                         | ActiveMQ Queue to consume from                                          |
-| ALPACA_DERIVATIVE_HOUDINI_URL             | http://houdini:8000/convert                               | Url of micro-service                                                    |
+| ALPACA_DERIVATIVE_HOUDINI_URL             | http://houdini:8080/                                      | Url of micro-service                                                    |
 | ALPACA_DERIVATIVE_OCR_ASYNC_CONSUMER      | true                                                      |                                                                         |
 | ALPACA_DERIVATIVE_OCR_CONSUMERS           | -1                                                        |                                                                         |
 | ALPACA_DERIVATIVE_OCR_ENABLED             | true                                                      |                                                                         |
 | ALPACA_DERIVATIVE_OCR_MAX_CONSUMERS       | -1                                                        |                                                                         |
 | ALPACA_DERIVATIVE_OCR_QUEUE               | queue:islandora-connector-ocr                             | ActiveMQ Queue to consume from                                          |
-| ALPACA_DERIVATIVE_OCR_URL                 | http://hypercube:8000                                     | Url of micro-service                                                    |
+| ALPACA_DERIVATIVE_OCR_URL                 | http://hypercube:8080/                                    | Url of micro-service                                                    |
 | ALPACA_DERIVATIVE_SYSTEMS                 | fits,homarus,houdini,ocr                                  |                                                                         |
 | ALPACA_FCREPO_INDEXER_ASYNC_CONSUMER      | true                                                      |                                                                         |
 | ALPACA_FCREPO_INDEXER_CONSUMERS           | -1                                                        |                                                                         |

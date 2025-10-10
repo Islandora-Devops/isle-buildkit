@@ -1,0 +1,22 @@
+# file: docker-compose.yml
+#
+# Tests the following:
+# - Houdini starts.
+# - Can generate PNG thumbnails from PDFs using ImageMagick.
+---
+
+name: houdini-integrationtests
+services:
+  # Serve test files over HTTP
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - ./fixtures:/usr/share/nginx/html
+  houdini:
+    image: ${HOUDINI:-islandora/houdini:local}
+    environment:
+      JWT_ADMIN_TOKEN: test_token
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

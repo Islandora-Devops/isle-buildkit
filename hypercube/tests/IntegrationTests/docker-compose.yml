@@ -1,0 +1,23 @@
+# file: docker-compose.yml
+#
+# Tests the following:
+# - Hypercube starts.
+# - Can perform OCR on images and PDFs using Tesseract.
+---
+
+name: hypercube-integrationtests
+services:
+  # Serve test files over HTTP
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - ./fixtures:/usr/share/nginx/html
+  hypercube:
+    image: ${HYPERCUBE:-islandora/hypercube:local}
+    environment:
+      JWT_ADMIN_TOKEN: test_token
+    volumes:
+      - ./fixtures:/fixtures # Mount fixtures for POST requests
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

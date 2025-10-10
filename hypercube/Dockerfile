@@ -1,18 +1,12 @@
 # syntax=docker/dockerfile:1.5.1
 FROM leptonica
-FROM crayfish AS hypercube
+FROM scyllaridae AS hypercube
 
 ARG TARGETARCH
 
-EXPOSE 8000
+EXPOSE 8080
 
-WORKDIR /var/www/crayfish/Hypercube
-
-# Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=hypercube-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
-    composer install -d /var/www/crayfish/Hypercube && \
-    ln -s /var/www/crayfish/Hypercube/public /var/www/html && \
-    cleanup.sh
+WORKDIR /app
 
 ARG \
     # renovate: datasource=repology depName=alpine_3_22/poppler-utils
@@ -38,13 +32,6 @@ RUN --mount=type=cache,id=hypercube-apk-${TARGETARCH},sharing=locked,target=/var
         tesseract-ocr-data-deu=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-jpn=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-rus=="${TESSERACT_VERSION}" \
-    && \
-    addgroup nginx jwt && \
-    cleanup.sh
-
-ENV HYPERCUBE_FCREPO_URL=fcrepo:8080/fcrepo/rest \
-    HYPERCUBE_LOG_LEVEL=info
+    && cleanup.sh
 
 COPY --link rootfs /
-
-RUN chown -R nginx:nginx /var/www

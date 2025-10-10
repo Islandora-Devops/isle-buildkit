@@ -1,0 +1,20 @@
+# file: docker-compose.yml
+#
+# Tests the following:
+# - Homarus starts.
+# - Can generate a video thumbnail from a video file using FFmpeg arguments.
+---
+
+name: homarus-integrationtests
+services:
+  # Serve test video files over HTTP
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - ./fixtures:/usr/share/nginx/html
+  homarus:
+    image: ${HOMARUS:-islandora/homarus:local}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

@@ -1,0 +1,13 @@
+mimeTypeFromDestination: true
+allowedMimeTypes:
+  - "audio/*"
+  - "video/*"
+  - "image/jpeg"
+  - "image/png"
+cmdByMimeType:
+  default:
+    cmd: /app/cmd.sh
+    args:
+      - "%source-mime-ext"
+      - "%destination-mime-ext"
+      - "%args"
