@@ -13,7 +13,7 @@ services:
     volumes:
       - ../../../hypercube/tests/IntegrationTests/fixtures:/usr/share/nginx/html
   fits:
-    image: ${FITS:-islandora/fits:local}
+    image: ${FITS:-islandora/fits:main}
   crayfits:
     image: ${CRAYFITS:-islandora/crayfits:local}
     volumes:
