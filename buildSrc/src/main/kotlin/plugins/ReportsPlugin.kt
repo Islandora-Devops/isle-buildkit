@@ -7,7 +7,9 @@ import org.gradle.api.Project
 import org.gradle.api.file.RegularFile
 import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.*
+import org.gradle.process.ExecOperations
 import plugins.IslePlugin.Companion.isDockerProject
+import javax.inject.Inject
 import plugins.SharedPropertiesPlugin.Companion.execCaptureOutput
 import plugins.SharedPropertiesPlugin.Companion.isleRepository
 import plugins.SharedPropertiesPlugin.Companion.isleTag
@@ -51,7 +53,9 @@ class ReportsPlugin : Plugin<Project> {
 
     // Updates Grype Database.
     @CacheableTask
-    open class UpdateGrypeDB : DefaultTask() {
+    abstract class UpdateGrypeDB : DefaultTask() {
+        @get:Inject
+        abstract val execOperations: ExecOperations
         @Input
         val image = project.objects.property<String>()
 
@@ -76,7 +80,7 @@ class ReportsPlugin : Plugin<Project> {
                 image.get(),
             )
 
-        private fun upToDate() = project.exec {
+        private fun upToDate() = execOperations.exec {
             commandLine(
                 baseArguments + listOf(
                     "db",
@@ -100,7 +104,7 @@ class ReportsPlugin : Plugin<Project> {
 
         @TaskAction
         fun pull() {
-            project.exec {
+            execOperations.exec {
                 commandLine(
                     baseArguments + listOf(
                         "db",
@@ -115,7 +119,9 @@ class ReportsPlugin : Plugin<Project> {
     // Wrapper around a call to `syft`, please refer to the documentation for more information:
     // https://github.com/anchore/syft
     @CacheableTask
-    open class Syft : DefaultTask() {
+    abstract class Syft : DefaultTask() {
+        @get:Inject
+        abstract val execOperations: ExecOperations
 
         // anchore/syft image.
         @Input
@@ -132,7 +138,7 @@ class ReportsPlugin : Plugin<Project> {
         @TaskAction
         fun exec() {
             sbom.get().asFile.outputStream().use { output ->
-                project.exec {
+                execOperations.exec {
                     standardOutput = output
                     commandLine = listOf(
                         "docker", "container", "run", "--rm",
@@ -149,7 +155,9 @@ class ReportsPlugin : Plugin<Project> {
     // Wrapper around a call to `syft`, please refer to the documentation for more information:
     // https://github.com/anchore/syft
     @CacheableTask
-    open class Grype : DefaultTask() {
+    abstract class Grype : DefaultTask() {
+        @get:Inject
+        abstract val execOperations: ExecOperations
         // anchore/grype image.
         @Input
         val grype = project.objects.property<String>()
@@ -218,7 +226,7 @@ class ReportsPlugin : Plugin<Project> {
                         command.add("--only-fixed")
                     }
                     command.addAll(listOf("-o", format.get()))
-                    project.exec {
+                    execOperations.exec {
                         standardInput = input
                         standardOutput = output
                         commandLine = command

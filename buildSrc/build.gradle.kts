@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 group = "io.github.nigelgbanks"
 
 repositories {
@@ -8,29 +6,25 @@ repositories {
 }
 
 plugins {
-    id("com.gradle.plugin-publish") version "1.1.0"
+    id("com.gradle.plugin-publish") version "1.2.1"
     `java-gradle-plugin`
     `kotlin-dsl`
 }
 
-afterEvaluate {
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            apiVersion = "1.6"
-            languageVersion = "1.6"
-        }
-    }
+kotlin {
+    jvmToolchain(11)
 }
 
 dependencies {
-    implementation("org.apache.commons:commons-io:1.3.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.1")
+    implementation("commons-io:commons-io:2.15.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.1")
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
 }
 
 gradlePlugin {
@@ -67,9 +61,4 @@ gradlePlugin {
             tags.set(listOf("isle"))
         }
     }
-}
-
-extensions.findByName("buildScan")?.withGroovyBuilder {
-    setProperty("termsOfServiceUrl", "https://gradle.com/terms-of-service")
-    setProperty("termsOfServiceAgree", "yes")
 }

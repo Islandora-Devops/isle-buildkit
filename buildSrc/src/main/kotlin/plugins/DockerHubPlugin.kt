@@ -16,6 +16,7 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.*
+import org.gradle.process.ExecOperations
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkQueue
@@ -57,7 +58,10 @@ class DockerHubPlugin : Plugin<Project> {
                 .toSet()
     }
 
-    open class ProtectedDockerHubTags : DefaultTask() {
+    abstract class ProtectedDockerHubTags : DefaultTask() {
+        @get:Inject
+        abstract val execOperations: ExecOperations
+
         @Input
         val images = project.objects.setProperty<String>()
 
@@ -79,13 +83,13 @@ class DockerHubPlugin : Plugin<Project> {
 
         @TaskAction
         fun exec() {
-            project.exec {
+            execOperations.exec {
                 commandLine = listOf("git", "fetch", "--all")
                 workingDir = project.projectDir
             }
 
             val gitTags = ByteArrayOutputStream().use { output ->
-                project.exec {
+                execOperations.exec {
                     commandLine = listOf("git", "tag", "-l")
                     workingDir = project.projectDir
                     standardOutput = output
@@ -94,7 +98,7 @@ class DockerHubPlugin : Plugin<Project> {
             }.lines()
 
             val gitBranches = ByteArrayOutputStream().use { output ->
-                project.exec {
+                execOperations.exec {
                     commandLine = listOf("git", "branch", "-r")
                     workingDir = project.projectDir
                     standardOutput = output

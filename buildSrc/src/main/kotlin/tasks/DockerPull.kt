@@ -11,10 +11,15 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.property
+import org.gradle.process.ExecOperations
+import javax.inject.Inject
 
 // Pulls down a docker image if not already present.
 // https://docs.docker.com/engine/reference/commandline/pull
-open class DockerPull : DefaultTask() {
+abstract class DockerPull : DefaultTask() {
+    @get:Inject
+    abstract val execOperations: ExecOperations
+
     @Input
     val image = project.objects.property<String>()
 
@@ -29,7 +34,7 @@ open class DockerPull : DefaultTask() {
 
     private fun exists() = digestFile.get().asFile.let { file ->
         file.exists() && file.readText().trim().let { digest ->
-            project.exec {
+            execOperations.exec {
                 commandLine("docker", "inspect", digest)
                 standardOutput = NullOutputStream()
                 errorOutput = NullOutputStream()
@@ -49,12 +54,12 @@ open class DockerPull : DefaultTask() {
 
     @TaskAction
     fun pull() {
-        project.exec {
-            commandLine("docker", "pull", image.get())
+        execOperations.exec {
+            commandLine = listOf("docker", "pull", image.get())
         }
         ByteArrayOutputStream().use { output ->
-            project.exec {
-                commandLine("docker", "inspect", image.get())
+            execOperations.exec {
+                commandLine = listOf("docker", "inspect", image.get())
                 standardOutput = output
             }
             output.toString()

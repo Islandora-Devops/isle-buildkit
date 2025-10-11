@@ -17,7 +17,7 @@ tasks.named<DockerComposeUp>("test") {
                 while (attempt < maxAttempts) {
                     attempt++
                     val outputStream = ByteArrayOutputStream()
-                    project.exec {
+                    execOperations.exec {
                         commandLine = baseArguments + listOf("ps", "--all")
                         standardOutput = outputStream
                         workingDir = project.projectDir
@@ -31,7 +31,7 @@ tasks.named<DockerComposeUp>("test") {
 
                     if (foundHealthyService) {
                         println("Service is healthy. Exiting test...")
-                        project.exec {
+                        execOperations.exec {
                             commandLine = baseArguments + listOf("stop")
                             standardOutput = outputStream
                             workingDir = project.projectDir

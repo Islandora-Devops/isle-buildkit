@@ -11,7 +11,7 @@ tasks.named<DockerComposeUp>("test") {
             {
                 // Send TERM after 10 seconds externally.
                 sleep(ofSeconds(10).toMillis())
-                project.exec {
+                execOperations.exec {
                     workingDir = projectDir
                     commandLine = baseArguments + listOf("stop")
                 }

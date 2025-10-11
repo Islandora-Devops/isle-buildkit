@@ -13,7 +13,9 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.*
+import org.gradle.process.ExecOperations
 import plugins.IslePlugin.Companion.isDockerProject
+import javax.inject.Inject
 import plugins.SharedPropertiesPlugin.Companion.isleRepository
 import plugins.SharedPropertiesPlugin.Companion.isleTag
 import java.io.ByteArrayOutputStream
@@ -41,7 +43,9 @@ class TestsPlugin : Plugin<Project> {
     }
 
 
-    open class DockerCompose : DefaultTask() {
+    abstract class DockerCompose : DefaultTask() {
+        @get:Inject
+        abstract val execOperations: ExecOperations
         data class DockerComposeFile(val services: Map<String, Service>) {
             companion object {
                 fun deserialize(file: File): DockerComposeFile =
@@ -101,7 +105,7 @@ class TestsPlugin : Plugin<Project> {
     }
 
     @CacheableTask
-    open class DockerComposeUp : DockerCompose() {
+    abstract class DockerComposeUp : DockerCompose() {
 
         companion object {
             val pool: ExecutorService = Executors.newCachedThreadPool()
@@ -128,7 +132,7 @@ class TestsPlugin : Plugin<Project> {
         // Gets the identifiers of all the services created by the docker compose file.
         private val containers by lazy {
             ByteArrayOutputStream().use { output ->
-                project.exec {
+                execOperations.exec {
                     workingDir(project.projectDir)
                     commandLine(baseArguments + listOf("ps", "-aq"))
                     standardOutput = output
@@ -146,7 +150,7 @@ class TestsPlugin : Plugin<Project> {
         protected val exitCodes by lazy {
             containers.associate { container ->
                 ByteArrayOutputStream().use { output ->
-                    project.exec {
+                    execOperations.exec {
                         workingDir(project.projectDir)
                         commandLine("docker", "inspect", container)
                         standardOutput = output
@@ -188,7 +192,7 @@ class TestsPlugin : Plugin<Project> {
                 val start = System.nanoTime()
                 while ((System.nanoTime() - start) <= timeout.get().toNanos()) {
                     ByteArrayOutputStream().use { outputStream ->
-                        project.exec {
+                        execOperations.exec {
                             workingDir = project.projectDir
                             commandLine = baseArguments + listOf("logs", service)
                             standardOutput = outputStream
@@ -245,7 +249,7 @@ class TestsPlugin : Plugin<Project> {
             }
             up.join() // Either ended of its own accord or output conditions have all been satisfied.
             // Wait for all containers to come down before we check their exit codes.
-            project.exec {
+            execOperations.exec {
                 workingDir = project.projectDir
                 commandLine = baseArguments + listOf("stop")
             }
@@ -272,11 +276,11 @@ class TestsPlugin : Plugin<Project> {
         }
     }
 
-    open class DockerComposeDown : DockerCompose() {
+    abstract class DockerComposeDown : DockerCompose() {
 
         @TaskAction
         fun down() {
-            project.exec {
+            execOperations.exec {
                 workingDir(project.projectDir)
                 commandLine(baseArguments + listOf("down", "-v"))
             }
@@ -314,7 +318,7 @@ class TestsPlugin : Plugin<Project> {
                             dependsOn(setUp)
                             doFirst {
                                 if (project.isleTestPull) {
-                                    project.exec {
+                                    execOperations.exec {
                                         workingDir = project.projectDir
                                         commandLine = baseArguments + listOf("pull", "--ignore-pull-failures")
                                         environment = this@register.environment.get() as Map<String, String>

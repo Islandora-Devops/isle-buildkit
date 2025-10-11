@@ -3,7 +3,11 @@ package plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
+import org.gradle.kotlin.dsl.*
+import org.gradle.process.ExecOperations
+import org.gradle.process.ExecSpec
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
 // Calculate once, share everywhere, configuration properties.
 // Applied to the root project.
@@ -13,22 +17,25 @@ class SharedPropertiesPlugin : Plugin<Project> {
 
     companion object {
         // Capture stdout from running a command.
-        fun Project.execCaptureOutput(command: List<String>, message: String) = ByteArrayOutputStream().use { output ->
-            ByteArrayOutputStream().use { error ->
-                val result = this.exec {
-                    standardOutput = output
-                    errorOutput = error
-                    commandLine = command
-                }
-                error.toString().let {
+        fun Project.execCaptureOutput(command: List<String>, message: String): String {
+            return try {
+                val process = ProcessBuilder(command).start()
+                val output = process.inputStream.bufferedReader().readText()
+                val error = process.errorStream.bufferedReader().readText()
+                
+                error.let {
                     if (it.isNotBlank()) {
                         logger.info(it)
                     }
                 }
-                if (result.exitValue != 0) throw RuntimeException(message)
-                output.toString()
+                
+                val exitCode = process.waitFor()
+                if (exitCode != 0) throw RuntimeException(message)
+                output.trim()
+            } catch (e: Exception) {
+                throw RuntimeException(message, e)
             }
-        }.trim()
+        }
 
         val Project.branch: String
             get() = rootProject.extra["git.branch"] as String
