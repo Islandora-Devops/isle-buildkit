@@ -1,8 +1,0 @@
-monolog:
-  handlers:
-    hypercube:
-      type: stream
-      path: "php://stderr"
-      # Valid log levels are:
-      # debug, info, notice, warning, error, critical, alert, emergency, none
-      level: {{ getenv "HYPERCUBE_LOG_LEVEL" }}

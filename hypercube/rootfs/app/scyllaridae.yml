@@ -1,0 +1,15 @@
+allowedMimeTypes:
+  - "application/pdf"
+  - "image/*"
+cmdByMimeType:
+  "application/pdf":
+    cmd: pdftotext
+    args:
+      - "%args"
+      - "-"
+      - "-"
+  default:
+    cmd: /app/cmd.sh
+    args:
+      - "%source-mime-ext"
+      - "%args"

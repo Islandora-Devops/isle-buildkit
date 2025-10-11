@@ -1,0 +1,10 @@
+allowedMimeTypes:
+  - "application/pdf"
+  - "image/*"
+cmdByMimeType:
+  default:
+    cmd: /app/cmd.sh
+    args:
+      - "%source-mime-ext"
+      - "%destination-mime-ext"
+      - "%args"
