@@ -23,20 +23,16 @@ class IslePlugin : Plugin<Project> {
         apply<ReportsPlugin>()
         apply<TestsPlugin>()
 
-        extensions.findByName("buildScan")?.withGroovyBuilder {
-            setProperty("termsOfServiceUrl", "https://gradle.com/terms-of-service")
-            setProperty("termsOfServiceAgree", "yes")
-        }
-
         // Make all build directories relative to the root, only supports projects up to a depth of one for now.
         subprojects {
-            buildDir = rootProject.buildDir.resolve(projectDir.relativeTo(rootDir))
-            layout.buildDirectory.set(buildDir)
+            layout.buildDirectory.convention(
+                rootProject.layout.buildDirectory.dir(projectDir.relativeTo(rootDir).path)
+            )
         }
     }
 }
 
-inline fun <reified T> Project.memoizedProperty(crossinline function: () -> T): Property<T> {
+inline fun <reified T : Any> Project.memoizedProperty(crossinline function: () -> T): Property<T> {
     val property = objects.property<T>()
     val value: T by lazy { function() }
     property.set(value)

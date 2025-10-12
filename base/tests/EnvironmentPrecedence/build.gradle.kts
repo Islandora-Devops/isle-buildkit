@@ -7,11 +7,12 @@ val pull by tasks.registering(DockerPull::class) {
 
 tasks.named<DockerCompose>("setUp") {
     doLast {
-        project.exec {
+        execOperations.exec {
             commandLine = baseArguments + listOf("up", "-d", "etcd")
             workingDir = project.projectDir
         }
-        project.exec {
+        
+        execOperations.exec {
             commandLine = baseArguments + listOf("exec", "-T", "etcd", "sh", "/populate-etcd.sh")
             workingDir = project.projectDir
         }

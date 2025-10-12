@@ -5,7 +5,7 @@ tasks.named<DockerComposeUp>("test") {
     doLast {
         // Get the docker logs from our nginx service.
         val outputStream = ByteArrayOutputStream()
-        project.exec {
+        execOperations.exec {
             commandLine = baseArguments + listOf("logs")
             standardOutput = outputStream
             workingDir = project.projectDir
