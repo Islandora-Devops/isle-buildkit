@@ -20,7 +20,7 @@ ARG CLI11_SHA256="887270cae374a0b9e22b39647f9fc4bc742587fb26d6a221da2d2bbcf3109b
 # renovate: datasource=github-releases depName=grok packageName=GrokImageCompression/grok
 ARG GROK_VERSION=20.0.0
 ARG GROK_URL="https://github.com/GrokImageCompression/grok/archive/refs/tags/v${GROK_VERSION}.zip"
-ARG GROK_SHA256="db77c715d2c5b3722384f14974fb617770b7bea29ace1016ab8b8be33dd7a45b"
+ARG GROK_SHA256="0f331d261e81aa431cfb372c6f8c7e7dda74ea58de6b001334079c6b85a2e187"
 
 
 EXPOSE 8182
