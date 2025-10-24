@@ -3,7 +3,7 @@ FROM drupal
 
 ARG TARGETARCH
 # renovate: datasource=git-refs depName=islandora-starter-site packageName=https://github.com/islandora-devops/islandora-starter-site branch=main
-ARG COMMIT=6c6cdfae25e889ce60a13550556970c775fcf87b
+ARG COMMIT=35cc0bc7f3a9f2547c728a470ea0e905a4ecf4c4
 ARG FILE=${COMMIT}.tar.gz
 ARG URL=https://github.com/Islandora/islandora-starter-site/archive/${FILE}
 ARG SHA256="6d698f9eaceda5d71fe8cab5eab2497cb6592fc4832098eaea204bd8931fa61d"
