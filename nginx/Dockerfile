@@ -27,7 +27,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_22/nginx
     NGINX_VERSION=1.28.0-r3 \
     # renovate: datasource=repology depName=alpine_3_22/php83
-    PHP_VERSION=8.3.26-r0
+    PHP_VERSION=8.3.27-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
