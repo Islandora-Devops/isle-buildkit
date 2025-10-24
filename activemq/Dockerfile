@@ -3,7 +3,7 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=custom.apache-downloads depName=apache-activemq packageName=activemq
-ARG ACTIVEMQ_VERSION=5.19.0
+ARG ACTIVEMQ_VERSION=5.19.1
 ARG ACTIVEMQ_FILE="apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz"
 ARG ACTIVEMQ_URL="https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ_FILE}"
 ARG ACTIVEMQ_FILE_SHA256="5ed946596ff8e93d0001219bef1cc379e09c1dc5bb49f11981dae6c0674d223d"
