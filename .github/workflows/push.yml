@@ -13,6 +13,14 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: 'actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8' # v5
+
+      - name: lint
+        run: shellcheck ci/*.sh
+
   #############################################################################
   ## Build.
   #############################################################################
@@ -22,6 +30,7 @@ jobs:
       # Use tag from workflow_dispatch OR push event
       tag: ${{ inputs.tag && inputs.tag || github.ref_name }}
     secrets: inherit
+    needs: lint
   base:
     uses: ./.github/workflows/build.yml
     with:
