@@ -58,8 +58,9 @@
         "major"
       ],
       "groupName": null,
-      "matchPackageNames": [
-        "*"
+      "matchDepTypes": [
+        "*",
+        "!action",
       ],
       "prConcurrentLimit": 1
     },
@@ -69,6 +70,10 @@
         "*",
         "!repology"
       ],
+      "matchDepTypes": [
+        "*",
+        "!action",
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch",
@@ -77,6 +82,13 @@
       "schedule": [
         "* 10 * * 3"
       ]
+    },
+    {
+      "matchDepTypes": [
+        "action",
+      ],
+      "groupName": "github-actions",
+      "commitMessagePrefix": "[skip-release] ",
     },
     {
       "matchDepNames": [
