@@ -60,7 +60,7 @@
       "groupName": null,
       "matchDepTypes": [
         "*",
-        "!action",
+        "!action"
       ],
       "prConcurrentLimit": 1
     },
@@ -72,7 +72,7 @@
       ],
       "matchDepTypes": [
         "*",
-        "!action",
+        "!action"
       ],
       "matchUpdateTypes": [
         "minor",
@@ -85,10 +85,10 @@
     },
     {
       "matchDepTypes": [
-        "action",
+        "action"
       ],
       "groupName": "github-actions",
-      "commitMessagePrefix": "[skip-release] ",
+      "commitMessagePrefix": "[skip-release] "
     },
     {
       "matchDepNames": [
