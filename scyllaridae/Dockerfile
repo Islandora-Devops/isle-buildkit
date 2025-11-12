@@ -1,24 +1,44 @@
-FROM golang:1.25-alpine3.22@sha256:d3f0cf7723f3429e3f9ed846243970b20a2de7bae6a5b66fc5914e228d831bbb AS builder
+FROM base AS builder
+
+WORKDIR /build
 
 ARG TARGETARCH
+
 # renovate: datasource=github-releases depName=scyllaridae packageName=islandora/scyllaridae
 ARG SCYLLARIDAE_VERSION=5.1.0
 ARG SCYLLARIDAE_URL="https://github.com/islandora/scyllaridae/archive/refs/tags/${SCYLLARIDAE_VERSION}.tar.gz"
 ARG SCYLLARIDAE_SHA256="2fd7fc31133435e39b0ffb777a260777dadfad63cdbfc88bc50bf2d00b052016"
-
-WORKDIR /build
-
-RUN apk add --no-cache curl tar && \
-    download.sh \
+RUN download.sh \
       --url "${SCYLLARIDAE_URL}" \
       --sha256 "${SCYLLARIDAE_SHA256}" \
       --dest .
 
-RUN go build -o scyllaridae -ldflags="-s -w" .
+# renovate: datasource=github-tags depName=golang packageName=golang/go versioning=go-mod-directive
+ARG GO_VERSION=go1.25.3
+ARG \
+  GO_BASE_URL="https://go.dev/dl/${GO_VERSION}" \
+  GO_AMD64=linux-amd64.tar.gz	\
+  GO_AMD64_SHA256="0335f314b6e7bfe08c3d0cfaa7c19db961b7b99fb20be62b0a826c992ad14e0f" \
+  GO_ARM64=linux-arm64.tar.gz \
+  GO_ARM64_SHA256="1d42ebc84999b5e2069f5e31b67d6fc5d67308adad3e178d5a2ee2c9ff2001f5"
+
+RUN if [ "${TARGETARCH}" = "amd64" ]; \
+    then \
+        download.sh \
+            --url "${GO_BASE_URL}.${GO_AMD64}" \
+            --sha256 "${GO_AMD64_SHA256}" \
+            --dest . ; \
+    else \
+        download.sh \
+            --url "${GO_BASE_URL}.${GO_ARM64}" \
+            --sha256 "${GO_ARM64_SHA256}" \
+            --dest . ; \
+    fi
+
+RUN cd "./scyllaridae-${SCYLLARIDAE_VERSION}" && \
+  ../go/bin/go build -o ../scyllaridae -ldflags="-s -w" .
 
 FROM base
-
-ARG TARGETARCH
 
 COPY --from=builder /build/scyllaridae /app/scyllaridae
 
