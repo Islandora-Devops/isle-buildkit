@@ -1,23 +1,26 @@
-# syntax=docker/dockerfile:1.5.1
-FROM base
+FROM golang:1.25-alpine3.22@sha256:d3f0cf7723f3429e3f9ed846243970b20a2de7bae6a5b66fc5914e228d831bbb AS builder
 
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=scyllaridae packageName=islandora/scyllaridae
 ARG SCYLLARIDAE_VERSION=5.1.0
-ARG SCYLLARIDAE_URL="https://github.com/islandora/scyllaridae/releases/download/${SCYLLARIDAE_VERSION}/"
-ARG SCYLLARIDAE_AMD64_SHA256="ed97561fbf1a260509dcc13c7fbbaa21c84d1c71347c01fc46452a167a36bfee"
-ARG SCYLLARIDAE_ARM64_SHA256="3b89c14daea56c0b4ebc96b826f291348a97d6a98bddfae0e75ed52ff4050cf9"
+ARG SCYLLARIDAE_URL="https://github.com/islandora/scyllaridae/archive/refs/tags/${SCYLLARIDAE_VERSION}.tar.gz"
+ARG SCYLLARIDAE_SHA256="2fd7fc31133435e39b0ffb777a260777dadfad63cdbfc88bc50bf2d00b052016"
 
-# Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=crayfish-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
-    SCYLLARIDAE_SHA256=$([ "$TARGETARCH" = "amd64" ] && echo "$SCYLLARIDAE_AMD64_SHA256" || echo "$SCYLLARIDAE_ARM64_SHA256") \
-    && SCYLLARIDAE_URL+=$([ "$TARGETARCH" = "amd64" ] && echo "scyllaridae_Linux_x86_64.tar.gz" || echo "scyllaridae_Linux_arm64.tar.gz") \
-    && download.sh \
-        --url "${SCYLLARIDAE_URL}" \
-        --sha256 "${SCYLLARIDAE_SHA256}" \
-        --dest "/app" \
-    && \
-    cleanup.sh
+WORKDIR /build
+
+RUN apk add --no-cache curl tar && \
+    download.sh \
+      --url "${SCYLLARIDAE_URL}" \
+      --sha256 "${SCYLLARIDAE_SHA256}" \
+      --dest .
+
+RUN go build -o scyllaridae -ldflags="-s -w" .
+
+FROM base
+
+ARG TARGETARCH
+
+COPY --from=builder /build/scyllaridae /app/scyllaridae
 
 RUN create-service-user.sh --name scyllaridae && \
     cleanup.sh
