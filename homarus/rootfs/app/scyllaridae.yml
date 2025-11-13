@@ -11,3 +11,4 @@ cmdByMimeType:
       - "%source-mime-ext"
       - "%destination-mime-ext"
       - "%args"
+    allowInsecureArgs: ${SCYLLARIDAE_ALLOW_INSECURE_ARGS}

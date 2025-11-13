@@ -5,8 +5,8 @@ WORKDIR /build
 ARG TARGETARCH
 
 # renovate: datasource=github-releases depName=scyllaridae packageName=islandora/scyllaridae
-ARG SCYLLARIDAE_VERSION=5.1.0
-ARG SCYLLARIDAE_URL="https://github.com/islandora/scyllaridae/archive/refs/heads/insecure-args.tar.gz"
+ARG SCYLLARIDAE_VERSION=insecure-args
+ARG SCYLLARIDAE_URL="https://github.com/islandora/scyllaridae/archive/refs/heads/${SCYLLARIDAE_VERSION}.tar.gz"
 ARG SCYLLARIDAE_SHA256="464dd5b2611b97aa116bc01c00cb06019d70d1dd0e55b579a557954ad6ad87a4"
 RUN download.sh \
       --url "${SCYLLARIDAE_URL}" \
@@ -46,6 +46,7 @@ RUN create-service-user.sh --name scyllaridae && \
     cleanup.sh
 
 ENV \
+  SCYLLARIDAE_ALLOW_INSECURE_ARGS="false" \
   SCYLLARIDAE_LOG_LEVEL=INFO \
   SCYLLARIDAE_PORT=8080 \
   SCYLLARIDAE_YML_PATH="/app/scyllaridae.yml"
