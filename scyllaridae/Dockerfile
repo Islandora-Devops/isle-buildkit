@@ -42,7 +42,13 @@ FROM base
 
 COPY --from=builder /build/scyllaridae /app/scyllaridae
 
-RUN create-service-user.sh --name scyllaridae && \
+ARG \
+  # renovate: datasource=repology depName=alpine_3_22/mailcap
+  MAILCAP_VERSION=2.1.54-r0
+
+RUN --mount=type=cache,id=scyllaridae-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    apk add mailcap=="${MAILCAP_VERSION}" && \
+    create-service-user.sh --name scyllaridae && \
     cleanup.sh
 
 ENV \
