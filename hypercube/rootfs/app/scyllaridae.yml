@@ -11,5 +11,5 @@ cmdByMimeType:
   default:
     cmd: /app/cmd.sh
     args:
-      - "%source-mime-ext"
+      - "%source-ext"
       - "%args"
