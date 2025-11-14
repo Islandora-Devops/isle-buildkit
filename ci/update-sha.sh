@@ -154,6 +154,11 @@ elif [ "$DEP" = "transkribus-process" ]; then
   DOCKERFILES=("transkribus/Dockerfile")
   README="transkribus/README.md"
 
+elif [ "$DEP" = "scyllaridae" ] ; then
+  URL="https://github.com/islandora/scyllaridea/archive/refs/tags/${NEW_VERSION}.tar.gz"
+  ARG=SCYLLARIDAE_SHA256
+  DOCKERFILES=("scyllaridae/Dockerfile")
+
 elif [ "$DEP" = "s6-overlay" ]; then
   BASE_URL="https://github.com/just-containers/s6-overlay/releases/download/v${NEW_VERSION}"
   declare -A URLS_AND_ARGS=(
@@ -170,19 +175,6 @@ elif [ "$DEP" = "s6-overlay" ]; then
   done
 
   exit 0
-elif [ "$DEP" = "scyllaridae" ] ; then
-  BASE_URL="https://github.com/islandora/scyllaridae/releases/download/${NEW_VERSION}"
-  declare -A URLS_AND_ARGS=(
-    ["SCYLLARIDAE_AMD64_SHA256"]="$BASE_URL/scyllaridae_Linux_x86_64.tar.gz"
-    ["SCYLLARIDAE_ARM64_SHA256"]="$BASE_URL/scyllaridae_Linux_arm64.tar.gz"
-  )
-
-  for ARG in "${!URLS_AND_ARGS[@]}"; do
-    URL="${URLS_AND_ARGS[$ARG]}"
-    update_dockerfile_sha "$URL" "$ARG" "scyllaridae/Dockerfile"
-  done
-  update_readme "$README" "$OLD_VERSION" "$NEW_VERSION"
-
 else
   echo "DEP not found"
   exit 0

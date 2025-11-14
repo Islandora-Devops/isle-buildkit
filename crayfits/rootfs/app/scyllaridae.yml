@@ -9,3 +9,4 @@ cmdByMimeType:
       - "-F"
       - "datafile=@-"
       - $CRAYFITS_WEBSERVICE_URI
+    allowInsecureArgs: ${SCYLLARIDAE_ALLOW_INSECURE_ARGS}
