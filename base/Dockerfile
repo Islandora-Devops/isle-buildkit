@@ -35,7 +35,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_22/gzip
   GZIP_VERSION=1.14-r1 \
   # renovate: datasource=repology depName=alpine_3_22/jq
-  JQ_VERSION=1.8.0-r0 \
+  JQ_VERSION=1.8.1-r0 \
   # renovate: datasource=repology depName=alpine_3_22/mariadb-client
   MARIADB_CLIENT_VERSION=11.4.8-r0 \
   # renovate: datasource=repology depName=alpine_3_22/mysql-client
