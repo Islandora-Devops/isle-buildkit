@@ -46,6 +46,8 @@ Requires `islandora/java` docker image to build. Please refer to the
 | HANDLE_PREFIX                | 200                                                  | Please read the handle documentation for how this is use                                            |
 | HANDLE_PRIVATE_KEY_PEM       | See rootfs/etc/defaults/HANDLE_PRIVATE_KEY_PEM       | Please read the handle documentation for how this is use                                            |
 | HANDLE_PUBLIC_KEY_PEM        | See rootfs/etc/defaults/HANDLE_PUBLIC_KEY_PEM        | Please read the handle documentation for how this is use                                            |
+| HANDLE_REPLICATION_ADMIN_EXTRA | empty                                              | Extra replication admin to be configured, besides the default generated one                         |
+| HANDLE_SERVER_ADMIN_EXTRA    | empty                                                | Extra server admin to be configured, besides the default generated one                              |
 | HANDLE_SERVER_ID             | 1                                                    | Used to distinguish from other servers within the same site                                         |
 | HANDLE_PERSISTENCE_TYPE      | bdbje                                                | Can be 'sql', if 'bdbje' make sure to create a volume at `/var/handle/bdbje` to persist changes     |
 | HANDLE_TEMPLATE_NS_OVERRIDE  | no                                                   | Prefer server_config settings.                                                                      |
