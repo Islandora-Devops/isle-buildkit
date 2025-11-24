@@ -170,11 +170,11 @@ elif [ "$DEP" = "s6-overlay" ]; then
   done
 
   exit 0
-elif [ "$DEP" = "scyllaridae"] ; then
+elif [ "$DEP" = "scyllaridae" ] ; then
   BASE_URL="https://github.com/islandora/scyllaridae/releases/download/${NEW_VERSION}"
   declare -A URLS_AND_ARGS=(
     ["SCYLLARIDAE_AMD64_SHA256"]="$BASE_URL/scyllaridae_Linux_x86_64.tar.gz"
-    ["SCYLLARIDAE_ARM64_SHA256"]="$BASE_URL/scyllaridae_Linux_arm64.tar.gz""
+    ["SCYLLARIDAE_ARM64_SHA256"]="$BASE_URL/scyllaridae_Linux_arm64.tar.gz"
   )
 
   for ARG in "${!URLS_AND_ARGS[@]}"; do

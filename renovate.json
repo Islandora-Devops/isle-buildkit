@@ -58,9 +58,6 @@
         "major"
       ],
       "groupName": null,
-      "matchPackageNames": [
-        "*"
-      ],
       "prConcurrentLimit": 1
     },
     {
@@ -77,6 +74,13 @@
       "schedule": [
         "* 10 * * 3"
       ]
+    },
+    {
+      "matchDepTypes": [
+        "action"
+      ],
+      "groupName": "github-actions",
+      "commitMessagePrefix": "[skip-release] "
     },
     {
       "matchDepNames": [

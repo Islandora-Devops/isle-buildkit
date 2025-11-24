@@ -13,9 +13,9 @@ ARG LIBJPEG_TURBO_URL="https://github.com/libjpeg-turbo/libjpeg-turbo/archive/re
 ARG LIBJPEG_TURBO_SHA256="a9e670ea30064f36d5a20481c1f33eedf80b7e76c6e3f75c7e7189b200a7a216"
 
 # renovate: datasource=github-releases depName=cli11 packageName=CLIUtils/CLI11
-ARG CLI11_VERSION=2.5.0
+ARG CLI11_VERSION=2.6.1
 ARG CLI11_URL="https://github.com/CLIUtils/CLI11/archive/refs/tags/v${CLI11_VERSION}.zip"
-ARG CLI11_SHA256="887270cae374a0b9e22b39647f9fc4bc742587fb26d6a221da2d2bbcf3109b0b"
+ARG CLI11_SHA256="44fd2b73ea6df72876cb0c53796062b2870c73495840b732c3451d5250316258"
 
 # renovate: datasource=github-releases depName=grok packageName=GrokImageCompression/grok
 ARG GROK_VERSION=14.3.0
