@@ -1,17 +1,15 @@
 # syntax=docker/dockerfile:1.5.1
-FROM gradle:6.9.4-jdk11 AS builder
+FROM eclipse-temurin:11 AS builder
 
 ARG ALPACA_BRANCH="x-islandora-event-header"
 ARG ALPACA_REPO="https://github.com/Islandora/Alpaca"
-
-RUN apt-get install git --yes
 
 WORKDIR /build
 
 RUN --mount=type=cache,id=alpaca-gradle,sharing=locked,target=/root/.gradle \
     git clone "${ALPACA_REPO}" . && \
     git checkout "${ALPACA_BRANCH}" && \
-    ./gradlew --stacktrace build
+    ./gradlew --stacktrace clean build shadowJar --no-daemon
 
 FROM java
 
@@ -21,7 +19,8 @@ RUN mkdir -p /opt/alpaca
 
 COPY --from=builder /build/islandora-alpaca-app/build/libs/islandora-alpaca-app-*-all.jar /opt/alpaca/alpaca.jar
 
-RUN create-service-user.sh --name alpaca && \
+RUN test -f /opt/alpaca/alpaca.jar && \
+    create-service-user.sh --name alpaca && \
     cleanup.sh
 
 ENV \
