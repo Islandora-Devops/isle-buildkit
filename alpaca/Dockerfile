@@ -1,21 +1,25 @@
 # syntax=docker/dockerfile:1.5.1
+FROM gradle:6.9.4-jdk11 AS builder
+
+ARG ALPACA_BRANCH="2.x"
+ARG ALPACA_REPO="https://github.com/Islandora/Alpaca"
+
+RUN apt-get install git --yes
+
+WORKDIR /build
+
+RUN --mount=type=cache,id=alpaca-gradle,sharing=locked,target=/root/.gradle \
+    git clone "${ALPACA_REPO}" . && \
+    git checkout "${ALPACA_BRANCH}" && \
+    ./gradlew --stacktrace build
+
 FROM java
 
 ARG TARGETARCH
-ARG ALPACA_VERSION="2.2.0"
-ARG ALPACA_FILE="islandora-alpaca-app-${ALPACA_VERSION}-all.jar"
-ARG ALPACA_URL="https://repo1.maven.org/maven2/ca/islandora/alpaca/islandora-alpaca-app/${ALPACA_VERSION}/${ALPACA_FILE}"
-ARG ALPACA_FILE_SHA256="5722306dd78f9fdc3d7a4248a527c439143a3472e5b2d4ea10601b0038b43923"
 
-# Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=alpaca-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
-    download.sh \
-        --url "${ALPACA_URL}" \
-        --sha256 "${ALPACA_FILE_SHA256}" \
-    && \
-    mkdir -p /opt/alpaca && \
-    cp "${DOWNLOAD_CACHE_DIRECTORY}/${ALPACA_FILE}" "/opt/alpaca/alpaca.jar" && \
-    cleanup.sh
+RUN mkdir -p /opt/alpaca
+
+COPY --from=builder /build/islandora-alpaca-app/build/libs/islandora-alpaca-app-*-all.jar /opt/alpaca/alpaca.jar
 
 RUN create-service-user.sh --name alpaca && \
     cleanup.sh
