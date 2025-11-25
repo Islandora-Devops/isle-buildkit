@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.5.1
 FROM gradle:6.9.4-jdk11 AS builder
 
-ARG ALPACA_BRANCH="2.x"
+ARG ALPACA_BRANCH="x-islandora-event-header"
 ARG ALPACA_REPO="https://github.com/Islandora/Alpaca"
 
 RUN apt-get install git --yes
