@@ -1,5 +1,6 @@
 name: Delete old DockerHub tags
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 13 * * 0" # Every Sunday at 1PM UTC (9AM EST)
 jobs:
@@ -19,3 +20,45 @@ jobs:
             deleteEligibleDockerHubTags
             '-Pisle.dockerhub.personal.access.token=${{ secrets.registry_token }}'
             --no-parallel
+  clean-ghcr:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        package:
+          - alpaca
+          - base
+          - blazegraph
+          - cantaloupe
+          - crayfish
+          - crayfits
+          - drupal
+          - fcrepo6
+          - fits
+          - handle
+          - homarus
+          - houdini
+          - hypercube
+          - imagemagick
+          - java
+          - leptonica
+          - mariadb
+          - milliner
+          - nginx
+          - postgresql
+          - riprap
+          - scyllaridae
+          - solr
+          - test
+          - tomcat
+          - transkribus
+    steps:
+      - uses: 'actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd' # v5
+      - run: ./ci/cleanup-ghcr.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ORG: islandora-devops
+          PACKAGE_NAME: ${{ matrix.package }}
+          DRY_RUN: false
