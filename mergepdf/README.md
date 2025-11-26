@@ -16,7 +16,7 @@ The drupal site requires a route available at `/node/{node}/book-manifest`. This
 
 ### Taxonomy Term Name to TID
 
-The drupal site requires a route available at `/term_from_term_name`. This View is installed by default in the [views.view.term_from_term_name.yml](https://github.com/Islandora-Devops/islandora-starter-site/blob/main/config/sync/views.view.term_from_term_name.yml) config in the Islandora Starter Site.
+The drupal site requires a route available at `/term_from_term_name`. This View is installed by default in the [views.view.term_from_term_name.yml](https://github.com/Islandora-Devops/islandora-starter-site/blob/main/config/sync/views.view.term_from_term_name.yml) config in the Islandora Starter Site. This View **must** have `jwt_auth` enabled in the `Path settings > Authentication` at `/admin/structure/views/view/term_from_term_name`
 
 ## Settings
 
