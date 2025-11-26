@@ -92,7 +92,10 @@ gs -dBATCH \
 # PUT it to the endpoint
 NID=$(basename "$1")
 BASE_URL=$(dirname "$1" | xargs dirname)
-TID=$(curl "$BASE_URL/term_from_term_name?vocab=islandora_media_use&name=Original+File&_format=json" | jq '.[0].tid[0].value')
+TID=$(curl -sf \
+  -H "Authorization: $SCYLLARIDAE_AUTH" \
+  "$BASE_URL/term_from_term_name?vocab=islandora_media_use&name=Original+File&_format=json" \
+  | jq '.[0].tid[0].value')
 curl \
   -H "Authorization: $SCYLLARIDAE_AUTH" \
   -H "Content-Type: application/pdf" \
