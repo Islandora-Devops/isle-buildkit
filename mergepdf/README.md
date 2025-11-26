@@ -1,6 +1,6 @@
-# Houdini
+# Merge PDF
 
-Docker image for mergepdf. Aggregate IIIF manifests into a PDF.
+Docker image for mergepdf. Aggregate IIIF manifests for books/paged-content into a PDF.
 
 Built from [Islandora-DevOps/isle-buildkit mergpdf](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/mergepdf)
 
