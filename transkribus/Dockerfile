@@ -40,7 +40,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_22/nodejs
     NODEJS_VERSION=22.16.0-r2 \
     # renovate: datasource=repology depName=alpine_3_22/npm
-    NPM_VERSION=11.3.0-r1 \
+    NPM_VERSION=11.6.3-r0 \
     # renovate: datasource=npm depName=xslt3
     XSLT3_VERSION=2.7.0
 

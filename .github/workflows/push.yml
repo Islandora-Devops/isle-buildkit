@@ -16,7 +16,7 @@ jobs:
   lint:
     runs-on: ubuntu-24.04
     steps:
-      - uses: 'actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8' # v5
+      - uses: 'actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd' # v5
 
       - name: lint
         run: shellcheck ci/*.sh
@@ -38,6 +38,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: tags
   activemq:
     uses: ./.github/workflows/build.yml
@@ -47,6 +50,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, java]
   alpaca:
     uses: ./.github/workflows/build.yml
@@ -56,6 +62,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, java]
   blazegraph:
     uses: ./.github/workflows/build.yml
@@ -65,6 +74,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, tomcat]
   cantaloupe:
     uses: ./.github/workflows/build.yml
@@ -74,6 +86,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, java]
   crayfish:
     uses: ./.github/workflows/build.yml
@@ -83,6 +98,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, nginx]
   crayfits:
     uses: ./.github/workflows/build.yml
@@ -92,6 +110,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, scyllaridae]
   drupal:
     uses: ./.github/workflows/build.yml
@@ -101,6 +122,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, nginx]
   fcrepo6:
     uses: ./.github/workflows/build.yml
@@ -110,6 +134,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, tomcat]
   fits:
     uses: ./.github/workflows/build.yml
@@ -119,6 +146,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, tomcat]
   handle:
     uses: ./.github/workflows/build.yml
@@ -128,6 +158,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, java]
   homarus:
     uses: ./.github/workflows/build.yml
@@ -137,6 +170,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, scyllaridae]
   houdini:
     uses: ./.github/workflows/build.yml
@@ -146,6 +182,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, scyllaridae, imagemagick]
   hypercube:
     uses: ./.github/workflows/build.yml
@@ -155,6 +194,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, scyllaridae, leptonica]
   imagemagick:
     uses: ./.github/workflows/build.yml
@@ -164,6 +206,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags]
   java:
     uses: ./.github/workflows/build.yml
@@ -173,6 +218,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, base]
   leptonica:
     uses: ./.github/workflows/build.yml
@@ -182,6 +230,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags]
   mariadb:
     uses: ./.github/workflows/build.yml
@@ -191,6 +242,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, base]
   milliner:
     uses: ./.github/workflows/build.yml
@@ -200,6 +254,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, crayfish]
   nginx:
     uses: ./.github/workflows/build.yml
@@ -209,6 +266,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, base]
   postgresql:
     uses: ./.github/workflows/build.yml
@@ -218,6 +278,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, base]
   riprap:
     uses: ./.github/workflows/build.yml
@@ -227,6 +290,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, nginx]
   scyllaridae:
     uses: ./.github/workflows/build.yml
@@ -236,6 +302,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, base]
   solr:
     uses: ./.github/workflows/build.yml
@@ -245,6 +314,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, java]
   test:
     uses: ./.github/workflows/build.yml
@@ -254,6 +326,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, drupal]
   tomcat:
     uses: ./.github/workflows/build.yml
@@ -263,6 +338,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, java]
   transkribus:
     uses: ./.github/workflows/build.yml
@@ -272,6 +350,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, base, imagemagick]
   #############################################################################
   ## Tests.

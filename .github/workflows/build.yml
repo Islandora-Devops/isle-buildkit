@@ -35,11 +35,9 @@ jobs:
         runner: [ubuntu-22.04, ubuntu-22.04-arm]
     name: build-${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}
-    permissions:
-      contents: read
     steps:
       - name: Checkout
-        uses: "actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8" # v5
+        uses: "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd" # v5
 
       - name: Set up Docker Buildx
         id: buildx
@@ -85,6 +83,13 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
+      - name: ghcr Login
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
@@ -92,17 +97,35 @@ jobs:
       - name: Create and push manifest list
         id: build-push-manifest
         run: |
-          FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
-          BASE_IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${FIRST_TAG}"
-          for TAG in ${{ inputs.tags }}; do
-            IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
-            docker buildx imagetools create \
-              -t "${IMAGE}" \
-              "${BASE_IMAGE}-amd64" \
-              "${BASE_IMAGE}-arm64"
+          set -eou pipefail
+
+          REPOS=(
+            "${{ inputs.repository }}"
+            "ghcr.io/islandora-devops"
+          )
+          TAG_ARGS=""
+          IMAGE=""
+          for REPO in "${REPOS[@]}"; do
+            for TAG in ${{ inputs.tags }}; do
+              # need to set digest/context below
+              if [ "$IMAGE" = "" ]; then
+                IMAGE="${{ inputs.repository }}/${{ inputs.image }}:${TAG}"
+              fi
+              TAG_ARGS="${TAG_ARGS} -t ${REPO}/${{ inputs.image }}:${TAG}"
+            done
           done
+
+          echo "Tagging ${TAG_ARGS}"
+
+          # Extract the first tag to reference the source architectures
+          FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
+          BASE_IMAGE_REF="${{ inputs.repository }}/${{ inputs.image }}:${FIRST_TAG}"
+
+          docker buildx imagetools create \
+            ${TAG_ARGS} \
+            "${BASE_IMAGE_REF}-amd64" \
+            "${BASE_IMAGE_REF}-arm64"
 
           DIGEST=$(docker buildx imagetools inspect "$IMAGE" | grep Digest | awk '{print $2}')
           echo "digest=-Pisle.${{ inputs.image }}.digest=${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
           echo "context=docker-image://${{ inputs.repository }}/${{ inputs.image }}@$DIGEST" >> $GITHUB_OUTPUT
-
