@@ -8,8 +8,10 @@ cmdByMimeType:
       - "%args"
       - "-"
       - "-"
+    allowInsecureArgs: ${SCYLLARIDAE_ALLOW_INSECURE_ARGS}
   default:
     cmd: /app/cmd.sh
     args:
       - "%source-mime-ext"
       - "%args"
+    allowInsecureArgs: ${SCYLLARIDAE_ALLOW_INSECURE_ARGS}

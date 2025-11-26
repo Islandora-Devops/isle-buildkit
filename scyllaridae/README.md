@@ -20,10 +20,11 @@ additional settings, volumes, ports, etc.
 ## Settings
 
 
-| Environment Variable    | Default                                    | Description                                                       |
-| :---------------------- | :----------------------------------------- | :---------------------------------------------------------------- |
-| `SCYLLARIDAE_LOG_LEVEL` |  `INFO`                                    | Log level. Possible Values: debug, info, notice, warning, error   |
-| `SCYLLARIDAE_PORT`      | `8080`                                     | What port to listen on inside the container                       |
-| `SCYLLARIDAE_YML_PATH`  | `/app/scyllaridae.yml`                     | Location of the scyllaridea YML file                              |
+| Environment Variable              | Default                                    | Description                                                       |
+| :-------------------------------- | :----------------------------------------- | :---------------------------------------------------------------- |
+| `SCYLLARIDAE_ALLOW_INSECURE_ARGS` |  `false`                                   | Allow insecure args to be passed to a microservice.               |
+| `SCYLLARIDAE_LOG_LEVEL`           |  `INFO`                                    | Log level. Possible Values: debug, info, notice, warning, error   |
+| `SCYLLARIDAE_PORT`                | `8080`                                     | What port to listen on inside the container                       |
+| `SCYLLARIDAE_YML_PATH`            | `/app/scyllaridae.yml`                     | Location of the scyllaridea YML file                              |
 
 [scyllaridae]: https://github.com/islandora/scyllaridae
