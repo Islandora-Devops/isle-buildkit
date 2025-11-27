@@ -254,6 +254,9 @@ jobs:
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     needs: [tags, scyllaridae, imagemagick, leptonica]
   milliner:
     uses: ./.github/workflows/build.yml
