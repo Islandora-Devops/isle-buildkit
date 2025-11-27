@@ -1,23 +1,26 @@
 # syntax=docker/dockerfile:1.5.1
+FROM gradle:6.9.4-jdk11@sha256:a21f8e1124fefb9b2affc85b7fa3bc856297056678b5cc882a61a8d6249da3a2 AS builder
+
+ARG ALPACA_BRANCH="x-islandora-event-header"
+ARG ALPACA_REPO="https://github.com/Islandora/Alpaca"
+
+WORKDIR /build
+
+RUN --mount=type=cache,id=alpaca-gradle,sharing=locked,target=/root/.gradle \
+    git clone "${ALPACA_REPO}" . && \
+    git checkout "${ALPACA_BRANCH}" && \
+    ./gradlew --stacktrace clean build shadowJar --no-daemon
+
 FROM java
 
 ARG TARGETARCH
-ARG ALPACA_VERSION="2.2.0"
-ARG ALPACA_FILE="islandora-alpaca-app-${ALPACA_VERSION}-all.jar"
-ARG ALPACA_URL="https://repo1.maven.org/maven2/ca/islandora/alpaca/islandora-alpaca-app/${ALPACA_VERSION}/${ALPACA_FILE}"
-ARG ALPACA_FILE_SHA256="5722306dd78f9fdc3d7a4248a527c439143a3472e5b2d4ea10601b0038b43923"
 
-# Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=alpaca-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
-    download.sh \
-        --url "${ALPACA_URL}" \
-        --sha256 "${ALPACA_FILE_SHA256}" \
-    && \
-    mkdir -p /opt/alpaca && \
-    cp "${DOWNLOAD_CACHE_DIRECTORY}/${ALPACA_FILE}" "/opt/alpaca/alpaca.jar" && \
-    cleanup.sh
+RUN mkdir -p /opt/alpaca
 
-RUN create-service-user.sh --name alpaca && \
+COPY --from=builder /build/islandora-alpaca-app/build/libs/islandora-alpaca-app-*-all.jar /opt/alpaca/alpaca.jar
+
+RUN test -f /opt/alpaca/alpaca.jar && \
+    create-service-user.sh --name alpaca && \
     cleanup.sh
 
 ENV \
@@ -50,13 +53,19 @@ ENV \
     ALPACA_DERIVATIVE_OCR_MAX_CONSUMERS=-1 \
     ALPACA_DERIVATIVE_OCR_QUEUE=queue:islandora-connector-ocr \
     ALPACA_DERIVATIVE_OCR_URL=http://hypercube:8080/ \
-    ALPACA_DERIVATIVE_SYSTEMS=fits,homarus,houdini,ocr,transkribus \
+    ALPACA_DERIVATIVE_SYSTEMS=fits,homarus,houdini,ocr,transkribus,mergepdf \
     ALPACA_DERIVATIVE_TRANSKRIBUS_ASYNC_CONSUMER=true \
     ALPACA_DERIVATIVE_TRANSKRIBUS_CONSUMERS=-1 \
     ALPACA_DERIVATIVE_TRANSKRIBUS_ENABLED=false \
     ALPACA_DERIVATIVE_TRANSKRIBUS_MAX_CONSUMERS=-1 \
     ALPACA_DERIVATIVE_TRANSKRIBUS_QUEUE=queue:islandora-connector-transkribus \
     ALPACA_DERIVATIVE_TRANSKRIBUS_URL=http://transkribus:5000/ \
+    ALPACA_DERIVATIVE_MERGEPDF_ASYNC_CONSUMER=true \
+    ALPACA_DERIVATIVE_MERGEPDF_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_MERGEPDF_ENABLED=false \
+    ALPACA_DERIVATIVE_MERGEPDF_MAX_CONSUMERS=-1 \
+    ALPACA_DERIVATIVE_MERGEPDF_QUEUE=queue:islandora-connector-mergepdf \
+    ALPACA_DERIVATIVE_MERGEPDF_URL=http://mergepdf:8080/ \
     ALPACA_FCREPO_INDEXER_ASYNC_CONSUMER=true \
     ALPACA_FCREPO_INDEXER_CONSUMERS=-1 \
     ALPACA_FCREPO_INDEXER_ENABLED=true \

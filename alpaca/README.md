@@ -45,7 +45,13 @@ additional settings, volumes, ports, etc.
 | ALPACA_DERIVATIVE_OCR_MAX_CONSUMERS       | -1                                                        |                                                                         |
 | ALPACA_DERIVATIVE_OCR_QUEUE               | queue:islandora-connector-ocr                             | ActiveMQ Queue to consume from                                          |
 | ALPACA_DERIVATIVE_OCR_URL                 | http://hypercube:8080/                                    | Url of micro-service                                                    |
-| ALPACA_DERIVATIVE_SYSTEMS                 | fits,homarus,houdini,ocr                                  |                                                                         |
+| ALPACA_DERIVATIVE_MERGEPDF_ASYNC_CONSUMER | true                                                      |                                                                         |
+| ALPACA_DERIVATIVE_MERGEPDF_CONSUMERS      | -1                                                        |                                                                         |
+| ALPACA_DERIVATIVE_MERGEPDF_ENABLED        | true                                                      |                                                                         |
+| ALPACA_DERIVATIVE_MERGEPDF_MAX_CONSUMERS  | -1                                                        |                                                                         |
+| ALPACA_DERIVATIVE_MERGEPDF_QUEUE          | queue:islandora-connector-mergepdf                        | ActiveMQ Queue to consume from                                          |
+| ALPACA_DERIVATIVE_MERGEPDF_URL            | http://mergepdf:8080/                                     | Url of micro-service                                                    |
+| ALPACA_DERIVATIVE_SYSTEMS                 | fits,homarus,houdini,ocr,transkribus,mergepdf             |                                                                         |
 | ALPACA_FCREPO_INDEXER_ASYNC_CONSUMER      | true                                                      |                                                                         |
 | ALPACA_FCREPO_INDEXER_CONSUMERS           | -1                                                        |                                                                         |
 | ALPACA_FCREPO_INDEXER_ENABLED             | true                                                      |                                                                         |
