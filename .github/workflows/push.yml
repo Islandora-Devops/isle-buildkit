@@ -165,7 +165,7 @@ jobs:
   homarus:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.crayfish.outputs.context }}
+      contexts: ${{ needs.scyllaridae.outputs.context }}
       image: homarus
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -177,7 +177,7 @@ jobs:
   houdini:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.crayfish.outputs.context }}
+      contexts: ${{ needs.scyllaridae.outputs.context }}
       image: houdini
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -189,7 +189,7 @@ jobs:
   hypercube:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.crayfish.outputs.context }}
+      contexts: ${{ needs.scyllaridae.outputs.context }}
       image: hypercube
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -246,6 +246,18 @@ jobs:
       contents: read
       packages: write
     needs: [tags, base]
+  mergepdf:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.scyllaridae.outputs.context }}
+      image: mergepdf
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, scyllaridae, imagemagick, leptonica]
   milliner:
     uses: ./.github/workflows/build.yml
     with:
@@ -493,6 +505,13 @@ jobs:
       image: mariadb
     secrets: inherit
     needs: [mariadb]
+  test-mergepdf:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.mergepdf.outputs.digest }}
+      image: mergepdf
+    secrets: inherit
+    needs: [mergepdf]
   test-milliner:
     uses: ./.github/workflows/test.yml
     with:
