@@ -1,6 +1,6 @@
 # Solr
 
-Docker image for [solr] version 9.9.0.
+Docker image for [solr] version 9.10.0.
 
 Built from [Islandora-DevOps/isle-buildkit solr](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/solr)
 
