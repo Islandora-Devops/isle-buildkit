@@ -57,7 +57,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_22/wget
   WGET_VERSION=1.25.0-r1 \
   # renovate: datasource=repology depName=alpine_3_22/yq-go
-  YQ_VERSION=4.47.2-r1
+  YQ_VERSION=4.47.2-r2
 
 # Install packages and tools required by all downstream images.
 # Platform specific does require arch specific identifier.
