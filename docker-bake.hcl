@@ -36,7 +36,7 @@ IMAGES = [
 
 DEPENDENCIES = {
   activemq = ["java"]
-  alpaca = ["java"]
+  alpaca = ["base", "java"]
   blazegraph = ["tomcat"]
   cantaloupe = ["java"]
   crayfish = ["nginx"]

@@ -1,16 +1,25 @@
 # syntax=docker/dockerfile:1.5.1
-FROM gradle:6.9.4-jdk11@sha256:a21f8e1124fefb9b2affc85b7fa3bc856297056678b5cc882a61a8d6249da3a2 AS builder
+FROM base AS download
 
-WORKDIR /build
+WORKDIR /opt/download
 
 # renovate: datasource=github-releases depName=alpaca packageName=islandora/alpaca
 ARG ALPACA_VERSION=2.4.0
 ARG ALPACA_URL="https://github.com/Islandora/Alpaca/archive/refs/tags/${ALPACA_VERSION}.tar.gz"
 ARG ALPACA_SHA256="75267b7078aeb720efa4250a8eeba8412badb6a9c73de801afce128d3f670cd8"
 RUN download.sh \
-      --url "${ALPACA_URL}" \
-      --sha256 "${ALPACA_SHA256}" \
-      --dest .
+    --url "${ALPACA_URL}" \
+    --sha256 "${ALPACA_SHA256}" \
+    --dest .
+
+FROM gradle:6.9.4-jdk11@sha256:a21f8e1124fefb9b2affc85b7fa3bc856297056678b5cc882a61a8d6249da3a2 AS builder
+
+# renovate: datasource=github-releases depName=alpaca packageName=islandora/alpaca
+ARG ALPACA_VERSION=2.4.0
+
+WORKDIR /build
+
+COPY --from=download /opt/download/Alpaca-${ALPACA_VERSION} .
 
 RUN --mount=type=cache,id=alpaca-gradle,sharing=locked,target=/root/.gradle \
     ./gradlew --stacktrace clean build shadowJar --no-daemon
