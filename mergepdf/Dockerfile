@@ -40,6 +40,7 @@ RUN --mount=type=bind,from=leptonica,source=/packages,target=/packages \
         poppler-utils=="${POPPLER_VERSION}"
 
 ENV \
-  MAX_THREADS=5
+  MAX_THREADS=5 \
+  URI_SCHEME="private"
 
 COPY --link rootfs /

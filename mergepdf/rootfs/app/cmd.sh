@@ -99,10 +99,13 @@ TID=$(curl -sf \
   -H "Authorization: $SCYLLARIDAE_AUTH" \
   "$BASE_URL/term_from_term_name?vocab=islandora_media_use&name=Original+File&_format=json" \
   | jq '.[0].tid[0].value')
+
+YEAR=$(date +"%Y")
+MONTH=$(date +"%m")
 curl \
   -H "Authorization: $SCYLLARIDAE_AUTH" \
   -H "Content-Type: application/pdf" \
-  -H "Content-Location: private://derivatives/pc/pdf/$NID.pdf" \
+  -H "Content-Location: ${URI_SCHEME}://derivatives/$YEAR/$MONTH/pc/$NID.pdf" \
   -T "$TMP_DIR/ocr.pdf" \
   "$1/media/document/$TID"
 
