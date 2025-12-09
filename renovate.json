@@ -85,6 +85,7 @@
     {
       "matchDepNames": [
         "alpine-pkg-glibc",
+        "alpaca",
         "apache-activemq",
         "apache-log4j",
         "apache-solr",
@@ -105,6 +106,7 @@
         "islandora-starter-site",
         "s6-overlay",
         "solr-ocrhighlighting",
+        "scyllaridae",
         "transkribus-process",
         "vscode"
       ],

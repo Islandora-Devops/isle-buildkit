@@ -22,6 +22,7 @@ IMAGES = [
   "java",
   "leptonica",
   "mariadb",
+  "mergepdf",
   "milliner",
   "nginx",
   "postgresql",
@@ -35,7 +36,7 @@ IMAGES = [
 
 DEPENDENCIES = {
   activemq = ["java"]
-  alpaca = ["java"]
+  alpaca = ["base", "java"]
   blazegraph = ["tomcat"]
   cantaloupe = ["java"]
   crayfish = ["nginx"]
@@ -49,6 +50,7 @@ DEPENDENCIES = {
   hypercube = ["scyllaridae", "leptonica"]
   java = ["base"]
   mariadb = ["base"]
+  mergepdf = ["scyllaridae", "imagemagick", "leptonica"]
   milliner = ["crayfish"]
   nginx = ["base"]
   postgresql = ["base"]
@@ -280,6 +282,11 @@ target "mariadb-common" {
   context = "mariadb"
 }
 
+target "mergepdf-common" {
+  inherits = ["common"]
+  context = "mergepdf"
+}
+
 target "milliner-common" {
   inherits = ["common"]
   context = "milliner"
@@ -449,6 +456,13 @@ target "mariadb" {
   contexts = dependencies("mariadb", "")
   cache-from = cacheFrom("mariadb", hostArch())
   tags = tags("mariadb", "")
+}
+
+target "mergepdf" {
+  inherits = ["mergepdf-common"]
+  contexts = dependencies("mergepdf", "")
+  cache-from = cacheFrom("mergepdf", hostArch())
+  tags = tags("mergepdf", "")
 }
 
 target "milliner" {
@@ -640,6 +654,13 @@ target "mariadb-amd64" {
   tags = tags("mariadb", "amd64")
 }
 
+target "mergepdf-amd64" {
+  inherits = ["mergepdf-common", "amd64-common"]
+  contexts = dependencies("mergepdf", "amd64")
+  cache-from = cacheFrom("mergepdf", "amd64")
+  tags = tags("mergepdf", "amd64")
+}
+
 target "milliner-amd64" {
   inherits = ["milliner-common", "amd64-common"]
   contexts = dependencies("milliner", "amd64")
@@ -827,6 +848,13 @@ target "mariadb-arm64" {
   contexts = dependencies("mariadb", "arm64")
   cache-from = cacheFrom("mariadb", "arm64")
   tags = tags("mariadb", "arm64")
+}
+
+target "mergepdf-arm64" {
+  inherits = ["mergepdf-common", "arm64-common"]
+  contexts = dependencies("mergepdf", "arm64")
+  cache-from = cacheFrom("mergepdf", "arm64")
+  tags = tags("mergepdf", "arm64")
 }
 
 target "milliner-arm64" {

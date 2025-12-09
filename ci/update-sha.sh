@@ -44,7 +44,12 @@ update_readme() {
 
 echo "Updating SHA for $DEP@$NEW_VERSION"
 
-if [ "$DEP" = "apache-tomcat" ]; then
+if [ "$DEP" = "alpaca" ] ; then
+  URL="https://github.com/islandora/alpaca/archive/refs/tags/${NEW_VERSION}.tar.gz"
+  ARG=ALPACA_SHA256
+  DOCKERFILES=("alpaca/Dockerfile")
+
+elif [ "$DEP" = "apache-tomcat" ]; then
   URL="https://downloads.apache.org/tomcat/tomcat-9/v$NEW_VERSION/bin/apache-tomcat-$NEW_VERSION.tar.gz"
   ARG="TOMCAT_FILE_SHA256"
   DOCKERFILES=("tomcat/Dockerfile")
