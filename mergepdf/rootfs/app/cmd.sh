@@ -35,7 +35,10 @@ download_and_process() {
 }
 
 # Iterate over all images in the IIIF manifest
-URLS=$(curl -sf "$URL" | jq -r '.sequences[0].canvases[].images[0].resource."@id"' | awk -F '/' '{print $7}' | sed -e 's/%2F/\//g' -e 's/%3A/:/g')
+URLS=$(curl -sf "$URL" | \
+  jq -r '.sequences[0].canvases[].images[0].resource."@id"' | \
+  awk -F '/' '{print $7}' | \
+  sed -e 's/%2F/\//g' -e 's/%3A/:/g' -e 's/%25/%/g')
 while read -r URL; do
   # If we have reached the max thread limit, wait for any one job to finish
   if [ "${#PIDS[@]}" -ge "$MAX_THREADS" ]; then
