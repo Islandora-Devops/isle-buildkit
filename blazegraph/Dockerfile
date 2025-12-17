@@ -8,10 +8,10 @@ ARG BLAZEGRAPH_URL="https://github.com/blazegraph/database/releases/download/BLA
 ARG BLAZEGRAPH_SHA256="b22f1a1aa8e536443db9a57da63720813374ef59e4021cfa9ad0e98f9a420e85"
 
 # renovate: datasource=custom.apache-downloads depName=apache-log4j packageName=logging/log4j
-ARG LOG4J_VERSION=2.25.2
+ARG LOG4J_VERSION=2.25.3
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
-ARG LOG4J_FILE_SHA256="a35f091992aa72f9e4161fc60eb67272001ce00fe47e6ffdde9054327aa6db86"
+ARG LOG4J_FILE_SHA256="0259555ff869522b889310a25c27859cf6dc35258251d5355a5eaaf7f4f48b40"
 ARG OLD_LOG4J_VERSION="1.2.17"
 
 # Platform agnostic does not require arch specific identifier.
