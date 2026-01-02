@@ -31,7 +31,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_22/git
   GIT_VERSION=2.49.1-r0 \
   # renovate: datasource=repology depName=alpine_3_22/gnupg
-  GNUPG_VERSION=2.4.7-r0 \
+  GNUPG_VERSION=2.4.9-r0 \
   # renovate: datasource=repology depName=alpine_3_22/gzip
   GZIP_VERSION=1.14-r1 \
   # renovate: datasource=repology depName=alpine_3_22/jq
