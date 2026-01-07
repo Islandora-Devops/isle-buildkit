@@ -23,4 +23,5 @@ The drupal site requires a route available at `/term_from_term_name`. This View 
 | Environment Variable | Default                                                   | Description                                                             |
 | :------------------- | :-------------------------------------------------------- | :---------------------------------------------------------------------- |
 | MAX_THREADS          | 5                                                         | How many images to download at once from a IIIF manifest                |
+| MAX_WIDTH            | 2000                                                      | How many pixels wide the images in the PDFs can be                      |
 | URI_SCHEME           | `private`                                                 | The Drupal URI to store the generated PDF in                            |

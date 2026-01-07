@@ -41,6 +41,7 @@ RUN --mount=type=bind,from=leptonica,source=/packages,target=/packages \
 
 ENV \
   MAX_THREADS=5 \
+  MAX_WIDTH=2000 \
   URI_SCHEME="private"
 
 COPY --link rootfs /

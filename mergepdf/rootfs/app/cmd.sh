@@ -6,6 +6,7 @@ URL="$1/book-manifest"
 TMP_DIR=$(mktemp -d)
 I=0
 MAX_THREADS=${MAX_THREADS:-5}
+MAX_WIDTH=${MAX_WIDTH:-2000}
 PIDS=()
 RETRIES=3
 
@@ -22,7 +23,7 @@ download_and_process() {
   local attempt=0
 
   while (( attempt < RETRIES )); do
-    if curl -s "$url" | magick - -resize 1000x\> "$output_file" > /dev/null 2>&1; then
+    if curl -s "$url" | magick - -resize "${MAX_WIDTH}x>" "$output_file" > /dev/null 2>&1; then
       return 0
     fi
     attempt=$(( attempt + 1 ))
