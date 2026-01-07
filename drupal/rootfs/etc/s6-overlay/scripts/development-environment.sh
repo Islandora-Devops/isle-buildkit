@@ -13,3 +13,7 @@ if [[ "${DEVELOPMENT_ENVIRONMENT}" == "true" ]]; then
     fi
   fi
 fi
+
+# always ensure nginx has access to the socket
+chown -R nginx:nginx /run/php-fpm83
+
