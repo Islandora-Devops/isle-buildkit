@@ -9,12 +9,12 @@ EXPOSE 8080
 WORKDIR /app
 
 ARG \
-  # renovate: datasource=repology depName=alpine_3_22/tesseract-ocr
-  TESSERACT_VERSION=5.5.0-r2 \
-  # renovate: datasource=repology depName=alpine_3_22/ghostscript
-  GHOSTSCRIPT_VERSION=10.05.1-r0 \
-  # renovate: datasource=repology depName=alpine_3_22/poppler-utils
-  POPPLER_VERSION=25.04.0-r0
+    # renovate: datasource=repology depName=alpine_3_23/tesseract-ocr
+    TESSERACT_VERSION=5.5.1-r0 \
+    # renovate: datasource=repology depName=alpine_3_23/ghostscript
+    GHOSTSCRIPT_VERSION=10.06.0-r0 \
+    # renovate: datasource=repology depName=alpine_3_23/poppler-utils
+    POPPLER_VERSION=25.12.0-r0
 
 # hadolint ignore=DL3018
 RUN --mount=type=bind,from=imagemagick,source=/packages,target=/packages \

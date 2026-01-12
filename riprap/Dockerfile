@@ -12,12 +12,12 @@ EXPOSE 8000
 WORKDIR /var/www/riprap
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_22/php83
-    PHP_VERSION=8.3.29-r0
+    # renovate: datasource=repology depName=alpine_3_23/php84
+    PHP_VERSION=8.4.16-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=riprap-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
-    apk add php83-pdo_sqlite=="${PHP_VERSION}" && \
+    apk add php84-pdo_sqlite=="${PHP_VERSION}" && \
     cleanup.sh
 
 # Platform agnostic does not require arch specific identifier.

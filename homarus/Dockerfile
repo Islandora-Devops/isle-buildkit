@@ -8,8 +8,8 @@ EXPOSE 8080
 WORKDIR /app
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_22/ffmpeg
-    FFMPEG_VERSION=6.1.2-r2
+    # renovate: datasource=repology depName=alpine_3_23/ffmpeg
+    FFMPEG_VERSION=8.0.1-r1
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=homarus-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \

@@ -22,45 +22,45 @@ RUN --mount=type=cache,id=download-downloads-${TARGETARCH},sharing=locked,target
     cleanup.sh
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_22/icu-data-full
+    # renovate: datasource=repology depName=alpine_3_23/icu-data-full
     ICU_VERSION=76.1-r1 \
-    # renovate: datasource=repology depName=alpine_3_22/nginx
-    NGINX_VERSION=1.28.0-r3 \
-    # renovate: datasource=repology depName=alpine_3_22/php83
-    PHP_VERSION=8.3.29-r0
+    # renovate: datasource=repology depName=alpine_3_23/nginx
+    NGINX_VERSION=1.28.0-r8 \
+    # renovate: datasource=repology depName=alpine_3_23/php84
+    PHP_VERSION=8.4.16-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
         icu-data-full=="${ICU_VERSION}" \
         nginx=="${NGINX_VERSION}" \
-        php83=="${PHP_VERSION}" \
-        php83-ctype=="${PHP_VERSION}" \
-        php83-curl=="${PHP_VERSION}" \
-        php83-dom=="${PHP_VERSION}" \
-        php83-fileinfo=="${PHP_VERSION}" \
-        php83-fpm=="${PHP_VERSION}" \
-        php83-gd=="${PHP_VERSION}" \
-        php83-iconv=="${PHP_VERSION}" \
-        php83-intl=="${PHP_VERSION}" \
-        php83-ldap=="${PHP_VERSION}" \
-        php83-mbstring=="${PHP_VERSION}" \
-        php83-mysqli=="${PHP_VERSION}" \
-        php83-opcache=="${PHP_VERSION}" \
-        php83-openssl=="${PHP_VERSION}" \
-        php83-pdo=="${PHP_VERSION}" \
-        php83-pdo_mysql=="${PHP_VERSION}" \
-        php83-pdo_pgsql=="${PHP_VERSION}" \
-        php83-phar=="${PHP_VERSION}" \
-        php83-session=="${PHP_VERSION}" \
-        php83-simplexml=="${PHP_VERSION}" \
-        php83-sockets=="${PHP_VERSION}" \
-        php83-tokenizer=="${PHP_VERSION}" \
-        php83-xml=="${PHP_VERSION}" \
-        php83-xmlreader=="${PHP_VERSION}" \
-        php83-xmlwriter=="${PHP_VERSION}" \
-        php83-xsl=="${PHP_VERSION}" \
-        php83-zip=="${PHP_VERSION}" \
+        php84=="${PHP_VERSION}" \
+        php84-ctype=="${PHP_VERSION}" \
+        php84-curl=="${PHP_VERSION}" \
+        php84-dom=="${PHP_VERSION}" \
+        php84-fileinfo=="${PHP_VERSION}" \
+        php84-fpm=="${PHP_VERSION}" \
+        php84-gd=="${PHP_VERSION}" \
+        php84-iconv=="${PHP_VERSION}" \
+        php84-intl=="${PHP_VERSION}" \
+        php84-ldap=="${PHP_VERSION}" \
+        php84-mbstring=="${PHP_VERSION}" \
+        php84-mysqli=="${PHP_VERSION}" \
+        php84-opcache=="${PHP_VERSION}" \
+        php84-openssl=="${PHP_VERSION}" \
+        php84-pdo=="${PHP_VERSION}" \
+        php84-pdo_mysql=="${PHP_VERSION}" \
+        php84-pdo_pgsql=="${PHP_VERSION}" \
+        php84-phar=="${PHP_VERSION}" \
+        php84-session=="${PHP_VERSION}" \
+        php84-simplexml=="${PHP_VERSION}" \
+        php84-sockets=="${PHP_VERSION}" \
+        php84-tokenizer=="${PHP_VERSION}" \
+        php84-xml=="${PHP_VERSION}" \
+        php84-xmlreader=="${PHP_VERSION}" \
+        php84-xmlwriter=="${PHP_VERSION}" \
+        php84-xsl=="${PHP_VERSION}" \
+        php84-zip=="${PHP_VERSION}" \
     && \
     addgroup nginx jwt && \
     cleanup.sh

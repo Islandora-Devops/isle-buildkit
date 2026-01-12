@@ -3,4 +3,4 @@ set -e
 exec s6-notifyoncheck -d -t 30000 -n 1 /usr/sbin/php-fpm83 \
 	--pid /run/php-fpm83/php-fpm83.pid \
 	--prefix /run/php-fpm83 \
-	--fpm-config /etc/php83/php-fpm.conf
+	--fpm-config /etc/php84/php-fpm.conf

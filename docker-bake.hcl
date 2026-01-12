@@ -129,7 +129,7 @@ function "cacheFrom" {
 
 function "cacheTo" {
   params = [image, arch]
-  result =  [notequal("", BRANCH) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${CACHE_TO_REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
+  result = [notequal("", BRANCH) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${CACHE_TO_REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
 }
 
 ###############################################################################
@@ -191,7 +191,7 @@ target "base-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
+    alpine = "docker-image://alpine:3.23.2@sha256:865b95f46d98cf867a156fe4a135ad3fe50d2056aa3f25ed31662dff6da4eb62"
   }
 }
 
@@ -257,7 +257,7 @@ target "imagemagick-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
+    alpine = "docker-image://alpine:3.23.2@sha256:865b95f46d98cf867a156fe4a135ad3fe50d2056aa3f25ed31662dff6da4eb62"
   }
 }
 
@@ -273,7 +273,7 @@ target "leptonica-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
+    alpine = "docker-image://alpine:3.23.2@sha256:865b95f46d98cf867a156fe4a135ad3fe50d2056aa3f25ed31662dff6da4eb62"
   }
 }
 

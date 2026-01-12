@@ -55,9 +55,9 @@ ENV \
     FCREPO_ACTIVEMQ_BROKER=tcp://activemq:61616 \
     FCREPO_ACTIVEMQ_QUEUE=fedora \
     FCREPO_ACTIVEMQ_TOPIC=fedora \
-    FCREPO_DB_NAME=fcrepo \
-    FCREPO_DB_PASSWORD=password \
-    FCREPO_DB_USER=fcrepo \
+    DB_NAME=fcrepo \
+    DB_PASSWORD=password \
+    DB_USER=fcrepo \
     FCREPO_DISABLE_SYN=false \
     FCREPO_PERSISTENCE_TYPE=file \
     FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin \
