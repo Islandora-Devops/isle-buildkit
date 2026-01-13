@@ -1,2 +1,0 @@
-# Change uid of nginx user to match host.
-/etc/s6-overlay/scripts/development-environment.sh
