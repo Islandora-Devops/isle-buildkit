@@ -122,16 +122,6 @@ and `DB_MYSQL_PORT` variables will be used when connecting to the backend.
 > `FCREPO_DB_NAME`. This is to allow for different settings on a per-service
 > basis when sharing the same confd backend.
 
-### Development Settings
-
-When doing development with the containers it is sometimes useful to remap the
-`uid` of users in the container to match that of the host user to prevent
-permission denied errors when bind mounting files.
-
-| Environment Variable    | Default | Description                                                                                                                       |
-| :---------------------- | :------ | :-------------------------------------------------------------------------------------------------------------------------------- |
-| DEVELOPMENT_ENVIRONMENT | false   | Set to `true` if using the containers for development, runs start up scripts to remap `uid` of users inside of the container etc. |
-| UID                     |         | The `uid` of the host user                                                                                                        |
 
 [Alpine Linux]: https://alpinelinux.org
 [bearer authentication]: https://tools.ietf.org/html/rfc6750
