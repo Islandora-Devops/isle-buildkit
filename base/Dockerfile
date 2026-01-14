@@ -161,7 +161,9 @@ ENV \
     DB_ROOT_PASSWORD=password \
     DB_ROOT_USER=root \
     DB_USER=default \
-    JWT_ADMIN_TOKEN=islandora
+    DEVELOPMENT_ENVIRONMENT=false \
+    JWT_ADMIN_TOKEN=islandora \
+    UID=
 
 COPY --link rootfs /
 
