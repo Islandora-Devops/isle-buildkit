@@ -11,6 +11,9 @@ if [[ -z "${UID}" ]]; then
   exit 0
 fi
 
+# ensure no new lines or other non-digits
+UID=$(echo "${UID}" | tr -cd '0-9')
+
 # Get the current user for this UID (if any) - don't fail if not found
 EXISTING_USER=$(getent passwd "${UID}" 2>/dev/null | cut -d: -f1 || true)
 
