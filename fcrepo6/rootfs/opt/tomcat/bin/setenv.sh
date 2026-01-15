@@ -1,16 +1,16 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 export JAVA_OPTS="${TOMCAT_JAVA_OPTS}"
-export CATALINA_OPTS="${TOMCAT_CATALINA_OPTS}"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.home=/data/home"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.velocity.runtime.log=/dev/stdout"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.jms.baseUrl=http://${HOSTNAME}/fcrepo/rest"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.external.content.allowed=/opt/tomcat/conf/allowed-external-content.txt"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.autoversioning.enabled=false"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.directory=file:///data/home/data/Activemq"
-export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.configuration=file:///opt/tomcat/conf/activemq.xml"
-# Set timeout
-export CATALINA_OPTS="${CATALINA_OPTS} -DconnectionTimeout=${FCREPO_CATALINA_TIMEOUT:=-1}"
+CATALINA_OPTS="${TOMCAT_CATALINA_OPTS}"
+CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.home=/data/home"
+CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.velocity.runtime.log=/dev/stdout"
+CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.jms.baseUrl=http://${HOSTNAME}/fcrepo/rest"
+CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.external.content.allowed=/opt/tomcat/conf/allowed-external-content.txt"
+CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.autoversioning.enabled=false"
+CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.directory=file:///data/home/data/Activemq"
+CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.configuration=file:///opt/tomcat/conf/activemq.xml"
+CATALINA_OPTS="${CATALINA_OPTS} -DconnectionTimeout=${FCREPO_CATALINA_TIMEOUT:=-1}"
+export CATALINA_OPTS
 
 case "${DB_DRIVER}" in
 none)

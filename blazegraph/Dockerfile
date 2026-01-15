@@ -41,3 +41,5 @@ RUN --mount=type=cache,id=log4j-downloads-${TARGETARCH},sharing=locked,target=/o
 COPY --link rootfs /
 
 RUN chown -R tomcat:tomcat /opt/tomcat
+
+HEALTHCHECK CMD curl -sf -o /dev/null http://localhost:8080/bigdata/status || exit 1

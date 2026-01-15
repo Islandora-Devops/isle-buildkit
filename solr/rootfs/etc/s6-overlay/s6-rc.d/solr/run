@@ -7,6 +7,8 @@ if [[ -n "${SOLR_JETTY_OPTS}" ]]; then
   ARGS+=(--jvm-opts "${SOLR_JETTY_OPTS}")
 fi
 
+SOLR_JAVA_OPTS="${SOLR_JAVA_OPTS} -Dlogback.access.config=/etc/logback-access.xml"
+
 if [[ -n "${SOLR_JAVA_OPTS}" ]]; then
   ARGS+=(-a "${SOLR_JAVA_OPTS}")
 fi

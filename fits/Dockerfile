@@ -107,3 +107,5 @@ COPY --link rootfs /
 RUN cp $(realpath /usr/share/java/jna.jar) /opt/fits/lib && \
     chown -R tomcat:tomcat /opt/tomcat /opt/fits && \
     cleanup.sh
+
+HEALTHCHECK CMD curl -sf -o /dev/null http://localhost:8080/fits/version || exit 1

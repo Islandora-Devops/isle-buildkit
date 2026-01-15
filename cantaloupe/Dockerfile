@@ -355,4 +355,4 @@ ENV \
 
 COPY --link rootfs /
 
-HEALTHCHECK CMD curl -s http://localhost:8182/health | jq .color | grep -q GREEN
+HEALTHCHECK CMD curl -s http://localhost:8182/health | jq .color | grep -q GREEN || exit 1

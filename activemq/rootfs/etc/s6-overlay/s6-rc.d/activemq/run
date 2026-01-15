@@ -4,4 +4,8 @@ set -e
 # When bind mounting we need to ensure that we
 # actually can write to the folder.
 chown activemq:activemq /opt/activemq/data
+
+JAVA_OPTS="${JAVA_OPTS} -Dlogback.access.config=/etc/logback-access.xml"
+export JAVA_OPTS
+
 exec s6-setuidgid activemq /opt/activemq/bin/activemq console

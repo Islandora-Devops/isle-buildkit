@@ -41,3 +41,14 @@ ENV \
     TOMCAT_MANAGER_REMOTE_ADDRESS_VALVE=^.*$
 
 COPY --link rootfs /
+
+# Compile and install custom HealthCheckValve
+WORKDIR /opt/tomcat/classes
+RUN javac -cp /opt/tomcat/lib/catalina.jar:/opt/tomcat/lib/servlet-api.jar \
+          -d /opt/tomcat/classes \
+          /opt/tomcat/HealthCheckValve.java && \
+    jar cf /opt/tomcat/lib/healthcheck-valve.jar org/islandora/tomcat/valves/*.class
+
+WORKDIR /opt/tomcat
+RUN rm -rf /opt/tomcat/classes /opt/tomcat/HealthCheckValve.java
+
