@@ -30,11 +30,11 @@ RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/c
 # hardware.
 ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=600000
 
-ENV \ 
+ENV \
     # Default Mariadb value of 16 MB (bytes)
     MYSQL_MAX_ALLOWED_PACKET=16777216 \
     MYSQL_TRANSACTION_ISOLATION=READ-COMMITTED
 
 COPY --link rootfs /
 
-HEALTHCHECK CMD mysqladmin ping --socket=/var/run/mysqld/mysqld.sock | grep -q alive
+HEALTHCHECK CMD mysqladmin ping --socket=/var/run/mysqld/mysqld.sock | grep -q alive || exit 1

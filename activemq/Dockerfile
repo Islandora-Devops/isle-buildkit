@@ -41,4 +41,4 @@ HEALTHCHECK CMD curl -s \
     -u admin:"$(cat /var/run/s6/container_environment/ACTIVEMQ_WEB_ADMIN_PASSWORD)" \
     -H origin:localhost \
     "http://localhost:8161/api/jolokia/read/org.apache.activemq:type=Broker,brokerName=localhost,service=Health/CurrentStatus" \
-    | jq .value | grep -q Good
+    | jq .value | grep -q Good  || exit 1

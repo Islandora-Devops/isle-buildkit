@@ -71,4 +71,4 @@ COPY --link rootfs /
 
 RUN chown -R tomcat:tomcat /opt/tomcat
 
-HEALTHCHECK CMD curl -s http://localhost:8080/fcrepo/rest/fcr:systeminfo | jq -e .version
+HEALTHCHECK CMD curl -s http://localhost:8080/fcrepo/rest/fcr:systeminfo | jq -e .version || exit 1

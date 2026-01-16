@@ -58,3 +58,5 @@ ENV \
   SCYLLARIDAE_YML_PATH="/app/scyllaridae.yml"
 
 COPY --link rootfs /
+
+HEALTHCHECK CMD curl -sf -o /dev/null http://localhost:8080/healthcheck || exit 1

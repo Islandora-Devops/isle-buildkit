@@ -7,6 +7,10 @@ log4j.rootLogger={{ getenv "SOLR_LOG_LEVEL" }}, CONSOLE
 log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
 log4j.appender.CONSOLE.layout=org.apache.log4j.EnhancedPatternLayout
 log4j.appender.CONSOLE.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p (%t) [%X{collection} %X{shard} %X{replica} %X{core}] %c{1.} %m%n
+# Filter out healthcheck logs
+log4j.appender.CONSOLE.filter.1=org.apache.log4j.varia.StringMatchFilter
+log4j.appender.CONSOLE.filter.1.StringToMatch=path=/admin/info/system
+log4j.appender.CONSOLE.filter.1.AcceptOnMatch=false
 
 # Adjust logging levels that should differ from root logger
 log4j.logger.org.apache.zookeeper=WARN

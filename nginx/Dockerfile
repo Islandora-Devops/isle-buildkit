@@ -108,4 +108,4 @@ ENV \
 
 COPY --link rootfs /
 
-HEALTHCHECK CMD curl -s http://localhost/status | grep -q pool
+HEALTHCHECK CMD curl -s http://localhost/status | grep -q pool || exit 1

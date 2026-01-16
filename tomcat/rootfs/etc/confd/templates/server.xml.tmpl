@@ -158,6 +158,9 @@
         <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
         -->
 
+        <!-- Valve to mark healthcheck requests -->
+        <Valve className="org.islandora.tomcat.valves.HealthCheckValve" />
+
         <!-- Access log processes all example.
              Documentation at: /docs/config/valve.html
              Note: The pattern used is equivalent to using pattern="common" -->
@@ -166,7 +169,8 @@
                prefix="stdout"
                suffix=""
                pattern="%h %l %u %t &quot;%r&quot; %s %b"
-               rotatable="false"/>
+               rotatable="false"
+               conditionUnless="skipHealthcheck"/>
 
         <Valve className="org.apache.catalina.valves.RemoteIpValve"
                remoteIpHeader="x-forwarded-for"
