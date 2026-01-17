@@ -18,8 +18,12 @@
 - [Running](#running)
 - [Docker Images](#docker-images)
   - [Updating Dependencies](#updating-dependencies)
-    - [Updating Composer](#updating-composer)
     - [Renovate](#renovate)
+      - [Why isle-buildkit can't use Renovate's GitHub app to track updates](#why-isle-buildkit-cant-use-renovates-github-app-to-track-updates)
+      - [Running renovate (automated)](#running-renovate-automated)
+      - [Running renovate (manually for debugging)](#running-renovate-manually-for-debugging)
+      - [Testing renovate changes in GitHub](#testing-renovate-changes-in-github)
+    - [Updating Composer](#updating-composer)
   - [Updating Configuration](#updating-configuration)
 - [Design Considerations](#design-considerations)
   - [Confd](#confd)
@@ -56,7 +60,7 @@ To build the Docker images using the provided Gradle build scripts requires:
 - [GNU Make 4.3+](https://www.gnu.org/software/make/)
 - [jq 1.6+](https://stedolan.github.io/jq/)
 - [mkcert 1.4+](https://github.com/FiloSottile/mkcert)
-- [OpenJDK or Oracle JDK 11+](https://www.java.com/en/download/)
+- [OpenJDK or Oracle JDK 21+](https://www.java.com/en/download/)
 - [pre-commit 2.19+](https://pre-commit.com/)
 
 > N.B You can use older versions of Docker to run the images, just not build

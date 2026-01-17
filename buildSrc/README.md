@@ -6,7 +6,7 @@
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Building](#building)
-    - [Build and Publish the Plugin](#build-and-publish-the-plugin)
+  - [Build and Publish the Plugin](#build-and-publish-the-plugin)
 - [Using the Plugin](#using-the-plugin)
 - [Using the Plugin from Source](#using-the-plugin-from-source)
 
@@ -28,7 +28,7 @@ and place your Dockerfile inside it, and it will be discovered built in the corr
 
 To build this plugin the following is required:
 
-- [OpenJDK or Oracle JDK 11+](https://www.java.com/en/download/)
+- [OpenJDK or Oracle JDK 21+](https://www.java.com/en/download/)
 
 ## Building
 
