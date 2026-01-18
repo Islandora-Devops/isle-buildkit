@@ -2,7 +2,7 @@
 
 Docker image for [Cantaloupe] version 5.0.6.
 
-Built from [Islandora-DevOps/isle-buildkit cantaloupe](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/cantaloupe)
+Built from [Islandora-DevOps/isle-buildkit cantaloupe](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/cantaloupe)
 
 Please refer to the [Cantaloupe Documentation] for more in-depth information.
 
@@ -15,7 +15,7 @@ docker run --rm -ti -p 8182:8182 islandora/cantaloupe
 
 ## Dependencies
 
-Requires `islandora/java` docker image to build. Please refer to the
+Requires `islandora/java` Docker image to build. Please refer to the
 [Java Image README](../java/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

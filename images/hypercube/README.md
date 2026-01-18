@@ -2,10 +2,10 @@
 
 Docker image for [Hypercube]. Tesseract as a microservice
 
-Built from [Islandora-DevOps/isle-buildkit hypercube](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/hypercube)
+Built from [Islandora-DevOps/isle-buildkit hypercube](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/hypercube)
 
 ## Dependencies
 
-Requires `islandora/scyllaridae` docker image to build. Please refer to the
+Requires `islandora/scyllaridae` Docker image to build. Please refer to the
 [Scyllaridae Image README](../scyllaridae/README.md) for additional information including
 additional settings, volumes, ports, etc.

@@ -2,7 +2,7 @@
 
 Docker image for [ActiveMQ] version 5.19.1.
 
-Built from [Islandora-DevOps/isle-buildkit activemq](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/activemq)
+Built from [Islandora-DevOps/isle-buildkit activemq](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/activemq)
 
 Please refer to the [ActiveMQ Documentation] for more in-depth information.
 
@@ -19,7 +19,7 @@ docker run --rm -ti -p 8161:8161 islandora/activemq
 
 ## Dependencies
 
-Requires `islandora/java` docker image to build. Please refer to the
+Requires `islandora/java` Docker image to build. Please refer to the
 [Java Image README](../java/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

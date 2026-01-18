@@ -2,7 +2,7 @@
 
 Docker image for [Nginx] version 1.24.0 and [FPM] version 8.3.8.
 
-Built from [Islandora-DevOps/isle-buildkit nginx](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/nginx)
+Built from [Islandora-DevOps/isle-buildkit nginx](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/nginx)
 
 Please refer to the [Nginx Documentation] and [FPM Documentation] for more
 in-depth information.
@@ -12,7 +12,7 @@ etc. It can be used on it's own as well.
 
 ## Dependencies
 
-Requires `islandora/base` docker image to build. Please refer to the
+Requires `islandora/base` Docker image to build. Please refer to the
 [Base Image README](../base/README.md) for additional information.
 
 ## Settings

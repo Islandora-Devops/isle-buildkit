@@ -2,7 +2,7 @@
 
 Docker image for [MariaDB] version 10.11.6
 
-Built from [Islandora-DevOps/isle-buildkit mariadb](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/mariadb)
+Built from [Islandora-DevOps/isle-buildkit mariadb](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/mariadb)
 
 Please refer to the [MariaDB Documentation] for more in-depth information.
 
@@ -16,7 +16,7 @@ docker exec -ti mariadb mysql -u root --password='password'
 
 ## Dependencies
 
-Requires `islandora/base` docker image to build. Please refer to the
+Requires `islandora/base` Docker image to build. Please refer to the
 [Base Image README](../base/README.md) for additional information.
 
 ## Ports

@@ -2,7 +2,7 @@
 
 Docker image for [Drupal].
 
-Built from [Islandora-DevOps/isle-buildkit drupal](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/drupal)
+Built from [Islandora-DevOps/isle-buildkit drupal](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/drupal)
 
 Acts as base Docker image for Drupal based projects, it doesn't install Drupal
 as consumers of this image are expected to provide their own composer file.
@@ -11,7 +11,7 @@ image is first run.
 
 ## Dependencies
 
-Requires `islandora/nginx` docker image to build. Please refer to the
+Requires `islandora/nginx` Docker image to build. Please refer to the
 [Nginx Image README](../nginx/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

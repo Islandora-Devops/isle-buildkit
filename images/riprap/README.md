@@ -2,13 +2,13 @@
 
 Docker image for [Riprap] (**unreleased version**) micro-service.
 
-Built from [Islandora-DevOps/isle-buildkit riprap](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/riprap)
+Built from [Islandora-DevOps/isle-buildkit riprap](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/riprap)
 
 Please refer to the [Riprap Documentation] for more in-depth information.
 
 ## Dependencies
 
-Requires `islandora/nginx` docker image to build. Please refer to the
+Requires `islandora/nginx` Docker image to build. Please refer to the
 [Nginx Image README](../nginx/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

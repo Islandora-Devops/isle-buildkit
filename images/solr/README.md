@@ -2,7 +2,7 @@
 
 Docker image for [solr] version 9.10.0.
 
-Built from [Islandora-DevOps/isle-buildkit solr](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/solr)
+Built from [Islandora-DevOps/isle-buildkit solr](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/solr)
 
 Please refer to the [Solr Documentation] for more in-depth information.
 
@@ -15,7 +15,7 @@ docker run --rm -ti -p 8983:8983 islandora/solr
 
 ## Dependencies
 
-Requires `islandora/java` docker image to build. Please refer to the
+Requires `islandora/java` Docker image to build. Please refer to the
 [Java Image README](../java/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

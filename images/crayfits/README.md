@@ -3,11 +3,11 @@
 Docker image for [CrayFits]. [FITS][1] as a microservice.
 
 
-Built from [Islandora-DevOps/isle-buildkit crayfits](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/crayfits)
+Built from [Islandora-DevOps/isle-buildkit crayfits](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/crayfits)
 
 ## Dependencies
 
-Requires `islandora/scyllaridae` docker image to build. Please refer to the
+Requires `islandora/scyllaridae` Docker image to build. Please refer to the
 [Scyllaridae Image README](../scyllaridae/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

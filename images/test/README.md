@@ -3,11 +3,11 @@
 This image is exclusively used for **manually testing** pull request to this
 repository and is not intended for use in production environments.
 
-Built from [Islandora-DevOps/isle-buildkit test](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/test)
+Built from [Islandora-DevOps/isle-buildkit test](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/test)
 
 ## Dependencies
 
-Requires `islandora/drupal` docker image to build. Please refer to the
+Requires `islandora/drupal` Docker image to build. Please refer to the
 [Drupal Image README](../drupal/README.md) for additional information.
 
 ## Gotchas

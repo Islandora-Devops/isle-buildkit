@@ -2,14 +2,14 @@
 
 Docker image for [Crayfish] (**unreleased version**).
 
-Built from [Islandora-DevOps/isle-buildkit crayfish](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/crayfish)
+Built from [Islandora-DevOps/isle-buildkit crayfish](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/crayfish)
 
 Acts as base Docker image for Crayfish based micro-services. It is not meant to
 be run on its own it is only used to cache the download.
 
 ## Dependencies
 
-Requires `islandora/nginx` docker image to build. Please refer to the
+Requires `islandora/nginx` Docker image to build. Please refer to the
 [Nginx Image README](../nginx/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

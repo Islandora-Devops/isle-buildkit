@@ -2,7 +2,7 @@
 
 Docker image for [Fits](https://projects.iq.harvard.edu/fits/home) version 1.6.0.
 
-Built from [Islandora-DevOps/isle-buildkit fits](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/fits)
+Built from [Islandora-DevOps/isle-buildkit fits](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/fits)
 
 Please refer to the [Fits Documentation] for more in-depth information.
 
@@ -15,7 +15,7 @@ docker run --rm -ti -p 80:80 islandora/fits
 
 ## Dependencies
 
-Requires `islandora/tomcat` docker image to build. Please refer to the
+Requires `islandora/tomcat` Docker image to build. Please refer to the
 [Tomcat Image README](../tomcat/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

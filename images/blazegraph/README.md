@@ -2,7 +2,7 @@
 
 Docker image for [Blazegraph] version 2.1.5.
 
-Built from [Islandora-DevOps/isle-buildkit blazegraph](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/blazegraph)
+Built from [Islandora-DevOps/isle-buildkit blazegraph](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/blazegraph)
 
 Please refer to the [Blazegraph Documentation] for more in-depth information.
 
@@ -15,7 +15,7 @@ docker run --rm -ti -p 80:80 islandora/blazegraph
 
 ## Dependencies
 
-Requires `islandora/tomcat` docker image to build. Please refer to the
+Requires `islandora/tomcat` Docker image to build. Please refer to the
 [Tomcat Image README](../tomcat/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

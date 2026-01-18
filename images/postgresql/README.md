@@ -2,7 +2,7 @@
 
 Docker image for [PostgreSQL] version 16.3
 
-Built from [Islandora-DevOps/isle-buildkit postgresql](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/postgresql)
+Built from [Islandora-DevOps/isle-buildkit postgresql](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/postgresql)
 
 Please refer to the [PostgreSQL Documentation] for more in-depth information.
 
@@ -16,7 +16,7 @@ docker exec -ti postgresql psql -U root postgres
 
 ## Dependencies
 
-Requires `islandora/base` docker image to build. Please refer to the
+Requires `islandora/base` Docker image to build. Please refer to the
 [Base Image README](../base/README.md) for additional information.
 
 ## Ports

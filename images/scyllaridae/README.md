@@ -7,7 +7,7 @@ be run on its own it is only used to cache the download.
 
 ## Dependencies
 
-Requires `islandora/base` docker image to build. Please refer to the
+Requires `islandora/base` Docker image to build. Please refer to the
 [Base Image README](../base/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

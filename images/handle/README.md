@@ -2,7 +2,7 @@
 
 Docker image for [Handle] version 9.3.1.
 
-Built from [Islandora-DevOps/isle-buildkit handle](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/handle)
+Built from [Islandora-DevOps/isle-buildkit handle](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/handle)
 
 Please refer to the [Handle Documentation] for more in-depth information.
 
@@ -15,7 +15,7 @@ docker run --rm -ti -p 8000:8000 islandora/handle
 
 ## Dependencies
 
-Requires `islandora/java` docker image to build. Please refer to the
+Requires `islandora/java` Docker image to build. Please refer to the
 [Java Image README](https://github.com/Islandora-Devops/isle-buildkit/blob/main/java/README.md) for additional information.
 
 ## Ports

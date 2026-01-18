@@ -2,7 +2,7 @@
 
 Docker image for [Tomcat] version 9.0.113.
 
-Built from [Islandora-DevOps/isle-buildkit tomcat](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/tomcat)
+Built from [Islandora-DevOps/isle-buildkit tomcat](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/tomcat)
 
 Please refer to the [Tomcat Documentation] for more in-depth information.
 
@@ -17,7 +17,7 @@ docker run --rm -ti \
 
 ## Dependencies
 
-Requires `islandora/java` docker image to build. Please refer to the
+Requires `islandora/java` Docker image to build. Please refer to the
 [Java Image README](../java/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

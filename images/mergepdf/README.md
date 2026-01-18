@@ -2,11 +2,11 @@
 
 Docker image for mergepdf. Aggregate IIIF manifests for books/paged-content into a PDF.
 
-Built from [Islandora-DevOps/isle-buildkit mergpdf](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/mergepdf)
+Built from [Islandora-DevOps/isle-buildkit mergpdf](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/mergepdf)
 
 ## Dependencies
 
-Requires `islandora/scyllaridae` docker image to build. Please refer to the
+Requires `islandora/scyllaridae` Docker image to build. Please refer to the
 [Scyllaridae Image README](../scyllaridae/README.md) for additional information including
 additional settings, volumes, ports, etc.
 

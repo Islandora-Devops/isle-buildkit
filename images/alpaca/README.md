@@ -2,13 +2,13 @@
 
 Docker image for [Alpaca] version 2.2.0.
 
-Built from [Islandora-DevOps/isle-buildkit alpaca](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/alpaca)
+Built from [Islandora-DevOps/isle-buildkit alpaca](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/alpaca)
 
 Please refer to the [Alpaca Documentation] for more in-depth information.
 
 ## Dependencies
 
-Requires `islandora/java` docker image to build. Please refer to the
+Requires `islandora/java` Docker image to build. Please refer to the
 [Java Image README](../java/README.md) for additional information including
 additional settings, volumes, ports, etc.
 
