@@ -16,7 +16,7 @@ jobs:
   lint:
     runs-on: ubuntu-24.04
     steps:
-      - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+      - uses: "actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8" # v6
 
       - name: lint
         run: shellcheck ci/*.sh
@@ -366,6 +366,18 @@ jobs:
       contents: read
       packages: write
     needs: [tags, base, imagemagick]
+  transcriber:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.scyllaridae.outputs.context }}
+      image: transcriber
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, base, imagemagick]
   #############################################################################
   ## Tests.
   #############################################################################
@@ -593,6 +605,13 @@ jobs:
       image: tomcat
     secrets: inherit
     needs: [tomcat]
+  test-transcriber:
+    uses: ./.github/workflows/test.yml
+    with:
+      digests: ${{ needs.transcriber.outputs.digest }}
+      image: transcriber
+    secrets: inherit
+    needs: [transcriber]
   test-transkribus:
     uses: ./.github/workflows/test.yml
     with:
@@ -765,6 +784,13 @@ jobs:
       image: tomcat
     secrets: inherit
     needs: [tomcat]
+  grype-transcriber:
+    uses: ./.github/workflows/grype.yml
+    with:
+      digest: ${{ needs.transcriber.outputs.digest }}
+      image: transcriber
+    secrets: inherit
+    needs: [transcriber]
   grype-transkribus:
     uses: ./.github/workflows/grype.yml
     with:

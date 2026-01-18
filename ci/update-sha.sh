@@ -47,122 +47,127 @@ echo "Updating SHA for $DEP@$NEW_VERSION"
 if [ "$DEP" = "alpaca" ] ; then
   URL="https://github.com/islandora/alpaca/archive/refs/tags/${NEW_VERSION}.tar.gz"
   ARG=ALPACA_SHA256
-  DOCKERFILES=("alpaca/Dockerfile")
+  DOCKERFILES=("images/alpaca/Dockerfile")
 
 elif [ "$DEP" = "apache-tomcat" ]; then
   URL="https://downloads.apache.org/tomcat/tomcat-9/v$NEW_VERSION/bin/apache-tomcat-$NEW_VERSION.tar.gz"
   ARG="TOMCAT_FILE_SHA256"
-  DOCKERFILES=("tomcat/Dockerfile")
-  README="tomcat/README.md"
+  DOCKERFILES=("images/tomcat/Dockerfile")
+  README="images/tomcat/README.md"
 
 elif [ "$DEP" = "apache-activemq" ]; then
   URL="https://downloads.apache.org/activemq/$NEW_VERSION/apache-activemq-$NEW_VERSION-bin.tar.gz"
   ARG="ACTIVEMQ_FILE_SHA256"
-  DOCKERFILES=("activemq/Dockerfile")
-  README="activemq/README.md"
+  DOCKERFILES=("images/activemq/Dockerfile")
+  README="images/activemq/README.md"
 
 elif [ "$DEP" = "apache-solr" ]; then
   URL="https://downloads.apache.org/solr/solr/$NEW_VERSION/solr-$NEW_VERSION.tgz"
   ARG="SOLR_FILE_SHA256"
-  DOCKERFILES=("solr/Dockerfile")
-  README="solr/README.md"
+  DOCKERFILES=("images/solr/Dockerfile")
+  README="images/solr/README.md"
 
 elif [ "$DEP" = "custom-composer" ]; then
   URL="https://getcomposer.org/download/${NEW_VERSION}/composer.phar"
   ARG="COMPOSER_SHA256"
-  DOCKERFILES=("nginx/Dockerfile")
+  DOCKERFILES=("images/nginx/Dockerfile")
 
 elif [ "$DEP" = "solr-ocrhighlighting" ]; then
   URL=https://github.com/dbmdz/solr-ocrhighlighting/releases/download/${NEW_VERSION}/solr-ocrhighlighting-${NEW_VERSION}.jar
   ARG="OCRHIGHLIGHT_FILE_SHA256"
-  DOCKERFILES=("solr/Dockerfile")
+  DOCKERFILES=("images/solr/Dockerfile")
 
 elif [ "$DEP" = "fcrepo" ]; then
   URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${NEW_VERSION}/fcrepo-webapp-${NEW_VERSION}.war"
   ARG="FCREPO_SHA256"
-  DOCKERFILES=("fcrepo6/Dockerfile")
-  README="fcrepo6/README.md"
+  DOCKERFILES=("images/fcrepo6/Dockerfile")
+  README="images/fcrepo6/README.md"
 
 elif [ "$DEP" = "islandora-syn" ]; then
   URL="https://github.com/Islandora/Syn/releases/download/v${NEW_VERSION}/islandora-syn-${NEW_VERSION}-all.jar"
   ARG="SYN_SHA256"
-  DOCKERFILES=("fcrepo6/Dockerfile")
+  DOCKERFILES=("images/fcrepo6/Dockerfile")
 
 elif [ "$DEP" = "fcrepo-import-export" ]; then
   URL="https://github.com/fcrepo-exts/fcrepo-import-export/releases/download/fcrepo-import-export-${NEW_VERSION}/fcrepo-import-export-${NEW_VERSION}.jar"
   ARG="IMPORT_EXPORT_SHA256"
-  DOCKERFILES=("fcrepo6/Dockerfile")
+  DOCKERFILES=("images/fcrepo6/Dockerfile")
 
 elif [ "$DEP" = "fcrepo-upgrade-utils" ]; then
   URL="https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${NEW_VERSION}/fcrepo-upgrade-utils-${NEW_VERSION}.jar"
   ARG="UPGRADE_UTILS_SHA256"
-  DOCKERFILES=("fcrepo6/Dockerfile")
+  DOCKERFILES=("images/fcrepo6/Dockerfile")
 
 elif [ "$DEP" = "cantaloupe" ]; then
   URL="https://github.com/cantaloupe-project/cantaloupe/releases/download/v${NEW_VERSION}/cantaloupe-${NEW_VERSION}.zip"
   ARG="CANTALOUPE_SHA256"
-  DOCKERFILES=("cantaloupe/Dockerfile")
-  README="cantaloupe/README.md"
+  DOCKERFILES=("images/cantaloupe/Dockerfile")
+  README="images/cantaloupe/README.md"
 
 elif [ "$DEP" = "grok" ]; then
   URL="https://github.com/GrokImageCompression/grok/archive/refs/tags/${NEW_VERSION}.zip"
   ARG="GROK_SHA256"
-  DOCKERFILES=("cantaloupe/Dockerfile")
+  DOCKERFILES=("images/cantaloupe/Dockerfile")
 
 elif [ "$DEP" = "cli11" ]; then
   URL="https://github.com/CLIUtils/CLI11/archive/refs/tags/${NEW_VERSION}.zip"
   ARG="CLI11_SHA256"
-  DOCKERFILES=("cantaloupe/Dockerfile")
+  DOCKERFILES=("images/cantaloupe/Dockerfile")
 
 elif [ "$DEP" = "fits-servlet" ]; then
   URL="https://github.com/harvard-lts/FITSservlet/releases/download/${NEW_VERSION}/fits-service-${NEW_VERSION}.war"
   ARG="FITSSERVLET_SHA256"
-  DOCKERFILES=("fits/Dockerfile")
+  DOCKERFILES=("images/fits/Dockerfile")
 
 elif [ "$DEP" = "fits" ]; then
   URL="https://github.com/harvard-lts/fits/releases/download/${NEW_VERSION}/fits-${NEW_VERSION}.zip"
   ARG="FITS_SHA256"
-  DOCKERFILES=("fits/Dockerfile")
-  README="fits/README.md"
+  DOCKERFILES=("images/fits/Dockerfile")
+  README="images/fits/README.md"
 
 elif [ "$DEP" = "apache-log4j" ]; then
   URL="https://archive.apache.org/dist/logging/log4j/${NEW_VERSION}/apache-log4j-${NEW_VERSION}-bin.zip"
   ARG="LOG4J_FILE_SHA256"
   DOCKERFILES=(
-    "blazegraph/Dockerfile"
-    "fits/Dockerfile"
+    "images/blazegraph/Dockerfile"
+    "images/fits/Dockerfile"
   )
 
 elif [ "$DEP" = "islandora-starter-site" ]; then
   URL=https://github.com/Islandora-Devops/islandora-starter-site/archive/${NEW_DIGEST}.tar.gz
   ARG="SHA256"
-  DOCKERFILES=("test/Dockerfile")
+  DOCKERFILES=("images/test/Dockerfile")
 
 elif [ "$DEP" = "handle" ]; then
   URL="https://handle.net/hnr-source/handle-${NEW_VERSION}-distribution.tar.gz"
   ARG=HANDLE_FILE_SHA256
-  DOCKERFILES=("handle/Dockerfile")
+  DOCKERFILES=("images/handle/Dockerfile")
 
 elif [ "$DEP" = "jdbc-mysql" ]; then
   URL="https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-${NEW_VERSION}.tar.gz"
   ARG=MYSQL_DRIVER_FILE_SHA256
-  DOCKERFILES=("handle/Dockerfile")
+  DOCKERFILES=("images/handle/Dockerfile")
 
 elif [ "$DEP" = "jdbc-postgres" ]; then
   URL="https://jdbc.postgresql.org/download/postgresql-${NEW_VERSION}.jar"
   ARG=POSTGRES_DRIVER_FILE_SHA256
-  DOCKERFILES=("handle/Dockerfile")
+  DOCKERFILES=("images/handle/Dockerfile")
+
+elif [ "$DEP" = "scyllaridae" ] ; then
+  URL="https://github.com/islandora/scyllaridea/archive/refs/tags/${NEW_VERSION}.tar.gz"
+  ARG=SCYLLARIDAE_SHA256
+  DOCKERFILES=("images/scyllaridae/Dockerfile")
 
 elif [ "$DEP" = "transkribus-process" ]; then
   URL="https://github.com/ulsdevteam/transkribus-process/archive/refs/tags/v${NEW_VERSION}.tar.gz"
   ARG="TRANSKRIBUS_PROCESS_SHA256"
   DOCKERFILES=("transkribus/Dockerfile")
-  README="transkribus/README.md"
+  README="images/transkribus/README.md"
 
-elif [ "$DEP" = "scyllaridae" ] ; then
-  URL="https://github.com/islandora/scyllaridea/archive/refs/tags/${NEW_VERSION}.tar.gz"
-  ARG=SCYLLARIDAE_SHA256
-  DOCKERFILES=("scyllaridae/Dockerfile")
+elif [ "$DEP" = "whisper.cpp" ] ; then
+  URL="https://github.com/ggml-org/whisper.cpp/archive/refs/tags/v${WHISPER_VERSION}.tar.gz"
+  ARG=WHISPER_SHA256
+  DOCKERFILES=("images/transcriber/Dockerfile")
 
 elif [ "$DEP" = "s6-overlay" ]; then
   BASE_URL="https://github.com/just-containers/s6-overlay/releases/download/v${NEW_VERSION}"

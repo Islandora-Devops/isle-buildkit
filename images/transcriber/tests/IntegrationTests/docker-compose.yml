@@ -1,0 +1,19 @@
+# file: docker-compose.yml
+#
+# Tests the following:
+# - Transcriber starts.
+# - Can generate a vtt file from an audio file.
+---
+name: transcriber-integrationtests
+services:
+  # Serve test video files over HTTP
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - ./fixtures:/usr/share/nginx/html
+  transcriber:
+    image: ${TRANSCRIBER:-islandora/transcriber:local}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
