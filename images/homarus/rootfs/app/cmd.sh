@@ -107,7 +107,6 @@ if [ ! -f "$OUTPUT_FILE" ] || [ ! -s "$OUTPUT_FILE" ]; then
 fi
 
 if [ "$DESTINATION_EXT" = "m3u8" ]; then
-
   # shellcheck disable=SC2046
   tar -czf "$TMP_DIR/hls.tar.gz" -C "$TMP_DIR" $(cd "$TMP_DIR" ; echo ./*.ts)
 
