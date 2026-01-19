@@ -9,7 +9,7 @@ cmdByMimeType:
   default:
     cmd: /app/cmd.sh
     args:
-      - "%source-mime-ext".
+      - "%source-mime-ext"
       - "%destination-mime-ext"
       - "%canonical"
       - "%args"
