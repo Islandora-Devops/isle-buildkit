@@ -935,7 +935,7 @@ adding the following, and restarting `Docker`:
 [islandora-playbook]: https://github.com/Islandora-Devops/islandora-playbook
 [islandora-starter-site]: https://github.com/Islandora/islandora-starter-site
 [isle-site-template]: https://github.com/Islandora-Devops/isle-site-template
-[leptonica]: [https://github.com/Islandora-Devops/isle-](https://github.com/Islandora-Devops/isle-buildkit/tree/main/images/leptonica
+[leptonica]: https://github.com/Islandora-Devops/isle-buildkit/tree/main/images/leptonica
 [musl libc]: https://musl.libc.org/
 [official documentation]: https://islandora.github.io/documentation/
 [Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver
