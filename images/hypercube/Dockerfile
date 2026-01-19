@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.5.1
+# syntax=docker/dockerfile:1.20.0
 FROM leptonica
 FROM scyllaridae AS hypercube
 
