@@ -917,6 +917,7 @@ adding the following, and restarting `Docker`:
 [solr]: ./images/solr/README.md
 [test]: ./images/test/README.md
 [tomcat]: ./images/tomcat/README.md
+[transcriber]: ./images/transcriber/README.md
 [transkribus]: /images/transkribus/README.md
 
 [Alpine Docker Image]: https://hub.docker.com/_/alpine
