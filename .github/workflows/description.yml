@@ -4,200 +4,52 @@ on:
     branches:
       - main
     paths:
-      - "**/README.md"
-      - "**/README.dockerhub.md"
+      - "images/*/README.md"
       - ".github/workflows/dockerhub-description.yml"
 jobs:
-  description:
+  find-images:
     runs-on: ubuntu-24.04
+    outputs:
+      readmes: ${{ steps.set-matrix.outputs.readmes }}
     steps:
-      - name: Checkout
-        uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+      - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+
+      - name: Generate matrix
+        id: set-matrix
+        run: |
+          readmes=$(find images -maxdepth 2 -mindepth 2 -type f -name "README.md" | while read readme; do
+            image_name=$(basename $(dirname "$readme"))
+            echo "\"$image_name\""
+          done | jq -s -c .)
+          # debug
+          echo "Found READMEs"
+          echo "$readmes" | jq .
+
+          # add to the job output
+          echo "readmes=$readmes" >> $GITHUB_OUTPUT
+
+  update-descriptions:
+    needs: find-images
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        name: ${{ fromJson(needs.find-images.outputs.readmes) }}
+      # be nice to the dockerhub API, only run 3 jobs at a time
+      max-parallel: 3
+      fail-fast: false
+    steps:
+      - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+        with:
+          sparse-checkout: images/${{ matrix.name }}/README.md
 
       - name: Fix Relative Paths
         run: |
-          find . -maxdepth 2 -mindepth 2 -type f -name "README*.md" -exec sed -i 's/](\.\.\/\([^/]*\).*)/](.\/\1)/g' {} \;
+          sed -i 's/](\.\.\/\([^/]*\).*)/](.\/\1)/g' ./images/${{ matrix.name }}/README.md
 
-      - name: ActiveMQ - Update Docker Hub Description
+      - name: ${{ matrix.name }} - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
         with:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/activemq
-          readme-filepath: ./images/activemq/README.md
-
-      - name: Alpaca - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/alpaca
-          readme-filepath: ./images/alpaca/README.md
-
-      - name: Base - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/base
-          readme-filepath: ./images/base/README.md
-
-      - name: Blazegraph - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/blazegraph
-          readme-filepath: ./images/blazegraph/README.md
-
-      - name: cantaloupe - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/cantaloupe
-          readme-filepath: ./images/cantaloupe/README.dockerhub.md
-
-      - name: Crayfish - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/crayfish
-          readme-filepath: ./images/crayfish/README.md
-
-      - name: CrayFits - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/crayfits
-          readme-filepath: ./images/crayfits/README.md
-
-      - name: Drupal - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/drupal
-          readme-filepath: ./images/drupal/README.md
-
-      - name: Fcrepo6 - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/fcrepo6
-          readme-filepath: ./images/fcrepo6/README.md
-
-      - name: Fits - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/fits
-          readme-filepath: ./images/fits/README.md
-
-      - name: Handle - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/handle
-          readme-filepath: ./images/handle/README.md
-
-      - name: Homarus - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/homarus
-          readme-filepath: ./images/homarus/README.md
-
-      - name: Houdini - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/houdini
-          readme-filepath: ./images/houdini/README.md
-
-      - name: hypercube - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/hypercube
-          readme-filepath: ./images/hypercube/README.md
-
-      - name: Java - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/java
-          readme-filepath: ./images/java/README.md
-
-      - name: MariaDB - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/mariadb
-          readme-filepath: ./images/mariadb/README.md
-
-      - name: Milliner - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/milliner
-          readme-filepath: ./images/milliner/README.md
-
-      - name: Nginx - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/nginx
-          readme-filepath: ./images/nginx/README.md
-
-      - name: PostgreSQL - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/postgresql
-          readme-filepath: ./images/postgresql/README.md
-
-      - name: RipRap - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/riprap
-          readme-filepath: ./images/riprap/README.md
-
-      - name: Solr - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/solr
-          readme-filepath: ./images/solr/README.md
-
-      - name: Test - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/tomcat
-          readme-filepath: ./images/test/README.md
-
-      - name: Tomcat - Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
-        with:
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-          repository: ${{ vars.repository }}/tomcat
-          readme-filepath: ./images/tomcat/README.md
+          repository: ${{ vars.repository }}/${{ matrix.name }}
+          readme-filepath: ./images/${{ matrix.name }}/README.md

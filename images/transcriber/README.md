@@ -1,10 +1,10 @@
 # Transcriber
 
-Docker image for [transciber]. OpenAI Whisper as a service.
+Docker image for [transcriber]. OpenAI Whisper as a service.
 
 Defaults to use Whisper's medium english model to transcribe Audio and Video files.
 
-Built from [Islandora-DevOps/isle-buildkit transciber](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/transciber)
+Built from [Islandora-DevOps/isle-buildkit transcriber](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/transcriber)
 
 ## Dependencies
 
