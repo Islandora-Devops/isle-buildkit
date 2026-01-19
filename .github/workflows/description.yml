@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "images/*/README.md"
+      - "images/*/README.dockerhub.md"
       - ".github/workflows/dockerhub-description.yml"
 jobs:
   find-images:
@@ -40,11 +41,21 @@ jobs:
     steps:
       - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
         with:
-          sparse-checkout: images/${{ matrix.name }}/README.md
+          sparse-checkout: |
+            images/${{ matrix.name }}/.
+
+      - name: Determine README file
+        id: readme
+        run: |
+          if [ -f "./images/${{ matrix.name }}/README.dockerhub.md" ]; then
+            echo "file=./images/${{ matrix.name }}/README.dockerhub.md" >> $GITHUB_OUTPUT
+          else
+            echo "file=./images/${{ matrix.name }}/README.md" >> $GITHUB_OUTPUT
+          fi
 
       - name: Fix Relative Paths
         run: |
-          sed -i 's/](\.\.\/\([^/]*\).*)/](.\/\1)/g' ./images/${{ matrix.name }}/README.md
+          sed -i 's/](\.\.\/\([^/]*\).*)/](.\/\1)/g' ${{ steps.readme.outputs.file }}
 
       - name: ${{ matrix.name }} - Update Docker Hub Description
         uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
@@ -52,4 +63,4 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
           repository: ${{ vars.repository }}/${{ matrix.name }}
-          readme-filepath: ./images/${{ matrix.name }}/README.md
+          readme-filepath: ${{ steps.readme.outputs.file }}

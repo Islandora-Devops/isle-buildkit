@@ -255,7 +255,7 @@ additional settings, volumes, ports, etc.
 | CANTALOUPE_SOURCE_STATIC                                                               | "HttpSource"                                                     |
 | CANTALOUPE_TEMP_PATHNAME                                                               |                                                                  |
 
-[Cantaloupe Caching]: https://cantaloupe-project.github.io/manual/3.1/caching.html
-[Cantaloupe Documentation]: https://cantaloupe-project.github.io/manual/3.1/getting-started.html
-[Cantaloupe Logs]: https://cantaloupe-project.github.io/manual/3.1/logging.html
+[Cantaloupe Caching]: https://cantaloupe-project.github.io/manual/5.0/caching.html
+[Cantaloupe Documentation]: https://cantaloupe-project.github.io/manual/5.0/getting-started.html
+[Cantaloupe Logs]: https://cantaloupe-project.github.io/manual/5.0/logging.html
 [Cantaloupe]: https://cantaloupe-project.github.io/

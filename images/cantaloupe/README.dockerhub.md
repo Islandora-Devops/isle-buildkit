@@ -29,7 +29,8 @@ Please see the
 [documentation](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/cantaloupe#settings)
 in Github as the settings here exceed the file length supported by Docker Hub.
 
-[Cantaloupe Caching]: https://cantaloupe-project.github.io/manual/3.1/caching.html
-[Cantaloupe Documentation]: https://cantaloupe-project.github.io/manual/3.1/getting-started.html
-[Cantaloupe Logs]: https://cantaloupe-project.github.io/manual/3.1/logging.html
+
+[Cantaloupe Caching]: https://cantaloupe-project.github.io/manual/5.0/caching.html
+[Cantaloupe Documentation]: https://cantaloupe-project.github.io/manual/5.0/getting-started.html
+[Cantaloupe Logs]: https://cantaloupe-project.github.io/manual/5.0/logging.html
 [Cantaloupe]: https://cantaloupe-project.github.io/
