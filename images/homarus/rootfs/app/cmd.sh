@@ -5,6 +5,7 @@ set -eou pipefail
 SOURCE_EXT="$1"
 DESTINATION_EXT="$2"
 NODE_URL="$3"
+NID=$(basename "$NODE_URL")
 ARGS=()
 if [[ ! $NODE_URL =~ ^http ]]; then
   # If third arg doesn't start with http
@@ -28,6 +29,7 @@ trap cleanup EXIT
 cat > "$INPUT_FILE"
 
 if [ "$DESTINATION_EXT" = "m3u8" ]; then
+  OUTPUT_FILE="$TMP_DIR/$NID.m3u8"
   cmd=(
     ffmpeg -loglevel error
     -f "$SOURCE_EXT"
@@ -105,13 +107,15 @@ if [ ! -f "$OUTPUT_FILE" ] || [ ! -s "$OUTPUT_FILE" ]; then
 fi
 
 if [ "$DESTINATION_EXT" = "m3u8" ]; then
+
   # shellcheck disable=SC2046
-  tar -czf "$TMP_DIR/hls.tar.gz" -C "$TMP_DIR" "./$NID.m3u8" $(cd "$TMP_DIR" ; echo ./*.ts)
+  tar -czf "$TMP_DIR/hls.tar.gz" -C "$TMP_DIR" $(cd "$TMP_DIR" ; echo ./*.ts)
 
   BASE_URL=$(dirname "$NODE_URL" | xargs dirname)
-  NID=$(basename "$NODE_URL")
-  TID=$(curl -sf "$BASE_URL/term_from_term_name?vocab=islandora_media_use&name=Intermediate+File&_format=json" | jq -e '.[0].tid[0].value')
-
+  TID=$(curl -sf \
+             -H "Authorization: $SCYLLARIDAE_AUTH" \
+             "$BASE_URL/term_from_term_name?vocab=islandora_media_use&name=Intermediate+File&_format=json" | \
+        jq -e '.[0].tid[0].value')
   curl -s \
     -H "Authorization: $SCYLLARIDAE_AUTH" \
     -H "Content-Type: application/gzip" \

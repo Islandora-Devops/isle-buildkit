@@ -4,11 +4,12 @@ allowedMimeTypes:
   - "video/*"
   - "image/jpeg"
   - "image/png"
+  - "application/vnd.apple.mpegurl"
 cmdByMimeType:
   default:
     cmd: /app/cmd.sh
     args:
-      - "%source-mime-ext"
+      - "%source-mime-ext".
       - "%destination-mime-ext"
       - "%canonical"
       - "%args"
