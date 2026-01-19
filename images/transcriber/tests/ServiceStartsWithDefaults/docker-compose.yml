@@ -1,0 +1,14 @@
+---
+# Common to all services
+x-common: &common
+  restart: "no"
+
+name: transcriber-servicestartswithdefaults
+services:
+  transcriber:
+    <<: *common
+    image: ${TRANSCRIBER:-islandora/transcriber:local}
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.

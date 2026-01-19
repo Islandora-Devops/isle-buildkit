@@ -31,6 +31,7 @@ IMAGES = [
   "solr",
   "test",
   "tomcat",
+  "transcriber",
   "transkribus",
 ]
 
@@ -59,6 +60,7 @@ DEPENDENCIES = {
   solr = ["java"]
   test = ["drupal"]
   tomcat = ["java"]
+  transcriber = ["base", "scyllaridae"]
   transkribus = ["base", "imagemagick"]
 }
 
@@ -129,7 +131,7 @@ function "cacheFrom" {
 
 function "cacheTo" {
   params = [image, arch]
-  result =  [notequal("", BRANCH) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${CACHE_TO_REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
+  result = [notequal("", BRANCH) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${CACHE_TO_REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
 }
 
 function "context" {
@@ -332,6 +334,11 @@ target "tomcat-common" {
   context = context("tomcat")
 }
 
+target "transcriber-common" {
+  inherits = ["common"]
+  context = context("transcriber")
+}
+
 target "transkribus-common" {
   inherits = ["common"]
   context = context("transkribus")
@@ -524,6 +531,13 @@ target "tomcat" {
   contexts = dependencies("tomcat", "")
   cache-from = cacheFrom("tomcat", hostArch())
   tags = tags("tomcat", "")
+}
+
+target "transcriber" {
+  inherits = ["transcriber-common"]
+  contexts = dependencies("transcriber", "")
+  cache-from = cacheFrom("transcriber", hostArch())
+  tags = tags("transcriber", "")
 }
 
 target "transkribus" {
@@ -722,6 +736,13 @@ target "tomcat-amd64" {
   tags = tags("tomcat", "amd64")
 }
 
+target "transcriber-amd64" {
+  inherits = ["transcriber-common", "amd64-common"]
+  contexts = dependencies("transcriber", "amd64")
+  cache-from = cacheFrom("transcriber", "amd64")
+  tags = tags("transcriber", "amd64")
+}
+
 target "transkribus-amd64" {
   inherits = ["transkribus-common", "amd64-common"]
   contexts = dependencies("transkribus", "amd64")
@@ -918,9 +939,17 @@ target "tomcat-arm64" {
   tags = tags("tomcat", "arm64")
 }
 
+target "transcriber-arm64" {
+  inherits = ["transcriber-common", "arm64-common"]
+  contexts = dependencies("transcriber", "arm64")
+  cache-from = cacheFrom("transcriber", "arm64")
+  tags = tags("transcriber", "arm64")
+}
+
 target "transkribus-arm64" {
   inherits = ["transkribus-common", "arm64-common"]
   contexts = dependencies("transkribus", "arm64")
   cache-from = cacheFrom("transkribus", "arm64")
   tags = tags("transkribus", "arm64")
 }
+

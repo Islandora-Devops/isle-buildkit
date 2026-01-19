@@ -108,7 +108,7 @@
         "solr-ocrhighlighting",
         "scyllaridae",
         "transkribus-process",
-        "vscode"
+        "whisper.cpp"
       ],
       "postUpgradeTasks": {
         "commands": [
