@@ -75,6 +75,7 @@ if [ "$DESTINATION_EXT" = "m3u8" ]; then
     -start_number 0
     -hls_time 10
     -hls_list_size 0
+    -hls_segment_filename "${TMP_DIR}/$NID_%d.ts"
     -b:v 800k
     -maxrate 800k
     -bufsize 1200k
