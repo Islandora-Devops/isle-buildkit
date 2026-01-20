@@ -16,10 +16,18 @@ elif [ "$#" -gt 3 ]; then
   ARGS=("${@:4}")
 fi
 
-
 TMP_DIR=$(mktemp -d)
 INPUT_FILE="$TMP_DIR/input.$SOURCE_EXT"
 OUTPUT_FILE="$TMP_DIR/output.$DESTINATION_EXT"
+
+get_media_type() {
+  local file="$1"
+  if ffprobe -v error -select_streams v:0 -show_entries stream=codec_type -of default=nw=1:nk=1 "$file" 2>/dev/null | grep -q video; then
+    echo "video"
+  else
+    echo "audio"
+  fi
+}
 
 cleanup() {
   rm -rf "$TMP_DIR"
@@ -107,20 +115,27 @@ if [ ! -f "$OUTPUT_FILE" ] || [ ! -s "$OUTPUT_FILE" ]; then
 fi
 
 if [ "$DESTINATION_EXT" = "m3u8" ]; then
-  # shellcheck disable=SC2046
   tar -czf "$TMP_DIR/hls.tar.gz" -C "$TMP_DIR" $(cd "$TMP_DIR" ; echo ./*.ts)
-
+  pushd "$TMP_DIR"
   BASE_URL=$(dirname "$NODE_URL" | xargs dirname)
-  TID=$(curl -sf \
-             -H "Authorization: $SCYLLARIDAE_AUTH" \
-             "$BASE_URL/term_from_term_name?vocab=islandora_media_use&name=Intermediate+File&_format=json" | \
-        jq -e '.[0].tid[0].value')
-  curl -s \
-    -H "Authorization: $SCYLLARIDAE_AUTH" \
-    -H "Content-Type: application/gzip" \
-    -H "Content-Location: private://derivatives/hls/$NID/hls.tar.gz" \
-    -T "$TMP_DIR/hls.tar.gz" \
-    "$NODE_URL/media/file/$TID"
+  for file in *.ts; do
+    # Check if any .ts files exist (handles case where glob doesn't match)
+    [ -e "$file" ] || continue
+    
+    echo "Processing: $file" >&2
+    
+    # Get file size
+    filesize=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null)
+    
+    bundle=$(get_media_type "$file")
+    curl -sf \
+      -X POST \
+      -H "Authorization: $SCYLLARIDAE_AUTH" \
+      -H "Content-Type: application/octet-stream" \
+      -H "Content-Disposition: file; filename=\"$file\"" \
+      --data-binary "@$file" \
+      "$BASE_URL/file/upload/media/${bundle}/field_additional_files"
+  done
 fi
 
 cat "$OUTPUT_FILE"
