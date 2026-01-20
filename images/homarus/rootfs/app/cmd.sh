@@ -144,7 +144,7 @@ fi
 
 if [ "$DESTINATION_EXT" = "m3u8" ]; then
   BASE_URL=$(dirname "$NODE_URL" | xargs dirname)
-  pushd "$TMP_DIR"
+  pushd "$TMP_DIR" > /dev/null
   for file in *.ts; do
     # Check if any .ts files exist (handles case where glob doesn't match)
     [ -e "$file" ] || continue
@@ -159,6 +159,7 @@ if [ "$DESTINATION_EXT" = "m3u8" ]; then
         -H "Content-Type: application/octet-stream" \
         -H "Content-Disposition: file; filename=\"$file\"" \
         --data-binary "@$file" \
+        -o /dev/null \
         "$BASE_URL/file/upload/media/${bundle}/field_additional_files"
   done
 fi
