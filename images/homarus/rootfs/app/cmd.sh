@@ -29,6 +29,33 @@ get_media_type() {
   fi
 }
 
+retry_until_success() {
+    local command_to_run=("$@")
+    local MAX_RETRIES=5
+    local SLEEP_INCREMENT=10
+    local RETRIES=0
+
+    while true; do
+        timeout 300 "${command_to_run[@]}"
+        local exit_code=$?
+
+        if [ "$exit_code" -eq 0 ]; then
+            return 0
+        fi
+
+        RETRIES=$((RETRIES + 1))
+
+        if [ "$RETRIES" -ge "$MAX_RETRIES" ]; then
+            echo "FAILURE: Command '${command_to_run[*]}' failed after $MAX_RETRIES attempts (Last exit code: $exit_code)." >&2
+            return 1
+        fi
+
+        local SLEEP=$(( SLEEP_INCREMENT * RETRIES ))
+        echo "Command '${command_to_run[*]}' failed (Exit code: $exit_code). Retrying in $SLEEP seconds... (Attempt $RETRIES/$MAX_RETRIES)" >&2
+        sleep "$SLEEP"
+    done
+}
+
 cleanup() {
   rm -rf "$TMP_DIR"
 }
@@ -115,26 +142,23 @@ if [ ! -f "$OUTPUT_FILE" ] || [ ! -s "$OUTPUT_FILE" ]; then
 fi
 
 if [ "$DESTINATION_EXT" = "m3u8" ]; then
-  tar -czf "$TMP_DIR/hls.tar.gz" -C "$TMP_DIR" $(cd "$TMP_DIR" ; echo ./*.ts)
-  pushd "$TMP_DIR"
   BASE_URL=$(dirname "$NODE_URL" | xargs dirname)
+  pushd "$TMP_DIR"
   for file in *.ts; do
     # Check if any .ts files exist (handles case where glob doesn't match)
     [ -e "$file" ] || continue
     
     echo "Processing: $file" >&2
     
-    # Get file size
-    filesize=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null)
-    
     bundle=$(get_media_type "$file")
-    curl -sf \
-      -X POST \
-      -H "Authorization: $SCYLLARIDAE_AUTH" \
-      -H "Content-Type: application/octet-stream" \
-      -H "Content-Disposition: file; filename=\"$file\"" \
-      --data-binary "@$file" \
-      "$BASE_URL/file/upload/media/${bundle}/field_additional_files"
+    retry_until_success \
+      curl -sf \
+        -X POST \
+        -H "Authorization: $SCYLLARIDAE_AUTH" \
+        -H "Content-Type: application/octet-stream" \
+        -H "Content-Disposition: file; filename=\"$file\"" \
+        --data-binary "@$file" \
+        "$BASE_URL/file/upload/media/${bundle}/field_additional_files"
   done
 fi
 
