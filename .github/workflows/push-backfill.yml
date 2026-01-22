@@ -354,7 +354,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       contexts: ${{ needs.drupal.outputs.context }}
-      image: codeserver
+      image: code-server
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
       strip-apk-pinning: true
