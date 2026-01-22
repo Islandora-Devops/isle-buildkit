@@ -169,7 +169,6 @@ while read -r version; do
 
     VERSION_ID=$(registry_get_version_id "$version")
     UPDATED_AT=$(registry_get_version_date "$version")
-    VERSION_DIGEST=$(registry_get_version_digest "$version")
     TAGS=$(registry_get_version_tags "$version")
 
     # Skip untagged versions - they may be platform-specific manifests referenced by multi-arch tags
