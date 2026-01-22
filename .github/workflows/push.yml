@@ -362,6 +362,7 @@ jobs:
       packages: write
     needs: [tags, java]
   test:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/build.yml
     with:
       contexts: ${{ needs.drupal.outputs.context }}
@@ -417,6 +418,7 @@ jobs:
   ## Tests.
   #############################################################################
   test-base:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.base.outputs.digest }}
@@ -424,6 +426,7 @@ jobs:
     secrets: inherit
     needs: [base]
   test-activemq:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.activemq.outputs.digest }}
@@ -431,6 +434,7 @@ jobs:
     secrets: inherit
     needs: [activemq]
   test-alpaca:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: >-
@@ -442,6 +446,7 @@ jobs:
       - activemq
       - alpaca
   test-blazegraph:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.blazegraph.outputs.digest }}
@@ -449,6 +454,7 @@ jobs:
     secrets: inherit
     needs: [blazegraph]
   test-cantaloupe:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.cantaloupe.outputs.digest }}
@@ -456,6 +462,7 @@ jobs:
     secrets: inherit
     needs: [cantaloupe]
   test-crayfish:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.crayfish.outputs.digest }}
@@ -463,6 +470,7 @@ jobs:
     secrets: inherit
     needs: [crayfish]
   test-crayfits:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.crayfits.outputs.digest }}
@@ -470,6 +478,7 @@ jobs:
     secrets: inherit
     needs: [crayfits]
   test-drupal:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: >-
@@ -483,6 +492,7 @@ jobs:
       - mariadb
       - postgresql
   test-fcrepo6:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: >-
@@ -498,6 +508,7 @@ jobs:
       - mariadb
       - postgresql
   test-fits:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.fits.outputs.digest }}
@@ -505,6 +516,7 @@ jobs:
     secrets: inherit
     needs: [fits]
   test-handle:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: >-
@@ -518,6 +530,7 @@ jobs:
       - mariadb
       - postgresql
   test-homarus:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.homarus.outputs.digest }}
@@ -525,6 +538,7 @@ jobs:
     secrets: inherit
     needs: [homarus]
   test-houdini:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.houdini.outputs.digest }}
@@ -532,6 +546,7 @@ jobs:
     secrets: inherit
     needs: [houdini]
   test-hypercube:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.hypercube.outputs.digest }}
@@ -539,6 +554,7 @@ jobs:
     secrets: inherit
     needs: [hypercube]
   test-java:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.java.outputs.digest }}
@@ -546,6 +562,7 @@ jobs:
     secrets: inherit
     needs: [java]
   test-mariadb:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.mariadb.outputs.digest }}
@@ -553,6 +570,7 @@ jobs:
     secrets: inherit
     needs: [mariadb]
   test-mergepdf:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.mergepdf.outputs.digest }}
@@ -560,6 +578,7 @@ jobs:
     secrets: inherit
     needs: [mergepdf]
   test-milliner:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.milliner.outputs.digest }}
@@ -567,6 +586,7 @@ jobs:
     secrets: inherit
     needs: [milliner]
   test-nginx:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.nginx.outputs.digest }}
@@ -574,6 +594,7 @@ jobs:
     secrets: inherit
     needs: [nginx]
   test-postgresql:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.postgresql.outputs.digest }}
@@ -581,6 +602,7 @@ jobs:
     secrets: inherit
     needs: [postgresql]
   test-riprap:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: >-
@@ -594,6 +616,7 @@ jobs:
       - mariadb
       - postgresql
   test-solr:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.solr.outputs.digest }}
@@ -601,6 +624,7 @@ jobs:
     secrets: inherit
     needs: [solr]
   test-test:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: >-
@@ -634,6 +658,7 @@ jobs:
       - solr
       - test
   test-tomcat:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.tomcat.outputs.digest }}
@@ -641,6 +666,7 @@ jobs:
     secrets: inherit
     needs: [tomcat]
   test-transcriber:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.transcriber.outputs.digest }}
@@ -648,6 +674,7 @@ jobs:
     secrets: inherit
     needs: [transcriber]
   test-transkribus:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: ${{ needs.transkribus.outputs.digest }}
@@ -658,6 +685,7 @@ jobs:
   ## Grype.
   #############################################################################
   grype-base:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.base.outputs.digest }}
@@ -665,6 +693,7 @@ jobs:
     secrets: inherit
     needs: [base]
   grype-activemq:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.activemq.outputs.digest }}
@@ -672,6 +701,7 @@ jobs:
     secrets: inherit
     needs: [activemq]
   grype-alpaca:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.alpaca.outputs.digest }}
@@ -679,6 +709,7 @@ jobs:
     secrets: inherit
     needs: [alpaca]
   grype-blazegraph:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.blazegraph.outputs.digest }}
@@ -686,6 +717,7 @@ jobs:
     secrets: inherit
     needs: [blazegraph]
   grype-cantaloupe:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.cantaloupe.outputs.digest }}
@@ -693,6 +725,7 @@ jobs:
     secrets: inherit
     needs: [cantaloupe]
   grype-crayfish:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.crayfish.outputs.digest }}
@@ -700,6 +733,7 @@ jobs:
     secrets: inherit
     needs: [crayfish]
   grype-crayfits:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.crayfits.outputs.digest }}
@@ -707,6 +741,7 @@ jobs:
     secrets: inherit
     needs: [crayfits]
   grype-drupal:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: >-
@@ -715,6 +750,7 @@ jobs:
     secrets: inherit
     needs: [drupal]
   grype-fcrepo6:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.fcrepo6.outputs.digest }}
@@ -722,6 +758,7 @@ jobs:
     secrets: inherit
     needs: [fcrepo6]
   grype-fits:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.fits.outputs.digest }}
@@ -729,6 +766,7 @@ jobs:
     secrets: inherit
     needs: [fits]
   grype-handle:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.handle.outputs.digest }}
@@ -736,6 +774,7 @@ jobs:
     secrets: inherit
     needs: [handle]
   grype-homarus:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.homarus.outputs.digest }}
@@ -743,6 +782,7 @@ jobs:
     secrets: inherit
     needs: [homarus]
   grype-houdini:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.houdini.outputs.digest }}
@@ -750,6 +790,7 @@ jobs:
     secrets: inherit
     needs: [houdini]
   grype-hypercube:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.hypercube.outputs.digest }}
@@ -757,6 +798,7 @@ jobs:
     secrets: inherit
     needs: [hypercube]
   grype-java:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.java.outputs.digest }}
@@ -764,6 +806,7 @@ jobs:
     secrets: inherit
     needs: [java]
   grype-mariadb:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.mariadb.outputs.digest }}
@@ -771,6 +814,7 @@ jobs:
     secrets: inherit
     needs: [mariadb]
   grype-milliner:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.milliner.outputs.digest }}
@@ -778,6 +822,7 @@ jobs:
     secrets: inherit
     needs: [milliner]
   grype-nginx:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.nginx.outputs.digest }}
@@ -785,6 +830,7 @@ jobs:
     secrets: inherit
     needs: [nginx]
   grype-postgresql:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.postgresql.outputs.digest }}
@@ -792,6 +838,7 @@ jobs:
     secrets: inherit
     needs: [postgresql]
   grype-riprap:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.riprap.outputs.digest }}
@@ -799,6 +846,7 @@ jobs:
     secrets: inherit
     needs: [riprap]
   grype-solr:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.solr.outputs.digest }}
@@ -806,6 +854,7 @@ jobs:
     secrets: inherit
     needs: [solr]
   grype-test:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.test.outputs.digest }}
@@ -813,6 +862,7 @@ jobs:
     secrets: inherit
     needs: [test]
   grype-tomcat:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.tomcat.outputs.digest }}
@@ -820,6 +870,7 @@ jobs:
     secrets: inherit
     needs: [tomcat]
   grype-transcriber:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.transcriber.outputs.digest }}
@@ -827,6 +878,7 @@ jobs:
     secrets: inherit
     needs: [transcriber]
   grype-transkribus:
+    if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
       digest: ${{ needs.transkribus.outputs.digest }}
