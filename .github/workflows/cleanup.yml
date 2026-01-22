@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
       - name: "Cleanup islandora/${{ matrix.name }}"
-        run: ./ci/cleanup-images.sh --registry dockerhub
+        run: ./ci/cleanup-images.sh --registry dockerhub --yolo
         env:
           REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
@@ -72,7 +72,7 @@ jobs:
     steps:
       - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
       - name: "Cleanup ghcr.io/islandora-devops/${{ matrix.name }}"
-        run: ./ci/cleanup-images.sh --registry ghcr
+        run: ./ci/cleanup-images.sh --registry ghcr --yolo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ORG: islandora-devops
