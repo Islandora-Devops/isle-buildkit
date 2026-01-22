@@ -39,13 +39,6 @@ gradlePlugin {
             description = "Main gradle plugin for the Islandora Isle project"
             tags.set(listOf("isle"))
         }
-        create("IsleDockerHub") {
-            id = "io.github.nigelgbanks.IsleDockerHub"
-            implementationClass = "plugins.DockerHubPlugin"
-            displayName = "IsleDockerHub"
-            description = "Tasks for managing DockerHub tags, etc."
-            tags.set(listOf("isle"))
-        }
         create("IsleReports") {
             id = "io.github.nigelgbanks.IsleReports"
             implementationClass = "plugins.ReportsPlugin"
