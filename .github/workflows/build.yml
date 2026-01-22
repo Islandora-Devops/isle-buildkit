@@ -109,6 +109,26 @@ jobs:
         run: |
           set -eou pipefail
 
+          # Retry function with exponential backoff for rate limiting
+          retry_with_backoff() {
+            local max_attempts=5
+            local attempt=1
+            local delay=15
+            while true; do
+              if "$@"; then
+                return 0
+              fi
+              if [ $attempt -ge $max_attempts ]; then
+                echo "Command failed after $max_attempts attempts"
+                return 1
+              fi
+              echo "Attempt $attempt failed, retrying in ${delay}s..."
+              sleep $delay
+              attempt=$((attempt + 1))
+              delay=$((delay * 2))
+            done
+          }
+
           REPOS=(
             "${{ inputs.repository }}"
             "ghcr.io/islandora-devops"
@@ -131,7 +151,7 @@ jobs:
           FIRST_TAG=$(echo "${{ inputs.tags }}" | awk '{print $1}')
           BASE_IMAGE_REF="${{ inputs.repository }}/${{ inputs.image }}:${FIRST_TAG}"
 
-          docker buildx imagetools create \
+          retry_with_backoff docker buildx imagetools create \
             ${TAG_ARGS} \
             "${BASE_IMAGE_REF}-amd64" \
             "${BASE_IMAGE_REF}-arm64"

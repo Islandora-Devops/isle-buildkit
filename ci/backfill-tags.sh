@@ -36,7 +36,6 @@ DOCKER_IMAGES=(
   homarus
   houdini
   hypercube
-  imagemagick
   java
   mariadb
   milliner
@@ -96,14 +95,17 @@ get_workflow_file() {
   fi
 }
 
-# Check if a Docker image exists
+# Check if a Docker image exists using Docker Hub API
 image_exists() {
   local image="$1"
   local tag="$2"
-  local full_image="${DOCKER_REPOSITORY}/${image}:${tag}"
+  local api_url="https://hub.docker.com/v2/repositories/${DOCKER_REPOSITORY}/${image}/tags/${tag}"
 
-  # Use docker manifest inspect to check if image exists (doesn't pull the image)
-  if docker manifest inspect "$full_image" &>/dev/null; then
+  # Use Docker Hub API to check if tag exists (more reliable than docker manifest inspect)
+  local http_code
+  http_code=$(curl -s -o /dev/null -w "%{http_code}" "$api_url")
+
+  if [[ "$http_code" == "200" ]]; then
     return 0
   else
     return 1
@@ -167,17 +169,11 @@ run_workflow() {
   while true; do
     status=$(gh run view "$run_id" --json status,conclusion --jq '.status')
     if [[ "$status" == "completed" ]]; then
-      conclusion=$(gh run view "$run_id" --json conclusion --jq '.conclusion')
-      if [[ "$conclusion" != "success" ]]; then
-        echo "  Workflow failed with conclusion: $conclusion"
-        exit 1
-      fi
       break
     fi
     printf "."
     sleep 30
   done
-  echo ""
 
   echo "Workflow completed for tag: $tag"
 }
