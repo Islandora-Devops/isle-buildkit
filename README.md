@@ -186,7 +186,6 @@ Isle DockerHub tasks
 deleteEligibleDockerHubTags - Delete eligible tags from DockerHub 'islandora/cache' Repository.
 getDockerHubTagsEligibleForDeletion - Gets the tags eligible for removal from DockerHub 'islandora/cache' Repository.
 getDockerHubToken - Gets the login token required for interacting with DockerHub Rest API.
-getProtectedDockerHubTags - Gets the tags which should not be removed by DockerHub cleanup inactive tags task.
 
 Isle Reports tasks
 ------------------
@@ -230,7 +229,7 @@ This repository makes use of [Github Actions] to perform a number of tasks.
 
 | Workflow                                                                 | Description                                                            |
 | :----------------------------------------------------------------------- | :--------------------------------------------------------------------- |
-| [cleanup.yml](.github/workflows/cleanup.yml)                             | Deletes old tags in DockerHub once a week.                             |
+| [cleanup.yml](.github/workflows/cleanup.yml)                             | Deletes old tags in DockerHub and GHCR once a week.                    |
 | [dockerhub-description.yml](.github/workflows/dockerhub-description.yml) | Updates DockerHub Description of images to match README.md files.      |
 | [push.yml](.github/workflows/push.yml)                                   | Builds and Tests images and generates a security vulnerability report. |
 
