@@ -5,7 +5,7 @@ set -euo pipefail
 # This allows rebuilding old tags with the latest
 # OS packages available in the base image's package manager.
 #
-# Usage: ./ci/build-with-os-versions.sh <tag>
+# Usage: ./ci/strip-apk-pinning.sh <tag>
 #   tag    - The git tag to build from (must exist)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -30,6 +30,8 @@ fi
 TAG="${1}"
 
 # Verify the git tag exists before proceeding
+# and also check it out
+# so when running in GitHub Actions we build the respective tag
 git fetch origin tag "${TAG}"
 git checkout "${TAG}"
 
