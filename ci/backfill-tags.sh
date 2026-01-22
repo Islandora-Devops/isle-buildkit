@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
+# Scan all tags on the repo
+# foreach tag, see if all our base docker images exist for that tag
+# If a tag is missing, kick off a github action workflow to rebuild those tags
+#
+# Usage: ./ci/backfill-tags.sh [OPTIONS]
+#
+# Options:
+#   --yolo              Execute the workflow runs (default: dry-run mode)
+#   --tag TAG           Process only a specific tag instead of all tags
+#
+# Examples:
+#   ./ci/backfill-tags.sh                                # Dry-run all tags
+#   ./ci/backfill-tags.sh --yolo                    # Execute workflow runs for all tags (one workflow at a time)
+#   ./ci/backfill-tags.sh --tag 3.0.0            # Dry-run specific tag
+#   ./ci/backfill-tags.sh --yolo --tag 4.1.3 # Execute workflow for specific tag
 # Handle Ctrl+C
 trap 'echo -e "\nInterrupted. Exiting..."; exit 130' INT TERM
 

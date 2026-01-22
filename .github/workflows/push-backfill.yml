@@ -32,7 +32,6 @@ jobs:
   tags:
     uses: ./.github/workflows/tags.yml
     with:
-      # Use tag from workflow_dispatch OR push event
       tag: ${{ inputs.tag }}
     secrets: inherit
   base:
