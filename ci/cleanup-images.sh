@@ -106,7 +106,8 @@ echo -e "${GREEN}Container Image Cleanup Script${NC}"
 echo "================================"
 registry_print_config
 echo "Deleting versions older than: $CUTOFF_DATE ($DAYS_OLD days)"
-echo "Preserving: 'main' tag and version tags (e.g., 5, 5.10, 1.2.3), excluding arch-specific tags (e.g., 5.1.5-arm64)"
+echo "Preserving: 'main' tag, version tags (e.g., 5, 5.10, 1.2.3), and untagged versions (multi-arch manifests)"
+echo "Deleting: old branch/PR tags (e.g., pr-123), arch-specific tags (e.g., 5.1.5-arm64)"
 if [ "$DRY_RUN" = "true" ]; then
     echo -e "Mode: ${YELLOW}DRY RUN${NC} (no deletions will occur)"
 else
@@ -143,13 +144,6 @@ is_older_than_cutoff() {
 # Fetch all versions
 echo "Fetching all versions..."
 ALL_VERSIONS=$(registry_fetch_all_versions)
-
-# Build a list of digests from preserved versions (main and semver tags)
-echo "Identifying preserved versions and their dependencies..."
-PRESERVED_DIGESTS=$(registry_get_preserved_digests "$ALL_VERSIONS")
-
-PRESERVED_COUNT_DIGESTS=$(echo "$PRESERVED_DIGESTS" | grep -c . || echo "0")
-echo "Found $PRESERVED_COUNT_DIGESTS preserved digests"
 echo ""
 
 # Create temp files for counters (to avoid subshell issues)
@@ -178,17 +172,10 @@ while read -r version; do
     VERSION_DIGEST=$(registry_get_version_digest "$version")
     TAGS=$(registry_get_version_tags "$version")
 
-    # Default to untagged if no tags
+    # Skip untagged versions - they may be platform-specific manifests referenced by multi-arch tags
     if [ -z "$TAGS" ]; then
-        TAG_DISPLAY="<untagged>"
-        SHOULD_DELETE=true
-
-        # Check if this untagged version is a preserved digest (referenced by a kept tag)
-        if echo "$PRESERVED_DIGESTS" | grep -qF "$VERSION_DIGEST"; then
-            SHOULD_DELETE=false
-            echo -e "${YELLOW}[$CURRENT/$TOTAL_VERSIONS] Preserving${NC} version $VERSION_ID (digest: ${VERSION_DIGEST:0:20}...) - referenced by preserved tag"
-            echo $(($(cat "$TEMP_DIR/preserved") + 1)) > "$TEMP_DIR/preserved"
-        fi
+        echo -e "${YELLOW}[$CURRENT/$TOTAL_VERSIONS] Skipping${NC} version $VERSION_ID (untagged) - may be referenced by multi-arch manifest"
+        continue
     else
         TAG_DISPLAY="$TAGS"
         SHOULD_DELETE=true
