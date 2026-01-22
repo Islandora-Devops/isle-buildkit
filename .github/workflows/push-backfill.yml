@@ -1,0 +1,380 @@
+name: Backfill 3.x, 4.x, or 5.x Docker Images
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        required: true
+concurrency:
+  group: push-backfill-${{ github.ref }}-${{ inputs.tag && inputs.tag }}
+  cancel-in-progress: true
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      use-external-builds: ${{ steps.compare.outputs.use-external-builds }}
+    steps:
+      - id: compare
+        run: |
+          TAG="${{ inputs.tag }}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$TAG"
+
+          USE_EXTERNAL_BUILDS=false
+          if [ "$MAJOR" -lt 4 ]; then
+            USE_EXTERNAL_BUILDS=true
+          elif [ "$MAJOR" -eq 4 ] && [ "$MINOR" -lt 1 ]; then
+            USE_EXTERNAL_BUILDS=true
+          elif [ "$MAJOR" -eq 4 ] && [ "$MINOR" -eq 1 ] && [ "$PATCH" -lt 3 ]; then
+            USE_EXTERNAL_BUILDS=true
+          fi
+
+          echo "use-external-builds=$USE_EXTERNAL_BUILDS" >> $GITHUB_OUTPUT
+  tags:
+    uses: ./.github/workflows/tags.yml
+    with:
+      # Use tag from workflow_dispatch OR push event
+      tag: ${{ inputs.tag }}
+    secrets: inherit
+  base:
+    uses: ./.github/workflows/build.yml
+    with:
+      image: base
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: tags
+  activemq:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: activemq
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, java]
+  alpaca:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: alpaca
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, java]
+  blazegraph:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.tomcat.outputs.context }}
+      image: blazegraph
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, tomcat]
+  cantaloupe:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: cantaloupe
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, java]
+  crayfish:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: crayfish
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, nginx]
+  crayfits:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: crayfits
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, crayfish]
+  drupal:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: drupal
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, nginx]
+  fcrepo6:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.tomcat.outputs.context }}
+      image: fcrepo6
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, tomcat]
+  fits:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.tomcat.outputs.context }}
+      image: fits
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, tomcat]
+  handle:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: handle
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, java]
+  homarus:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: homarus
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, crayfish]
+  houdini:
+    if: always()
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: houdini
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, crayfish, imagemagick]
+  hypercube:
+    if: always()
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: hypercube
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, crayfish, leptonica]
+  imagemagick:
+    if: ${{ needs.check-version.outputs.use-external-builds == 'false' }}
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: imagemagick
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, base, check-version]
+  java:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: java
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, base]
+  leptonica:
+    if: ${{ needs.check-version.outputs.use-external-builds == 'false' }}
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: leptonica
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, base, check-version]
+  mariadb:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: mariadb
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, base]
+  milliner:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.crayfish.outputs.context }}
+      image: milliner
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, crayfish]
+  nginx:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: nginx
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, base]
+  postgresql:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.base.outputs.context }}
+      image: postgresql
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, base]
+  riprap:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: riprap
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, nginx]
+  solr:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: solr
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, java]
+  tomcat:
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.java.outputs.context }}
+      image: tomcat
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, java]
+  codeserver:
+    if: ${{ startsWith(inputs.tag, '3.') || startsWith(inputs.tag, '4.') }}
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.drupal.outputs.context }}
+      image: codeserver
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, drupal]
+  matomo:
+    if: ${{ startsWith(inputs.tag, '3.') }}
+    uses: ./.github/workflows/build.yml
+    with:
+      contexts: ${{ needs.nginx.outputs.context }}
+      image: matomo
+      repository: ${{ vars.repository }}
+      tags: ${{ needs.tags.outputs.tags }}
+      strip-apk-pinning: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+    needs: [tags, nginx]

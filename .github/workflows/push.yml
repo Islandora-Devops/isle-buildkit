@@ -15,11 +15,12 @@ on:
         type: boolean
         default: false
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.ref }}-${{ inputs.tag && inputs.tag || github.ref_name }}
   cancel-in-progress: true
 jobs:
   lint:
     runs-on: ubuntu-24.04
+    name: "lint ${{ inputs.tag && inputs.tag || github.ref_name }}"
     steps:
       - uses: "actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8" # v6
 

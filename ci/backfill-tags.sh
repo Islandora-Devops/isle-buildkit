@@ -66,6 +66,19 @@ get_semver_tags() {
   done
 }
 
+# Get the workflow file for a given tag
+get_workflow_file() {
+  local tag="$1"
+  local version="${tag#v}"
+  local major="${version%%.*}"
+
+  if [[ "$major" -le 5 ]]; then
+    echo "push-backfill.yml"
+  else
+    echo "$WORKFLOW_FILE"
+  fi
+}
+
 # Check if a Docker image exists
 image_exists() {
   local image="$1"
@@ -95,26 +108,38 @@ log_workflow() {
 # Run the workflow for a given tag
 run_workflow() {
   local tag="$1"
+  local workflow
+  workflow=$(get_workflow_file "$tag")
 
-  echo "Running workflow for tag: $tag"
+  echo "Running workflow $workflow for tag: $tag"
 
   if [[ "$DRY_RUN" == "true" ]]; then
-    echo "[DRY-RUN] Would run: gh workflow run $WORKFLOW_FILE --ref $WORKFLOW_REF -f tag=$tag -f strip-apk-pinning=true"
+    if [[ "$workflow" == "push-backfill.yml" ]]; then
+      echo "[DRY-RUN] Would run: gh workflow run $workflow --ref $WORKFLOW_REF -f tag=$tag"
+    else
+      echo "[DRY-RUN] Would run: gh workflow run $workflow --ref $WORKFLOW_REF -f tag=$tag -f strip-apk-pinning=true"
+    fi
     return 0
   fi
 
   # Run the workflow and wait for completion
-  gh workflow run "$WORKFLOW_FILE" \
-    --ref "$WORKFLOW_REF" \
-    -f "tag=$tag" \
-    -f "strip-apk-pinning=true"
+  if [[ "$workflow" == "push-backfill.yml" ]]; then
+    gh workflow run "$workflow" \
+      --ref "$WORKFLOW_REF" \
+      -f "tag=$tag"
+  else
+    gh workflow run "$workflow" \
+      --ref "$WORKFLOW_REF" \
+      -f "tag=$tag" \
+      -f "strip-apk-pinning=true"
+  fi
 
   # Give GitHub a moment to register the run
   sleep 5
 
   # Get the run ID and URL of the workflow we just triggered
   local run_info run_id run_url
-  run_info=$(gh run list --workflow="$WORKFLOW_FILE" --limit=1 --json databaseId,url --jq '.[0] | "\(.databaseId) \(.url)"')
+  run_info=$(gh run list --workflow="$workflow" --limit=1 --json databaseId,url --jq '.[0] | "\(.databaseId) \(.url)"')
   run_id=$(echo "$run_info" | cut -d' ' -f1)
   run_url=$(echo "$run_info" | cut -d' ' -f2)
 
