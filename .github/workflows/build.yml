@@ -15,6 +15,11 @@ on:
       contexts:
         required: false
         type: string
+      strip-apk-pinning:
+        description: "Remove apk OS package pins from dockerfiles"
+        required: false
+        type: boolean
+        default: false
     outputs:
       digest:
         description: "Digest argument for Gradle"
@@ -38,6 +43,11 @@ jobs:
     steps:
       - name: Checkout
         uses: "actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8" # v6
+
+      # allow running this job on old tags
+      - name: Strip APK pinning
+        if: ${{ inputs.strip-apk-pinning || false }}
+        run: ./ci/strip-apk-pinning.sh "$(echo "${{ inputs.tags }}" | awk '{print $1}')"
 
       - name: Set up Docker Buildx
         id: buildx
