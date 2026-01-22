@@ -11,7 +11,7 @@ on:
         required: true
       strip-apk-pinning:
         description: "Remove apk OS package pins from dockerfiles"
-        required: false
+        required: true
         type: boolean
         default: true
 concurrency:
