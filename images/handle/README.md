@@ -1,6 +1,6 @@
 # Handle
 
-Docker image for [Handle] version 9.3.1.
+Docker image for [Handle] version 9.3.2.
 
 Built from [Islandora-DevOps/isle-buildkit handle](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/handle)
 
