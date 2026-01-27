@@ -40,8 +40,8 @@
 
 This repository provides a number of docker images which can be used to build an
 Islandora site. On commit, these images are automatically pushed to
-[Docker Hub] via Github Actions. Which are consumed by [isle-dc] and
-[isle-site-template]. They can also be used by other Docker orchestration tools
+[Docker Hub] via Github Actions. Which are consumed by [isle-site-template].
+They can also be used by other Docker orchestration tools
 such as Swarm / Kubernetes. Reach out on the community slack for other example
 installations.
 
@@ -49,7 +49,7 @@ It is **not** meant as a starting point for new users or those unfamiliar with
 Docker, or basic server administration.
 
 If you are looking to use islandora please read the [official documentation] and
-use either [isle-dc] or the [isle-site-template] to deploy via [Docker] or the
+use [isle-site-template] to deploy via [Docker] or the
 [islandora-playbook] to deploy via [Ansible].
 
 ## Requirements
@@ -254,9 +254,6 @@ cache.
 make bake
 ```
 
-If you want to build cross platform issues, please use the [isle-builder]
-repository for setting up a builder.
-
 ### Build All Images
 
 The following will build all the images in the correct order.
@@ -320,8 +317,7 @@ Alternatively you can test a single image like so:
 While `isle-buildkit` does provide a test environment, it is not meant for
 development on Islandora or as production environment. It is meant for testing
 for breaking changes to the images provided by this repository. Instead please
-refer to [isle-dc], or the [isle-site-template], for how to build your own
-Islandora site.
+refer to the [isle-site-template], for how to build your own Islandora site.
 
 To manually test changes in a functioning environment you can use the provided
 `docker-compose.yml` file.
@@ -408,6 +404,7 @@ The following docker images are provided:
 - [hypercube]
 - [java]
 - [mariadb]
+- [mergepdf]
 - [milliner]
 - [nginx]
 - [postgresql]
@@ -415,6 +412,8 @@ The following docker images are provided:
 - [solr]
 - [test]
 - [tomcat]
+- [transcriber]
+- [transkribus]
 
 Many are intermediate images used to build other images in the list, for example
 [java](./java/README.md). Please see the `README.md` of each image to find out
@@ -736,15 +735,18 @@ are arranged in a hierarchy, that roughly follows below:
     ├── mariadb
     ├── postgresql
     └── nginx
-        ├── crayfish
-        │   ├── homarus
-        │   ├── houdini (consumes [imagemagick] as well during its build stage)
-        │   ├── hypercube (consumes [leptonica] as well during its build stage)
-        │   ├── milliner
-        │   └── riprap
-        ├── crayfits
-        ├── drupal
-            └── test
+    │   ├── crayfish
+    │   │   ├── milliner
+    │   │   └── riprap
+    │   ├── drupal
+    │       └── test
+    ├── scyllaridae
+    │   ├── crayfits
+    │   ├── homarus
+    │   ├── houdini (consumes [imagemagick] as well during its build stage)
+    │   ├── hypercube (consumes [leptonica] as well during its build stage)
+    │   ├── mergepdf
+    │   ├── transcriber
 ```
 
 [imagemagick] & [leptonica] stand outside of the hierarchy as they are use only
@@ -892,31 +894,31 @@ adding the following, and restarting `Docker`:
 }
 ```
 
-[abuild]: ./abuild/README.md
-[activemq]: ./activemq/README.md
-[alpaca]: ./alpaca/README.md
-[base]: ./base/README.md
-[blazegraph]: ./blazegraph/README.md
-[cantaloupe]: ./cantaloupe/README.md
-[crayfish]: ./crayfish/README.md
-[crayfits]: ./crayfits/README.md
-[drupal]: ./drupal/README.md
-[fcrepo6]: ./fcrepo6/README.md
-[fits]: ./fits/README.md
-[handle]: ./handle/README.md
-[homarus]: ./homarus/README.md
-[houdini]: ./houdini/README.md
-[hypercube]: ./hypercube/README.md
-[java]: ./java/README.md
-[mariadb]: ./mariadb/README.md
-[milliner]: ./milliner/README.md
-[nginx]: ./nginx/README.md
-[postgresql]: ./postgresql/README.md
-[ripgrep]: ./ripgrep/README.md
-[solr]: ./solr/README.md
-[test]: ./test/README.md
-[tomcat]: ./tomcat/README.md
-[transkribus]: /transkribus/README.md
+[activemq]: ./images/activemq/README.md
+[alpaca]: ./images/alpaca/README.md
+[base]: ./images/base/README.md
+[blazegraph]: ./images/blazegraph/README.md
+[cantaloupe]: ./images/cantaloupe/README.md
+[crayfish]: ./images/crayfish/README.md
+[crayfits]: ./images/crayfits/README.md
+[drupal]: ./images/drupal/README.md
+[fcrepo6]: ./images/fcrepo6/README.md
+[fits]: ./images/fits/README.md
+[handle]: ./images/handle/README.md
+[homarus]: ./images/homarus/README.md
+[houdini]: ./images/houdini/README.md
+[hypercube]: ./images/hypercube/README.md
+[java]: ./images/java/README.md
+[mariadb]: ./images/mariadb/README.md
+[milliner]: ./images/milliner/README.md
+[nginx]: ./images/nginx/README.md
+[postgresql]: ./images/postgresql/README.md
+[ripgrep]: ./images/ripgrep/README.md
+[solr]: ./images/solr/README.md
+[test]: ./images/test/README.md
+[tomcat]: ./images/tomcat/README.md
+[transcriber]: ./images/transcriber/README.md
+[transkribus]: /images/transkribus/README.md
 
 [Alpine Docker Image]: https://hub.docker.com/_/alpine
 [Ansible]: https://docs.ansible.com/ansible/latest/user_guide/index.html#getting-started
@@ -930,15 +932,13 @@ adding the following, and restarting `Docker`:
 [execline]: https://skarnet.org/software/execline/index.html
 [Github Actions]: https://github.com/features/actions
 [glibc]: https://www.gnu.org/software/libc/
-[imagemagick]: https://github.com/Islandora-Devops/isle-imagemagick
+[imagemagick]: https://github.com/Islandora-Devops/isle-buildkit/tree/main/images/imagemagick
 [islandora-playbook]: https://github.com/Islandora-Devops/islandora-playbook
 [islandora-starter-site]: https://github.com/Islandora/islandora-starter-site
-[isle-dc]: https://github.com/Islandora-Devops/isle-dc
 [isle-site-template]: https://github.com/Islandora-Devops/isle-site-template
-[leptonica]: https://github.com/Islandora-Devops/isle-leptonica
+[leptonica]: https://github.com/Islandora-Devops/isle-buildkit/tree/main/images/leptonica
 [musl libc]: https://musl.libc.org/
 [official documentation]: https://islandora.github.io/documentation/
 [Overlay2]: https://docs.docker.com/storage/storagedriver/overlayfs-driver#configure-docker-with-the-overlay-or-overlay2-storage-driver
 [registry-cache]: https://docs.docker.com/build/cache/backends/registry/
 [S6 Overlay]: https://github.com/just-containers/s6-overlay
-[isle-builder]: https://github.com/Islandora-Devops/isle-dc
