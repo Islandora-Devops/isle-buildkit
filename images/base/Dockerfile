@@ -3,18 +3,18 @@ FROM alpine
 
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=s6-overlay packageName=just-containers/s6-overlay
-ARG S6_VERSION=3.2.1.0
+ARG S6_VERSION=3.2.2.0
 ARG S6_BASE_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}"
 ARG S6_OVERLAY_NOARCH=s6-overlay-noarch.tar.xz
-ARG S6_OVERLAY_NOARCH_SHA256="42e038a9a00fc0fef70bf0bc42f625a9c14f8ecdfe77d4ad93281edf717e10c5"
+ARG S6_OVERLAY_NOARCH_SHA256="85848f6baab49fb7832a5557644c73c066899ed458dd1601035cf18e7c759f26"
 ARG S6_OVERLAY_SYMLINKS_ARCH=s6-overlay-symlinks-arch.tar.xz
-ARG S6_OVERLAY_SYMLINKS_ARCH_SHA256="c99a8c5747866aedf268067c2dadd755863044c4df76429314f5f0434200c9d5"
+ARG S6_OVERLAY_SYMLINKS_ARCH_SHA256="9364479e3f9f4d42425312ced93e25ca2a8896d0405ac747d815ca56338321f0"
 ARG S6_OVERLAY_SYMLINKS_NOARCH=s6-overlay-symlinks-noarch.tar.xz
-ARG S6_OVERLAY_SYMLINKS_NOARCH_SHA256="5c0a28acc0aca6c86d90c9cd752361e0b69b0d57789064fbc8b066b2e21264d4"
+ARG S6_OVERLAY_SYMLINKS_NOARCH_SHA256="fae2b2fd6da3067a5f484e915dc5744e2b152abc81721a72f3d2e9b2d6657204"
 ARG S6_OVERLAY_AMD64=s6-overlay-x86_64.tar.xz
-ARG S6_OVERLAY_AMD64_SHA256="8bcbc2cada58426f976b159dcc4e06cbb1454d5f39252b3bb0c778ccf71c9435"
+ARG S6_OVERLAY_AMD64_SHA256="5a09e2f1878dc5f7f0211dd7bafed3eee1afe4f813e872fff2ab1957f266c7c0"
 ARG S6_OVERLAY_ARM64=s6-overlay-aarch64.tar.xz
-ARG S6_OVERLAY_ARM64_SHA256="c8fd6b1f0380d399422fc986a1e6799f6a287e2cfa24813ad0b6a4fb4fa755cc"
+ARG S6_OVERLAY_ARM64_SHA256="50a5d4919e688fafc95ce9cf0055a46f74847517bcf08174bac811de234ec7d2"
 
 LABEL License="MIT License"
 
@@ -43,7 +43,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_22/netcat-openbsd
   NETCAT_OPENBSD_VERSION=1.229.1-r0 \
   # renovate: datasource=repology depName=alpine_3_22/openssl
-  OPENSSL_VERSION=3.5.4-r0 \
+  OPENSSL_VERSION=3.5.5-r0 \
   # renovate: datasource=repology depName=alpine_3_22/patch
   PATCH_VERSION=2.8-r0 \
   # renovate: datasource=repology depName=alpine_3_22/postgresql16-client
