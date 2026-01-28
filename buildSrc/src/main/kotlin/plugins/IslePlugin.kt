@@ -19,7 +19,6 @@ class IslePlugin : Plugin<Project> {
 
     override fun apply(pluginProject: Project): Unit = pluginProject.run {
         apply<SharedPropertiesPlugin>()
-        apply<DockerHubPlugin>()
         apply<ReportsPlugin>()
         apply<TestsPlugin>()
 

@@ -1,48 +1,79 @@
-name: Delete old DockerHub tags
+name: Cleanup old container images
 on:
   workflow_dispatch:
+    inputs:
+      image:
+        description: 'Single image to clean (leave empty for all images)'
+        required: false
+        type: string
   schedule:
     - cron: "0 13 * * 0" # Every Sunday at 1PM UTC (9AM EST)
 jobs:
-  clean-ghcr:
+  find-images:
     runs-on: ubuntu-24.04
+    outputs:
+      images: ${{ steps.set-matrix.outputs.images }}
+    steps:
+      - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+
+      - name: Generate matrix
+        id: set-matrix
+        run: |
+          if [ -n "${{ inputs.image }}" ]; then
+            # Single image specified
+            images=$(echo '["${{ inputs.image }}"]')
+          else
+            # Find all images
+            images=$(find images -maxdepth 2 -mindepth 2 -type f -name "Dockerfile" | while read dockerfile; do
+              image_name=$(basename $(dirname "$dockerfile"))
+              echo "\"$image_name\""
+            done | jq -s -c .)
+          fi
+          # debug
+          echo "Images to process:"
+          echo "$images" | jq .
+
+          echo "images=$images" >> $GITHUB_OUTPUT
+
+  clean-dockerhub:
+    name: "DockerHub: ${{ matrix.name }}"
+    runs-on: ubuntu-24.04
+    needs: [find-images]
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        name: ${{ fromJson(needs.find-images.outputs.images) }}
+      # be nice to the dockerhub/ghcr API, only run 1 job at a time
+      max-parallel: 1
+      fail-fast: false
+    steps:
+      - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+      - name: "Cleanup islandora/${{ matrix.name }}"
+        run: ./ci/cleanup-images.sh --registry dockerhub --yolo
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          DOCKERHUB_REPOSITORY: ${{ matrix.name }}
+
+  clean-ghcr:
+    name: "GHCR: ${{ matrix.name }}"
+    runs-on: ubuntu-24.04
+    needs: [find-images]
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
-        package:
-          - alpaca
-          - base
-          - blazegraph
-          - cantaloupe
-          - crayfish
-          - crayfits
-          - drupal
-          - fcrepo6
-          - fits
-          - handle
-          - homarus
-          - houdini
-          - hypercube
-          - imagemagick
-          - java
-          - leptonica
-          - mariadb
-          - milliner
-          - nginx
-          - postgresql
-          - riprap
-          - scyllaridae
-          - solr
-          - test
-          - tomcat
-          - transkribus
+        name: ${{ fromJson(needs.find-images.outputs.images) }}
+      # be nice to the dockerhub/ghcr API, only run 1 job at a time
+      max-parallel: 1
+      fail-fast: false
     steps:
       - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
-      - run: ./ci/cleanup-ghcr.sh
+      - name: "Cleanup ghcr.io/islandora-devops/${{ matrix.name }}"
+        run: ./ci/cleanup-images.sh --registry ghcr --yolo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ORG: islandora-devops
-          PACKAGE_NAME: ${{ matrix.package }}
-          DRY_RUN: false
+          PACKAGE_NAME: ${{ matrix.name }}
