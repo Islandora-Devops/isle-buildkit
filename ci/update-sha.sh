@@ -181,7 +181,7 @@ elif [ "$DEP" = "s6-overlay" ]; then
 
   for ARG in "${!URLS_AND_ARGS[@]}"; do
     URL="${URLS_AND_ARGS[$ARG]}"
-    update_dockerfile_sha "$URL" "$ARG" "base/Dockerfile"
+    update_dockerfile_sha "$URL" "$ARG" "images/base/Dockerfile"
   done
 
   exit 0
