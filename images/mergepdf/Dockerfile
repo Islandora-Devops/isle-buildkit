@@ -28,7 +28,7 @@ RUN --mount=type=bind,from=leptonica,source=/packages,target=/packages \
         /packages/leptonica-*.apk \
         ghostscript=="${GHOSTSCRIPT_VERSION}" \
         tesseract-ocr=="${TESSERACT_VERSION}" \
-tesseract-ocr-data-afr=="${TESSERACT_VERSION}" \
+        tesseract-ocr-data-afr=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-ara=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-aze=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-bel=="${TESSERACT_VERSION}" \

@@ -23,7 +23,7 @@ RUN --mount=type=cache,id=hypercube-apk-${TARGETARCH},sharing=locked,target=/var
         /packages/leptonica-*.apk \
         poppler-utils=="${POPPLER_VERSION}" \
         tesseract-ocr=="${TESSERACT_VERSION}" \
-tesseract-ocr-data-afr=="${TESSERACT_VERSION}" \
+        tesseract-ocr-data-afr=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-ara=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-aze=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-bel=="${TESSERACT_VERSION}" \
