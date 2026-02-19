@@ -43,4 +43,7 @@ fi
 if [[ "${FCREPO_BINARYSTORAGE_TYPE}" == "s3" ]]; then
     # Enable S3 mode and set default options
     export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-s3 -Dfcrepo.aws.region=${FCREPO_AWS_REGION} -Dfcrepo.ocfl.s3.bucket=${FCREPO_S3_BUCKET} -Dfcrepo.ocfl.s3.prefix=${FCREPO_S3_PREFIX}"
+    if [[ "$FCREPO_S3_ENDPOINT" != "" ]] ; then
+        export CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.ocfl.s3.endpoint=${FCREPO_S3_ENDPOINT}"
+    fi
 fi
