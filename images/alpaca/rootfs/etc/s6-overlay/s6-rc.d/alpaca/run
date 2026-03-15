@@ -1,4 +1,13 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 set -e
-exec s6-setuidgid alpaca java "${ALPACA_JAVA_OPTS[@]}" -jar /opt/alpaca/alpaca.jar -c /opt/alpaca/alpaca.properties
+
+alpaca_java_opts=()
+
+if [ -n "${ALPACA_JAVA_OPTS:-}" ]; then
+  read -r -a alpaca_java_opts <<<"$ALPACA_JAVA_OPTS"
+fi
+
+exec s6-setuidgid alpaca java "${alpaca_java_opts[@]}" \
+  -jar /opt/alpaca/alpaca.jar \
+  -c /opt/alpaca/alpaca.properties
