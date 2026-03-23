@@ -35,7 +35,9 @@
         "digest"
       ],
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "pr",
+      "minimumReleaseAge": null,
+      "schedule": []
     },
     {
       "matchPackageNames": [
