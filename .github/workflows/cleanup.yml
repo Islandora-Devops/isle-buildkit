@@ -14,7 +14,7 @@ jobs:
     outputs:
       images: ${{ steps.set-matrix.outputs.images }}
     steps:
-      - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+      - uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # v6
 
       - name: Generate matrix
         id: set-matrix
@@ -48,7 +48,7 @@ jobs:
       max-parallel: 1
       fail-fast: false
     steps:
-      - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+      - uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # v6
       - name: "Cleanup islandora/${{ matrix.name }}"
         run: ./ci/cleanup-images.sh --registry dockerhub --yolo
         env:
@@ -70,7 +70,7 @@ jobs:
       max-parallel: 1
       fail-fast: false
     steps:
-      - uses: 'actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8' # v6
+      - uses: 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd' # v6
       - name: "Cleanup ghcr.io/islandora-devops/${{ matrix.name }}"
         run: ./ci/cleanup-images.sh --registry ghcr --yolo
         env:
