@@ -16,32 +16,40 @@ cleanup() {
 
 trap cleanup EXIT
 
-# Function to download and process the image with retries
 download_and_process() {
-  local url="$1"
-  local output_file="$2"
+  local img_url="$1"
+  local width="$2"
+  local output_file="$3"
   local attempt=0
+  local download_url
+
+  if (( width > MAX_WIDTH )); then
+    download_url="${img_url}/full/${MAX_WIDTH},/0/default.jpg"
+  else
+    download_url="${img_url}/full/full/0/default.jpg"
+  fi
 
   while (( attempt < RETRIES )); do
-    if curl -s "$url" | magick - -resize "${MAX_WIDTH}x>" "$output_file" > /dev/null 2>&1; then
+    if curl -sf "$download_url" -o "$output_file"; then
       return 0
     fi
     attempt=$(( attempt + 1 ))
-    echo "Retrying ($attempt/$RETRIES) for $url..."
+    echo "Retrying ($attempt/$RETRIES) for $download_url..." >&2
     sleep 1
   done
 
-  echo "Failed to process $url after $RETRIES attempts." >&2
+  echo "Failed to process $download_url after $RETRIES attempts." >&2
   return 1
 }
 
-# Iterate over all images in the IIIF manifest
-URLS=$(curl -sf "$URL" | \
-  jq -r '.sequences[0].canvases[].images[0].resource."@id"' | \
-  awk -F '/' '{print $7}' | \
-  sed -e 's/%2F/\//g' -e 's/%3A/:/g' -e 's/%25/%/g')
-while read -r URL; do
-  # If we have reached the max thread limit, wait for any one job to finish
+mapfile -t ENTRIES < <(curl -sf "$URL" | \
+  jq -r '.sequences[0].canvases[] |
+    (.images[0].resource.service["@id"]) + " " + (.width | tostring)')
+
+for ENTRY in "${ENTRIES[@]}"; do
+  IMG_URL=$(echo "$ENTRY" | cut -d' ' -f1)
+  WIDTH=$(echo "$ENTRY" | cut -d' ' -f2)
+
   if [ "${#PIDS[@]}" -ge "$MAX_THREADS" ]; then
     wait -n
     NEW_PIDS=()
@@ -53,22 +61,19 @@ while read -r URL; do
     PIDS=("${NEW_PIDS[@]}")
   fi
 
-  # Run each job in the background
   (
     local_img="$TMP_DIR/img_$I.jpg"
 
-    # Download and resize the image with retry logic
-    if ! download_and_process "$URL" "$local_img"; then
+    if ! download_and_process "$IMG_URL" "$WIDTH" "$local_img"; then
       exit 1
     fi
 
-    # Make an OCR'd PDF from the image
     tesseract "$local_img" "$TMP_DIR/img_$I" pdf > /dev/null 2>&1
     rm "$local_img"
   ) &
   PIDS+=("$!")
   I="$(( I + 1))"
-done <<< "$URLS"
+done
 
 FILES=()
 for index in $(seq 0 $((I - 1))); do
@@ -77,9 +82,8 @@ done
 
 wait
 
-# Make the node title the title of the PDF
 TITLE=$(curl -L "$1?_format=json" | jq -r '.title[0].value' | sed 's/(/\\(/g; s/)/\\)/g')
-echo "[ /Title ($TITLE)/DOCINFO pdfmark" >  "$TMP_DIR/metadata.txt"
+echo "[ /Title ($TITLE)/DOCINFO pdfmark" > "$TMP_DIR/metadata.txt"
 
 gs -dBATCH \
   -dNOPAUSE \
@@ -92,8 +96,6 @@ gs -dBATCH \
   "${FILES[@]}" \
   "$TMP_DIR/metadata.txt"
 
-# Instead of printing the PDF
-# PUT it to the endpoint
 NID=$(basename "$1")
 BASE_URL=$(dirname "$1" | xargs dirname)
 TID=$(curl -sf \
