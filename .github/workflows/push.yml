@@ -282,7 +282,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [tags, scyllaridae, imagemagick, leptonica]
+    needs: [tags, scyllaridae, leptonica]
   milliner:
     uses: ./.github/workflows/build.yml
     with:

@@ -1,4 +1,3 @@
-FROM imagemagick
 FROM leptonica
 FROM scyllaridae
 
@@ -12,14 +11,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_22/tesseract-ocr
   TESSERACT_VERSION=5.5.0-r2 \
   # renovate: datasource=repology depName=alpine_3_22/ghostscript
-  GHOSTSCRIPT_VERSION=10.05.1-r0 \
-  # renovate: datasource=repology depName=alpine_3_22/poppler-utils
-  POPPLER_VERSION=25.04.0-r0
-
-# hadolint ignore=DL3018
-RUN --mount=type=bind,from=imagemagick,source=/packages,target=/packages \
-    --mount=type=bind,from=imagemagick,source=/etc/apk/keys,target=/etc/apk/keys \
-    apk add --no-cache /packages/imagemagick-*.apk
+  GHOSTSCRIPT_VERSION=10.05.1-r0
 
 RUN --mount=type=bind,from=leptonica,source=/packages,target=/packages \
     --mount=type=bind,from=leptonica,source=/etc/apk/keys,target=/etc/apk/keys \
@@ -36,8 +28,7 @@ RUN --mount=type=bind,from=leptonica,source=/packages,target=/packages \
         tesseract-ocr-data-hin=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-deu=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-jpn=="${TESSERACT_VERSION}" \
-        tesseract-ocr-data-rus=="${TESSERACT_VERSION}" \
-        poppler-utils=="${POPPLER_VERSION}"
+        tesseract-ocr-data-rus=="${TESSERACT_VERSION}"
 
 ENV \
   MAX_THREADS=5 \
