@@ -27,7 +27,9 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_22/nginx
     NGINX_VERSION=1.28.3-r0 \
     # renovate: datasource=repology depName=alpine_3_22/php83
-    PHP_VERSION=8.3.29-r0
+    PHP_VERSION=8.3.29-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/php83-pecl-amqp
+    PHP_PECL_AMQP_VERSION=2.1.2-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
@@ -61,6 +63,7 @@ RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cac
         php83-xmlwriter=="${PHP_VERSION}" \
         php83-xsl=="${PHP_VERSION}" \
         php83-zip=="${PHP_VERSION}" \
+        php83-pecl-amqp=="${PHP_PECL_AMQP_VERSION}" \
     && \
     addgroup nginx jwt && \
     cleanup.sh
