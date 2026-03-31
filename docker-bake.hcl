@@ -42,7 +42,7 @@ DEPENDENCIES = {
   cantaloupe = ["java"]
   crayfish = ["nginx"]
   crayfits = ["scyllaridae"]
-  drupal = ["nginx"]
+  drupal = ["nginx", "scyllaridae", "imagemagick", "leptonica", "crayfits", "homarus", "houdini", "hypercube", "mergepdf"]
   fcrepo6 = ["tomcat"]
   fits = ["tomcat"]
   handle = ["java"]
@@ -952,4 +952,3 @@ target "transkribus-arm64" {
   cache-from = cacheFrom("transkribus", "arm64")
   tags = tags("transkribus", "arm64")
 }
-
