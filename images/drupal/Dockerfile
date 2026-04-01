@@ -160,9 +160,7 @@ ENV \
     DRUPAL_DEFAULT_TRIPLESTORE_PORT=8080 \
     DRUPAL_ENABLE_HTTPS=true \
     DRUPAL_REVERSE_PROXY_IPS= \
-    DRUPAL_SITES=DEFAULT \
-    CRAYFITS_WEBSERVICE_URI=http://fits:8080/fits/examine
-
+    DRUPAL_SITES=DEFAULT
 
 COPY --link rootfs /
 COPY --link --from=scyllaridae /app/scyllaridae /usr/bin/scyllaridae
