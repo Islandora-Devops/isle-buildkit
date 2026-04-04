@@ -97,6 +97,11 @@ ENV \
     DRUPAL_SITES=DEFAULT
 
 COPY --link rootfs /
+RUN chown -R nginx:nginx /var/www /usr/share/drush
+
+# bundle scyllaridae definitions into this image
+ENV \
+    CRAYFITS_WEBSERVICE_URI=http://fits:8080/fits/examine
 COPY --link --from=scyllaridae /app/scyllaridae /usr/bin/scyllaridae
 COPY --link --from=crayfits /app/scyllaridae.yml /opt/scyllaridae/crayfits/scyllaridae.yml
 COPY --link --from=homarus /app/scyllaridae.yml /opt/scyllaridae/homarus/scyllaridae.yml
@@ -107,6 +112,3 @@ COPY --link --from=hypercube /app/scyllaridae.yml /opt/scyllaridae/hypercube/scy
 COPY --link --from=hypercube /app/cmd.sh /opt/scyllaridae/hypercube/cmd.sh
 COPY --link --from=mergepdf /app/scyllaridae.yml /opt/scyllaridae/mergepdf/scyllaridae.yml
 COPY --link --from=mergepdf /app/cmd.sh /opt/scyllaridae/mergepdf/cmd.sh
-
-
-RUN chown -R nginx:nginx /var/www /usr/share/drush
