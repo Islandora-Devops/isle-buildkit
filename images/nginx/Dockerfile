@@ -27,9 +27,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_22/nginx
     NGINX_VERSION=1.28.3-r0 \
     # renovate: datasource=repology depName=alpine_3_22/php83
-    PHP_VERSION=8.3.29-r0 \
-    # renovate: datasource=repology depName=alpine_3_22/php83-pecl-amqp
-    PHP_PECL_AMQP_VERSION=2.1.2-r0
+    PHP_VERSION=8.3.29-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
@@ -63,7 +61,6 @@ RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cac
         php83-xmlwriter=="${PHP_VERSION}" \
         php83-xsl=="${PHP_VERSION}" \
         php83-zip=="${PHP_VERSION}" \
-        php83-pecl-amqp=="${PHP_PECL_AMQP_VERSION}" \
     && \
     addgroup nginx jwt && \
     cleanup.sh
@@ -107,8 +104,7 @@ ENV \
     PHP_PROCESS_CONTROL_TIMEOUT=60 \
     PHP_REQUEST_TERMINATE_TIMEOUT=60 \
     PHP_UPLOAD_MAX_FILESIZE=128M \
-    SOLR_HOCR_PLUGIN_PATH=/opt/solr/server/solr/contrib/ocrhighlighting/lib \
-    CRAYFITS_WEBSERVICE_URI=http://fits:8080/fits/examine
+    SOLR_HOCR_PLUGIN_PATH=/opt/solr/server/solr/contrib/ocrhighlighting/lib
 
 COPY --link rootfs /
 
