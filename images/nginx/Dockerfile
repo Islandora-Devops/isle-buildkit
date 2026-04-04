@@ -104,7 +104,9 @@ ENV \
     PHP_PROCESS_CONTROL_TIMEOUT=60 \
     PHP_REQUEST_TERMINATE_TIMEOUT=60 \
     PHP_UPLOAD_MAX_FILESIZE=128M \
-    SOLR_HOCR_PLUGIN_PATH=/opt/solr/server/solr/contrib/ocrhighlighting/lib
+    # these env vars are exposed in php-fpm env so php code can access them with getenv
+    SOLR_HOCR_PLUGIN_PATH=/opt/solr/server/solr/contrib/ocrhighlighting/lib \
+    CRAYFITS_WEBSERVICE_URI=http://fits:8080/fits/examine
 
 COPY --link rootfs /
 
