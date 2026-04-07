@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv bash
+set -e
+exec /etc/s6-overlay/scripts/messenger-worker.sh islandora_derivatives "${DRUPAL_SM_WORKERS_DERIVATIVES_ENABLED:-true}"
