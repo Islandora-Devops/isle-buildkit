@@ -553,7 +553,7 @@ function generate_solr_config {
 
 # Creates a SOLR core for the site using the Solr REST API.
 function create_solr_core {
-    local site core host port
+    local site core host port status
     site="${1}"
     shift
     core=$(drupal_site_env "${site}" "SOLR_CORE")
@@ -562,6 +562,12 @@ function create_solr_core {
 
     # Require a running Solr to create a core.
     wait_for_service "${site}" "SOLR"
+
+    status=$(curl -fsS "http://${host}:${port}/solr/admin/cores?action=STATUS&core=${core}&indexInfo=false&wt=json")
+    if jq -e --arg core "${core}" '.status[$core] != null and (.status[$core] | length > 0)' <<<"${status}" >/dev/null; then
+        echo "Solr core ${core} already exists."
+        return 0
+    fi
 
     curl -s "http://${host}:${port}/solr/admin/cores?action=CREATE&name=${core}&instanceDir=${core}&config=solrconfig.xml&dataDir=data"
 }
