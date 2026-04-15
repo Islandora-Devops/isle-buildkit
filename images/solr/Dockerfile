@@ -12,7 +12,7 @@ ARG OCRHIGHLIGHT_VERSION=0.9.5
 ARG OCRHIGHLIGHT_FILE=solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
 ARG OCRHIGHLIGHT_URL=https://github.com/dbmdz/solr-ocrhighlighting/releases/download/${OCRHIGHLIGHT_VERSION}/solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
 ARG OCRHIGHLIGHT_FILE_SHA256="0fb598699ed17e9e70cbd2923ee1907595b85068402a39fdd64e06e8b23bd419"
-ARG OCRHIGHLIGHT_DEST=/opt/solr/server/solr/contrib/ocrhighlighting/lib
+ARG OCRHIGHLIGHT_DEST=/opt/solr/lib
 
 EXPOSE 8983
 
@@ -48,7 +48,7 @@ ENV \
     SOLR_JETTY_OPTS="-Dsolr.jetty.host=0.0.0.0" \
     SOLR_LOG_LEVEL=INFO \
     SOLR_MEMORY=512m \
-    SOLR_MODULES=analysis-extras,extraction,langid,ltr,ocrhighlighting
+    SOLR_MODULES=analysis-extras,extraction,langid,ltr
 
 COPY --link rootfs /
 
