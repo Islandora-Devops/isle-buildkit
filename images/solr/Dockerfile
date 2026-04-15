@@ -37,6 +37,9 @@ RUN --mount=type=cache,id=solr-ocrhighlight-downloads,sharing=locked,target=/opt
         --sha256 "${OCRHIGHLIGHT_FILE_SHA256}" \
         --dest ${OCRHIGHLIGHT_DEST} \
     && \
+    mkdir -p /opt/solr/server/solr/contrib/ocrhighlighting/lib && \
+    # v9 support to avoid breaking <lib> directives in solr XML
+    ln -s "${OCRHIGHLIGHT_DEST}/solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar" /opt/solr/server/solr/contrib/ocrhighlighting/lib/ocrhighlighting.jar && \
     cleanup.sh
 
 RUN create-service-user.sh --name solr /data && \
