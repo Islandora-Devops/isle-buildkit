@@ -9,6 +9,7 @@
 
     <context:property-placeholder/>
 
+{{ if or (ne (getenv "FCREPO_ACTIVEMQ_QUEUE") "") (ne (getenv "FCREPO_ACTIVEMQ_TOPIC") "") }}
     <!--
         The <broker> element is used to configure the ActiveMQ broker.
     -->
@@ -19,10 +20,15 @@
       <networkConnectors>
         <networkConnector name="fedora/bridge" dynamicOnly="true" uri="static:({{ getenv "FCREPO_ACTIVEMQ_BROKER" }})">
           <dynamicallyIncludedDestinations>
+{{ if ne (getenv "FCREPO_ACTIVEMQ_TOPIC") "" }}
             <topic physicalName="{{ getenv "FCREPO_ACTIVEMQ_TOPIC" }}"/>
+{{ end }}
+{{ if ne (getenv "FCREPO_ACTIVEMQ_QUEUE") "" }}
             <queue physicalName="{{ getenv "FCREPO_ACTIVEMQ_QUEUE" }}"/>
+{{ end }}
           </dynamicallyIncludedDestinations>
         </networkConnector>
       </networkConnectors>
     </broker>
+{{ end }}
 </beans>

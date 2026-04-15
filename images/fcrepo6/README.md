@@ -35,10 +35,8 @@ additional settings, volumes, ports, etc.
 | Environment Variable         | Default              | Description                                                                          |
 | :--------------------------- | :------------------- | :----------------------------------------------------------------------------------- |
 | FCREPO_ACTIVEMQ_BROKER       | tcp://activemq:61616 | The location of the ActiveMQ Broker in which to publish JMS messages to              |
-| FCREPO_ACTIVEMQ_QUEUE        | fedora               | The ActiveMQ Queue in which to publish JMS messages                                  |
-| FCREPO_ACTIVEMQ_QUEUE_ENABLE | false                | If `true` publish JMS messages on the queue `FCREPO_ACTIVEMQ_QUEUE`                  |
-| FCREPO_ACTIVEMQ_TOPIC        | fedora               | The ActiveMQ Topic in which to publish JMS messages                                  |
-| FCREPO_ACTIVEMQ_TOPIC_ENABLE | true                 | If `true` publish JMS messages on the topic `FCREPO_ACTIVEMQ_TOPIC`                  |
+| FCREPO_ACTIVEMQ_QUEUE        |                      | The ActiveMQ Queue in which to publish JMS messages. Blank value disables this.      |
+| FCREPO_ACTIVEMQ_TOPIC        |                      | The ActiveMQ Topic in which to publish JMS messages. Blank value disables this.      |
 | FCREPO_BINARYSTORAGE_TYPE    | file                 | The binary storage type. Only `file` and `s3` are supported at this time             |
 | FCREPO_AWS_REGION            | us-east-1            | AWS Region for S3 Bucket                                                             |
 | FCREPO_S3_BUCKET             |                      | Bucket to use for S3 Storage                                                         |

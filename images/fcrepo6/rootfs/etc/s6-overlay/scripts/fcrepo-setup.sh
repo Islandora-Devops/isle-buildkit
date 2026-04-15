@@ -77,7 +77,10 @@ function main {
     # When bind mounting we need to ensure that we
     # actually can write to the folder.
     chown tomcat:tomcat /data
-    # Fcrepo can fail to start if it cannot connect to an broker on startup.
-    wait_for_broker
+    if [ -n "${FCREPO_ACTIVEMQ_QUEUE:-}" ] || [ -n "${FCREPO_ACTIVEMQ_TOPIC:-}" ]; then
+        # Fcrepo can fail to start if it cannot connect to an broker on startup.
+        # ideally this is just enforced with a docker compose service conditon on activemq
+        wait_for_broker
+    fi
 }
 main
