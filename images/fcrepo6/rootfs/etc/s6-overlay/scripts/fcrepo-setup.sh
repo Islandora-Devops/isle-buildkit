@@ -78,9 +78,7 @@ function main {
     # actually can write to the folder.
     chown tomcat:tomcat /data
     if [ -n "${FCREPO_ACTIVEMQ_QUEUE:-}" ] || [ -n "${FCREPO_ACTIVEMQ_TOPIC:-}" ]; then
-        # Fcrepo can fail to start if it cannot connect to an broker on startup.
-        # ideally this is just enforced with a docker compose service conditon on activemq
-        wait_for_broker
+      wait_for_broker
     fi
 }
 main
