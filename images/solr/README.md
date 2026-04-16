@@ -21,12 +21,13 @@ additional settings, volumes, ports, etc.
 
 ## Settings
 
-| Environment Variable | Default                                                    | Description                                                                    |
-| :------------------- | :--------------------------------------------------------- | :----------------------------------------------------------------------------- |
-| SOLR_JAVA_OPTS       |                                                            | Additional parameters to pass to the JVM when starting Solr                    |
-| SOLR_JETTY_OPTS      | `-Dsolr.jetty.host=0.0.0.0 -Dsolr.config.lib.enabled=true` | Additional parameters to pass to Jetty when starting Solr.                     |
-| SOLR_LOG_LEVEL       | `INFO`                                                     | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
-| SOLR_MEMORY          | `512m`                                                     | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
+| Environment Variable | Default                                 | Description                                                                    |
+| :------------------- | :-------------------------------------- | :----------------------------------------------------------------------------- |
+| SOLR_JAVA_OPTS       |                                         | Additional parameters to pass to the JVM when starting Solr                    |
+| SOLR_JETTY_OPTS      | `-Dsolr.jetty.host=0.0.0.0`.            | Additional parameters to pass to Jetty when starting Solr.                     |
+| SOLR_LOG_LEVEL       | `INFO`                                  | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
+| SOLR_MEMORY          | `512m`                                  | Sets the min (-Xms) and max (-Xmx) heap size for the JVM                       |
+| SOLR_MODULES         | `analysis-extras,extraction,langid,ltr` | Solr modules to enable                                                         |
 
 ## Ports
 
@@ -39,6 +40,16 @@ additional settings, volumes, ports, etc.
 | Path                  | Description                                      |
 | :-------------------- | :----------------------------------------------- |
 | /opt/solr/server/solr | Location of configuration and data for all cores |
+
+## Solr 10 Readiness
+
+The `dbmdz/solr-ocrhighlighting` plugin is shipped as a regular jar in
+`/opt/solr/lib`, not as a Solr module. This is intentional: `SOLR_MODULES`
+only supports built-in Solr modules, and Solr 10 removes the old
+`<lib ... />` config path that was previously used for loading arbitrary jars.
+
+If you set `SOLR_MODULES`, only include actual Solr module names such as
+`extraction` or `ltr`. Do not include `ocrhighlighting`.
 
 ## Logs
 

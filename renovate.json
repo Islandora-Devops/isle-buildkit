@@ -125,7 +125,8 @@
       "description": "Update (COMMIT|_VERSION) variables in Dockerfiles",
       "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile\\.[^/]*$/"
+        "/(^|/)Dockerfile\\.[^/]*$/",
+        "/(^|/|\\.)utilities\\.sh$/"
       ],
       "matchStrings": [
         "([ ]+)?# renovate: datasource=(?<datasource>[a-z-\\.]+?) depName=(?<depName>.+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG)? .+?_VERSION=(?<currentValue>.+?)(\\s|$)",
