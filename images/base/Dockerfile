@@ -37,9 +37,9 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_22/jq
   JQ_VERSION=1.8.1-r0 \
   # renovate: datasource=repology depName=alpine_3_22/mariadb-client
-  MARIADB_CLIENT_VERSION=11.4.8-r0 \
+  MARIADB_CLIENT_VERSION=11.4.10-r0 \
   # renovate: datasource=repology depName=alpine_3_22/mysql-client
-  MYSQL_CLIENT_VERSION=11.4.8-r0 \
+  MYSQL_CLIENT_VERSION=11.4.10-r0 \
   # renovate: datasource=repology depName=alpine_3_22/netcat-openbsd
   NETCAT_OPENBSD_VERSION=1.229.1-r0 \
   # renovate: datasource=repology depName=alpine_3_22/openssl
