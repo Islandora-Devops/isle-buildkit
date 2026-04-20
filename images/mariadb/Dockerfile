@@ -7,7 +7,7 @@ EXPOSE 3306
 
 ARG \
   # renovate: datasource=repology depName=alpine_3_22/mariadb
-  MARIADB_VERSION=11.4.8-r0
+  MARIADB_VERSION=11.4.10-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=mariadb-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
