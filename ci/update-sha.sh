@@ -165,7 +165,7 @@ elif [ "$DEP" = "transkribus-process" ]; then
   README="images/transkribus/README.md"
 
 elif [ "$DEP" = "whisper.cpp" ] ; then
-  URL="https://github.com/ggml-org/whisper.cpp/archive/refs/tags/v${NEW_VERSION}.tar.gz"
+  URL="https://github.com/ggml-org/whisper.cpp/archive/refs/tags/${NEW_VERSION}.tar.gz"
   ARG=WHISPER_SHA256
   DOCKERFILES=("images/transcriber/Dockerfile")
 
