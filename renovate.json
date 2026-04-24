@@ -19,6 +19,15 @@
   ],
   "packageRules": [
     {
+      "matchManagers": [
+          "custom.regex"
+      ],
+      "matchDatasources": [
+          "*"
+      ],
+      "allowedVersions": "!/-rc|-beta|-alpha/i"
+    },
+    {
       "matchDatasources": [
         "repology"
       ],
