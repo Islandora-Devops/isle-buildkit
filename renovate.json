@@ -25,7 +25,7 @@
       "matchDatasources": [
           "*"
       ],
-      "allowedVersions": "!/-rc|-beta|-alpha/i"
+      "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/"
     },
     {
       "matchDatasources": [
