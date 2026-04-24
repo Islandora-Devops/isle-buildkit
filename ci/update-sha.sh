@@ -154,7 +154,7 @@ elif [ "$DEP" = "jdbc-postgres" ]; then
   DOCKERFILES=("images/handle/Dockerfile")
 
 elif [ "$DEP" = "scyllaridae" ] ; then
-  URL="https://github.com/islandora/scyllaridea/archive/refs/tags/${NEW_VERSION}.tar.gz"
+  URL="https://github.com/islandora/scyllaridae/archive/refs/tags/${NEW_VERSION}.tar.gz"
   ARG=SCYLLARIDAE_SHA256
   DOCKERFILES=("images/scyllaridae/Dockerfile")
 
@@ -165,7 +165,7 @@ elif [ "$DEP" = "transkribus-process" ]; then
   README="images/transkribus/README.md"
 
 elif [ "$DEP" = "whisper.cpp" ] ; then
-  URL="https://github.com/ggml-org/whisper.cpp/archive/refs/tags/v${WHISPER_VERSION}.tar.gz"
+  URL="https://github.com/ggml-org/whisper.cpp/archive/refs/tags/v${NEW_VERSION}.tar.gz"
   ARG=WHISPER_SHA256
   DOCKERFILES=("images/transcriber/Dockerfile")
 
