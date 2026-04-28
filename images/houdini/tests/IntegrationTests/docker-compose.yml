@@ -2,7 +2,7 @@
 #
 # Tests the following:
 # - Houdini starts.
-# - Can generate PNG thumbnails from PDFs using ImageMagick.
+# - Can generate PNG thumbnails from PDFs using libvips.
 ---
 
 name: houdini-integrationtests

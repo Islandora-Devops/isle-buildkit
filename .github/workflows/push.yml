@@ -204,7 +204,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [tags, scyllaridae, imagemagick]
+    needs: [tags, scyllaridae]
   hypercube:
     uses: ./.github/workflows/build.yml
     with:
