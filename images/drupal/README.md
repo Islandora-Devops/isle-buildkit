@@ -30,6 +30,57 @@ additional settings, volumes, ports, etc.
 | DRUPAL_ENABLE_HTTPS      | true    | Inform PHP that `https` should be used.                                            |
 | DRUPAL_REVERSE_PROXY_IPS |         | Use the IP address for the host 'traefik' if found otherwise default to `0.0.0.0`. |
 
+### Symfony Messenger Worker Settings
+
+This image can manage Islandora Events Messenger workers directly with
+`s6-overlay`. That is intended for single-container or small deployment
+topologies where worker processes should live beside PHP-FPM.
+
+Set `DRUPAL_SM_WORKERS_MODE=container` to enable the built-in workers. Leave it
+as `external` to run workers elsewhere.
+
+| Environment Variable                          | Default  | Description                                                                 |
+| :-------------------------------------------- | :------- | :-------------------------------------------------------------------------- |
+| DRUPAL_SM_WORKERS_MODE                        | external | `container` runs local `drush sm:consume` services, `external` disables them |
+| DRUPAL_SM_WORKERS_DERIVATIVES_ENABLED         | true     | Enable the derivative transport worker when local workers are enabled       |
+| DRUPAL_SM_WORKERS_INDEX_FEDORA_ENABLED        | true     | Enable the Fedora indexing worker when local workers are enabled            |
+| DRUPAL_SM_WORKERS_INDEX_BLAZEGRAPH_ENABLED    | true     | Enable the Blazegraph indexing worker when local workers are enabled        |
+| DRUPAL_SM_WORKERS_TIME_LIMIT                  | 3600     | `drush sm:consume --time-limit` value used before the worker is restarted   |
+| DRUPAL_SM_WORKERS_FETCH_SIZE                  |          | Optional `drush sm:consume --fetch-size` value for Symfony 8.1+             |
+| DRUPAL_SM_WORKERS_NO_RESET                    |          | Set to `true` to pass `drush sm:consume --no-reset` on Symfony 8.1+         |
+| DRUPAL_SM_WORKERS_RETRY_DELAY                 | 30       | Seconds to wait before retrying when Drupal is not ready or a worker exits  |
+
+`DRUPAL_SM_WORKERS_FETCH_SIZE` and `DRUPAL_SM_WORKERS_NO_RESET` are opt-in so
+the image remains safe on current Drupal and Symfony releases. Only set them
+when the target `sm:consume` command supports those options.
+
+Worker bootstrap uses this URI precedence:
+
+- `DRUSH_OPTIONS_URI`
+- `DRUPAL_DEFAULT_SITE_URL`
+
+The built-in worker services are:
+
+- `islandora_derivatives`
+- `islandora_index_fedora`
+- `islandora_index_blazegraph`
+
+`external` mode does not use a worker URL. Distributed workers are simply the
+same `drush sm:consume` commands running in another container, pod, or host
+against the same Drupal site and queue backend.
+
+### Derivative Command Settings
+
+Islandora Events derivative queues default to local `command` execution for the
+bundled Scyllaridae-backed connectors. The Drupal image writes the matching
+`settings.php` policy during startup so those queues can run without a manual
+settings override.
+
+| Environment Variable                                      | Default             | Description |
+| :-------------------------------------------------------- | :------------------ | :---------- |
+| DRUPAL_ISLANDORA_EVENTS_DERIVATIVE_COMMAND_ENABLED        | true                | Enables privileged local derivative command execution in `settings.php` |
+| DRUPAL_ISLANDORA_EVENTS_DERIVATIVE_COMMAND_ALLOWED_BINARIES | /usr/bin/scyllaridae | Comma-separated allowlist written to `settings.php` for derivative command execution |
+
 ### Database Settings
 
 [Drupal] can make use of different database backends for storage. Please see the

@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv bash
+set -e
+exec /etc/s6-overlay/scripts/messenger-worker.sh islandora_index_blazegraph "${DRUPAL_SM_WORKERS_INDEX_BLAZEGRAPH_ENABLED:-true}"

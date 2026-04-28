@@ -1,4 +1,12 @@
 # syntax=docker/dockerfile:1.20.0
+FROM leptonica
+FROM imagemagick
+FROM scyllaridae
+FROM hypercube
+FROM houdini
+FROM homarus
+FROM crayfits
+FROM mergepdf
 FROM nginx
 
 ARG TARGETARCH
@@ -7,11 +15,39 @@ EXPOSE 80
 
 WORKDIR /var/www/drupal
 
+ARG \
+    # renovate: datasource=repology depName=alpine_3_22/ffmpeg
+    FFMPEG_VERSION=6.1.2-r2 \
+    # renovate: datasource=repology depName=alpine_3_22/poppler-utils
+    POPPLER_VERSION=25.04.0-r0 \
+    # renovate: datasource=repology depName=alpine_3_22/tesseract-ocr
+    TESSERACT_VERSION=5.5.0-r2
+
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=drupal-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    --mount=type=bind,from=leptonica,source=/packages,target=/packages/leptonica \
+    --mount=type=bind,from=leptonica,source=/etc/apk/keys,target=/keys/leptonica \
+    --mount=type=bind,from=imagemagick,source=/packages,target=/packages/imagemagick \
+    --mount=type=bind,from=imagemagick,source=/etc/apk/keys,target=/keys/imagemagick \
     mkdir -p \
+        /opt/scyllaridae/crayfits \
+        /opt/scyllaridae/homarus \
+        /opt/scyllaridae/houdini \
+        /opt/scyllaridae/hypercube \
         /var/www/drupal/config \
         /var/www/drupal/web/libraries \
+    && \
+    cp /keys/leptonica/* /etc/apk/keys/ \
+    && \
+    cp /keys/imagemagick/* /etc/apk/keys/ \
+    && \
+    apk add \
+        /packages/imagemagick/imagemagick-*.apk \
+        /packages/leptonica/leptonica-*.apk \
+        ffmpeg=="${FFMPEG_VERSION}" \
+        poppler-utils=="${POPPLER_VERSION}" \
+        tesseract-ocr=="${TESSERACT_VERSION}" \
+        tesseract-ocr-data-eng=="${TESSERACT_VERSION}" \
     && \
     chown -R nginx:nginx /var/www && \
     addgroup nginx jwt && \
@@ -23,6 +59,16 @@ RUN --mount=type=cache,id=drupal-apk-${TARGETARCH},sharing=locked,target=/var/ca
 ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=600000
 
 ENV \
+    DRUPAL_SM_WORKERS_DERIVATIVES_ENABLED=true \
+    DRUPAL_SM_WORKERS_INDEX_BLAZEGRAPH_ENABLED=true \
+    DRUPAL_SM_WORKERS_INDEX_FEDORA_ENABLED=true \
+    DRUPAL_SM_WORKERS_FETCH_SIZE= \
+    DRUPAL_SM_WORKERS_MODE=container \
+    DRUPAL_SM_WORKERS_NO_RESET= \
+    DRUPAL_SM_WORKERS_RETRY_DELAY=30 \
+    DRUPAL_SM_WORKERS_TIME_LIMIT=3600 \
+    DRUPAL_ISLANDORA_EVENTS_DERIVATIVE_COMMAND_ALLOWED_BINARIES=/usr/bin/scyllaridae \
+    DRUPAL_ISLANDORA_EVENTS_DERIVATIVE_COMMAND_ENABLED=true \
     DRUPAL_DEFAULT_ACCOUNT_EMAIL=webmaster@localhost.com \
     DRUPAL_DEFAULT_ACCOUNT_NAME=admin \
     DRUPAL_DEFAULT_ACCOUNT_PASSWORD=password \
@@ -61,5 +107,16 @@ ENV \
     DRUPAL_SITES=DEFAULT
 
 COPY --link rootfs /
-
 RUN chown -R nginx:nginx /var/www /usr/share/drush
+
+# bundle scyllaridae definitions into this image
+COPY --link --from=scyllaridae /app/scyllaridae /usr/bin/scyllaridae
+COPY --link --from=crayfits /app/scyllaridae.yml /opt/scyllaridae/crayfits/scyllaridae.yml
+COPY --link --from=homarus /app/scyllaridae.yml /opt/scyllaridae/homarus/scyllaridae.yml
+COPY --link --from=homarus /app/cmd.sh /opt/scyllaridae/homarus/cmd.sh
+COPY --link --from=houdini /app/scyllaridae.yml /opt/scyllaridae/houdini/scyllaridae.yml
+COPY --link --from=houdini /app/cmd.sh /opt/scyllaridae/houdini/cmd.sh
+COPY --link --from=hypercube /app/scyllaridae.yml /opt/scyllaridae/hypercube/scyllaridae.yml
+COPY --link --from=hypercube /app/cmd.sh /opt/scyllaridae/hypercube/cmd.sh
+COPY --link --from=mergepdf /app/scyllaridae.yml /opt/scyllaridae/mergepdf/scyllaridae.yml
+COPY --link --from=mergepdf /app/cmd.sh /opt/scyllaridae/mergepdf/cmd.sh

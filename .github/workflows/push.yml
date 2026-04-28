@@ -130,7 +130,16 @@ jobs:
   drupal:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.nginx.outputs.context }}
+      contexts: >-
+        ${{ needs.nginx.outputs.context }}
+        ${{ needs.scyllaridae.outputs.context }}
+        ${{ needs.imagemagick.outputs.context }}
+        ${{ needs.leptonica.outputs.context }}
+        ${{ needs.crayfits.outputs.context }}
+        ${{ needs.homarus.outputs.context }}
+        ${{ needs.houdini.outputs.context }}
+        ${{ needs.hypercube.outputs.context }}
+        ${{ needs.mergepdf.outputs.context }}
       image: drupal
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -139,7 +148,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [tags, nginx]
+    needs: [tags, nginx, scyllaridae, imagemagick, leptonica, crayfits, homarus, houdini, hypercube]
   fcrepo6:
     uses: ./.github/workflows/build.yml
     with:

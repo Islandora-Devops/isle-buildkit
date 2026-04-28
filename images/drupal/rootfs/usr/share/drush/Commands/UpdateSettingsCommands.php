@@ -2,8 +2,8 @@
 
 namespace Drush\Commands;
 
-use Consolidation\AnnotatedCommand\AnnotationData;
-use Consolidation\AnnotatedCommand\CommandData;
+use Drush\Drush;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -18,8 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *   - http://cgit.drupalcode.org/devel/tree/src/Commands/DevelCommands.php
  *   - http://cgit.drupalcode.org/devel/tree/drush.services.yml
  */
-class UpdateSettingsCommands extends DrushCommands
-{
+class UpdateSettingsCommands extends DrushCommands {
 
   /**
    * Creates in settings.php from default.settings.php if missing.
@@ -29,8 +28,7 @@ class UpdateSettingsCommands extends DrushCommands
    * @usage drush islandora:settings:create-settings-if-missing
    *   Creates settings.php in sites directory if missing.
    */
-  public function createSettingsIfMissing()
-  {
+  public function createSettingsIfMissing() {
     $settings_file = $this->getSettingFilePath();
     $fs = new Filesystem();
     if (!$fs->exists($settings_file)) {
@@ -45,16 +43,17 @@ class UpdateSettingsCommands extends DrushCommands
   }
 
   /**
-   * Set `config_sync_directory` in settings.php
+   * Set `config_sync_directory` in settings.php.
+   *
+   * @param string $path
+   *   The path to use for the `config_sync_directory` setting.
    *
    * @command islandora:settings:set-config-sync-directory
    * @bootstrap site
-   * @param $path The path to use for the `config_sync_directory` setting
    * @usage drush islandora:settings:set-config-sync-directory ../config/sync
    *   Sets `config_sync_directory` in settings.php.
    */
-  public function setConfigSyncDirectory($path)
-  {
+  public function setConfigSyncDirectory($path) {
     $settings['settings']['config_sync_directory'] = (object) [
       'value' => $path,
       'required' => TRUE,
@@ -63,16 +62,18 @@ class UpdateSettingsCommands extends DrushCommands
   }
 
   /**
-   * Set `hash_salt` in settings.php
+   * Set `hash_salt` in settings.php.
+   *
+   * @param string $salt
+   *   The value of the salt.
    *
    * @command islandora:settings:set-hash-salt
    * @bootstrap site
-   * @param $salt The value of the salt
    * @usage drush islandora:settings:set-hash-salt IpWSRBrkTDKAL_ykij_WJJrnqcDv
-   *   Sets `hash_salt` in settings.php, use something like Crypt::randomBytesBase64(55).
+   *   Sets `hash_salt` in settings.php. Use something like
+   *   Crypt::randomBytesBase64(55).
    */
-  public function setHashSalt($salt)
-  {
+  public function setHashSalt($salt) {
     $settings['settings']['hash_salt'] = (object) [
       'value' => $salt,
       'required' => TRUE,
@@ -81,21 +82,22 @@ class UpdateSettingsCommands extends DrushCommands
   }
 
   /**
-   * Set `flysystem` in settings.php
+   * Set `flysystem` in settings.php.
+   *
+   * @param string $url
+   *   The root URL to Fedora.
    *
    * @command islandora:settings:set-flystem-fedora-url
    * @bootstrap site
-   * @param $url The root url to Fedora
    * @usage drush islandora:settings:set-flystem-fedora-url http://fcrepo.isle-dc.localhost/fcrepo/rest/
    *   Sets `flysystem` in settings.php.
    */
-  public function setFlystemFedoraUrl($url)
-  {
-    $settings['settings']['flysystem']['fedora']['driver'] =  (object) [
+  public function setFlystemFedoraUrl($url) {
+    $settings['settings']['flysystem']['fedora']['driver'] = (object) [
       'value' => 'fedora',
       'required' => TRUE,
     ];
-    $settings['settings']['flysystem']['fedora']['config']['root'] =  (object) [
+    $settings['settings']['flysystem']['fedora']['config']['root'] = (object) [
       'value' => $url,
       'required' => TRUE,
     ];
@@ -103,18 +105,25 @@ class UpdateSettingsCommands extends DrushCommands
   }
 
   /**
-   * Set `database` settings in settings.php
+   * Set `database` settings in settings.php.
+   *
+   * @param string $database
+   *   The name of the database.
+   * @param string $username
+   *   The user name to connect with.
+   * @param string $password
+   *   The password of the user.
+   * @param string $host
+   *   The database host.
+   * @param string|int $port
+   *   The database port.
+   * @param string $driver
+   *   Database driver defaults to `mysql`.
+   * @param string $prefix
+   *   Table prefix.
    *
    * @command islandora:settings:set-database-settings
    * @bootstrap site
-   * @param $database  The name of the database
-   * @param $username  The user name to connect with
-   * @param $password  The password of the user
-   * @param $host      The database host
-   * @param $port      The database port
-   * @param $driver    Database driver defaults to 'mysql'
-   * @param $prefix    Table prefix
-   *
    *   Sets `database` in settings.php.
    */
   public function setDatabaseSettings(
@@ -124,37 +133,37 @@ class UpdateSettingsCommands extends DrushCommands
     $host,
     $port,
     $driver = 'mysql',
-    $prefix = ''
+    $prefix = '',
   ) {
-    $default_database['database'] =  (object) [
+    $default_database['database'] = (object) [
       'value' => $database,
       'required' => TRUE,
     ];
-    $default_database['username'] =  (object) [
+    $default_database['username'] = (object) [
       'value' => $username,
       'required' => TRUE,
     ];
-    $default_database['password'] =  (object) [
+    $default_database['password'] = (object) [
       'value' => $password,
       'required' => TRUE,
     ];
-    $default_database['host'] =  (object) [
+    $default_database['host'] = (object) [
       'value' => $host,
       'required' => TRUE,
     ];
-    $default_database['port'] =  (object) [
+    $default_database['port'] = (object) [
       'value' => $port,
       'required' => TRUE,
     ];
-    $default_database['prefix'] =  (object) [
+    $default_database['prefix'] = (object) [
       'value' => $prefix,
       'required' => TRUE,
     ];
-    $default_database['driver'] =  (object) [
+    $default_database['driver'] = (object) [
       'value' => $driver,
       'required' => TRUE,
     ];
-    $default_database['namespace'] =  (object) [
+    $default_database['namespace'] = (object) [
       'value' => 'Drupal\\Core\\Database\\Driver\\' . $driver,
       'required' => TRUE,
     ];
@@ -163,17 +172,18 @@ class UpdateSettingsCommands extends DrushCommands
   }
 
   /**
-   * Set `trusted_host_patterns` in settings.php
+   * Set `trusted_host_patterns` in settings.php.
+   *
+   * @param string $patterns
+   *   List of comma-separated patterns.
    *
    * @command islandora:settings:set-trusted-host-patterns
    * @bootstrap site
-   * @param $patterns List of comma, separated patterns.
    * @usage drush islandora:settings:set-trusted-host-patterns "^localhost$,^192\\.168\\.00\\.52$,^127\\.0\\.0\\.1$"
    *   Sets `trusted_host_patterns` in settings.php.
    *   Be aware that shell escaping can have an affect on the arguments.
    */
-  public function setTrustedHostPatterns($patterns)
-  {
+  public function setTrustedHostPatterns($patterns) {
     $settings['settings']['trusted_host_patterns'] = (object) [
       'value' => explode(',', $patterns),
       'required' => TRUE,
@@ -182,11 +192,13 @@ class UpdateSettingsCommands extends DrushCommands
   }
 
   /**
-   * Set `reverse_proxy` in settings.php
+   * Set `reverse_proxy` in settings.php.
+   *
+   * @param string $reverse_proxy_ips
+   *   List of comma-separated IP addresses for the reverse proxy.
    *
    * @command islandora:settings:set-reverse-proxy
    * @bootstrap site
-   * @param $reverse_proxy_ips List of comma separated ip adresses for the reverse proxy.
    * @usage drush islandora:settings:set-reverse-proxy
    *   Sets `reverse_proxy` in settings.php.
    *   Be aware that shell escaping can have an affect on the arguments.
@@ -201,9 +213,9 @@ class UpdateSettingsCommands extends DrushCommands
       'required' => TRUE,
     ];
     $settings['settings']['reverse_proxy_trusted_headers'] = (object) [
-      'value' => \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR |
-        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO |
-        \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT,
+      'value' => Request::HEADER_X_FORWARDED_FOR |
+      Request::HEADER_X_FORWARDED_PROTO |
+      Request::HEADER_X_FORWARDED_PORT,
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
@@ -212,16 +224,14 @@ class UpdateSettingsCommands extends DrushCommands
   /**
    * Determine which settings file to update.
    */
-  private function getSettingFilePath()
-  {
-    return DRUPAL_ROOT . "/" . \Drush\Drush::bootstrap()->confPath() . "/settings.php";
+  private function getSettingFilePath() {
+    return DRUPAL_ROOT . "/" . Drush::bootstrap()->confPath() . "/settings.php";
   }
 
   /**
    * Determine which settings file to update.
    */
-  private function writeSettings($settings)
-  {
+  private function writeSettings($settings) {
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     $settings_file = $this->getSettingFilePath();
     $fs = new Filesystem();
@@ -230,4 +240,5 @@ class UpdateSettingsCommands extends DrushCommands
     drupal_rewrite_settings($settings, $settings_file);
     $fs->chmod($settings_file, 0400);
   }
+
 }

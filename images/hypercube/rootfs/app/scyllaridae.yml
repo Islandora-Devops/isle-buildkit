@@ -10,7 +10,7 @@ cmdByMimeType:
       - "-"
     allowInsecureArgs: ${SCYLLARIDAE_ALLOW_INSECURE_ARGS}
   default:
-    cmd: /app/cmd.sh
+    cmd: "${SCYLLARIDAE_BASE_DIR}/cmd.sh"
     args:
       - "%source-mime-ext"
       - "%args"

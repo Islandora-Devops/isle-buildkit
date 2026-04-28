@@ -19,8 +19,12 @@
       <networkConnectors>
         <networkConnector name="fedora/bridge" dynamicOnly="true" uri="static:({{ getenv "FCREPO_ACTIVEMQ_BROKER" }})">
           <dynamicallyIncludedDestinations>
+{{ if ne (getenv "FCREPO_ACTIVEMQ_TOPIC") "" }}
             <topic physicalName="{{ getenv "FCREPO_ACTIVEMQ_TOPIC" }}"/>
+{{ end }}
+{{ if ne (getenv "FCREPO_ACTIVEMQ_QUEUE") "" }}
             <queue physicalName="{{ getenv "FCREPO_ACTIVEMQ_QUEUE" }}"/>
+{{ end }}
           </dynamicallyIncludedDestinations>
         </networkConnector>
       </networkConnectors>

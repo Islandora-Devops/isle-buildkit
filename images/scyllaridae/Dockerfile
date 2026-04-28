@@ -5,9 +5,9 @@ WORKDIR /build
 ARG TARGETARCH
 
 # renovate: datasource=github-releases depName=scyllaridae packageName=islandora/scyllaridae
-ARG SCYLLARIDAE_VERSION=5.2.1
-ARG SCYLLARIDAE_URL="https://github.com/islandora/scyllaridae/archive/refs/tags/${SCYLLARIDAE_VERSION}.tar.gz"
-ARG SCYLLARIDAE_SHA256="547aa1f3a5efed7caf5f73b00f2fa74320a1e0433f37c35ea1a0cf372cdb9a40"
+ARG SCYLLARIDAE_VERSION=feat/cli
+ARG SCYLLARIDAE_URL="https://github.com/islandora/scyllaridae/archive/refs/heads/${SCYLLARIDAE_VERSION}.tar.gz"
+ARG SCYLLARIDAE_SHA256="1f0dd8b2c637fa321a9bad834f64905f274036197ab44996bcc3e233f03d0679"
 RUN download.sh \
       --url "${SCYLLARIDAE_URL}" \
       --sha256 "${SCYLLARIDAE_SHA256}" \
@@ -35,8 +35,9 @@ RUN if [ "${TARGETARCH}" = "amd64" ]; \
             --dest . ; \
     fi
 
-RUN cd "./scyllaridae-${SCYLLARIDAE_VERSION}" && \
-  ../go/bin/go build -o ../scyllaridae -ldflags="-s -w" .
+RUN SOURCE_DIR="./scyllaridae-$(echo "${SCYLLARIDAE_VERSION}" | tr '/' '-')" && \
+    cd "${SOURCE_DIR}" && \
+    ../go/bin/go build -o ../scyllaridae -ldflags="-s -w" .
 
 FROM base
 
@@ -53,6 +54,7 @@ RUN --mount=type=cache,id=scyllaridae-apk-${TARGETARCH},sharing=locked,target=/v
 
 ENV \
   SCYLLARIDAE_ALLOW_INSECURE_ARGS="false" \
+  SCYLLARIDAE_BASE_DIR=/app \
   SCYLLARIDAE_LOG_LEVEL=INFO \
   SCYLLARIDAE_PORT=8080 \
   SCYLLARIDAE_YML_PATH="/app/scyllaridae.yml"
