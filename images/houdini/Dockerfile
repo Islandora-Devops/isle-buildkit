@@ -1,5 +1,4 @@
 # syntax=docker/dockerfile:1.20.0
-FROM imagemagick
 FROM scyllaridae
 
 ARG TARGETARCH
@@ -8,11 +7,11 @@ EXPOSE 8080
 
 WORKDIR /app
 
-# Platform specific does require arch specific identifier.
-# Though platform information is included via the FROM imagemagick.
-RUN --mount=type=bind,from=imagemagick,source=/packages,target=/packages \
-    --mount=type=bind,from=imagemagick,source=/etc/apk/keys,target=/etc/apk/keys \
-    apk add /packages/imagemagick-*.apk && \
+RUN apk add --no-cache \
+      openjpeg-tools \
+      vips \
+      vips-poppler \
+      vips-tools && \
     cleanup.sh
 
 COPY --link rootfs /
