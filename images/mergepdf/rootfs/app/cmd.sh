@@ -25,6 +25,8 @@ download_and_process() {
 
   if (( width > MAX_WIDTH )); then
     download_url="${img_url}/full/${MAX_WIDTH},/0/default.jpg"
+  elif [[ "$img_url" == *"/iiif/3/"* ]]; then
+    download_url="${img_url}/full/max/0/default.jpg"
   else
     download_url="${img_url}/full/full/0/default.jpg"
   fi
