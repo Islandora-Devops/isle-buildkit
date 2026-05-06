@@ -2,6 +2,6 @@ allowedMimeTypes:
   - "*"
 cmdByMimeType:
   default:
-    cmd: /app/cmd.sh
+    cmd: "${SCYLLARIDAE_BASE_DIR}/cmd.sh"
     args:
       - "%canonical"

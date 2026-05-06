@@ -53,8 +53,8 @@ RUN --mount=type=cache,id=fcrepo6-downloads-${TARGETARCH},sharing=locked,target=
 
 ENV \
     FCREPO_ACTIVEMQ_BROKER=tcp://activemq:61616 \
-    FCREPO_ACTIVEMQ_QUEUE=fedora \
-    FCREPO_ACTIVEMQ_TOPIC=fedora \
+    FCREPO_ACTIVEMQ_QUEUE= \
+    FCREPO_ACTIVEMQ_TOPIC= \
     FCREPO_DB_NAME=fcrepo \
     FCREPO_DB_PASSWORD=password \
     FCREPO_DB_USER=fcrepo \
