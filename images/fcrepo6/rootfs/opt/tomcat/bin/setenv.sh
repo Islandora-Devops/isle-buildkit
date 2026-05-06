@@ -10,7 +10,7 @@ CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.external.content.allowed=/opt/tomcat/co
 CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.autoversioning.enabled=false"
 CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.directory=file:///data/home/data/Activemq"
 CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.activemq.configuration=file:///opt/tomcat/conf/activemq.xml"
-CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.session.timeout=${FCREPO_SESSION_TIMEOUT:=180000}"
+CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.session.timeout=${FCREPO_SESSION_TIMEOUT:-180000}"
 CATALINA_OPTS="${CATALINA_OPTS} -DconnectionTimeout=${FCREPO_CATALINA_TIMEOUT:=-1}"
 
 case "${DB_DRIVER}" in
