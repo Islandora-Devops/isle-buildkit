@@ -3,21 +3,54 @@
 
 set -xeuo pipefail
 
+trap 'echo "ERROR: test.sh failed at line ${LINENO}: ${BASH_COMMAND}" >&2' ERR
+
+function fail() {
+  local message="${1}"
+  echo "ERROR: ${message}" >&2
+  exit 1
+}
+
+function assert_eq() {
+  local label="${1}"
+  local expected="${2}"
+  local actual="${3}"
+
+  if [[ "${actual}" != "${expected}" ]]; then
+    fail "${label} mismatch. expected=${expected} actual=${actual}"
+  fi
+
+  echo "PASS: ${label}=${actual}"
+}
+
 function node_count() {
   local count="${1}"
-  test "$(drush sql-query 'select count(*) from node;')" -eq "${count}"
+  local actual
+  actual="$(drush sql-query 'select count(*) from node;')"
+  assert_eq "node_count" "${count}" "${actual}"
 }
 
 function media_use_count() {
   local name="${1}"
   local count="${2}"
-  TID=$(drush sql-query "select tid from taxonomy_term_field_data where name = '${name}';")
-  test "$(drush sql-query "select count(*) from media__field_media_use where field_media_use_target_id = $TID;")" -eq "${count}"
+  local tid
+  local actual
+
+  tid="$(drush sql-query "select tid from taxonomy_term_field_data where name = '${name}';")"
+  [[ -n "${tid}" ]] || fail "taxonomy term not found for media use '${name}'"
+
+  actual="$(drush sql-query "select count(*) from media__field_media_use where field_media_use_target_id = ${tid};")"
+  assert_eq "media_use_count[${name}]" "${count}" "${actual}"
 }
 
 function solr_document_count() {
   local count="${1}"
-  test "$(curl -sL 'solr:8983/solr/default/select?q=*:*&rows=0' | jq '.response.numFound')" -eq "${count}"
+  local response
+  local actual
+
+  response="$(curl -fsSL 'solr:8983/solr/default/select?q=*:*&rows=0')"
+  actual="$(jq -r '.response.numFound' <<< "${response}")"
+  assert_eq "solr_document_count" "${count}" "${actual}"
 }
 
 function main() {

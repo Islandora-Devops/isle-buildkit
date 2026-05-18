@@ -332,10 +332,17 @@ class TestsPlugin : Plugin<Project> {
                             dependsOn(setUp)
                             doFirst {
                                 if (project.isleTestPull) {
-                                    execOperations.exec {
-                                        workingDir = project.projectDir
-                                        commandLine = baseArguments + listOf("pull", "--ignore-pull-failures")
-                                        environment = this@register.environment.get() as Map<String, String>
+                                    logs.get().asFile.mkdirs()
+                                    val pullLog = logs.get().asFile.resolve("pull.log")
+                                    pullLog.outputStream().buffered().use { output ->
+                                        execOperations.exec {
+                                            workingDir = project.projectDir
+                                            commandLine = baseArguments + listOf("pull", "--ignore-pull-failures")
+                                            environment = this@register.environment.get() as Map<String, String>
+                                            standardOutput = output
+                                            errorOutput = output
+                                            isIgnoreExitValue = true
+                                        }
                                     }
                                 }
                             }

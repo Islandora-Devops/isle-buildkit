@@ -51,10 +51,10 @@ jobs:
               echo "::group::${log_file}"
               sed -n '1,400p' "${log_file}"
               echo "::endgroup::"
-            done < <(find "images/${TEST_IMAGE}/tests" -type f -path '*/build/*.log' -print0 | sort -z)
+            done < <(find "build/images/${TEST_IMAGE}/tests" -type f -name '*.log' -print0 | sort -z)
 
             if [[ "${logs_found}" -eq 0 ]]; then
-              echo "No test log artifacts were found under images/${TEST_IMAGE}/tests."
+              echo "No test log artifacts were found under build/images/${TEST_IMAGE}/tests."
             fi
           }
 
