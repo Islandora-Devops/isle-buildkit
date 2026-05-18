@@ -1,6 +1,8 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 
+set -x
+
 # Wait for service to start.
 wait_20x http://localhost:8000/
 

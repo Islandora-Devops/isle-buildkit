@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eou pipefail
+set -xeuo pipefail
 
 cleanup() {
   if [ -f transcription.vtt ]; then

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eou pipefail
+set -xeuo pipefail
 
 # shellcheck disable=SC1091
 source /usr/local/share/isle/utilities.sh

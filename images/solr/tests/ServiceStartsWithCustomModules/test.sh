@@ -1,7 +1,7 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 
-set -euo pipefail
+set -xeuo pipefail
 
 # shellcheck disable=SC1091
 source /usr/local/share/isle/utilities.sh

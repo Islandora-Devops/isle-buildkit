@@ -1,6 +1,8 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 
+set -x
+
 # Wait for Nginx to be ready.
 s6-svwait -U /run/service/nginx
 

@@ -1,6 +1,8 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 
+set -x
+
 on_terminate() {
     echo "Termination signal received. Exiting..."
     exit 0

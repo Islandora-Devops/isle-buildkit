@@ -1,6 +1,8 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 
+set -x
+
 sleep 10
 echo "s6-rc: info: Send SIGTERM to test service." >&2
 s6-svc -t /run/s6/legacy-services/test

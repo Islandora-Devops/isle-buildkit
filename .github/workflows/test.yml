@@ -30,11 +30,39 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3
         with:
           cache-read-only: false
-          arguments: images:${{ inputs.image }}:test -Pisle.test.pull=true ${{ inputs.digests }} --info
+
+      - name: Run ${{ inputs.image }} tests
+        shell: bash --noprofile --norc -xeuo pipefail {0}
+        env:
+          GRADLE_TASK: images:${{ inputs.image }}:test
+          GRADLE_ARGS: -Pisle.test.pull=true ${{ inputs.digests }} --console=plain --stacktrace --warning-mode=summary
+          TEST_IMAGE: ${{ inputs.image }}
+        run: |
+          print_test_logs() {
+            local logs_found=0
+
+            while IFS= read -r -d '' log_file; do
+              logs_found=1
+              echo "::group::${log_file}"
+              sed -n '1,400p' "${log_file}"
+              echo "::endgroup::"
+            done < <(find "images/${TEST_IMAGE}/tests" -type f -path '*/build/*.log' -print0 | sort -z)
+
+            if [[ "${logs_found}" -eq 0 ]]; then
+              echo "No test log artifacts were found under images/${TEST_IMAGE}/tests."
+            fi
+          }
+
+          if ! ./gradlew "${GRADLE_TASK}" ${GRADLE_ARGS}; then
+            echo "::error::Gradle tests failed for ${TEST_IMAGE}. Dumping captured test logs."
+            print_test_logs
+            exit 1
+          fi
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: always()
         with:

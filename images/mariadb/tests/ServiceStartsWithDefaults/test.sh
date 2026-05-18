@@ -1,6 +1,8 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 
+set -x
+
 if timeout 300 wait-for-open-port.sh "localhost" "3306"; then
     echo "Service Started"
     exit 0

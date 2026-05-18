@@ -232,6 +232,7 @@ class TestsPlugin : Plugin<Project> {
 
             // Used to fail the task if any condition was not met.
             var failedConditions = false
+            val failures = mutableListOf<String>()
 
             if (outputConditions.get().isNotEmpty()) {
                 Thread.sleep(5000)
@@ -245,7 +246,13 @@ class TestsPlugin : Plugin<Project> {
                 // Exit ignoring the exit code for docker-compose as we look at each container instead.
                 up.complete(0)
                 // Check for any monitors that failed to find their expected output.
-                failedConditions = logMonitors.any { !it.get().third }
+                logMonitors
+                    .map { it.get() }
+                    .filter { !it.third }
+                    .forEach { (service, output, _) ->
+                        failedConditions = true
+                        failures += """Service "$service" did not emit expected log output: "$output"."""
+                    }
             }
             up.join() // Either ended of its own accord or output conditions have all been satisfied.
             // Wait for all containers to come down before we check their exit codes.
@@ -267,11 +274,18 @@ class TestsPlugin : Plugin<Project> {
                 logger.info("Service ($service) exited with: $exitCode, expected ${expectedExitCodes.joinToString(", ")}")
                 if (!expectedExitCodes.contains(exitCode)) {
                     failedConditions = true
+                    failures += "Service \"$service\" exited with code $exitCode, expected ${expectedExitCodes.joinToString(", ")}. See ${logs.get().asFile.resolve("${service}.log")}."
                 }
             }
             if (failedConditions) {
-                logger.info("Failed Conditions")
-                throw GradleException("Failed conditions")
+                val upLog = logs.get().asFile.resolve("up.log")
+                val failureMessage = buildString {
+                    appendLine("Failed test conditions for ${project.path}.")
+                    failures.forEach { appendLine("- $it") }
+                    append("Compose startup log: $upLog")
+                }
+                logger.error(failureMessage)
+                throw GradleException(failureMessage)
             }
         }
     }
