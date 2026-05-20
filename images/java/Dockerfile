@@ -5,7 +5,7 @@ ARG TARGETARCH
 
 ARG \
   # renovate: datasource=repology depName=alpine_3_22/openjdk17
-  OPENJDK_VERSION=17.0.18_p8-r0 \
+  OPENJDK_VERSION=17.0.19_p10-r0 \
   # renovate: datasource=repology depName=alpine_3_22/maven
   MAVEN_VERSION=3.9.9-r0
 
@@ -13,7 +13,6 @@ ARG \
 #
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=java-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
-    if [ "${TARGETARCH}" = "arm64" ]; then OPENJDK_VERSION="17.0.19_p10-r0"; fi && \
     apk add \
         openjdk17=="${OPENJDK_VERSION}" \
         maven=="${MAVEN_VERSION}" \
