@@ -14,9 +14,9 @@ RUN --mount=type=cache,id=whisper-build-apk-${TARGETARCH},sharing=locked,target=
         cmake=="${CMAKE_VERSION}"
 
 # renovate: datasource=github-releases depName=whisper.cpp packageName=ggml-org/whisper.cpp
-ARG WHISPER_VERSION=1.8.3
+ARG WHISPER_VERSION=1.8.4
 ARG WHISPER_URL="https://github.com/ggml-org/whisper.cpp/archive/refs/tags/v${WHISPER_VERSION}.tar.gz"
-ARG WHISPER_SHA256="870ba21409cdf66697dc4db15ebdb13bc67037d76c7cc63756c81471d8f1731a"
+ARG WHISPER_SHA256="b26f30e52c095ccb75da40b168437736605eb280de57381887bf9e2b65f31e66"
 # whisper model to include in this image
 # see https://github.com/ggml-org/whisper.cpp#more-audio-samples for options
 ARG WHISPER_MODEL=medium.en
