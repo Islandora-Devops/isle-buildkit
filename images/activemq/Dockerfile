@@ -20,6 +20,8 @@ RUN --mount=type=cache,id=activemq-downloads-${TARGETARCH},sharing=locked,target
         --strip \
         examples webapps-demo docs \
     && \
+    sed -i '/transportConnector name="stomp"/ s/^[[:space:]]*<!-- \(.*\) -->$/            \1/' conf/activemq.xml \
+    && \
     cleanup.sh
 
 # Defaults environment variables to be overloaded.
