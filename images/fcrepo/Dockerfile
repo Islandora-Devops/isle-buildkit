@@ -4,10 +4,10 @@ FROM tomcat
 ARG TARGETARCH
 
 # renovate: datasource=github-releases depName=fcrepo packageName=fcrepo/fcrepo
-ARG FCREPO_VERSION=6.5.1
+ARG FCREPO_VERSION=7.0.0
 ARG FCREPO_FILE=fcrepo-webapp-${FCREPO_VERSION}.war
 ARG FCREPO_URL=https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}
-ARG FCREPO_SHA256="5091550fe31e7693f36396e0ea3231c990648f14d914597124b84971a9daaae5"
+ARG FCREPO_SHA256="83e19e9ccddaf74dd36f6e1164156ef8eb91262175b9456820138413f0ae2244"
 
 # renovate: datasource=github-releases depName=islandora-syn packageName=Islandora/Syn
 ARG SYN_VERSION=1.1.1
@@ -28,7 +28,7 @@ ARG UPGRADE_UTILS_URL=https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releas
 ARG UPGRADE_UTILS_SHA256=a897faeda52322ead9b619dfadab6f77d3f4b3c5baf8ab3f188e8d8769430348
 
 # Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=fcrepo6-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+RUN --mount=type=cache,id=fcrepo-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
         --url ${FCREPO_URL} \
         --sha256 ${FCREPO_SHA256} \
