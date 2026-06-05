@@ -1,6 +1,6 @@
 # ActiveMQ
 
-Docker image for [ActiveMQ] version 5.19.6.
+Docker image for [ActiveMQ] version 5.19.7.
 
 Built from [Islandora-DevOps/isle-buildkit activemq](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/activemq)
 
@@ -25,14 +25,14 @@ additional settings, volumes, ports, etc.
 
 ## Ports
 
-| Port  | Description  |
-| :---- | :----------- |
-| 1883  | [MQTT]       |
-| 5672  | [AMPQ]       |
-| 8161  | [WebConsole] |
-| 61613 | [STOMP]      |
-| 61614 | [WS]         |
-| 61616 | [OpenWire]   |
+| Port  | Description  | Enabled by default |
+| :---- | :----------- | :----------------- |
+| 1883  | [MQTT]       | No                 |
+| 5672  | [AMPQ]       | No                 |
+| 8161  | [WebConsole] | Yes                |
+| 61613 | [STOMP]      | Yes                |
+| 61614 | [WS]         | No                 |
+| 61616 | [OpenWire]   | Yes                |
 
 ## Volumes
 

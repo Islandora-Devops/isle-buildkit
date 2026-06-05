@@ -3,10 +3,10 @@ FROM base
 
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=custom-composer packageName=composer/composer
-ARG COMPOSER_VERSION=2.9.8
+ARG COMPOSER_VERSION=2.10.1
 ARG COMPOSER_FILE=composer.phar
 ARG COMPOSER_URL=https://getcomposer.org/download/${COMPOSER_VERSION}/${COMPOSER_FILE}
-ARG COMPOSER_SHA256="59b2c50e10cafa0d8efc19ede9a326d782f096c674a26baf98cf042ce23de890"
+ARG COMPOSER_SHA256="345b9c6a98da5c30dcbd4b0d99fc8710bf0ae98a3898eea18f7b2ad9dec93f06"
 
 WORKDIR /var/www
 
@@ -25,7 +25,7 @@ ARG \
     # renovate: datasource=repology depName=alpine_3_22/icu-data-full
     ICU_VERSION=76.1-r1 \
     # renovate: datasource=repology depName=alpine_3_22/nginx
-    NGINX_VERSION=1.28.3-r1 \
+    NGINX_VERSION=1.28.3-r3 \
     # renovate: datasource=repology depName=alpine_3_22/php83
     PHP_VERSION=8.3.29-r0
 
