@@ -74,7 +74,6 @@
     {
       "groupName": "all non-major dependencies",
       "matchDatasources": [
-        "*",
         "!repology"
       ],
       "matchUpdateTypes": [
@@ -83,7 +82,7 @@
         "digest"
       ],
       "schedule": [
-        "* 10 * * 3"
+        "* * * * 3"
       ]
     },
     {
