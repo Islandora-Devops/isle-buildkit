@@ -22,7 +22,7 @@ services:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${fcrepo:-islandora/fcrepo:local}
+    image: ${FCREPO:-islandora/fcrepo:local}
     depends_on:
       - activemq
       - mariadb
