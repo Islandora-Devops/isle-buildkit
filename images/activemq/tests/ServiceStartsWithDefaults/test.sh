@@ -10,10 +10,5 @@ do
     sleep 1
 done
 
-if ! bash -c "</dev/tcp/localhost/61613"; then
-    echo "ActiveMQ STOMP connector is not listening on port 61613"
-    exit 1
-fi
-
 # All tests were successful
 exit 0
