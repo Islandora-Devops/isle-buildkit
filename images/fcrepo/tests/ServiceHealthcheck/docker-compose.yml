@@ -4,16 +4,16 @@
 x-common: &common
   restart: "no"
 
-name: fcrepo6-servicehealthcheck
+name: fcrepo-servicehealthcheck
 services:
   activemq:
     <<: *common
     image: ${ACTIVEMQ:-islandora/activemq:local}
-  fcrepo6:
+  fcrepo:
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${FCREPO6:-islandora/fcrepo6:local}
+    image: ${fcrepo:-islandora/fcrepo:local}
     depends_on:
       - activemq

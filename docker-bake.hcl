@@ -12,7 +12,7 @@ IMAGES = [
   "crayfish",
   "crayfits",
   "drupal",
-  "fcrepo6",
+  "fcrepo",
   "fits",
   "handle",
   "homarus",
@@ -43,7 +43,7 @@ DEPENDENCIES = {
   crayfish = ["nginx"]
   crayfits = ["scyllaridae"]
   drupal = ["nginx"]
-  fcrepo6 = ["tomcat"]
+  fcrepo = ["tomcat"]
   fits = ["tomcat"]
   handle = ["java"]
   homarus = ["scyllaridae"]
@@ -227,9 +227,9 @@ target "drupal-common" {
   context = context("drupal")
 }
 
-target "fcrepo6-common" {
+target "fcrepo-common" {
   inherits = ["common"]
-  context = context("fcrepo6")
+  context = context("fcrepo")
 }
 
 target "fits-common" {
@@ -402,11 +402,11 @@ target "drupal" {
   tags = tags("drupal", "")
 }
 
-target "fcrepo6" {
-  inherits = ["fcrepo6-common"]
-  contexts = dependencies("fcrepo6", "")
-  cache-from = cacheFrom("fcrepo6", hostArch())
-  tags = tags("fcrepo6", "")
+target "fcrepo" {
+  inherits = ["fcrepo-common"]
+  contexts = dependencies("fcrepo", "")
+  cache-from = cacheFrom("fcrepo", hostArch())
+  tags = tags("fcrepo", "")
 }
 
 target "fits" {
@@ -605,11 +605,11 @@ target "drupal-amd64" {
   tags = tags("drupal", "amd64")
 }
 
-target "fcrepo6-amd64" {
-  inherits = ["fcrepo6-common", "amd64-common"]
-  contexts = dependencies("fcrepo6", "amd64")
-  cache-from = cacheFrom("fcrepo6", "amd64")
-  tags = tags("fcrepo6", "amd64")
+target "fcrepo-amd64" {
+  inherits = ["fcrepo-common", "amd64-common"]
+  contexts = dependencies("fcrepo", "amd64")
+  cache-from = cacheFrom("fcrepo", "amd64")
+  tags = tags("fcrepo", "amd64")
 }
 
 target "fits-amd64" {
@@ -808,11 +808,11 @@ target "drupal-arm64" {
   tags = tags("drupal", "arm64")
 }
 
-target "fcrepo6-arm64" {
-  inherits = ["fcrepo6-common", "arm64-common"]
-  contexts = dependencies("fcrepo6", "arm64")
-  cache-from = cacheFrom("fcrepo6", "arm64")
-  tags = tags("fcrepo6", "arm64")
+target "fcrepo-arm64" {
+  inherits = ["fcrepo-common", "arm64-common"]
+  contexts = dependencies("fcrepo", "arm64")
+  cache-from = cacheFrom("fcrepo", "arm64")
+  tags = tags("fcrepo", "arm64")
 }
 
 target "fits-arm64" {

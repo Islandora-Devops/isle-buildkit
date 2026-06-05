@@ -140,11 +140,11 @@ jobs:
       contents: read
       packages: write
     needs: [tags, nginx]
-  fcrepo6:
+  fcrepo:
     uses: ./.github/workflows/build.yml
     with:
       contexts: ${{ needs.tomcat.outputs.context }}
-      image: fcrepo6
+      image: fcrepo
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
       strip-apk-pinning: ${{ inputs.strip-apk-pinning || false }}
@@ -491,20 +491,20 @@ jobs:
       - drupal
       - mariadb
       - postgresql
-  test-fcrepo6:
+  test-fcrepo:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: >-
         ${{ needs.activemq.outputs.digest }}
-        ${{ needs.fcrepo6.outputs.digest }}
+        ${{ needs.fcrepo.outputs.digest }}
         ${{ needs.mariadb.outputs.digest }}
         ${{ needs.postgresql.outputs.digest }}
-      image: fcrepo6
+      image: fcrepo
     secrets: inherit
     needs:
       - activemq
-      - fcrepo6
+      - fcrepo
       - mariadb
       - postgresql
   test-fits:
@@ -632,7 +632,7 @@ jobs:
         ${{ needs.alpaca.outputs.digest }}
         ${{ needs.blazegraph.outputs.digest }}
         ${{ needs.crayfits.outputs.digest }}
-        ${{ needs.fcrepo6.outputs.digest }}
+        ${{ needs.fcrepo.outputs.digest }}
         ${{ needs.fits.outputs.digest }}
         ${{ needs.homarus.outputs.digest }}
         ${{ needs.houdini.outputs.digest }}
@@ -648,7 +648,7 @@ jobs:
       - alpaca
       - blazegraph
       - crayfits
-      - fcrepo6
+      - fcrepo
       - fits
       - homarus
       - houdini
@@ -749,14 +749,14 @@ jobs:
       image: drupal
     secrets: inherit
     needs: [drupal]
-  grype-fcrepo6:
+  grype-fcrepo:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
-      digest: ${{ needs.fcrepo6.outputs.digest }}
-      image: fcrepo6
+      digest: ${{ needs.fcrepo.outputs.digest }}
+      image: fcrepo
     secrets: inherit
-    needs: [fcrepo6]
+    needs: [fcrepo]
   grype-fits:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml

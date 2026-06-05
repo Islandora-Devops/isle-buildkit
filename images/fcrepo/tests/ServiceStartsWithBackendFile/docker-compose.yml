@@ -4,25 +4,20 @@
 # overridden by prefixing them.
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+
 x-common: &common
   restart: "no"
 
-name: fcrepo6-servicestartswithbackendpostgresql
+name: fcrepo-servicestartswithbackendfile
 services:
   activemq:
     <<: *common
     image: ${ACTIVEMQ:-islandora/activemq:local}
-  postgresql:
-    image: ${POSTGRESQL:-islandora/postgresql:local}
-  fcrepo6:
-    # Allow downstream container to override `DB` environment variables.
-    environment:
-      FCREPO_PERSISTENCE_TYPE: postgresql
+  fcrepo:
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:
       - /test.sh # Run test and exit.
-    image: ${FCREPO6:-islandora/fcrepo6:local}
+    image: ${fcrepo:-islandora/fcrepo:local}
     depends_on:
       - activemq
-      - postgresql

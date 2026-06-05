@@ -28,7 +28,7 @@ ARG UPGRADE_UTILS_URL=https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releas
 ARG UPGRADE_UTILS_SHA256=a897faeda52322ead9b619dfadab6f77d3f4b3c5baf8ab3f188e8d8769430348
 
 # Platform agnostic does not require arch specific identifier.
-RUN --mount=type=cache,id=fcrepo6-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+RUN --mount=type=cache,id=fcrepo-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
         --url ${FCREPO_URL} \
         --sha256 ${FCREPO_SHA256} \

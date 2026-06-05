@@ -51,7 +51,7 @@ composer
 crayfish
 crayfits
 drupal
-fcrepo6
+fcrepo
 fits
 handle
 homarus

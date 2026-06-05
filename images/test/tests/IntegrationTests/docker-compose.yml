@@ -75,7 +75,7 @@ services:
         command: /test.sh # Run test and exit.
     fcrepo:
         <<: *common
-        image: ${FCREPO6:-islandora/fcrepo6:local}
+        image: ${fcrepo:-islandora/fcrepo:local}
         environment:
             FCREPO_ALLOW_EXTERNAL_DEFAULT: "http://default/"
             FCREPO_ALLOW_EXTERNAL_DRUPAL: "http://test/"

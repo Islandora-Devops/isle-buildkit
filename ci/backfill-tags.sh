@@ -30,7 +30,7 @@ DOCKER_IMAGES=(
   crayfish
   crayfits
   drupal
-  fcrepo6
+  fcrepo
   fits
   handle
   homarus
