@@ -16,10 +16,10 @@ ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSI
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
 # renovate: datasource=custom.apache-downloads depName=apache-log4j packageName=logging/log4j
-ARG LOG4J_VERSION=2.25.3
+ARG LOG4J_VERSION=2.26.0
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
-ARG LOG4J_FILE_SHA256="0259555ff869522b889310a25c27859cf6dc35258251d5355a5eaaf7f4f48b40"
+ARG LOG4J_FILE_SHA256="6735d0f8f10c858aa0499aac5500d75fc32464baeb1667e73cdb00562ad20fa6"
 ARG OLD_LOG4J_VERSION="2.22.0"
 
 # Platform agnostic does not require arch specific identifier.

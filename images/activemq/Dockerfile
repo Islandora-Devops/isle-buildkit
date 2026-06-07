@@ -3,10 +3,10 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=custom.apache-downloads depName=apache-activemq packageName=activemq
-ARG ACTIVEMQ_VERSION=5.19.1
+ARG ACTIVEMQ_VERSION=5.19.7
 ARG ACTIVEMQ_FILE="apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz"
 ARG ACTIVEMQ_URL="https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ_FILE}"
-ARG ACTIVEMQ_FILE_SHA256="8502ce4cc5bdb851c292566e61163774c532b92e5acae68a6826ebb861bd7951"
+ARG ACTIVEMQ_FILE_SHA256="be84d738fec33058ab2ff5541c7f5590c1feced68f90bc7785d8a81f1c678862"
 
 EXPOSE 61616 5672 61613 1883 61614 8161
 
@@ -19,6 +19,8 @@ RUN --mount=type=cache,id=activemq-downloads-${TARGETARCH},sharing=locked,target
         --dest /opt/activemq \
         --strip \
         examples webapps-demo docs \
+    && \
+    sed -i '/transportConnector name="stomp"/ s/^[[:space:]]*<!-- \(.*\) -->$/            \1/' conf/activemq.xml \
     && \
     cleanup.sh
 
