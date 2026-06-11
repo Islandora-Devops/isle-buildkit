@@ -1,0 +1,23 @@
+# file: docker-compose.yml
+#
+# Tests that the base values for database environment variables can be
+# overridden by prefixing them.
+#
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+
+x-common: &common
+  restart: "no"
+
+name: fcrepo-servicestartswithbackendfile
+services:
+  activemq:
+    <<: *common
+    image: ${ACTIVEMQ:-islandora/activemq:local}
+  fcrepo:
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${FCREPO:-islandora/fcrepo:local}
+    depends_on:
+      - activemq

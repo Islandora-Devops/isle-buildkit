@@ -395,7 +395,7 @@ The following docker images are provided:
 - [crayfish]
 - [crayfits]
 - [drupal]
-- [fcrepo6]
+- [fcrepo]
 - [fits]
 - [handle]
 - [homarus]
@@ -727,7 +727,7 @@ are arranged in a hierarchy, that roughly follows below:
     │   └── tomcat
     │       ├── blazegraph
     │       ├── cantaloupe
-    │       ├── fcrepo6
+    │       ├── fcrepo
     │       └── fits
     ├── mariadb
     ├── postgresql
@@ -837,7 +837,7 @@ successfully start without any other container present. Additionally it ensure
 that the order of precedence for configuration settings.
 
 This does not completely remove dependencies between containers, for example,
-when the [fcrepo6] starts it requires a running database like [mariadb] to be
+when the [fcrepo] starts it requires a running database like [mariadb] to be
 able to start. In these cases an `oneshot` service can block until another
 container is available or a timeout has been reached. For example:
 
@@ -899,7 +899,7 @@ adding the following, and restarting `Docker`:
 [crayfish]: ./images/crayfish/README.md
 [crayfits]: ./images/crayfits/README.md
 [drupal]: ./images/drupal/README.md
-[fcrepo6]: ./images/fcrepo6/README.md
+[fcrepo]: ./images/fcrepo/README.md
 [fits]: ./images/fits/README.md
 [handle]: ./images/handle/README.md
 [homarus]: ./images/homarus/README.md

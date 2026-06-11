@@ -5,7 +5,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=imagemagick
 _pkgname=ImageMagick
-pkgver=7.1.2.3
+pkgver=7.1.2.25
 pkgrel=0
 _pkgver=${pkgver%.*}-${pkgver##*.}
 _abiver=7
@@ -27,6 +27,7 @@ makedepends="
 	lcms2-dev
 	libheif-dev
 	libjpeg-turbo-dev
+	libjxl-dev
 	libpng-dev
 	libraw-dev
 	librsvg-dev
@@ -47,6 +48,7 @@ subpackages="
 	$pkgname-libs
 	$pkgname-heic
 	$pkgname-jpeg
+	$pkgname-jxl
 	$pkgname-openexr
 	$pkgname-jp2
 	$pkgname-pango
@@ -56,22 +58,123 @@ subpackages="
 	$pkgname-tiff
 	$pkgname-webp
 	"
-source="https://github.com/ImageMagick/ImageMagick/archive/refs/tags/$_pkgver.tar.gz
-	revert-incorrect-distortion-change.patch
-	"
+source="https://imagemagick.org/archive/releases/ImageMagick-$_pkgver.tar.xz"
 builddir="$srcdir/$_pkgname-$_pkgver"
 
-case "$CARCH" in
-s390x)
-	;;
-*)
-	makedepends="$makedepends libjxl-dev"
-	subpackages="$subpackages $pkgname-jxl"
-	_jxl="--with-jxl"
-	;;
-esac
-
 # secfixes:
+#   7.1.2.24-r0:
+#     - CVE-2026-48724
+#     - CVE-2026-48733
+#     - CVE-2026-48734
+#     - CVE-2026-48994
+#     - CVE-2026-49218
+#     - CVE-2026-49219
+#   7.1.2.23-r0:
+#     - CVE-2026-46520
+#     - CVE-2026-46521
+#     - CVE-2026-46522
+#     - CVE-2026-46523
+#     - CVE-2026-46557
+#     - CVE-2026-46559
+#     - CVE-2026-46692
+#     - CVE-2026-46693
+#     - CVE-2026-47165
+#     - CVE-2026-47166
+#   7.1.2.22-r0:
+#     - CVE-2026-42326
+#     - CVE-2026-45031
+#     - CVE-2026-45358
+#     - CVE-2026-45359
+#     - CVE-2026-45624
+#     - CVE-2026-45664
+#   7.1.2.21-r0:
+#     - CVE-2026-42050
+#   7.1.2.19-r0:
+#     - CVE-2026-33899
+#     - CVE-2026-33900
+#     - CVE-2026-33901
+#     - CVE-2026-33902
+#     - CVE-2026-33905
+#     - CVE-2026-33908
+#     - CVE-2026-34238
+#     - CVE-2026-40169
+#     - CVE-2026-40183
+#     - CVE-2026-40310
+#     - CVE-2026-40311
+#     - CVE-2026-40312
+#   7.1.2.18-r0:
+#     - CVE-2026-33535
+#     - CVE-2026-33536
+#   7.1.2.17-r0:
+#     - CVE-2026-28493
+#     - CVE-2026-28494
+#     - CVE-2026-28686
+#     - CVE-2026-28687
+#     - CVE-2026-28688
+#     - CVE-2026-28689
+#     - CVE-2026-28690
+#     - CVE-2026-28691
+#     - CVE-2026-28692
+#     - CVE-2026-28693
+#     - CVE-2026-30883
+#     - CVE-2026-30929
+#     - CVE-2026-30931
+#     - CVE-2026-30935
+#     - CVE-2026-30936
+#     - CVE-2026-30937
+#     - CVE-2026-31853
+#     - CVE-2026-32259
+#     - CVE-2026-32636
+#   7.1.2.15-r0:
+#     - CVE-2026-24481
+#     - CVE-2026-24484
+#     - CVE-2026-24485
+#     - CVE-2026-25576
+#     - CVE-2026-25637
+#     - CVE-2026-25638
+#     - CVE-2026-25794
+#     - CVE-2026-25795
+#     - CVE-2026-25796
+#     - CVE-2026-25797
+#     - CVE-2026-25798
+#     - CVE-2026-25799
+#     - CVE-2026-25897
+#     - CVE-2026-25898
+#     - CVE-2026-25965
+#     - CVE-2026-25966
+#     - CVE-2026-25967
+#     - CVE-2026-25968
+#     - CVE-2026-25969
+#     - CVE-2026-25970
+#     - CVE-2026-25971
+#     - CVE-2026-25982
+#     - CVE-2026-25983
+#     - CVE-2026-25985
+#     - CVE-2026-25986
+#     - CVE-2026-25987
+#     - CVE-2026-25988
+#     - CVE-2026-25989
+#     - CVE-2026-26066
+#     - CVE-2026-26283
+#     - CVE-2026-26284
+#     - CVE-2026-26983
+#     - CVE-2026-27798
+#     - CVE-2026-27799
+#   7.1.2.12-r0:
+#     - CVE-2025-66628
+#     - CVE-2025-68469
+#     - CVE-2025-68618
+#     - CVE-2025-68950
+#     - CVE-2025-69204
+#   7.1.2.8-r0:
+#     - CVE-2025-53014
+#     - CVE-2025-53019
+#     - CVE-2025-53101
+#     - CVE-2025-55212
+#     - CVE-2025-55298
+#     - CVE-2025-57803
+#     - CVE-2025-62171
+#     - CVE-2025-62594
 #   7.1.1.21-r0:
 #     - CVE-2023-5341
 #   7.1.0.52-r0:
@@ -192,6 +295,7 @@ build() {
 		--with-gslib \
 		--with-hdri \
 		--with-heic \
+		--with-jxl \
 		--with-modules \
 		--with-openexr \
 		--with-openjp2 \
@@ -205,8 +309,7 @@ build() {
 		--with-webp \
 		--without-x \
 		--with-xml \
-		--without-magick-plus-plus \
-		$_jxl
+		--without-magick-plus-plus
 	make -j $(nproc)
 }
 
@@ -302,6 +405,5 @@ webp() {
 }
 
 sha512sums="
-b036d7fa6a455b10f7f5f97ac3247bc6ddab05b537585b1fe22aa7276c7de1c3923a2281d83685a31b60d99157392162a00bbc1bf75e9ddc8ec65c91c5c99886  7.1.2-3.tar.gz
-5054a76a53e92c43e6289c3904662bd99c8aa92460140309cad1918d039403f3ce76fbf68de33dc13fe24fb283a1b9c2fefdb3359a64df57f8c883fd5f754a64  revert-incorrect-distortion-change.patch
+4a0c805d5b4af658ea1dba6cb0f0a8222b346e3f1ab4402c8001da6d63b36c8c9f529cc00b1810edb3b5bf9c3f3138cba9a02bf44cf121cd277a6303d6d13cc9  ImageMagick-7.1.2-25.tar.xz
 "

@@ -12,7 +12,7 @@ IMAGES = [
   "crayfish",
   "crayfits",
   "drupal",
-  "fcrepo6",
+  "fcrepo",
   "fits",
   "handle",
   "homarus",
@@ -26,7 +26,6 @@ IMAGES = [
   "milliner",
   "nginx",
   "postgresql",
-  "riprap",
   "scyllaridae",
   "solr",
   "test",
@@ -43,7 +42,7 @@ DEPENDENCIES = {
   crayfish = ["nginx"]
   crayfits = ["scyllaridae"]
   drupal = ["nginx"]
-  fcrepo6 = ["tomcat"]
+  fcrepo = ["tomcat"]
   fits = ["tomcat"]
   handle = ["java"]
   homarus = ["scyllaridae"]
@@ -55,7 +54,6 @@ DEPENDENCIES = {
   milliner = ["crayfish"]
   nginx = ["base"]
   postgresql = ["base"]
-  riprap = ["nginx"]
   scyllaridae = ["base"]
   solr = ["java"]
   test = ["drupal"]
@@ -198,7 +196,7 @@ target "base-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
+    alpine = "docker-image://alpine:3.24.0@sha256:a2d49ea686c2adfe3c992e47dc3b5e7fa6e6b5055609400dc2acaeb241c829f4"
   }
 }
 
@@ -227,9 +225,9 @@ target "drupal-common" {
   context = context("drupal")
 }
 
-target "fcrepo6-common" {
+target "fcrepo-common" {
   inherits = ["common"]
-  context = context("fcrepo6")
+  context = context("fcrepo")
 }
 
 target "fits-common" {
@@ -264,7 +262,7 @@ target "imagemagick-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
+    alpine = "docker-image://alpine:3.24.0@sha256:a2d49ea686c2adfe3c992e47dc3b5e7fa6e6b5055609400dc2acaeb241c829f4"
   }
 }
 
@@ -280,7 +278,7 @@ target "leptonica-common" {
     # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
     # It will be the digest printed when you do: docker pull alpine:3.17.1
     # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1"
+    alpine = "docker-image://alpine:3.24.0@sha256:a2d49ea686c2adfe3c992e47dc3b5e7fa6e6b5055609400dc2acaeb241c829f4"
   }
 }
 
@@ -307,11 +305,6 @@ target "nginx-common" {
 target "postgresql-common" {
   inherits = ["common"]
   context = context("postgresql")
-}
-
-target "riprap-common" {
-  inherits = ["common"]
-  context = context("riprap")
 }
 
 target "scyllaridae-common" {
@@ -402,11 +395,11 @@ target "drupal" {
   tags = tags("drupal", "")
 }
 
-target "fcrepo6" {
-  inherits = ["fcrepo6-common"]
-  contexts = dependencies("fcrepo6", "")
-  cache-from = cacheFrom("fcrepo6", hostArch())
-  tags = tags("fcrepo6", "")
+target "fcrepo" {
+  inherits = ["fcrepo-common"]
+  contexts = dependencies("fcrepo", "")
+  cache-from = cacheFrom("fcrepo", hostArch())
+  tags = tags("fcrepo", "")
 }
 
 target "fits" {
@@ -496,13 +489,6 @@ target "postgresql" {
   contexts = dependencies("postgresql", "")
   cache-from = cacheFrom("postgresql", hostArch())
   tags = tags("postgresql", "")
-}
-
-target "riprap" {
-  inherits = ["riprap-common"]
-  contexts = dependencies("riprap", "")
-  cache-from = cacheFrom("riprap", hostArch())
-  tags = tags("riprap", "")
 }
 
 target "scyllaridae" {
@@ -605,11 +591,11 @@ target "drupal-amd64" {
   tags = tags("drupal", "amd64")
 }
 
-target "fcrepo6-amd64" {
-  inherits = ["fcrepo6-common", "amd64-common"]
-  contexts = dependencies("fcrepo6", "amd64")
-  cache-from = cacheFrom("fcrepo6", "amd64")
-  tags = tags("fcrepo6", "amd64")
+target "fcrepo-amd64" {
+  inherits = ["fcrepo-common", "amd64-common"]
+  contexts = dependencies("fcrepo", "amd64")
+  cache-from = cacheFrom("fcrepo", "amd64")
+  tags = tags("fcrepo", "amd64")
 }
 
 target "fits-amd64" {
@@ -699,13 +685,6 @@ target "postgresql-amd64" {
   contexts = dependencies("postgresql", "amd64")
   cache-from = cacheFrom("postgresql", "amd64")
   tags = tags("postgresql", "amd64")
-}
-
-target "riprap-amd64" {
-  inherits = ["riprap-common", "amd64-common"]
-  contexts = dependencies("riprap", "amd64")
-  cache-from = cacheFrom("riprap", "amd64")
-  tags = tags("riprap", "amd64")
 }
 
 target "scyllaridae-amd64" {
@@ -808,11 +787,11 @@ target "drupal-arm64" {
   tags = tags("drupal", "arm64")
 }
 
-target "fcrepo6-arm64" {
-  inherits = ["fcrepo6-common", "arm64-common"]
-  contexts = dependencies("fcrepo6", "arm64")
-  cache-from = cacheFrom("fcrepo6", "arm64")
-  tags = tags("fcrepo6", "arm64")
+target "fcrepo-arm64" {
+  inherits = ["fcrepo-common", "arm64-common"]
+  contexts = dependencies("fcrepo", "arm64")
+  cache-from = cacheFrom("fcrepo", "arm64")
+  tags = tags("fcrepo", "arm64")
 }
 
 target "fits-arm64" {
@@ -902,13 +881,6 @@ target "postgresql-arm64" {
   contexts = dependencies("postgresql", "arm64")
   cache-from = cacheFrom("postgresql", "arm64")
   tags = tags("postgresql", "arm64")
-}
-
-target "riprap-arm64" {
-  inherits = ["riprap-common", "arm64-common"]
-  contexts = dependencies("riprap", "arm64")
-  cache-from = cacheFrom("riprap", "arm64")
-  tags = tags("riprap", "arm64")
 }
 
 target "scyllaridae-arm64" {

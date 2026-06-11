@@ -50,7 +50,7 @@ if [ "$DEP" = "alpaca" ] ; then
   DOCKERFILES=("images/alpaca/Dockerfile")
 
 elif [ "$DEP" = "apache-tomcat" ]; then
-  URL="https://downloads.apache.org/tomcat/tomcat-9/v$NEW_VERSION/bin/apache-tomcat-$NEW_VERSION.tar.gz"
+  URL="https://downloads.apache.org/tomcat/tomcat-11/v$NEW_VERSION/bin/apache-tomcat-$NEW_VERSION.tar.gz"
   ARG="TOMCAT_FILE_SHA256"
   DOCKERFILES=("images/tomcat/Dockerfile")
   README="images/tomcat/README.md"
@@ -80,23 +80,23 @@ elif [ "$DEP" = "solr-ocrhighlighting" ]; then
 elif [ "$DEP" = "fcrepo" ]; then
   URL="https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${NEW_VERSION}/fcrepo-webapp-${NEW_VERSION}.war"
   ARG="FCREPO_SHA256"
-  DOCKERFILES=("images/fcrepo6/Dockerfile")
-  README="images/fcrepo6/README.md"
+  DOCKERFILES=("images/fcrepo/Dockerfile")
+  README="images/fcrepo/README.md"
 
 elif [ "$DEP" = "islandora-syn" ]; then
   URL="https://github.com/Islandora/Syn/releases/download/v${NEW_VERSION}/islandora-syn-${NEW_VERSION}-all.jar"
   ARG="SYN_SHA256"
-  DOCKERFILES=("images/fcrepo6/Dockerfile")
+  DOCKERFILES=("images/fcrepo/Dockerfile")
 
 elif [ "$DEP" = "fcrepo-import-export" ]; then
   URL="https://github.com/fcrepo-exts/fcrepo-import-export/releases/download/fcrepo-import-export-${NEW_VERSION}/fcrepo-import-export-${NEW_VERSION}.jar"
   ARG="IMPORT_EXPORT_SHA256"
-  DOCKERFILES=("images/fcrepo6/Dockerfile")
+  DOCKERFILES=("images/fcrepo/Dockerfile")
 
 elif [ "$DEP" = "fcrepo-upgrade-utils" ]; then
   URL="https://github.com/fcrepo-exts/fcrepo-upgrade-utils/releases/download/fcrepo-upgrade-utils-${NEW_VERSION}/fcrepo-upgrade-utils-${NEW_VERSION}.jar"
   ARG="UPGRADE_UTILS_SHA256"
-  DOCKERFILES=("images/fcrepo6/Dockerfile")
+  DOCKERFILES=("images/fcrepo/Dockerfile")
 
 elif [ "$DEP" = "cantaloupe" ]; then
   URL="https://github.com/cantaloupe-project/cantaloupe/releases/download/v${NEW_VERSION}/cantaloupe-${NEW_VERSION}.zip"

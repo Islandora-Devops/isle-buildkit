@@ -9,7 +9,7 @@ ARG TRANSKRIBUS_PROCESS_FILE=v${TRANSKRIBUS_PROCESS_VERSION}.tar.gz
 ARG TRANSKRIBUS_PROCESS_URL=https://github.com/ulsdevteam/transkribus-process/archive/refs/tags/${TRANSKRIBUS_PROCESS_FILE}
 ARG TRANSKRIBUS_PROCESS_SHA256="8a88c135fed7668d3bdbfaefa0ca75f0cbb8daa406158784a05aea53bf0eb9f6"
 
-# renovate: datasource=repology depName=alpine_3_22/dotnet8-sdk
+# renovate: datasource=repology depName=alpine_3_24/dotnet8-sdk
 ARG DOTNET_SDK_VERSION=8.0.127-r0
 
 RUN --mount=type=cache,id=transkribus-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
@@ -35,14 +35,14 @@ FROM base AS runtime
 ARG TARGETARCH
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_22/aspnetcore8-runtime
-    ASPNETCORE_VERSION=8.0.27-r0 \
-    # renovate: datasource=repology depName=alpine_3_22/nodejs
-    NODEJS_VERSION=22.22.2-r0 \
-    # renovate: datasource=repology depName=alpine_3_22/npm
-    NPM_VERSION=11.6.4-r0 \
-    # renovate: datasource=npm depName=xslt3
-    XSLT3_VERSION=2.7.0
+  # renovate: datasource=repology depName=alpine_3_24/aspnetcore8-runtime
+  ASPNETCORE_VERSION=8.0.27-r0 \
+  # renovate: datasource=repology depName=alpine_3_24/nodejs
+  NODEJS_VERSION=24.16.0-r0 \
+  # renovate: datasource=repology depName=alpine_3_24/npm
+  NPM_VERSION=11.12.1-r0 \
+  # renovate: datasource=npm depName=xslt3
+  XSLT3_VERSION=2.7.0
 
 
 # Platform specific does require arch specific identifier.

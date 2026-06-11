@@ -1,0 +1,19 @@
+---
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+name: fcrepo-servicehealthcheck
+services:
+  activemq:
+    <<: *common
+    image: ${ACTIVEMQ:-islandora/activemq:local}
+  fcrepo:
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${FCREPO:-islandora/fcrepo:local}
+    depends_on:
+      - activemq
