@@ -50,7 +50,7 @@ if [ "$DEP" = "alpaca" ] ; then
   DOCKERFILES=("images/alpaca/Dockerfile")
 
 elif [ "$DEP" = "apache-tomcat" ]; then
-  URL="https://downloads.apache.org/tomcat/tomcat-9/v$NEW_VERSION/bin/apache-tomcat-$NEW_VERSION.tar.gz"
+  URL="https://downloads.apache.org/tomcat/tomcat-11/v$NEW_VERSION/bin/apache-tomcat-$NEW_VERSION.tar.gz"
   ARG="TOMCAT_FILE_SHA256"
   DOCKERFILES=("images/tomcat/Dockerfile")
   README="images/tomcat/README.md"

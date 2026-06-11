@@ -54,32 +54,41 @@ usage() {
 get_alpine_package_version() {
     local package_name="$1"
     local alpine_version="$2"
-    
-    # Query Repology API for the specific package
-    local url="https://repology.org/api/v1/project/${package_name}"
-    
-    # Get package info from Repology API with better error handling and User-Agent
+
+    # Repology's project name frequently differs from the Alpine binary package
+    # name (e.g. yq-go, mysql-client, procps-ng all live under different project
+    # names), so querying /api/v1/project/<pkg> directly returns an empty result
+    # for those. Instead resolve the binary package name to its project via the
+    # project-by tool, exactly like Renovate's repology datasource does.
+    local url="https://repology.org/tools/project-by?repo=${alpine_version}&name_type=binname&target_page=api_v1_project&name=${package_name}"
+
+    # Get package info from Repology API with better error handling and User-Agent.
+    # -L follows the project-by redirect through to the api_v1_project response.
     local response
     local http_code
-    response=$(curl -s --max-time 15 -H "User-Agent: alpine-updater/1.0 (https://github.com/user/alpine-updater)" -w "%{http_code}" "$url" 2>/dev/null || true)
-    
+    response=$(curl -sL --max-time 20 -H "User-Agent: alpine-updater/1.0 (https://github.com/user/alpine-updater)" -w "%{http_code}" "$url" 2>/dev/null || true)
+
     if [[ -z "$response" ]]; then
         return 1
     fi
-    
+
     # Extract HTTP code from end of response
     http_code="${response: -3}"
     response="${response%???}"
-    
+
+    # An unresolved package returns HTTP 400 with an HTML error page.
     if [[ "$http_code" != "200" ]]; then
         return 1
     fi
-    
-    # Extract version for the specific Alpine repository using jq
-    # Use origversion (the actual package version) instead of version (upstream version)
+
+    # Match the package within the requested Alpine repo by binary/source/visible
+    # name (the project may bundle several), and prefer origversion (the real
+    # package revision) over version (the upstream version).
     local version
-    version=$(echo "$response" | jq -r --arg repo "$alpine_version" '.[] | select(.repo == $repo) | .origversion // .version' 2>/dev/null | head -n1)
-    
+    version=$(echo "$response" | jq -r --arg repo "$alpine_version" --arg pkg "$package_name" \
+        '.[] | select(.repo == $repo) | select(.binname == $pkg or .srcname == $pkg or .visiblename == $pkg) | .origversion // .version' \
+        2>/dev/null | head -n1)
+
     if [[ -n "$version" && "$version" != "null" && "$version" != "" ]]; then
         echo "$version"
         return 0
@@ -94,71 +103,85 @@ update_dockerfile() {
     local old_alpine="$2"
     local new_alpine="$3"
     local dry_run="$4"
-    
+
     print_processing "Processing $dockerfile"
-    
+
     if [[ ! -f "$dockerfile" ]]; then
         print_error "File not found: $dockerfile"
         return 1
     fi
-  
+
     local temp_file
     temp_file=$(mktemp)
     local changes_made=false
-    
+
     # Process the file line by line
     while IFS= read -r line; do
-        if [[ "$line" =~ renovate:.*depName=${old_alpine}/ ]]; then
-            # Extract package name using sed for better compatibility
-            local package_name
-            package_name=$(echo "$line" | sed -n "s/.*depName=${old_alpine}\/\([^[:space:]]*\).*/\1/p" || true)
-            
-            if [[ -n "$package_name" ]]; then
-                print_status "  Found package: $package_name"
-                
-                # Update the depName
-                local updated_line
-                updated_line=$(echo "$line" | sed "s/depName=${old_alpine}\//depName=${new_alpine}\//g")
-                
-                # Try to get new version
-                print_status "  Fetching version for $package_name..."
-                local new_version=""
-                if new_version=$(get_alpine_package_version "$package_name" "$new_alpine"); then
-                    print_status "  Found version: $new_version"
-                    
-                    # Look for the next line that should contain the version ARG
-                    echo "$updated_line" >> "$temp_file"
-                    
-                    # Read the next line (should be the ARG line)
-                    if IFS= read -r next_line; then
-                        if [[ "$next_line" =~ ^[[:space:]]*[A-Z_]+_VERSION= ]]; then
-                            local var_name
-                            var_name=$(echo "$next_line" | sed -n 's/^[[:space:]]*\([A-Z_]*_VERSION\)=.*/\1/p')
-                            local updated_version_line="  ${var_name}=${new_version} \\"
-                            
-                            if [[ "$dry_run" == "true" ]]; then
-                                print_status "  [DRY RUN] Would update: $var_name=$new_version"
-                            else
-                                echo "$updated_version_line" >> "$temp_file"
-                                changes_made=true
-                                print_status "  Updated: $var_name=$new_version"
-                            fi
-                        else
-                            echo "$next_line" >> "$temp_file"
-                        fi
-                    fi
-                else
-                    print_warning "  Could not fetch version for $package_name, keeping comment update only"
-                    echo "$updated_line" >> "$temp_file"
-                    changes_made=true
-                fi
+        # Match a renovate comment pinning an Alpine package, capturing the
+        # Alpine release and package name from the depName itself.
+        if [[ "$line" =~ renovate:.*depName=(alpine_[0-9_]+)/([^[:space:]]+) ]]; then
+            local line_alpine="${BASH_REMATCH[1]}"
+            local package_name="${BASH_REMATCH[2]}"
+
+            # Migration mode: only touch comments for the requested old release,
+            # leave any others untouched. In-place mode ($old_alpine empty)
+            # refreshes every Alpine package against its current release.
+            if [[ -n "$old_alpine" && "$line_alpine" != "$old_alpine" ]]; then
+                echo "$line" >> "$temp_file"
                 continue
             fi
+
+            # The release to look up against and to write into the depName:
+            # the new release when migrating, otherwise the line's own release.
+            local target_alpine="${new_alpine:-$line_alpine}"
+
+            print_status "  Found package: $package_name ($line_alpine)"
+
+            # Rewrite the depName to the target release (no-op when unchanged).
+            local updated_line
+            updated_line=$(echo "$line" | sed "s/depName=${line_alpine}\//depName=${target_alpine}\//g")
+            if [[ "$updated_line" != "$line" ]]; then
+                changes_made=true
+            fi
+
+            # Try to get the latest version for the target release.
+            print_status "  Fetching version for $package_name..."
+            local new_version=""
+            if new_version=$(get_alpine_package_version "$package_name" "$target_alpine"); then
+                echo "$updated_line" >> "$temp_file"
+
+                # Read the next line (should be the ARG version assignment).
+                if IFS= read -r next_line; then
+                    if [[ "$next_line" =~ ^[[:space:]]*([A-Z_]+_VERSION)=([^[:space:]\\]*) ]]; then
+                        local var_name="${BASH_REMATCH[1]}"
+                        local current_version="${BASH_REMATCH[2]}"
+                        local updated_version_line="  ${var_name}=${new_version} \\"
+
+                        if [[ "$new_version" == "$current_version" ]]; then
+                            print_status "  $var_name already up to date ($current_version)"
+                            echo "$next_line" >> "$temp_file"
+                        elif [[ "$dry_run" == "true" ]]; then
+                            print_status "  [DRY RUN] Would update: $var_name $current_version -> $new_version"
+                            echo "$next_line" >> "$temp_file"
+                        else
+                            echo "$updated_version_line" >> "$temp_file"
+                            changes_made=true
+                            print_status "  Updated: $var_name $current_version -> $new_version"
+                        fi
+                    else
+                        echo "$next_line" >> "$temp_file"
+                    fi
+                fi
+            else
+                print_warning "  Could not fetch version for $package_name, keeping comment as-is"
+                echo "$updated_line" >> "$temp_file"
+            fi
+            continue
         fi
-        
+
         echo "$line" >> "$temp_file"
     done < "$dockerfile"
-    
+
     # Apply changes if not dry run
     if [[ "$dry_run" != "true" && "$changes_made" == "true" ]]; then
         mv "$temp_file" "$dockerfile"
@@ -171,11 +194,6 @@ update_dockerfile() {
             print_warning "No changes made to $dockerfile"
         fi
     fi
-    
-    # Clean up backup if no changes were made
-    if [[ "$dry_run" != "true" && "$changes_made" != "true" && -f "${dockerfile}.backup" ]]; then
-        rm -f "${dockerfile}.backup"
-    fi
 }
 
 # Main function
@@ -184,7 +202,8 @@ main() {
     local new_alpine=""
     local directory="."
     local dry_run="false"
-    
+    local positional=()
+
     # Parse arguments
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -196,60 +215,82 @@ main() {
                 usage
                 exit 0
                 ;;
+            -*)
+                print_error "Unknown option: $1"
+                usage
+                exit 1
+                ;;
             *)
-                if [[ -z "$old_alpine" ]]; then
-                    old_alpine="$1"
-                elif [[ -z "$new_alpine" ]]; then
-                    new_alpine="$1"
-                elif [[ -z "$directory" || "$directory" == "." ]]; then
-                    directory="$1"
-                else
-                    print_error "Too many arguments"
-                    usage
-                    exit 1
-                fi
+                positional+=("$1")
                 shift
                 ;;
         esac
     done
-    
-    # Validate arguments
-    if [[ -z "$old_alpine" || -z "$new_alpine" ]]; then
-        print_error "Missing required arguments"
-        usage
-        exit 1
-    fi
-    
+
+    # Interpret positional arguments. Versions are optional: when none are
+    # given the script runs in "check for updates" mode, refreshing every
+    # package against the Alpine release already pinned in its depName.
+    #   (no versions)        -> in-place update, directory "."
+    #   <dir>                -> in-place update of <dir>
+    #   <old> <new>          -> migrate releases, directory "."
+    #   <old> <new> <dir>    -> migrate releases in <dir>
+    case ${#positional[@]} in
+        0)
+            ;;
+        1)
+            if [[ -d "${positional[0]}" ]]; then
+                directory="${positional[0]}"
+            else
+                print_error "Single argument must be a directory for in-place updates, or pass <old> <new> [dir] to migrate releases"
+                usage
+                exit 1
+            fi
+            ;;
+        2)
+            old_alpine="${positional[0]}"
+            new_alpine="${positional[1]}"
+            ;;
+        3)
+            old_alpine="${positional[0]}"
+            new_alpine="${positional[1]}"
+            directory="${positional[2]}"
+            ;;
+        *)
+            print_error "Too many arguments"
+            usage
+            exit 1
+            ;;
+    esac
+
     if [[ ! -d "$directory" ]]; then
         print_error "Directory not found: $directory"
         exit 1
     fi
-    
-    print_status "Starting Alpine package update process"
-    print_status "Old version: $old_alpine"
-    print_status "New version: $new_alpine"
+
+    if [[ -n "$old_alpine" ]]; then
+        print_status "Starting Alpine package update process"
+        print_status "Old version: $old_alpine"
+        print_status "New version: $new_alpine"
+    else
+        print_status "Checking for Alpine package updates (in-place)"
+    fi
     print_status "Directory: $directory"
-    
+
     if [[ "$dry_run" == "true" ]]; then
         print_warning "DRY RUN MODE - No files will be modified"
     fi
-    
+
     # Find all Dockerfiles
     local dockerfile_count=0
     while IFS= read -r -d '' dockerfile; do
         update_dockerfile "$dockerfile" "$old_alpine" "$new_alpine" "$dry_run"
-        ((dockerfile_count++))
+        dockerfile_count=$((dockerfile_count + 1))
     done < <(find "$directory" -name "Dockerfile*" -type f -print0)
-    
+
     if [[ $dockerfile_count -eq 0 ]]; then
         print_warning "No Dockerfiles found in $directory"
     else
         print_status "Processed $dockerfile_count Dockerfile(s)"
-        
-        if [[ "$dry_run" != "true" ]]; then
-            print_status "Backup files created with .backup extension"
-            print_status "To restore: find $directory -name '*.backup' -exec sh -c 'mv \"\$1\" \"\${1%.backup}\"' _ {} \;"
-        fi
     fi
 }
 
@@ -264,19 +305,19 @@ setup_macos_compatibility() {
 # Check dependencies
 check_dependencies() {
     local missing_deps=()
-    
+
     if ! command -v curl >/dev/null 2>&1; then
         missing_deps+=("curl")
     fi
-    
+
     if ! command -v jq >/dev/null 2>&1; then
         missing_deps+=("jq")
     fi
-    
+
     if ! command -v sed >/dev/null 2>&1; then
         missing_deps+=("sed")
     fi
-    
+
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
         print_error "Missing dependencies: ${missing_deps[*]}"
         print_error "Please install the missing tools:"

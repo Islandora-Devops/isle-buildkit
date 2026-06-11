@@ -322,19 +322,6 @@ jobs:
       contents: read
       packages: write
     needs: [tags, base]
-  riprap:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.nginx.outputs.context }}
-      image: riprap
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-      strip-apk-pinning: ${{ inputs.strip-apk-pinning || false }}
-    secrets: inherit
-    permissions:
-      contents: read
-      packages: write
-    needs: [tags, nginx]
   scyllaridae:
     uses: ./.github/workflows/build.yml
     with:
@@ -601,20 +588,6 @@ jobs:
       image: postgresql
     secrets: inherit
     needs: [postgresql]
-  test-riprap:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: >-
-        ${{ needs.riprap.outputs.digest }}
-        ${{ needs.mariadb.outputs.digest }}
-        ${{ needs.postgresql.outputs.digest }}
-      image: riprap
-    secrets: inherit
-    needs:
-      - riprap
-      - mariadb
-      - postgresql
   test-solr:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
@@ -837,14 +810,6 @@ jobs:
       image: postgresql
     secrets: inherit
     needs: [postgresql]
-  grype-riprap:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.riprap.outputs.digest }}
-      image: riprap
-    secrets: inherit
-    needs: [riprap]
   grype-solr:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml

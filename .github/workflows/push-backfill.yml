@@ -310,19 +310,6 @@ jobs:
       contents: read
       packages: write
     needs: [tags, base]
-  riprap:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.nginx.outputs.context }}
-      image: riprap
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-      strip-apk-pinning: true
-    secrets: inherit
-    permissions:
-      contents: read
-      packages: write
-    needs: [tags, nginx]
   solr:
     uses: ./.github/workflows/build.yml
     with:
