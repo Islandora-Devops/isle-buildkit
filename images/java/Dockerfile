@@ -4,8 +4,8 @@ FROM base
 ARG TARGETARCH
 
 ARG \
-  # renovate: datasource=repology depName=alpine_3_24/openjdk21
-  OPENJDK_VERSION=21.0.11_p10-r0 \
+  # renovate: datasource=repology depName=alpine_3_24/openjdk25
+  OPENJDK_VERSION=25.0.3_p9-r1 \
   # renovate: datasource=repology depName=alpine_3_24/maven
   MAVEN_VERSION=3.9.16-r0
 
@@ -14,7 +14,7 @@ ARG \
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=java-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
-        openjdk21=="${OPENJDK_VERSION}" \
+        openjdk25=="${OPENJDK_VERSION}" \
         maven=="${MAVEN_VERSION}" \
     && \
     cleanup.sh

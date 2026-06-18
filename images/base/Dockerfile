@@ -25,7 +25,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/bash
   BASH_VERSION=5.3.9-r1 \
   # renovate: datasource=repology depName=alpine_3_24/ca-certificates
-  CA_CERTIFICATES_VERSION=20260413-r0 \
+  CA_CERTIFICATES_VERSION=20260611-r0 \
   # renovate: datasource=repology depName=alpine_3_24/curl
   CURL_VERSION=8.20.0-r1 \
   # renovate: datasource=repology depName=alpine_3_24/git
