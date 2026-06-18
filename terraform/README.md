@@ -7,7 +7,6 @@ build and cache infrastructure.
 
 ## Buckets Created
 
-- `isle-cache-gradle`: Gradle cache bucket
 - `isle-cache-buildkit`: BuildKit cache bucket
 - `isle-cache-sccache`: Shared Compilation cache bucket
 
@@ -66,7 +65,7 @@ The Terraform state is stored in the `isle-terraform-state` bucket in Digital Oc
 
 ## Bucket Access
 
-All cache buckets (`isle-cache-gradle`, `isle-cache-buildkit`, `isle-cache-sccache`) are configured with public read access. This means anyone can read objects from these buckets, but only authorized users can write to them.
+All cache buckets (`isle-cache-buildkit`, `isle-cache-sccache`) are configured with public read access. This means anyone can read objects from these buckets, but only authorized users can write to them.
 
 ## Lifecycle Policy
 

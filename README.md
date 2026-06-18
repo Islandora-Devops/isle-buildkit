@@ -8,7 +8,6 @@
   - [Windows](#windows)
 - [Tooling](#tooling)
   - [Make](#make)
-  - [Gradle](#gradle)
   - [Github Actions](#github-actions)
 - [Building](#building)
   - [Build All Images](#build-all-images)
@@ -54,13 +53,13 @@ use [isle-site-template] to deploy via [Docker] or the
 
 ## Requirements
 
-To build the Docker images using the provided Gradle build scripts requires:
+To build and test the Docker images requires:
 
 - [Docker 20.10+](https://docs.docker.com/get-docker/)
 - [GNU Make 4.3+](https://www.gnu.org/software/make/)
 - [jq 1.6+](https://stedolan.github.io/jq/)
 - [mkcert 1.4+](https://github.com/FiloSottile/mkcert)
-- [OpenJDK or Oracle JDK 21+](https://www.java.com/en/download/)
+- [Go](https://go.dev/doc/install)
 - [pre-commit 2.19+](https://pre-commit.com/)
 
 > N.B You can use older versions of Docker to run the images, just not build
@@ -103,7 +102,7 @@ certificates.
 There are a number of tools you can use to [build](#building) and
 [test](#testing) the images produced by this repository. In general there are
 tools like `docker buildx` and `docker compose` that can be invoked directly or
-you can the wrapper tools like [make](#make), [gradle](#gradle). Using the
+you can use wrapper tools like [make](#make). Using the
 wrapper tools has some advantages and is generally recommended, but it is
 occasionally good to revert to the tools they wrap around if you need to debug
 an issue with the building or testing.
@@ -139,88 +138,6 @@ General:
   clean                          Destroys local environment and cleans up any uncommitted files.
   purge                          Destroys all data.
   help                           Displays this help message.
-```
-
-### Gradle
-
-[Testing](#testing) and [generating security reports](#grype) as well as
-[DockerHub maintenance](#dockerhub) rely on Gradle and should function equally
-well across platforms. The only difference being the script you call to interact
-with gradle (the following assumes you are executing from the **root directory**
-of the project):
-
-**Linux or OSX:**
-
-```bash
-./gradlew
-```
-
-**Windows:**
-
-```bash
-gradlew.bat
-```
-
-For the remaining examples the **Linux or OSX** call method will be used, if
-using Windows substitute the call to Gradle script.
-
-Gradle is a project/task based build system to query all the available tasks use
-the following command.
-
-```bash
-./gradlew tasks --all
-```
-
-Which should return something akin to:
-
-```bash
-> Task :tasks
-
-------------------------------------------------------------
-Tasks runnable from root project
-------------------------------------------------------------
-
-...
-Isle DockerHub tasks
---------------------
-deleteEligibleDockerHubTags - Delete eligible tags from DockerHub 'islandora/cache' Repository.
-getDockerHubTagsEligibleForDeletion - Gets the tags eligible for removal from DockerHub 'islandora/cache' Repository.
-getDockerHubToken - Gets the login token required for interacting with DockerHub Rest API.
-
-Isle Reports tasks
-------------------
-grype - Process the software bill of material with Grype
-pullGrype - Pull anchore/grype docker image
-pullSyft - Pull anchore/syft docker image
-syft - Generate a software bill of material with Syft
-updateGrypeDB - Update the Grype Database
-
-Isle Tests tasks
-----------------
-cleanUpAfter - Clean up resources after running test
-cleanUpBefore - Clean up resources before running test (if interrupted externally, etc)
-setUp - Prepare to run test
-test - Perform test
-
-...
-```
-
-In Gradle each Project maps onto a folder in the file system path where it is
-delimited by `:` instead of `/` (Unix) or `\` (Windows).
-
-The root project `:` can be omitted.
-
-So if you want to run a particular task `taskname` that resided in the project
-folder `project/subproject` you would specify it like so:
-
-```bash
-./gradlew :project:subproject:taskname
-```
-
-To get more verbose output from Gradle use the `--info` argument like so:
-
-```bash
-./gradlew :PROJECT:TASK --info
 ```
 
 ### Github Actions
@@ -296,7 +213,7 @@ can be found in the `tests` folders of each docker image project.
 To run these tests use the following command:
 
 ```bash
-./gradlew test
+make test
 ```
 
 > N.B. Running all tests concurrently can saturate Docker's default number of
@@ -308,7 +225,13 @@ To run these tests use the following command:
 Alternatively you can test a single image like so:
 
 ```bash
-./gradlew tomcat:test
+make test TARGET=fcrepo
+```
+
+If you want to explicitly rebuild the image before running its tests, run:
+
+```bash
+make bake test TARGET=fcrepo
 ```
 
 ## Running

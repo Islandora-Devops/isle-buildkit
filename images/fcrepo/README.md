@@ -46,7 +46,6 @@ additional settings, volumes, ports, etc.
 | FCREPO_S3_PASSWORD           |                      | AWS Secret Token for S3 Storage                                                                             |
 | FCREPO_S3_PREFIX             |                      | AWS Prefix for S3 Storage                                                                                   |
 | FCREPO_PERSISTENCE_TYPE      | file                 | The object store type. Only `file`, `mysql`, `postgresql` are supported at this time                        |
-| FCREPO_DISABLE_SYN           | false                | Enable or disable authentication via [Syn](https://github.com/Islandora/Syn)                                |
 | FCREPO_SESSION_TIMEOUT       | 180000               | This sets the duration (in milliseconds) for which a transaction will stay active before auto-rolling back  |
 
 To allow [external content] provide sites as key pairs. Wherein multiple values
@@ -55,11 +54,6 @@ is the url and the 'name' is a key that replaces the '*' symbol below.
 | Environment Variable    |
 | :---------------------- |
 | FCREPO_ALLOW_EXTERNAL_* |
-
-### JWT Settings
-
-[fcrepo] makes use of JWT for authentication. Please see the documentation in
-the [base image] for more information.
 
 ### Database Settings
 
@@ -102,23 +96,6 @@ FCREPO_URL=$(eval "echo $FCREPO_URL")
 wget --quiet "${FCREPO_URL}"
 shasum -a 256 "${FCREPO_FILE}" | cut -f1 -d' '
 rm "${FCREPO_FILE}"
-```
-
-You can change the version used for [syn] by modifying the build argument
-`SYN_VERSION` and `SYN_SHA256` in the `Dockerfile`.
-
-Change `SYN_VERSION` and then generate the `SYN_SHA256` with the following
-commands:
-
-```bash
-SYN_VERSION=$(cat fcrepo/Dockerfile | grep -o 'SYN_VERSION=.*' | cut -f2 -d=)
-SYN_FILE=$(cat fcrepo/Dockerfile | grep -o 'SYN_FILE=.*' | cut -f2 -d=)
-SYN_URL=$(cat fcrepo/Dockerfile | grep -o 'SYN_URL=.*' | cut -f2 -d=)
-SYN_FILE=$(eval "echo $SYN_FILE")
-SYN_URL=$(eval "echo $SYN_URL")
-wget --quiet "${SYN_URL}"
-shasum -a 256 "${SYN_FILE}" | cut -f1 -d' '
-rm "${SYN_FILE}"
 ```
 
 You can change the version used for [fcrepo-import-export] by modifying the
@@ -164,5 +141,4 @@ rm "${UPGRADE_UTILS_FILE}"
 [fcrepo-upgrade-utils]: https://github.com/fcrepo-exts/fcrepo-upgrade-utils
 [fcrepo]: https://github.com/fcrepo/fcrepo
 [s3]: https://aws.amazon.com/s3/
-[syn]: https://github.com/Islandora-CLAW/Syn
 [tomcat image]: ../tomcat/README.md

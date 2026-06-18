@@ -11,17 +11,6 @@ Code updates, documentation, testing
 
 ### Description
 
-* Updates for the following Gradle related software
-
-<!--- Maintainers to pick one or more, uncomment and then remove remaining untouched images listed below --->
-
-<!---
-* gradle
-* gradle.properties
-* gradlew
-* gradlew.bat
---->
-
 * Security and package updates for the following Docker images
   * `apk upgrade --available` dist-upgrades for dependencies security and package updates
     * abuild

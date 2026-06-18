@@ -25,15 +25,8 @@ jobs:
         with:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
-        with:
-          distribution: temurin
-          java-version: 21
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3
-        with:
-          cache-read-only: false
-          arguments: images:${{ inputs.image }}:grype ${{ inputs.digest }} --info
+      - name: Scan image
+        run: ./ci/grype.sh "${{ inputs.image }}" "${{ inputs.digest }}"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: always()
         with:

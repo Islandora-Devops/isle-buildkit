@@ -29,7 +29,6 @@ provider "digitalocean" {
 
 locals {
   buckets = {
-    gradle_cache   = "isle-cache-gradle"
     buildkit_cache = "isle-cache-buildkit"
     sccache_cache  = "isle-cache-sccache"
   }

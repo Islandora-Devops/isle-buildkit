@@ -22,7 +22,7 @@ on:
         default: false
     outputs:
       digest:
-        description: "Digest argument for Gradle"
+        description: "Image digest reference"
         value: ${{ jobs.merge.outputs.digest }}
       context:
         description: "Context to use in dependent images"
