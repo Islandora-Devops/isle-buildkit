@@ -9,6 +9,12 @@ ARG FCREPO_FILE=fcrepo-webapp-${FCREPO_VERSION}.war
 ARG FCREPO_URL=https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}
 ARG FCREPO_SHA256="83e19e9ccddaf74dd36f6e1164156ef8eb91262175b9456820138413f0ae2244"
 
+# renovate: datasource=github-releases depName=islandora-syn packageName=Islandora/Syn
+ARG SYN_VERSION=2.0.0
+ARG SYN_FILE=islandora-syn-${SYN_VERSION}-all.jar
+ARG SYN_URL=https://github.com/Islandora/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}
+ARG SYN_SHA256=2ee12833f46aab8980e872a255612865323bf22165f86b8f5208018c1775afa5
+
 # renovate: datasource=github-releases depName=fcrepo-import-export packageName=fcrepo-exts/fcrepo-import-export
 ARG IMPORT_EXPORT_VERSION=1.2.0
 ARG IMPORT_EXPORT_FILE=fcrepo-import-export-${IMPORT_EXPORT_VERSION}.jar
@@ -27,6 +33,11 @@ RUN --mount=type=cache,id=fcrepo-downloads-${TARGETARCH},sharing=locked,target=/
         --url ${FCREPO_URL} \
         --sha256 ${FCREPO_SHA256} \
         --dest /opt/tomcat/webapps/fcrepo \
+    && \
+    download.sh \
+        --url ${SYN_URL} \
+        --sha256 ${SYN_SHA256} \
+        --dest /opt/tomcat/lib \
     && \
     download.sh \
         --url ${IMPORT_EXPORT_URL} \
@@ -60,4 +71,4 @@ COPY --link rootfs /
 
 RUN chown -R tomcat:tomcat /opt/tomcat
 
-HEALTHCHECK CMD curl --fail -s -u "${TOMCAT_ADMIN_NAME}:${TOMCAT_ADMIN_PASSWORD}" http://localhost:8080/fcrepo/rest/fcr:systeminfo | jq -e .version
+HEALTHCHECK CMD curl -s http://localhost:8080/fcrepo/rest/fcr:systeminfo | jq -e .version
