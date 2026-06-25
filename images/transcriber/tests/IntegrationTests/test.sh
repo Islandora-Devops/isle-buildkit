@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-# shellcheck disable=SC2329
+# shellcheck disable=SC2317,SC2329
 cleanup() {
   if [ -f transcription.vtt ]; then
     rm -rf transcription.vtt
