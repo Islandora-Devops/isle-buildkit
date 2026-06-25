@@ -11,7 +11,7 @@ fi
 OUTPUT=$(mktemp -u /tmp/output-XXXXXX)
 OUTPUT="$OUTPUT.$DEST_EXT"
 
-# shellcheck disable=SC2317
+# shellcheck disable=SC2317,SC2329
 cleanup() {
   rm -rf "$OUTPUT"
 }

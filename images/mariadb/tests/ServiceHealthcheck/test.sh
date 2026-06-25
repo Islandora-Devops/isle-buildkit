@@ -1,6 +1,7 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
 
+# shellcheck disable=SC2329
 on_terminate() {
     echo "Termination signal received. Exiting..."
     exit 0

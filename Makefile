@@ -137,6 +137,12 @@ docker-buildx: | docker
 go:
 	@if [ -z "$(GO)" ]; then printf "${RED}Could not find executable: %s${RESET}\n${README_MESSAGE}" go; exit 1; fi
 
+.PHONY: lint-test
+## Runs shellcheck and Go tests.
+lint-test: | shellcheck go
+	shopt -s globstar; shellcheck **/*.sh
+	$(GO) test -v ./... -race
+
 .git/hooks/pre-commit: | pre-commit
 .git/hooks/pre-commit:
 	pre-commit install
