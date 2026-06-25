@@ -34,7 +34,9 @@ if [[ "${DB_DRIVER}" != "none" ]]; then
     CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.password=${FCREPO_DB_PASSWORD}"
 fi
 
-CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.properties.management=relaxed"
+if [[ "${FCREPO_DISABLE_SYN}" == "true" ]]; then
+    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.properties.management=relaxed"
+fi
 
 if [[ "${FCREPO_BINARYSTORAGE_TYPE}" == "file" ]]; then
     CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.storage=ocfl-fs"

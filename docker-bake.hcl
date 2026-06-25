@@ -42,7 +42,7 @@ DEPENDENCIES = {
   crayfish = ["nginx"]
   crayfits = ["scyllaridae"]
   drupal = ["nginx"]
-  fcrepo = ["tomcat"]
+  fcrepo = ["tomcat", "java"]
   fits = ["tomcat"]
   handle = ["java"]
   homarus = ["scyllaridae"]
@@ -924,4 +924,3 @@ target "transkribus-arm64" {
   cache-from = cacheFrom("transkribus", "arm64")
   tags = tags("transkribus", "arm64")
 }
-

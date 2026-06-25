@@ -73,6 +73,15 @@ The following settings are only used if `FCREPO_PERSISTENCE_TYPE` is set to
 Additionally the `DB_DRIVER` variable is derived from the
 `FCREPO_PERSISTENCE_TYPE` so users do not need to specify it separately.
 
+### JWT Settings
+
+[fcrepo] makes use of JWT for authentication. Please see the documentation in
+the [base image] for more information about the default JWT configuration.
+
+| Environment Variable | Default | Description                                |
+| :------------------- | :------ | :----------------------------------------- |
+| FCREPO_DISABLE_SYN   | false   | Enable or disable authentication via [Syn] |
+
 ### Tomcat Settings
 
 Fcrepo is deployed in as a servlet in Tomcat. Please see the documentation in
@@ -97,6 +106,14 @@ wget --quiet "${FCREPO_URL}"
 shasum -a 256 "${FCREPO_FILE}" | cut -f1 -d' '
 rm "${FCREPO_FILE}"
 ```
+
+You can change the version used for [Syn] by modifying the build arguments
+`SYN_VERSION` and `SYN_REF` in the `Dockerfile`.
+
+By default, the image fetches `refs/heads/${SYN_VERSION}` from the Syn
+repository and builds it with `./gradlew`. To build a tagged Syn release
+artifact instead, set `SYN_VERSION`, `SYN_REF=refs/tags/v${SYN_VERSION}`, and
+`SYN_SHA256` for that tag's release artifact.
 
 You can change the version used for [fcrepo-import-export] by modifying the
 build argument `IMPORT_EXPORT_VERSION` and `IMPORT_EXPORT_SHA256` in the
@@ -141,4 +158,5 @@ rm "${UPGRADE_UTILS_FILE}"
 [fcrepo-upgrade-utils]: https://github.com/fcrepo-exts/fcrepo-upgrade-utils
 [fcrepo]: https://github.com/fcrepo/fcrepo
 [s3]: https://aws.amazon.com/s3/
+[Syn]: https://github.com/Islandora/Syn
 [tomcat image]: ../tomcat/README.md

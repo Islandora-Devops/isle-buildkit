@@ -1,4 +1,35 @@
 # syntax=docker/dockerfile:1.20.0
+FROM java AS syn-builder
+
+ARG TARGETARCH
+
+ARG SYN_VERSION=fix-tomcat11-release-2x
+ARG SYN_REF=refs/heads/${SYN_VERSION}
+ARG SYN_REPOSITORY=https://github.com/Islandora/Syn.git
+ARG SYN_FILE=islandora-syn-${SYN_VERSION}-all.jar
+ARG SYN_RELEASE_URL=https://github.com/Islandora/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}
+ARG SYN_SHA256=2ee12833f46aab8980e872a255612865323bf22165f86b8f5208018c1775afa5
+
+WORKDIR /build/syn
+
+RUN --mount=type=cache,id=fcrepo-syn-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    --mount=type=cache,id=fcrepo-syn-gradle,sharing=locked,target=/root/.gradle \
+    mkdir -p /opt/syn-artifact && \
+    if [[ "${SYN_REF}" == refs/tags/* ]]; then \
+        download.sh \
+            --url "${SYN_RELEASE_URL}" \
+            --sha256 "${SYN_SHA256}" \
+            --dest /opt/syn-artifact; \
+        mv "/opt/syn-artifact/${SYN_FILE}" /opt/syn-artifact/islandora-syn.jar; \
+    else \
+        git init .; \
+        git remote add origin "${SYN_REPOSITORY}"; \
+        git fetch --depth 1 origin "${SYN_REF}"; \
+        git checkout --detach FETCH_HEAD; \
+        ./gradlew --stacktrace clean build shadowJar --no-daemon; \
+        cp build/libs/islandora-syn-*-all.jar /opt/syn-artifact/islandora-syn.jar; \
+    fi
+
 FROM tomcat
 
 ARG TARGETARCH
@@ -8,12 +39,6 @@ ARG FCREPO_VERSION=7.0.0
 ARG FCREPO_FILE=fcrepo-webapp-${FCREPO_VERSION}.war
 ARG FCREPO_URL=https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREPO_VERSION}/${FCREPO_FILE}
 ARG FCREPO_SHA256="83e19e9ccddaf74dd36f6e1164156ef8eb91262175b9456820138413f0ae2244"
-
-# renovate: datasource=github-releases depName=islandora-syn packageName=Islandora/Syn
-ARG SYN_VERSION=2.0.0
-ARG SYN_FILE=islandora-syn-${SYN_VERSION}-all.jar
-ARG SYN_URL=https://github.com/Islandora/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}
-ARG SYN_SHA256=2ee12833f46aab8980e872a255612865323bf22165f86b8f5208018c1775afa5
 
 # renovate: datasource=github-releases depName=fcrepo-import-export packageName=fcrepo-exts/fcrepo-import-export
 ARG IMPORT_EXPORT_VERSION=1.2.0
@@ -35,11 +60,6 @@ RUN --mount=type=cache,id=fcrepo-downloads-${TARGETARCH},sharing=locked,target=/
         --dest /opt/tomcat/webapps/fcrepo \
     && \
     download.sh \
-        --url ${SYN_URL} \
-        --sha256 ${SYN_SHA256} \
-        --dest /opt/tomcat/lib \
-    && \
-    download.sh \
         --url ${IMPORT_EXPORT_URL} \
         --sha256 ${IMPORT_EXPORT_SHA256} \
         --dest /opt/tomcat \
@@ -58,6 +78,7 @@ ENV \
     FCREPO_DB_NAME=fcrepo \
     FCREPO_DB_PASSWORD=password \
     FCREPO_DB_USER=fcrepo \
+    FCREPO_DISABLE_SYN=false \
     FCREPO_PERSISTENCE_TYPE=file \
     FCREPO_TOMCAT_ADMIN_ROLES=manager-gui,fedoraAdmin \
     FCREPO_S3_BUCKET= \
@@ -66,6 +87,8 @@ ENV \
     FCREPO_AWS_REGION=us-east-1 \
     FCREPO_S3_PREFIX= \
     FCREPO_SESSION_TIMEOUT=180000
+
+COPY --from=syn-builder /opt/syn-artifact/islandora-syn.jar /opt/tomcat/lib/islandora-syn.jar
 
 COPY --link rootfs /
 
