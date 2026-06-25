@@ -147,8 +147,8 @@ func RunTests(root string, args []string, stdout, stderr io.Writer) int {
 		return 0
 	}
 	if len(cases) == 0 {
-		fmt.Fprintln(stderr, "no tests selected")
-		return 2
+		fmt.Fprintln(stdout, "no tests selected")
+		return 0
 	}
 
 	failed := 0
@@ -286,6 +286,9 @@ func (r *Runner) selectTests() ([]TestCase, error) {
 		if testFilter[test.Image+"/"+test.Name] || testFilter[test.Name] {
 			selected = append(selected, test)
 		}
+	}
+	if len(selected) == 0 && len(testFilter) > 0 {
+		return nil, fmt.Errorf("no tests matched selector(s): %s", strings.Join(r.options.Tests, ", "))
 	}
 	return selected, nil
 }
