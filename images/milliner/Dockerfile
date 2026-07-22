@@ -9,7 +9,13 @@ WORKDIR /var/www/crayfish/Milliner/
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=milliner-composer-${TARGETARCH},sharing=locked,target=/root/.composer/cache \
-    composer install -d /var/www/crayfish/Milliner && \
+    composer install \
+        --working-dir=/var/www/crayfish/Milliner \
+        --no-dev \
+        --no-interaction \
+        --no-progress \
+        --prefer-dist \
+        --classmap-authoritative && \
     ln -s /var/www/crayfish/Milliner/public /var/www/html && \
     cleanup.sh
 

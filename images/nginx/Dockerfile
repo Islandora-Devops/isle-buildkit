@@ -25,9 +25,9 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/icu-data-full
   ICU_VERSION=78.1-r0 \
   # renovate: datasource=repology depName=alpine_3_24/nginx
-  NGINX_VERSION=1.30.3-r0 \
+  NGINX_VERSION=1.30.4-r0 \
   # renovate: datasource=repology depName=alpine_3_24/php84
-  PHP_VERSION=8.4.22-r0
+  PHP_VERSION=8.4.23-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
@@ -54,6 +54,7 @@ RUN --mount=type=cache,id=nginx-apk-${TARGETARCH},sharing=locked,target=/var/cac
         php84-phar=="${PHP_VERSION}" \
         php84-session=="${PHP_VERSION}" \
         php84-simplexml=="${PHP_VERSION}" \
+        php84-sodium=="${PHP_VERSION}" \
         php84-sockets=="${PHP_VERSION}" \
         php84-tokenizer=="${PHP_VERSION}" \
         php84-xml=="${PHP_VERSION}" \

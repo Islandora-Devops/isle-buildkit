@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1.20.0
 FROM nginx
 
-# When updating this commit also update the lock files in rootfs/var/www/crayfish.
+# Keep this immutable source pin and checksum in sync with the Crayfish 5.x release line.
 ARG TARGETARCH
-ARG COMMIT=6ba190c3ffebabb83e977c6515ecfd022692f6e5
+ARG COMMIT=ef30f09e9a17bffc1148facdf785b6b6f9312acb
 ARG FILE=${COMMIT}.tar.gz
 ARG URL=https://github.com/Islandora/Crayfish/archive/${FILE}
-ARG SHA256=3fb7ae787be43a719f66a3d98efff85766056cf2d962365d9e821ff3a9f813ee
+ARG SHA256=2e27caac6ec5b10d6d4a62257d8a69b874c62c020e2c64bfc1ba249b6d527ef8
 
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=crayfish-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
