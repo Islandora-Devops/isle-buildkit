@@ -63,7 +63,7 @@ RUN --mount=type=cache,id=cantaloupe-downloads-${TARGETARCH},sharing=locked,targ
 
 ARG \
   # renovate: datasource=repology depName=alpine_3_24/ffmpeg
-  FFMPEG_VERSION=8.1.1-r0 \
+  FFMPEG_VERSION=8.1.2-r0 \
   # renovate: datasource=repology depName=alpine_3_24/openjpeg-tools
   OPENJPG_TOOLS_VERSION=2.5.4-r1
 

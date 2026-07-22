@@ -3,8 +3,8 @@
 set -euo pipefail
 
 # Alpine package version updater for Dockerfiles
-# Usage: ./update-alpine-packages.sh <old_version> <new_version> [directory]
-# Example: ./update-alpine-packages.sh alpine_3_20 alpine_3_22 .
+# Usage: ./update-alpine-packages.sh [<old_version> <new_version>] [directory]
+# Example: ./update-alpine-packages.sh images
 
 # Colors for output
 RED='\033[0;31m'
@@ -12,6 +12,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+ERROR_COUNT=0
 
 # Function to print colored output
 print_status() {
@@ -32,9 +33,11 @@ print_processing() {
 
 # Function to show usage
 usage() {
-    echo "Usage: $0 <old_alpine_version> <new_alpine_version> [directory]"
+    echo "Usage: $0 [<old_alpine_version> <new_alpine_version>] [directory]"
     echo ""
     echo "Examples:"
+    echo "  $0"
+    echo "  $0 images"
     echo "  $0 alpine_3_20 alpine_3_22"
     echo "  $0 alpine_3_20 alpine_3_22 ./dockerfiles"
     echo "  $0 alpine_3_22 alpine_3_23 /path/to/dockerfiles"
@@ -42,7 +45,7 @@ usage() {
     echo "This script will:"
     echo "1. Find all Dockerfiles in the specified directory (current dir if not specified)"
     echo "2. Update renovate comments from old Alpine version to new version"
-    echo "3. Fetch latest package versions from Alpine package database"
+    echo "3. Fetch latest package versions from Repology"
     echo "4. Update version numbers in ARG declarations"
     echo ""
     echo "Options:"
@@ -66,7 +69,16 @@ get_alpine_package_version() {
     # -L follows the project-by redirect through to the api_v1_project response.
     local response
     local http_code
-    response=$(curl -sL --max-time 20 -H "User-Agent: alpine-updater/1.0 (https://github.com/user/alpine-updater)" -w "%{http_code}" "$url" 2>/dev/null || true)
+    response=$(curl -fsSL \
+        --connect-timeout 10 \
+        --max-time 20 \
+        --retry 3 \
+        --retry-all-errors \
+        --retry-delay 2 \
+        --retry-max-time 60 \
+        -H "User-Agent: isle-buildkit-alpine-updater/1.0 (https://github.com/Islandora-Devops/isle-buildkit)" \
+        -w "%{http_code}" \
+        "$url" 2>/dev/null || true)
 
     if [[ -z "$response" ]]; then
         return 1
@@ -151,11 +163,14 @@ update_dockerfile() {
                 echo "$updated_line" >> "$temp_file"
 
                 # Read the next line (should be the ARG version assignment).
+                # Preserve its original formatting: pins may either be members
+                # of a multi-line ARG block or standalone `ARG NAME=value`
+                # declarations.
                 if IFS= read -r next_line; then
-                    if [[ "$next_line" =~ ^[[:space:]]*([A-Z_]+_VERSION)=([^[:space:]\\]*) ]]; then
-                        local var_name="${BASH_REMATCH[1]}"
-                        local current_version="${BASH_REMATCH[2]}"
-                        local updated_version_line="  ${var_name}=${new_version} \\"
+                    if [[ "$next_line" =~ ^[[:space:]]*(ARG[[:space:]]+)?([A-Z0-9_]+_VERSION)=([^[:space:]]+) ]]; then
+                        local var_name="${BASH_REMATCH[2]}"
+                        local current_version="${BASH_REMATCH[3]}"
+                        local updated_version_line="${next_line/${var_name}=${current_version}/${var_name}=${new_version}}"
 
                         if [[ "$new_version" == "$current_version" ]]; then
                             print_status "  $var_name already up to date ($current_version)"
@@ -163,18 +178,25 @@ update_dockerfile() {
                         elif [[ "$dry_run" == "true" ]]; then
                             print_status "  [DRY RUN] Would update: $var_name $current_version -> $new_version"
                             echo "$next_line" >> "$temp_file"
+                            changes_made=true
                         else
                             echo "$updated_version_line" >> "$temp_file"
                             changes_made=true
                             print_status "  Updated: $var_name $current_version -> $new_version"
                         fi
                     else
+                        print_warning "  Expected a version assignment after the Repology annotation"
+                        ERROR_COUNT=$((ERROR_COUNT + 1))
                         echo "$next_line" >> "$temp_file"
                     fi
+                else
+                    print_warning "  Expected a version assignment after the Repology annotation"
+                    ERROR_COUNT=$((ERROR_COUNT + 1))
                 fi
             else
                 print_warning "  Could not fetch version for $package_name, keeping comment as-is"
-                echo "$updated_line" >> "$temp_file"
+                ERROR_COUNT=$((ERROR_COUNT + 1))
+                echo "$line" >> "$temp_file"
             fi
             continue
         fi
@@ -188,10 +210,12 @@ update_dockerfile() {
         print_status "Updated $dockerfile"
     else
         rm -f "$temp_file"
-        if [[ "$dry_run" == "true" ]]; then
+        if [[ "$dry_run" == "true" && "$changes_made" == "true" ]]; then
             print_status "[DRY RUN] Would update $dockerfile"
+        elif [[ "$dry_run" == "true" ]]; then
+            print_status "No changes needed for $dockerfile"
         else
-            print_warning "No changes made to $dockerfile"
+            print_status "No changes needed for $dockerfile"
         fi
     fi
 }
@@ -292,6 +316,11 @@ main() {
     else
         print_status "Processed $dockerfile_count Dockerfile(s)"
     fi
+
+    if [[ $ERROR_COUNT -gt 0 ]]; then
+        print_error "Repology audit incomplete: $ERROR_COUNT package lookup or annotation error(s)"
+        exit 1
+    fi
 }
 
 # Setup macOS compatibility
@@ -328,9 +357,8 @@ check_dependencies() {
     fi
 }
 
-# Run dependency check and setup compatibility
-check_dependencies
-setup_macos_compatibility
-
-# Run main function
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    check_dependencies
+    setup_macos_compatibility
+    main "$@"
+fi

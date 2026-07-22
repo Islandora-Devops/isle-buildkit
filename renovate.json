@@ -23,7 +23,7 @@
           "custom.regex"
       ],
       "matchDatasources": [
-          "*"
+          "!repology"
       ],
       "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/"
     },

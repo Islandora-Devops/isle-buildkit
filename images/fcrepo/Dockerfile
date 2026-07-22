@@ -3,12 +3,12 @@ FROM java AS syn-builder
 
 ARG TARGETARCH
 
-ARG SYN_VERSION=fix-tomcat11-release-2x
-ARG SYN_REF=refs/heads/${SYN_VERSION}
+ARG SYN_VERSION=2.0.1
+ARG SYN_REF=refs/tags/${SYN_VERSION}
 ARG SYN_REPOSITORY=https://github.com/Islandora/Syn.git
 ARG SYN_FILE=islandora-syn-${SYN_VERSION}-all.jar
 ARG SYN_RELEASE_URL=https://github.com/Islandora/Syn/releases/download/v${SYN_VERSION}/${SYN_FILE}
-ARG SYN_SHA256=2ee12833f46aab8980e872a255612865323bf22165f86b8f5208018c1775afa5
+ARG SYN_SHA256=dde30978ca103a78d88f98ee0d2e95b767566377b29b3e8b680831fef8662bd8
 
 WORKDIR /build/syn
 

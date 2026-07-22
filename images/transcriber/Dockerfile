@@ -40,7 +40,7 @@ WORKDIR /app
 
 ARG \
   # renovate: datasource=repology depName=alpine_3_24/ffmpeg
-  FFMPEG_VERSION=8.1.1-r0 \
+  FFMPEG_VERSION=8.1.2-r0 \
   # renovate: datasource=repology depName=alpine_3_24/sdl2
   SDL2_VERSION=2.32.10-r0
 
