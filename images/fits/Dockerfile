@@ -2,6 +2,10 @@
 FROM tomcat
 
 ARG TARGETARCH
+ARG SOURCE_DATE_EPOCH=0
+ARG \
+    # renovate: datasource=repology depName=alpine_3_24/strip-nondeterminism
+    STRIP_NONDETERMINISM_VERSION=1.15.0-r0
 
 # renovate: datasource=github-releases depName=fits-servlet packageName=harvard-lts/FITSservlet
 ARG FITSSERVLET_VERSION=2.1.0
@@ -20,14 +24,38 @@ ARG LOG4J_VERSION=2.26.0
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
 ARG LOG4J_FILE_SHA256="6735d0f8f10c858aa0499aac5500d75fc32464baeb1667e73cdb00562ad20fa6"
-ARG OLD_LOG4J_VERSION="2.22.0"
 
+# FITSservlet still targets the Java EE javax namespace, so migrate it for
+# Tomcat 11's Jakarta APIs before deployment.
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=fits-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    --mount=type=cache,id=fits-migration-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
+    apk add --virtual .jakarta-migration-deps \
+        strip-nondeterminism=="${STRIP_NONDETERMINISM_VERSION}" \
+    && \
     download.sh \
         --url "${FITSSERVLET_URL}" \
         --sha256 "${FITSSERVLET_SHA256}" \
-        --dest "/opt/tomcat/webapps/fits" \
+        --dest "/opt/tomcat/webapps-javaee/fits" \
+    && \
+    /opt/tomcat/bin/migrate.sh \
+        /opt/tomcat/webapps-javaee/fits \
+        /opt/tomcat/webapps/fits \
+    && \
+    NORMALIZED_TIMESTAMP="$((SOURCE_DATE_EPOCH > 315576060 ? SOURCE_DATE_EPOCH : 315576060))" && \
+    find /opt/tomcat/webapps/fits -type f -name "*.jar" \
+        -exec strip-nondeterminism \
+            --type jar \
+            --timestamp "${NORMALIZED_TIMESTAMP}" \
+            {} + \
+        >/dev/null \
+    && \
+    find /opt/tomcat/webapps/fits \
+        -exec touch -h -d "@${NORMALIZED_TIMESTAMP}" {} + \
+    && \
+    apk del .jakarta-migration-deps \
+    && \
+    rm -rf /opt/tomcat/webapps-javaee \
     && \
     mkdir /opt/fits && \
     download.sh \
@@ -85,8 +113,8 @@ RUN --mount=type=cache,id=log4j-downloads-${TARGETARCH},sharing=locked,target=/o
     && \
     ## Remove the outmoded log4j-* files that come with fits
     rm -f /opt/fits/lib/droid/log4j-1.2.13.jar && \
-    rm -f "/opt/tomcat/webapps/fits/WEB-INF/lib/log4j-api-${OLD_LOG4J_VERSION}.jar" && \
-    rm -f "/opt/tomcat/webapps/fits/WEB-INF/lib/log4j-core-${OLD_LOG4J_VERSION}.jar" && \
+    rm -f /opt/tomcat/webapps/fits/WEB-INF/lib/log4j-api-*.jar && \
+    rm -f /opt/tomcat/webapps/fits/WEB-INF/lib/log4j-core-*.jar && \
     ## Add new log4j-* files
     unzip -o "${DOWNLOAD_CACHE_DIRECTORY}/${LOG4J_FILE}" -d "${DOWNLOAD_CACHE_DIRECTORY}" && \
     cp "${DOWNLOAD_CACHE_DIRECTORY}/log4j-1.2-api-${LOG4J_VERSION}.jar" /opt/fits/lib/droid/ && \

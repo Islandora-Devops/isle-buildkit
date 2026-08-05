@@ -42,10 +42,13 @@ if [[ "${valid_status}" != 2* ]]; then
 fi
 echo "Valid JWT accepted with HTTP ${valid_status}."
 
-case "${valid_jwt: -1}" in
-x) bad_jwt="${valid_jwt%?}y" ;;
-*) bad_jwt="${valid_jwt%?}x" ;;
+signing_input="${valid_jwt%.*}"
+signature="${valid_jwt##*.}"
+case "${signature:0:1}" in
+x) bad_signature="y${signature:1}" ;;
+*) bad_signature="x${signature:1}" ;;
 esac
+bad_jwt="${signing_input}.${bad_signature}"
 
 bad_status=$(post_status "${bad_jwt}" /tmp/syn-bad-response.txt)
 if [[ "${bad_status}" != "401" ]]; then
