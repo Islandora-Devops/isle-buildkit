@@ -38,7 +38,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/aspnetcore8-runtime
   ASPNETCORE_VERSION=8.0.29-r0 \
   # renovate: datasource=repology depName=alpine_3_24/nodejs
-  NODEJS_VERSION=24.17.0-r0 \
+  NODEJS_VERSION=24.18.1-r0 \
   # renovate: datasource=repology depName=alpine_3_24/npm
   NPM_VERSION=11.12.1-r0 \
   # renovate: datasource=npm depName=xslt3
