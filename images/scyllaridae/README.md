@@ -1,4 +1,4 @@
-# Crayfish
+# Scyllaridae
 
 Docker image for [scyllaridae] 5.2.1.
 

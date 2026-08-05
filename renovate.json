@@ -102,6 +102,7 @@
         "apache-tomcat",
         "cantaloupe",
         "cli11",
+        "crayfish",
         "custom-composer",
         "fcrepo",
         "fcrepo-import-export",

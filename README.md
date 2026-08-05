@@ -56,6 +56,7 @@ use [isle-site-template] to deploy via [Docker] or the
 To build and test the Docker images requires:
 
 - [Docker 20.10+](https://docs.docker.com/get-docker/)
+- [Docker Buildx 0.11+](https://github.com/docker/buildx/releases/tag/v0.11.0)
 - [GNU Make 4.3+](https://www.gnu.org/software/make/)
 - [jq 1.6+](https://stedolan.github.io/jq/)
 - [mkcert 1.4+](https://github.com/FiloSottile/mkcert)
@@ -315,7 +316,6 @@ The following docker images are provided:
 - [base]
 - [blazegraph]
 - [cantaloupe]
-- [crayfish]
 - [crayfits]
 - [drupal]
 - [fcrepo]
@@ -434,26 +434,10 @@ However, we have a workflow dispatch rule in our renovate bot that allows settin
 
 #### Updating Composer
 
-A number of images like [crayfish] provide a `composer.lock` file to pin them to
-particular dependencies.
-
-When updating the dependencies be sure to search for `composer.lock` in the
-`rootfs` folder of the image and update them as well.
-
-This can be done by running the image after
-[updating dependencies](#updating-dependencies), to get the latest code, and
-running composer update. For example [crayfish]:
-
-```bash
-# Update ARGS as done in previous section
-# ...
-# Build image
-make bake TARGET=crayfish
-for lock in $(find crayfish -name "composer.lock"); \
-do \
-  docker run --rm -ti -v "$(pwd)/${lock}:${lock#crayfish/rootfs*}" -w $(dirname "${lock#crayfish/rootfs*}") --entrypoint composer islandora/crayfish:local update; \
-done
-```
+PHP application images install dependencies from the `composer.lock` in their
+pinned upstream source release. Update dependencies and commit the lock file in
+the upstream project first, then update the release version and checksum in this
+repository. Do not maintain a second lock file in an image's `rootfs`.
 
 ### Updating Configuration
 
@@ -654,19 +638,17 @@ are arranged in a hierarchy, that roughly follows below:
     │       └── fits
     ├── mariadb
     ├── postgresql
-    └── nginx
-    │   ├── crayfish
-    │   │   ├── milliner
-    │   │   └── riprap
-    │   ├── drupal
+    ├── nginx
+    │   ├── milliner
+    │   └── drupal
     │       └── test
-    ├── scyllaridae
-    │   ├── crayfits
-    │   ├── homarus
-    │   ├── houdini (consumes [imagemagick] as well during its build stage)
-    │   ├── hypercube (consumes [leptonica] as well during its build stage)
-    │   ├── mergepdf
-    │   ├── transcriber
+    └── scyllaridae
+        ├── crayfits
+        ├── homarus
+        ├── houdini (consumes [imagemagick] as well during its build stage)
+        ├── hypercube (consumes [leptonica] as well during its build stage)
+        ├── mergepdf
+        └── transcriber
 ```
 
 [imagemagick] & [leptonica] stand outside of the hierarchy as they are use only
@@ -686,16 +668,15 @@ image. So for example `rootfs/etc/islandora/configs` will be
 Since [bake] is used to build all the images, you must add new images to
 [docker-bake.hcl](./docker-bake.hcl).
 
-Be sure to update `IMAGES` and `DEPENDENCIES` variables for any new images
-added, along with all the required targets for your new `IMAGE-NAME`:
+Add a new image to `IMAGES` and describe its build dependencies in
+`DEPENDENCIES`. The Bake matrix generates all supported targets:
 
-- `IMAGE-NAME-common`: Properties shared by all the following targets.
 - `IMAGE-NAME`: Targets the host platform.
 - `IMAGE-NAME-amd64`: Targets amd64, regardless of host platform.
 - `IMAGE-NAME-arm64`: Targets arm64, regardless of host platform.
-- `IMAGE-NAME-ci`: Used to update the remote cache and build both `PLATFORM-ci` images.
-- `IMAGE-NAME-amd64-ci`: Targets amd64, regardless of host platform updates remote cache.
-- `IMAGE-NAME-arm64-ci`: Targets arm64, regardless of host platform updates remote cache.
+
+Images that require a named build context not produced by another target must
+also add it to `IMAGE_CONTEXTS`.
 
 ### Multi-arch builds
 
@@ -819,7 +800,6 @@ adding the following, and restarting `Docker`:
 [base]: ./images/base/README.md
 [blazegraph]: ./images/blazegraph/README.md
 [cantaloupe]: ./images/cantaloupe/README.md
-[crayfish]: ./images/crayfish/README.md
 [crayfits]: ./images/crayfits/README.md
 [drupal]: ./images/drupal/README.md
 [fcrepo]: ./images/fcrepo/README.md

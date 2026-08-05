@@ -104,6 +104,11 @@ elif [ "$DEP" = "cantaloupe" ]; then
   DOCKERFILES=("images/cantaloupe/Dockerfile")
   README="images/cantaloupe/README.md"
 
+elif [ "$DEP" = "crayfish" ]; then
+  URL="https://github.com/Islandora/Crayfish/archive/refs/tags/${NEW_VERSION}.tar.gz"
+  ARG="CRAYFISH_SHA256"
+  DOCKERFILES=("images/milliner/Dockerfile")
+
 elif [ "$DEP" = "grok" ]; then
   URL="https://github.com/GrokImageCompression/grok/archive/refs/tags/${NEW_VERSION}.zip"
   ARG="GROK_SHA256"

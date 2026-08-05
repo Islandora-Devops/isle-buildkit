@@ -106,23 +106,10 @@ jobs:
       contents: read
       packages: write
     needs: [tags, java]
-  crayfish:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.nginx.outputs.context }}
-      image: crayfish
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-      strip-apk-pinning: ${{ inputs.strip-apk-pinning || false }}
-    secrets: inherit
-    permissions:
-      contents: read
-      packages: write
-    needs: [tags, nginx]
   crayfits:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.nginx.outputs.context }}
+      contexts: ${{ needs.scyllaridae.outputs.context }}
       image: crayfits
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -226,7 +213,6 @@ jobs:
   imagemagick:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.base.outputs.context }}
       image: imagemagick
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -252,7 +238,6 @@ jobs:
   leptonica:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.base.outputs.context }}
       image: leptonica
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -291,7 +276,7 @@ jobs:
   milliner:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.crayfish.outputs.context }}
+      contexts: ${{ needs.nginx.outputs.context }}
       image: milliner
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -300,7 +285,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [tags, crayfish]
+    needs: [tags, nginx]
   nginx:
     uses: ./.github/workflows/build.yml
     with:
@@ -405,7 +390,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [tags, base, imagemagick]
+    needs: [tags, base, scyllaridae]
   #############################################################################
   ## Tests.
   #############################################################################
@@ -453,14 +438,6 @@ jobs:
       image: cantaloupe
     secrets: inherit
     needs: [cantaloupe]
-  test-crayfish:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: ${{ needs.crayfish.outputs.digest }}
-      image: crayfish
-    secrets: inherit
-    needs: [crayfish]
   test-crayfits:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
@@ -702,14 +679,6 @@ jobs:
       image: cantaloupe
     secrets: inherit
     needs: [cantaloupe]
-  grype-crayfish:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.crayfish.outputs.digest }}
-      image: crayfish
-    secrets: inherit
-    needs: [crayfish]
   grype-crayfits:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml

@@ -9,7 +9,6 @@ IMAGES = [
   "base",
   "blazegraph",
   "cantaloupe",
-  "crayfish",
   "crayfits",
   "drupal",
   "fcrepo",
@@ -39,7 +38,6 @@ DEPENDENCIES = {
   alpaca = ["base", "java"]
   blazegraph = ["tomcat"]
   cantaloupe = ["java"]
-  crayfish = ["nginx"]
   crayfits = ["scyllaridae"]
   drupal = ["nginx"]
   fcrepo = ["tomcat", "java"]
@@ -51,7 +49,7 @@ DEPENDENCIES = {
   java = ["base"]
   mariadb = ["base"]
   mergepdf = ["scyllaridae", "leptonica"]
-  milliner = ["crayfish"]
+  milliner = ["nginx"]
   nginx = ["base"]
   postgresql = ["base"]
   scyllaridae = ["base"]
@@ -60,6 +58,13 @@ DEPENDENCIES = {
   tomcat = ["java"]
   transcriber = ["base", "scyllaridae"]
   transkribus = ["base", "imagemagick"]
+}
+
+# Named build contexts that are not other targets in this file.
+ALPINE_CONTEXT = "docker-image://alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b"
+IMAGE_CONTEXTS = {
+  for image in ["base", "imagemagick", "leptonica"] :
+  image => { alpine = ALPINE_CONTEXT }
 }
 
 ###############################################################################
@@ -97,29 +102,33 @@ variable "BRANCH" {
 ###############################################################################
 # Functions
 ###############################################################################
-function hostArch {
+function "hostArch" {
   params = []
-  result = equal("linux/amd64", BAKE_LOCAL_PLATFORM) ? "amd64" : "arm64" # Only two platforms supported.
+  # Only two platforms are supported.
+  result = equal("linux/amd64", BAKE_LOCAL_PLATFORM) ? "amd64" : "arm64"
 }
 
-function arches {
-  params = [image, suffix]
-  result = equal("", suffix) ? [for arch in ARCHES: "${image}-${arch}" ] : [ for arch in ARCHES: "${image}-${arch}-${suffix}" ]
+function "targetName" {
+  params = [image, arch]
+  result = equal("", arch) ? image : "${image}-${arch}"
 }
 
-function dependencies {
-  params = [image, suffix]
-  result = { for target in DEPENDENCIES[image]: target => notequal("", suffix) ? "target:${target}-${suffix}" : "target:${target}" }
+function "dependencies" {
+  params = [image, arch]
+  result = {
+    for dependency in lookup(DEPENDENCIES, image, []) :
+    dependency => "target:${targetName(dependency, arch)}"
+  }
 }
 
-function targets {
-  params = [suffix]
-  result = [for target in IMAGES: "${target}-${suffix}" ]
+function "targets" {
+  params = [arch]
+  result = [for image in IMAGES : targetName(image, arch)]
 }
 
 function "tags" {
-  params = [image, suffix]
-  result = equal("", suffix) ? [for tag in split(" ", TAGS): "${REPOSITORY}/${image}:${tag}"] : [for tag in split(" ", TAGS): "${REPOSITORY}/${image}:${tag}-${suffix}"]
+  params = [image, arch]
+  result = equal("", arch) ? [for tag in split(" ", TAGS) : "${REPOSITORY}/${image}:${tag}"] : [for tag in split(" ", TAGS) : "${REPOSITORY}/${image}:${tag}-${arch}"]
 }
 
 function "cacheFrom" {
@@ -153,7 +162,7 @@ group "arm64" {
 }
 
 ###############################################################################
-# Common target properties.
+# Targets
 ###############################################################################
 target "common" {
   args = {
@@ -168,759 +177,20 @@ target "common" {
   }
 }
 
-target "amd64-common" {
-  platforms = ["linux/amd64"]
-}
-
-target "arm64-common" {
-  platforms = ["linux/arm64"]
-}
-
-###############################################################################
-# Image specific target properties.
-###############################################################################
-target "activemq-common" {
-  inherits = ["common"]
-  context = context("activemq")
-}
-
-target "alpaca-common" {
-  inherits = ["common"]
-  context = context("alpaca")
-}
-
-target "base-common" {
-  inherits = ["common"]
-  context = context("base")
-  contexts = {
-    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
-    # It will be the digest printed when you do: docker pull alpine:3.17.1
-    # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b"
+# Bake matrices are the supported way to generate target blocks. This creates
+# each image's native, linux/amd64, and linux/arm64 targets from the metadata
+# above while keeping names such as `milliner` and `milliner-amd64` stable.
+target "_images" {
+  name = targetName(image, arch)
+  matrix = {
+    image = IMAGES
+    arch = concat([""], ARCHES)
   }
-}
 
-target "blazegraph-common" {
   inherits = ["common"]
-  context = context("blazegraph")
-}
-
-target "cantaloupe-common" {
-  inherits = ["common"]
-  context = context("cantaloupe")
-}
-
-target "crayfish-common" {
-  inherits = ["common"]
-  context = context("crayfish")
-}
-
-target "crayfits-common" {
-  inherits = ["common"]
-  context = context("crayfits")
-}
-
-target "drupal-common" {
-  inherits = ["common"]
-  context = context("drupal")
-}
-
-target "fcrepo-common" {
-  inherits = ["common"]
-  context = context("fcrepo")
-}
-
-target "fits-common" {
-  inherits = ["common"]
-  context = context("fits")
-}
-
-target "handle-common" {
-  inherits = ["common"]
-  context = context("handle")
-}
-
-target "homarus-common" {
-  inherits = ["common"]
-  context = context("homarus")
-}
-
-target "houdini-common" {
-  inherits = ["common"]
-  context = context("houdini")
-}
-
-target "hypercube-common" {
-  inherits = ["common"]
-  context = context("hypercube")
-}
-
-target "imagemagick-common" {
-  inherits = ["common"]
-  context = context("imagemagick")
-  contexts = {
-    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
-    # It will be the digest printed when you do: docker pull alpine:3.17.1
-    # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b"
-  }
-}
-
-target "java-common" {
-  inherits = ["common"]
-  context = context("java")
-}
-
-target "leptonica-common" {
-  inherits = ["common"]
-  context = context("leptonica")
-  contexts = {
-    # The digest (sha256 hash) is not platform specific but the digest for the manifest of all platforms.
-    # It will be the digest printed when you do: docker pull alpine:3.17.1
-    # Not the one displayed on DockerHub.
-    alpine = "docker-image://alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b"
-  }
-}
-
-target "mariadb-common" {
-  inherits = ["common"]
-  context = context("mariadb")
-}
-
-target "mergepdf-common" {
-  inherits = ["common"]
-  context = context("mergepdf")
-}
-
-target "milliner-common" {
-  inherits = ["common"]
-  context = context("milliner")
-}
-
-target "nginx-common" {
-  inherits = ["common"]
-  context = context("nginx")
-}
-
-target "postgresql-common" {
-  inherits = ["common"]
-  context = context("postgresql")
-}
-
-target "scyllaridae-common" {
-  inherits = ["common"]
-  context = context("scyllaridae")
-}
-
-target "solr-common" {
-  inherits = ["common"]
-  context = context("solr")
-}
-
-target "test-common" {
-  inherits = ["common"]
-  context = context("test")
-}
-
-target "tomcat-common" {
-  inherits = ["common"]
-  context = context("tomcat")
-}
-
-target "transcriber-common" {
-  inherits = ["common"]
-  context = context("transcriber")
-}
-
-target "transkribus-common" {
-  inherits = ["common"]
-  context = context("transkribus")
-}
-
-###############################################################################
-# Default Image targets for local builds.
-###############################################################################
-target "activemq" {
-  inherits = ["activemq-common"]
-  contexts = dependencies("activemq", "")
-  cache-from = cacheFrom("activemq", hostArch())
-  tags = tags("activemq", "")
-}
-
-target "alpaca" {
-  inherits = ["alpaca-common"]
-  contexts = dependencies("alpaca", "")
-  cache-from = cacheFrom("alpaca", hostArch())
-  tags = tags("alpaca", "")
-}
-
-target "base" {
-  inherits = ["base-common"]
-  cache-from = cacheFrom("base", hostArch())
-  tags = tags("base", "")
-}
-
-target "blazegraph" {
-  inherits = ["blazegraph-common"]
-  contexts = dependencies("blazegraph", "")
-  cache-from = cacheFrom("blazegraph", hostArch())
-  tags = tags("blazegraph", "")
-}
-
-target "cantaloupe" {
-  inherits = ["cantaloupe-common"]
-  contexts = dependencies("cantaloupe", "")
-  cache-from = cacheFrom("cantaloupe", hostArch())
-  tags = tags("cantaloupe", "")
-}
-
-target "crayfish" {
-  inherits = ["crayfish-common"]
-  contexts = dependencies("crayfish", "")
-  cache-from = cacheFrom("crayfish", hostArch())
-  tags = tags("crayfish", "")
-}
-
-target "crayfits" {
-  inherits = ["crayfits-common"]
-  contexts = dependencies("crayfits", "")
-  cache-from = cacheFrom("crayfits", hostArch())
-  tags = tags("crayfits", "")
-}
-
-target "drupal" {
-  inherits = ["drupal-common"]
-  contexts = dependencies("drupal", "")
-  cache-from = cacheFrom("drupal", hostArch())
-  tags = tags("drupal", "")
-}
-
-target "fcrepo" {
-  inherits = ["fcrepo-common"]
-  contexts = dependencies("fcrepo", "")
-  cache-from = cacheFrom("fcrepo", hostArch())
-  tags = tags("fcrepo", "")
-}
-
-target "fits" {
-  inherits = ["fits-common"]
-  contexts = dependencies("fits", "")
-  cache-from = cacheFrom("fits", hostArch())
-  tags = tags("fits", "")
-}
-
-target "handle" {
-  inherits = ["handle-common"]
-  contexts = dependencies("handle", "")
-  cache-from = cacheFrom("handle", hostArch())
-  tags = tags("handle", "")
-}
-
-target "homarus" {
-  inherits = ["homarus-common"]
-  contexts = dependencies("homarus", "")
-  cache-from = cacheFrom("homarus", hostArch())
-  tags = tags("homarus", "")
-}
-
-target "houdini" {
-  inherits = ["houdini-common"]
-  contexts = dependencies("houdini", "")
-  cache-from = cacheFrom("houdini", hostArch())
-  tags = tags("houdini", "")
-}
-
-target "hypercube" {
-  inherits = ["hypercube-common"]
-  contexts = dependencies("hypercube", "")
-  cache-from = cacheFrom("hypercube", hostArch())
-  tags = tags("hypercube", "")
-}
-
-target "imagemagick" {
-  inherits = ["imagemagick-common"]
-  cache-from = cacheFrom("imagemagick", hostArch())
-  tags = tags("imagemagick", "")
-}
-
-target "java" {
-  inherits = ["java-common"]
-  contexts = dependencies("java", "")
-  cache-from = cacheFrom("java", hostArch())
-  tags = tags("java", "")
-}
-
-target "leptonica" {
-  inherits = ["leptonica-common"]
-  cache-from = cacheFrom("leptonica", hostArch())
-  tags = tags("leptonica", "")
-}
-
-target "mariadb" {
-  inherits = ["mariadb-common"]
-  contexts = dependencies("mariadb", "")
-  cache-from = cacheFrom("mariadb", hostArch())
-  tags = tags("mariadb", "")
-}
-
-target "mergepdf" {
-  inherits = ["mergepdf-common"]
-  contexts = dependencies("mergepdf", "")
-  cache-from = cacheFrom("mergepdf", hostArch())
-  tags = tags("mergepdf", "")
-}
-
-target "milliner" {
-  inherits = ["milliner-common"]
-  contexts = dependencies("milliner", "")
-  cache-from = cacheFrom("milliner", hostArch())
-  tags = tags("milliner", "")
-}
-
-target "nginx" {
-  inherits = ["nginx-common"]
-  contexts = dependencies("nginx", "")
-  cache-from = cacheFrom("nginx", hostArch())
-  tags = tags("nginx", "")
-}
-
-target "postgresql" {
-  inherits = ["postgresql-common"]
-  contexts = dependencies("postgresql", "")
-  cache-from = cacheFrom("postgresql", hostArch())
-  tags = tags("postgresql", "")
-}
-
-target "scyllaridae" {
-  inherits = ["scyllaridae-common"]
-  contexts = dependencies("scyllaridae", "")
-  cache-from = cacheFrom("scyllaridae", hostArch())
-  tags = tags("scyllaridae", "")
-}
-
-target "solr" {
-  inherits = ["solr-common"]
-  contexts = dependencies("solr", "")
-  cache-from = cacheFrom("solr", hostArch())
-  tags = tags("solr", "")
-}
-
-target "test" {
-  inherits = ["test-common"]
-  contexts = dependencies("test", "")
-  cache-from = cacheFrom("test", hostArch())
-  tags = tags("test", "")
-}
-
-target "tomcat" {
-  inherits = ["tomcat-common"]
-  contexts = dependencies("tomcat", "")
-  cache-from = cacheFrom("tomcat", hostArch())
-  tags = tags("tomcat", "")
-}
-
-target "transcriber" {
-  inherits = ["transcriber-common"]
-  contexts = dependencies("transcriber", "")
-  cache-from = cacheFrom("transcriber", hostArch())
-  tags = tags("transcriber", "")
-}
-
-target "transkribus" {
-  inherits = ["transkribus-common"]
-  contexts = dependencies("transkribus", "")
-  cache-from = cacheFrom("transkribus", hostArch())
-  tags = tags("transkribus", "")
-}
-
-###############################################################################
-# linux/amd64 targets.
-###############################################################################
-target "activemq-amd64" {
-  inherits = ["activemq-common", "amd64-common"]
-  contexts = dependencies("activemq", "amd64")
-  cache-from = cacheFrom("activemq", "amd64")
-  tags = tags("activemq", "amd64")
-}
-
-target "alpaca-amd64" {
-  inherits = ["alpaca-common", "amd64-common"]
-  contexts = dependencies("alpaca", "amd64")
-  cache-from = cacheFrom("alpaca", "amd64")
-  tags = tags("alpaca", "amd64")
-}
-
-target "base-amd64" {
-  inherits = ["base-common", "amd64-common"]
-  cache-from = cacheFrom("base", "amd64")
-  tags = tags("base", "amd64")
-}
-
-target "blazegraph-amd64" {
-  inherits = ["blazegraph-common", "amd64-common"]
-  contexts = dependencies("blazegraph", "amd64")
-  cache-from = cacheFrom("blazegraph", "amd64")
-  tags = tags("blazegraph", "amd64")
-}
-
-target "cantaloupe-amd64" {
-  inherits = ["cantaloupe-common", "amd64-common"]
-  contexts = dependencies("cantaloupe", "amd64")
-  cache-from = cacheFrom("cantaloupe", "amd64")
-  tags = tags("cantaloupe", "amd64")
-}
-
-target "crayfish-amd64" {
-  inherits = ["crayfish-common", "amd64-common"]
-  contexts = dependencies("crayfish", "amd64")
-  cache-from = cacheFrom("crayfish", "amd64")
-  tags = tags("crayfish", "amd64")
-}
-
-target "crayfits-amd64" {
-  inherits = ["crayfits-common", "amd64-common"]
-  contexts = dependencies("crayfits", "amd64")
-  cache-from = cacheFrom("crayfits", "amd64")
-  tags = tags("crayfits", "amd64")
-}
-
-target "drupal-amd64" {
-  inherits = ["drupal-common", "amd64-common"]
-  contexts = dependencies("drupal", "amd64")
-  cache-from = cacheFrom("drupal", "amd64")
-  tags = tags("drupal", "amd64")
-}
-
-target "fcrepo-amd64" {
-  inherits = ["fcrepo-common", "amd64-common"]
-  contexts = dependencies("fcrepo", "amd64")
-  cache-from = cacheFrom("fcrepo", "amd64")
-  tags = tags("fcrepo", "amd64")
-}
-
-target "fits-amd64" {
-  inherits = ["fits-common", "amd64-common"]
-  contexts = dependencies("fits", "amd64")
-  cache-from = cacheFrom("fits", "amd64")
-  tags = tags("fits", "amd64")
-}
-
-target "handle-amd64" {
-  inherits = ["handle-common", "amd64-common"]
-  contexts = dependencies("handle", "amd64")
-  cache-from = cacheFrom("handle", "amd64")
-  tags = tags("handle", "amd64")
-}
-
-target "homarus-amd64" {
-  inherits = ["homarus-common", "amd64-common"]
-  contexts = dependencies("homarus", "amd64")
-  cache-from = cacheFrom("homarus", "amd64")
-  tags = tags("homarus", "amd64")
-}
-
-target "houdini-amd64" {
-  inherits = ["houdini-common", "amd64-common"]
-  contexts = dependencies("houdini", "amd64")
-  cache-from = cacheFrom("houdini", "amd64")
-  tags = tags("houdini", "amd64")
-}
-
-target "hypercube-amd64" {
-  inherits = ["hypercube-common", "amd64-common"]
-  contexts = dependencies("hypercube", "amd64")
-  cache-from = cacheFrom("hypercube", "amd64")
-  tags = tags("hypercube", "amd64")
-}
-
-target "imagemagick-amd64" {
-  inherits = ["imagemagick-common", "amd64-common"]
-  cache-from = cacheFrom("imagemagick", "amd64")
-  tags = tags("imagemagick", "amd64")
-}
-
-target "java-amd64" {
-  inherits = ["java-common", "amd64-common"]
-  contexts = dependencies("java", "amd64")
-  cache-from = cacheFrom("java", "amd64")
-  tags = tags("java", "amd64")
-}
-
-target "leptonica-amd64" {
-  inherits = ["leptonica-common", "amd64-common"]
-  cache-from = cacheFrom("leptonica", "amd64")
-  tags = tags("leptonica", "amd64")
-}
-
-target "mariadb-amd64" {
-  inherits = ["mariadb-common", "amd64-common"]
-  contexts = dependencies("mariadb", "amd64")
-  cache-from = cacheFrom("mariadb", "amd64")
-  tags = tags("mariadb", "amd64")
-}
-
-target "mergepdf-amd64" {
-  inherits = ["mergepdf-common", "amd64-common"]
-  contexts = dependencies("mergepdf", "amd64")
-  cache-from = cacheFrom("mergepdf", "amd64")
-  tags = tags("mergepdf", "amd64")
-}
-
-target "milliner-amd64" {
-  inherits = ["milliner-common", "amd64-common"]
-  contexts = dependencies("milliner", "amd64")
-  cache-from = cacheFrom("milliner", "amd64")
-  tags = tags("milliner", "amd64")
-}
-
-target "nginx-amd64" {
-  inherits = ["nginx-common", "amd64-common"]
-  contexts = dependencies("nginx", "amd64")
-  cache-from = cacheFrom("nginx", "amd64")
-  tags = tags("nginx", "amd64")
-}
-
-target "postgresql-amd64" {
-  inherits = ["postgresql-common", "amd64-common"]
-  contexts = dependencies("postgresql", "amd64")
-  cache-from = cacheFrom("postgresql", "amd64")
-  tags = tags("postgresql", "amd64")
-}
-
-target "scyllaridae-amd64" {
-  inherits = ["scyllaridae-common", "amd64-common"]
-  contexts = dependencies("scyllaridae", "amd64")
-  cache-from = cacheFrom("scyllaridae", "amd64")
-  tags = tags("scyllaridae", "amd64")
-}
-
-target "solr-amd64" {
-  inherits = ["solr-common", "amd64-common"]
-  contexts = dependencies("solr", "amd64")
-  cache-from = cacheFrom("solr", "amd64")
-  tags = tags("solr", "amd64")
-}
-
-target "test-amd64" {
-  inherits = ["test-common", "amd64-common"]
-  contexts = dependencies("test", "amd64")
-  cache-from = cacheFrom("test", "amd64")
-  tags = tags("test", "amd64")
-}
-
-target "tomcat-amd64" {
-  inherits = ["tomcat-common", "amd64-common"]
-  contexts = dependencies("tomcat", "amd64")
-  cache-from = cacheFrom("tomcat", "amd64")
-  tags = tags("tomcat", "amd64")
-}
-
-target "transcriber-amd64" {
-  inherits = ["transcriber-common", "amd64-common"]
-  contexts = dependencies("transcriber", "amd64")
-  cache-from = cacheFrom("transcriber", "amd64")
-  tags = tags("transcriber", "amd64")
-}
-
-target "transkribus-amd64" {
-  inherits = ["transkribus-common", "amd64-common"]
-  contexts = dependencies("transkribus", "amd64")
-  cache-from = cacheFrom("transkribus", "amd64")
-  tags = tags("transkribus", "amd64")
-}
-
-###############################################################################
-# linux/arm64 targets.
-###############################################################################
-target "activemq-arm64" {
-  inherits = ["activemq-common", "arm64-common"]
-  contexts = dependencies("activemq", "arm64")
-  cache-from = cacheFrom("activemq", "arm64")
-  tags = tags("activemq", "arm64")
-}
-
-target "alpaca-arm64" {
-  inherits = ["alpaca-common", "arm64-common"]
-  contexts = dependencies("alpaca", "arm64")
-  cache-from = cacheFrom("alpaca", "arm64")
-  tags = tags("alpaca", "arm64")
-}
-
-target "base-arm64" {
-  inherits = ["base-common", "arm64-common"]
-  cache-from = cacheFrom("base", "arm64")
-  tags = tags("base", "arm64")
-}
-
-target "blazegraph-arm64" {
-  inherits = ["blazegraph-common", "arm64-common"]
-  contexts = dependencies("blazegraph", "arm64")
-  cache-from = cacheFrom("blazegraph", "arm64")
-  tags = tags("blazegraph", "arm64")
-}
-
-target "cantaloupe-arm64" {
-  inherits = ["cantaloupe-common", "arm64-common"]
-  contexts = dependencies("cantaloupe", "arm64")
-  cache-from = cacheFrom("cantaloupe", "arm64")
-  tags = tags("cantaloupe", "arm64")
-}
-
-target "crayfish-arm64" {
-  inherits = ["crayfish-common", "arm64-common"]
-  contexts = dependencies("crayfish", "arm64")
-  cache-from = cacheFrom("crayfish", "arm64")
-  tags = tags("crayfish", "arm64")
-}
-
-target "crayfits-arm64" {
-  inherits = ["crayfits-common", "arm64-common"]
-  contexts = dependencies("crayfits", "arm64")
-  cache-from = cacheFrom("crayfits", "arm64")
-  tags = tags("crayfits", "arm64")
-}
-
-target "drupal-arm64" {
-  inherits = ["drupal-common", "arm64-common"]
-  contexts = dependencies("drupal", "arm64")
-  cache-from = cacheFrom("drupal", "arm64")
-  tags = tags("drupal", "arm64")
-}
-
-target "fcrepo-arm64" {
-  inherits = ["fcrepo-common", "arm64-common"]
-  contexts = dependencies("fcrepo", "arm64")
-  cache-from = cacheFrom("fcrepo", "arm64")
-  tags = tags("fcrepo", "arm64")
-}
-
-target "fits-arm64" {
-  inherits = ["fits-common", "arm64-common"]
-  contexts = dependencies("fits", "arm64")
-  cache-from = cacheFrom("fits", "arm64")
-  tags = tags("fits", "arm64")
-}
-
-target "handle-arm64" {
-  inherits = ["handle-common", "arm64-common"]
-  contexts = dependencies("handle", "arm64")
-  cache-from = cacheFrom("handle", "arm64")
-  tags = tags("handle", "arm64")
-}
-
-target "homarus-arm64" {
-  inherits = ["homarus-common", "arm64-common"]
-  contexts = dependencies("homarus", "arm64")
-  cache-from = cacheFrom("homarus", "arm64")
-  tags = tags("homarus", "arm64")
-}
-
-target "houdini-arm64" {
-  inherits = ["houdini-common", "arm64-common"]
-  contexts = dependencies("houdini", "arm64")
-  cache-from = cacheFrom("houdini", "arm64")
-  tags = tags("houdini", "arm64")
-}
-
-target "hypercube-arm64" {
-  inherits = ["hypercube-common", "arm64-common"]
-  contexts = dependencies("hypercube", "arm64")
-  cache-from = cacheFrom("hypercube", "arm64")
-  tags = tags("hypercube", "arm64")
-}
-
-target "imagemagick-arm64" {
-  inherits = ["imagemagick-common", "arm64-common"]
-  cache-from = cacheFrom("imagemagick", "arm64")
-  tags = tags("imagemagick", "arm64")
-}
-
-target "java-arm64" {
-  inherits = ["java-common", "arm64-common"]
-  contexts = dependencies("java", "arm64")
-  cache-from = cacheFrom("java", "arm64")
-  tags = tags("java", "arm64")
-}
-
-target "leptonica-arm64" {
-  inherits = ["leptonica-common", "arm64-common"]
-  cache-from = cacheFrom("leptonica", "arm64")
-  tags = tags("leptonica", "arm64")
-}
-
-target "mariadb-arm64" {
-  inherits = ["mariadb-common", "arm64-common"]
-  contexts = dependencies("mariadb", "arm64")
-  cache-from = cacheFrom("mariadb", "arm64")
-  tags = tags("mariadb", "arm64")
-}
-
-target "mergepdf-arm64" {
-  inherits = ["mergepdf-common", "arm64-common"]
-  contexts = dependencies("mergepdf", "arm64")
-  cache-from = cacheFrom("mergepdf", "arm64")
-  tags = tags("mergepdf", "arm64")
-}
-
-target "milliner-arm64" {
-  inherits = ["milliner-common", "arm64-common"]
-  contexts = dependencies("milliner", "arm64")
-  cache-from = cacheFrom("milliner", "arm64")
-  tags = tags("milliner", "arm64")
-}
-
-target "nginx-arm64" {
-  inherits = ["nginx-common", "arm64-common"]
-  contexts = dependencies("nginx", "arm64")
-  cache-from = cacheFrom("nginx", "arm64")
-  tags = tags("nginx", "arm64")
-}
-
-target "postgresql-arm64" {
-  inherits = ["postgresql-common", "arm64-common"]
-  contexts = dependencies("postgresql", "arm64")
-  cache-from = cacheFrom("postgresql", "arm64")
-  tags = tags("postgresql", "arm64")
-}
-
-target "scyllaridae-arm64" {
-  inherits = ["scyllaridae-common", "arm64-common"]
-  contexts = dependencies("scyllaridae", "arm64")
-  cache-from = cacheFrom("scyllaridae", "arm64")
-  tags = tags("scyllaridae", "arm64")
-}
-
-target "solr-arm64" {
-  inherits = ["solr-common", "arm64-common"]
-  contexts = dependencies("solr", "arm64")
-  cache-from = cacheFrom("solr", "arm64")
-  tags = tags("solr", "arm64")
-}
-
-target "test-arm64" {
-  inherits = ["test-common", "arm64-common"]
-  contexts = dependencies("test", "arm64")
-  cache-from = cacheFrom("test", "arm64")
-  tags = tags("test", "arm64")
-}
-
-target "tomcat-arm64" {
-  inherits = ["tomcat-common", "arm64-common"]
-  contexts = dependencies("tomcat", "arm64")
-  cache-from = cacheFrom("tomcat", "arm64")
-  tags = tags("tomcat", "arm64")
-}
-
-target "transcriber-arm64" {
-  inherits = ["transcriber-common", "arm64-common"]
-  contexts = dependencies("transcriber", "arm64")
-  cache-from = cacheFrom("transcriber", "arm64")
-  tags = tags("transcriber", "arm64")
-}
-
-target "transkribus-arm64" {
-  inherits = ["transkribus-common", "arm64-common"]
-  contexts = dependencies("transkribus", "arm64")
-  cache-from = cacheFrom("transkribus", "arm64")
-  tags = tags("transkribus", "arm64")
+  context = context(image)
+  contexts = merge(lookup(IMAGE_CONTEXTS, image, {}), dependencies(image, arch))
+  platforms = equal("", arch) ? [] : ["linux/${arch}"]
+  cache-from = cacheFrom(image, equal("", arch) ? hostArch() : arch)
+  tags = tags(image, arch)
 }
