@@ -30,7 +30,11 @@ RUN download.sh \
 
 WORKDIR /build/whisper.cpp
 
-RUN make "${WHISPER_MODEL}"
+# Avoid -march=native: CI builders may expose AVX-512 instructions that are
+# unavailable on the hosts running the published image.
+RUN make \
+      CMAKE_ARGS="-DGGML_NATIVE=OFF -DGGML_BMI2=OFF" \
+      "${WHISPER_MODEL}"
 
 FROM scyllaridae
 
