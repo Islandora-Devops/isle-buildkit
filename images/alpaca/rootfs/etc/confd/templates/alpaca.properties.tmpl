@@ -37,7 +37,13 @@ fcrepo.indexer.max-concurrent-consumers={{ getenv "ALPACA_FCREPO_INDEXER_MAX_CON
 fcrepo.indexer.async-consumer={{ getenv "ALPACA_FCREPO_INDEXER_ASYNC_CONSUMER" }}
 
 # Triplestore indexer options
-triplestore.indexer.enabled=false
+triplestore.indexer.enabled={{ getenv "ALPACA_TRIPLESTORE_INDEXER_ENABLED" }}
+triplestore.baseUrl={{ getenv "ALPACA_TRIPLESTORE_INDEXER_URL" }}
+triplestore.index.stream={{ getenv "ALPACA_TRIPLESTORE_INDEXER_QUEUE_INDEX" }}
+triplestore.delete.stream={{ getenv "ALPACA_TRIPLESTORE_INDEXER_QUEUE_DELETE" }}
+triplestore.indexer.concurrent-consumers={{ getenv "ALPACA_TRIPLESTORE_INDEXER_CONSUMERS" }}
+triplestore.indexer.max-concurrent-consumers={{ getenv "ALPACA_TRIPLESTORE_INDEXER_MAX_CONSUMERS" }}
+triplestore.indexer.async-consumer={{ getenv "ALPACA_TRIPLESTORE_INDEXER_ASYNC_CONSUMER" }}
 
 # Derivative services
 derivative.systems.installed={{ getenv "ALPACA_DERIVATIVE_SYSTEMS" }}
