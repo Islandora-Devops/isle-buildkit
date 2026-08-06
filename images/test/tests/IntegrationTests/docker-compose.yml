@@ -49,9 +49,6 @@ services:
     activemq:
         <<: *common
         image: ${ACTIVEMQ:-islandora/activemq:local}
-    blazegraph:
-        <<: *common
-        image: ${BLAZEGRAPH:-islandora/blazegraph:local}
     test:
         <<: *common
         image: ${TEST:-islandora/test:local}

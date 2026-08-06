@@ -80,19 +80,6 @@ jobs:
       contents: read
       packages: write
     needs: [tags, java]
-  blazegraph:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.tomcat.outputs.context }}
-      image: blazegraph
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-      strip-apk-pinning: ${{ inputs.strip-apk-pinning || false }}
-    secrets: inherit
-    permissions:
-      contents: read
-      packages: write
-    needs: [tags, tomcat]
   cantaloupe:
     uses: ./.github/workflows/build.yml
     with:
@@ -422,14 +409,6 @@ jobs:
     needs:
       - activemq
       - alpaca
-  test-blazegraph:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: ${{ needs.blazegraph.outputs.digest }}
-      image: blazegraph
-    secrets: inherit
-    needs: [blazegraph]
   test-cantaloupe:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
@@ -585,7 +564,6 @@ jobs:
       digests: >-
         ${{ needs.activemq.outputs.digest }}
         ${{ needs.alpaca.outputs.digest }}
-        ${{ needs.blazegraph.outputs.digest }}
         ${{ needs.crayfits.outputs.digest }}
         ${{ needs.fcrepo.outputs.digest }}
         ${{ needs.fits.outputs.digest }}
@@ -601,7 +579,6 @@ jobs:
     needs:
       - activemq
       - alpaca
-      - blazegraph
       - crayfits
       - fcrepo
       - fits
@@ -663,14 +640,6 @@ jobs:
       image: alpaca
     secrets: inherit
     needs: [alpaca]
-  grype-blazegraph:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.blazegraph.outputs.digest }}
-      image: blazegraph
-    secrets: inherit
-    needs: [blazegraph]
   grype-cantaloupe:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml

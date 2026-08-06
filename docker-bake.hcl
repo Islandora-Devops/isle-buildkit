@@ -7,7 +7,6 @@ IMAGES = [
   "activemq",
   "alpaca",
   "base",
-  "blazegraph",
   "cantaloupe",
   "crayfits",
   "drupal",
@@ -36,7 +35,6 @@ IMAGES = [
 DEPENDENCIES = {
   activemq = ["java"]
   alpaca = ["base", "java"]
-  blazegraph = ["tomcat"]
   cantaloupe = ["java"]
   crayfits = ["scyllaridae"]
   drupal = ["nginx"]

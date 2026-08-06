@@ -73,8 +73,6 @@ function install {
     wait_for_service "${SITE}" fcrepo
     wait_for_service "${SITE}" fits
     wait_for_service "${SITE}" solr
-    wait_for_service "${SITE}" triplestore
-    create_blazegraph_namespace_with_default_properties "${SITE}"
     configure
 }
 
