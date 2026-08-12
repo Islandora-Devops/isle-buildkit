@@ -20,7 +20,7 @@ IS_WSL := $(shell grep -q WSL /proc/version 2>/dev/null && echo "true")
 MKCERT := $(if $(filter true,$(IS_WSL)),mkcert.exe,mkcert)
 
 # The location of root certificates.
-CAROOT := $(if $(filter true,$(IS_WSL)),$(shell $(MKCERT) -CAROOT | xargs -0 wslpath -u),$(shell $(MKCERT) -CAROOT))
+CAROOT := $(if $(filter true,$(IS_WSL)),$(shell command -v $(MKCERT) >/dev/null 2>&1 && $(MKCERT) -CAROOT | xargs -0 wslpath -u),$(shell command -v $(MKCERT) >/dev/null 2>&1 && $(MKCERT) -CAROOT))
 
 # Display text for requirements.
 README_MESSAGE = ${BLUE}Consult the README.md for how to install requirements.${RESET}\n
@@ -53,6 +53,9 @@ PROGRESS ?= auto
 CACHE_FROM_REPOSITORY ?= $(REPOSITORY)
 CACHE_TO_REPOSITORY ?= $(REPOSITORY)
 
+# Go command used by the local test helper.
+GO ?= $(shell command -v go 2>/dev/null || { test -x /usr/local/go/bin/go && printf /usr/local/go/bin/go; })
+
 # Tags to apply to all images loaded or pushed, space delimited.
 TAGS ?= local
 
@@ -65,8 +68,13 @@ CONTEXTS ?=
 
 # All images should be included in the bake files default target.
 # It is the source of truth.
-ALL_IMAGES = $(shell docker buildx bake --print default 2>/dev/null | jq -r '.target[].context')
-TARGET_IMAGES = $(shell docker buildx bake --print $(TARGET) 2>/dev/null | jq -r '.target[].context')
+ALL_IMAGES = $(shell docker buildx bake --print default 2>/dev/null | jq -r '.target[].context | sub("^images/"; "")')
+TARGET_IMAGES = $(shell docker buildx bake --print $(TARGET) 2>/dev/null | jq -r '.target[].context | sub("^images/"; "")')
+TEST_TARGET_IMAGES = $(filter $(ALL_IMAGES),$(TARGET))
+TEST_IMAGE_ARGS = $(if $(filter default,$(TARGET)),,$(foreach image,$(TEST_TARGET_IMAGES),--image $(image)))
+LOCAL_IMAGE_CHECK_IMAGES = $(if $(filter default,$(TARGET)),$(TARGET_IMAGES),$(TEST_TARGET_IMAGES))
+TEST_MODE ?= fallback
+TEST_ARGS ?=
 
 build:
 	mkdir -p build
@@ -124,6 +132,16 @@ docker-buildx: | docker
 		printf "$(MISSING_DOCKER_BUILDX_PLUGIN_MESSAGE)"; \
 		exit 1; \
 	fi
+
+.PHONY: go
+go:
+	@if [ -z "$(GO)" ]; then printf "${RED}Could not find executable: %s${RESET}\n${README_MESSAGE}" go; exit 1; fi
+
+.PHONY: lint-test
+## Runs shellcheck and Go tests.
+lint-test: | shellcheck go
+	shopt -s globstar; shellcheck **/*.sh
+	$(GO) test -v ./... -race
 
 .git/hooks/pre-commit: | pre-commit
 .git/hooks/pre-commit:
@@ -220,6 +238,39 @@ build/manifests.json: build/bake.json
 bake: build/bake.json
 	docker buildx bake --builder $(BUILDER) -f build/bake.json --progress=$(PROGRESS) --load
 
+.PHONY: test
+## Runs docker compose tests for built images. Use TARGET=<image> to narrow the run.
+test: | docker-compose
+	@if [ -z "$(GO)" ]; then printf "Go is required to run tests.\n"; exit 127; fi
+	@if [ "$(TARGET)" != "default" ] && [ -z "$(TEST_TARGET_IMAGES)" ]; then printf "No test image target selected by TARGET=%s\n" "$(TARGET)"; exit 2; fi
+	@missing=0; \
+	for image in $(LOCAL_IMAGE_CHECK_IMAGES); do \
+		ref="$(REPOSITORY)/$${image}:$(firstword $(TAGS))"; \
+		if ! docker image inspect "$${ref}" >/dev/null 2>&1; then \
+			printf "Missing local image %s\n" "$${ref}"; \
+			missing=1; \
+		fi; \
+	done; \
+	if [ "$${missing}" = "1" ]; then \
+		$(MAKE) bake TARGET="$(TARGET)" REPOSITORY="$(REPOSITORY)" TAGS="$(TAGS)" BUILDER="$(BUILDER)" PROGRESS="$(PROGRESS)" CONTEXTS="$(CONTEXTS)"; \
+	fi
+	$(GO) run ./cmd/buildkit test \
+		$(TEST_IMAGE_ARGS) \
+		$(if $(TEST),--test $(TEST),) \
+		--repository "$(REPOSITORY)" \
+		--mode "$(TEST_MODE)" \
+		--tag "$(firstword $(TAGS))" \
+		$(TEST_ARGS)
+
+.PHONY: list-tests
+## Lists docker compose tests selected by TARGET=<image>.
+list-tests:
+	@if [ -z "$(GO)" ]; then printf "Go is required to list tests.\n"; exit 127; fi
+	@if [ "$(TARGET)" != "default" ] && [ -z "$(TEST_TARGET_IMAGES)" ]; then printf "No test image target selected by TARGET=%s\n" "$(TARGET)"; exit 2; fi
+	$(GO) run ./cmd/buildkit test --list \
+		$(TEST_IMAGE_ARGS) \
+		$(if $(TEST),--test $(TEST),)
+
 .PHONY: push
 ## Builds and pushes the target(s) into remote repository.
 push: build/bake.json login
@@ -300,6 +351,7 @@ clean: down | git
 .PHONY: setup
 ## Checks that all required tools are installed (Installs pre-commit).
 setup: .git/hooks/pre-commit | git docker-compose docker-buildx jq awk $(MKCERT)
+setup: go
 
 .PHONY: help
 .SILENT: help

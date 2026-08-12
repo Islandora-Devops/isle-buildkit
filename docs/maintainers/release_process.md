@@ -47,7 +47,8 @@ Reporting results from testing process:
 
 When testing isle-buildkit
 * `git clone git@github.com:Islandora-Devops/isle-buildkit.git` to local laptop
-* `./gradlew build`
+* `make bake`
+* `make test`
 
 #### Results
 

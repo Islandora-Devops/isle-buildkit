@@ -8,7 +8,6 @@
   - [Windows](#windows)
 - [Tooling](#tooling)
   - [Make](#make)
-  - [Gradle](#gradle)
   - [Github Actions](#github-actions)
 - [Building](#building)
   - [Build All Images](#build-all-images)
@@ -54,13 +53,14 @@ use [isle-site-template] to deploy via [Docker] or the
 
 ## Requirements
 
-To build the Docker images using the provided Gradle build scripts requires:
+To build and test the Docker images requires:
 
 - [Docker 20.10+](https://docs.docker.com/get-docker/)
+- [Docker Buildx 0.11+](https://github.com/docker/buildx/releases/tag/v0.11.0)
 - [GNU Make 4.3+](https://www.gnu.org/software/make/)
 - [jq 1.6+](https://stedolan.github.io/jq/)
 - [mkcert 1.4+](https://github.com/FiloSottile/mkcert)
-- [OpenJDK or Oracle JDK 21+](https://www.java.com/en/download/)
+- [Go](https://go.dev/doc/install)
 - [pre-commit 2.19+](https://pre-commit.com/)
 
 > N.B You can use older versions of Docker to run the images, just not build
@@ -103,7 +103,7 @@ certificates.
 There are a number of tools you can use to [build](#building) and
 [test](#testing) the images produced by this repository. In general there are
 tools like `docker buildx` and `docker compose` that can be invoked directly or
-you can the wrapper tools like [make](#make), [gradle](#gradle). Using the
+you can use wrapper tools like [make](#make). Using the
 wrapper tools has some advantages and is generally recommended, but it is
 occasionally good to revert to the tools they wrap around if you need to debug
 an issue with the building or testing.
@@ -139,88 +139,6 @@ General:
   clean                          Destroys local environment and cleans up any uncommitted files.
   purge                          Destroys all data.
   help                           Displays this help message.
-```
-
-### Gradle
-
-[Testing](#testing) and [generating security reports](#grype) as well as
-[DockerHub maintenance](#dockerhub) rely on Gradle and should function equally
-well across platforms. The only difference being the script you call to interact
-with gradle (the following assumes you are executing from the **root directory**
-of the project):
-
-**Linux or OSX:**
-
-```bash
-./gradlew
-```
-
-**Windows:**
-
-```bash
-gradlew.bat
-```
-
-For the remaining examples the **Linux or OSX** call method will be used, if
-using Windows substitute the call to Gradle script.
-
-Gradle is a project/task based build system to query all the available tasks use
-the following command.
-
-```bash
-./gradlew tasks --all
-```
-
-Which should return something akin to:
-
-```bash
-> Task :tasks
-
-------------------------------------------------------------
-Tasks runnable from root project
-------------------------------------------------------------
-
-...
-Isle DockerHub tasks
---------------------
-deleteEligibleDockerHubTags - Delete eligible tags from DockerHub 'islandora/cache' Repository.
-getDockerHubTagsEligibleForDeletion - Gets the tags eligible for removal from DockerHub 'islandora/cache' Repository.
-getDockerHubToken - Gets the login token required for interacting with DockerHub Rest API.
-
-Isle Reports tasks
-------------------
-grype - Process the software bill of material with Grype
-pullGrype - Pull anchore/grype docker image
-pullSyft - Pull anchore/syft docker image
-syft - Generate a software bill of material with Syft
-updateGrypeDB - Update the Grype Database
-
-Isle Tests tasks
-----------------
-cleanUpAfter - Clean up resources after running test
-cleanUpBefore - Clean up resources before running test (if interrupted externally, etc)
-setUp - Prepare to run test
-test - Perform test
-
-...
-```
-
-In Gradle each Project maps onto a folder in the file system path where it is
-delimited by `:` instead of `/` (Unix) or `\` (Windows).
-
-The root project `:` can be omitted.
-
-So if you want to run a particular task `taskname` that resided in the project
-folder `project/subproject` you would specify it like so:
-
-```bash
-./gradlew :project:subproject:taskname
-```
-
-To get more verbose output from Gradle use the `--info` argument like so:
-
-```bash
-./gradlew :PROJECT:TASK --info
 ```
 
 ### Github Actions
@@ -296,7 +214,7 @@ can be found in the `tests` folders of each docker image project.
 To run these tests use the following command:
 
 ```bash
-./gradlew test
+make test
 ```
 
 > N.B. Running all tests concurrently can saturate Docker's default number of
@@ -308,7 +226,13 @@ To run these tests use the following command:
 Alternatively you can test a single image like so:
 
 ```bash
-./gradlew tomcat:test
+make test TARGET=fcrepo
+```
+
+If you want to explicitly rebuild the image before running its tests, run:
+
+```bash
+make bake test TARGET=fcrepo
 ```
 
 ## Running
@@ -392,10 +316,9 @@ The following docker images are provided:
 - [base]
 - [blazegraph]
 - [cantaloupe]
-- [crayfish]
 - [crayfits]
 - [drupal]
-- [fcrepo6]
+- [fcrepo]
 - [fits]
 - [handle]
 - [homarus]
@@ -511,26 +434,10 @@ However, we have a workflow dispatch rule in our renovate bot that allows settin
 
 #### Updating Composer
 
-A number of images like [crayfish] provide a `composer.lock` file to pin them to
-particular dependencies.
-
-When updating the dependencies be sure to search for `composer.lock` in the
-`rootfs` folder of the image and update them as well.
-
-This can be done by running the image after
-[updating dependencies](#updating-dependencies), to get the latest code, and
-running composer update. For example [crayfish]:
-
-```bash
-# Update ARGS as done in previous section
-# ...
-# Build image
-make bake TARGET=crayfish
-for lock in $(find crayfish -name "composer.lock"); \
-do \
-  docker run --rm -ti -v "$(pwd)/${lock}:${lock#crayfish/rootfs*}" -w $(dirname "${lock#crayfish/rootfs*}") --entrypoint composer islandora/crayfish:local update; \
-done
-```
+PHP application images install dependencies from the `composer.lock` in their
+pinned upstream source release. Update dependencies and commit the lock file in
+the upstream project first, then update the release version and checksum in this
+repository. Do not maintain a second lock file in an image's `rootfs`.
 
 ### Updating Configuration
 
@@ -727,23 +634,21 @@ are arranged in a hierarchy, that roughly follows below:
     │   └── tomcat
     │       ├── blazegraph
     │       ├── cantaloupe
-    │       ├── fcrepo6
+    │       ├── fcrepo
     │       └── fits
     ├── mariadb
     ├── postgresql
-    └── nginx
-    │   ├── crayfish
-    │   │   ├── milliner
-    │   │   └── riprap
-    │   ├── drupal
+    ├── nginx
+    │   ├── milliner
+    │   └── drupal
     │       └── test
-    ├── scyllaridae
-    │   ├── crayfits
-    │   ├── homarus
-    │   ├── houdini (consumes [imagemagick] as well during its build stage)
-    │   ├── hypercube (consumes [leptonica] as well during its build stage)
-    │   ├── mergepdf
-    │   ├── transcriber
+    └── scyllaridae
+        ├── crayfits
+        ├── homarus
+        ├── houdini (consumes [imagemagick] as well during its build stage)
+        ├── hypercube (consumes [leptonica] as well during its build stage)
+        ├── mergepdf
+        └── transcriber
 ```
 
 [imagemagick] & [leptonica] stand outside of the hierarchy as they are use only
@@ -763,16 +668,15 @@ image. So for example `rootfs/etc/islandora/configs` will be
 Since [bake] is used to build all the images, you must add new images to
 [docker-bake.hcl](./docker-bake.hcl).
 
-Be sure to update `IMAGES` and `DEPENDENCIES` variables for any new images
-added, along with all the required targets for your new `IMAGE-NAME`:
+Add a new image to `IMAGES` and describe its build dependencies in
+`DEPENDENCIES`. The Bake matrix generates all supported targets:
 
-- `IMAGE-NAME-common`: Properties shared by all the following targets.
 - `IMAGE-NAME`: Targets the host platform.
 - `IMAGE-NAME-amd64`: Targets amd64, regardless of host platform.
 - `IMAGE-NAME-arm64`: Targets arm64, regardless of host platform.
-- `IMAGE-NAME-ci`: Used to update the remote cache and build both `PLATFORM-ci` images.
-- `IMAGE-NAME-amd64-ci`: Targets amd64, regardless of host platform updates remote cache.
-- `IMAGE-NAME-arm64-ci`: Targets arm64, regardless of host platform updates remote cache.
+
+Images that require a named build context not produced by another target must
+also add it to `IMAGE_CONTEXTS`.
 
 ### Multi-arch builds
 
@@ -837,7 +741,7 @@ successfully start without any other container present. Additionally it ensure
 that the order of precedence for configuration settings.
 
 This does not completely remove dependencies between containers, for example,
-when the [fcrepo6] starts it requires a running database like [mariadb] to be
+when the [fcrepo] starts it requires a running database like [mariadb] to be
 able to start. In these cases an `oneshot` service can block until another
 container is available or a timeout has been reached. For example:
 
@@ -896,10 +800,9 @@ adding the following, and restarting `Docker`:
 [base]: ./images/base/README.md
 [blazegraph]: ./images/blazegraph/README.md
 [cantaloupe]: ./images/cantaloupe/README.md
-[crayfish]: ./images/crayfish/README.md
 [crayfits]: ./images/crayfits/README.md
 [drupal]: ./images/drupal/README.md
-[fcrepo6]: ./images/fcrepo6/README.md
+[fcrepo]: ./images/fcrepo/README.md
 [fits]: ./images/fits/README.md
 [handle]: ./images/handle/README.md
 [homarus]: ./images/homarus/README.md

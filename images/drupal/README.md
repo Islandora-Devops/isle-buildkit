@@ -53,7 +53,7 @@ as `DRUPAL_SITE_{SITE}_DB_HOST` are defined.
 documentation in the [base image] for more information.
 
 The public/private key pair used here should be the same key as is used in the
-`crayfish` and `fcrepo` based containers.
+`milliner` and `fcrepo` containers.
 
 ### Default Site
 

@@ -2,9 +2,9 @@
 FROM java
 
 ARG TARGETARCH
-# renovate: datasource=custom.apache-downloads depName=apache-tomcat packageName=tomcat/tomcat-9
-ARG TOMCAT_VERSION=9.0.118
-ARG TOMCAT_FILE_SHA256="2fd31ef9da9929b878997f731cf25536feac574161c02d9399727471c7c406b2"
+# renovate: datasource=custom.apache-downloads depName=apache-tomcat packageName=tomcat/tomcat-11
+ARG TOMCAT_VERSION=11.0.22
+ARG TOMCAT_FILE_SHA256="73d239232f14dfde2278e8d931f767ed454aed9b018e4d70a1d404c2579b5998"
 
 EXPOSE 8080
 
@@ -12,7 +12,7 @@ WORKDIR /opt/tomcat
 
 RUN --mount=type=cache,id=tomcat-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     TOMCAT_FILE="apache-tomcat-${TOMCAT_VERSION}.tar.gz" && \
-    TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE}" && \
+    TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE}" && \
     download.sh --url "${TOMCAT_URL}" --sha256 "${TOMCAT_FILE_SHA256}" "${DOWNLOAD_CACHE_DIRECTORY}" && \
     download.sh \
         --url "${TOMCAT_URL}" \

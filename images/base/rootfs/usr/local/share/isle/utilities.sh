@@ -22,7 +22,7 @@ function error_handler {
         script=$(realpath "${BASH_SOURCE[$j]}")
         num=${BASH_LINENO[$i]}
         echo "# ${i} File: ${script}, Line: ${BASH_LINENO[$i]} Function: ${FUNCNAME[$j]:-}" >&2
-        awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=${num} "${script}" >&2
+        awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L="${num}" "${script}" >&2
         echo "------"
     done
     exit "${code}"

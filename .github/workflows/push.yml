@@ -24,8 +24,13 @@ jobs:
     steps:
       - uses: "actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10" # v6
 
+      - name: Set up Go
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6
+        with:
+          go-version-file: go.mod
+
       - name: lint
-        run: shellcheck ci/*.sh
+        run: make lint-test
 
   #############################################################################
   ## Build.
@@ -75,19 +80,6 @@ jobs:
       contents: read
       packages: write
     needs: [tags, java]
-  blazegraph:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.tomcat.outputs.context }}
-      image: blazegraph
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-      strip-apk-pinning: ${{ inputs.strip-apk-pinning || false }}
-    secrets: inherit
-    permissions:
-      contents: read
-      packages: write
-    needs: [tags, tomcat]
   cantaloupe:
     uses: ./.github/workflows/build.yml
     with:
@@ -101,23 +93,10 @@ jobs:
       contents: read
       packages: write
     needs: [tags, java]
-  crayfish:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.nginx.outputs.context }}
-      image: crayfish
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-      strip-apk-pinning: ${{ inputs.strip-apk-pinning || false }}
-    secrets: inherit
-    permissions:
-      contents: read
-      packages: write
-    needs: [tags, nginx]
   crayfits:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.nginx.outputs.context }}
+      contexts: ${{ needs.scyllaridae.outputs.context }}
       image: crayfits
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -140,11 +119,11 @@ jobs:
       contents: read
       packages: write
     needs: [tags, nginx]
-  fcrepo6:
+  fcrepo:
     uses: ./.github/workflows/build.yml
     with:
       contexts: ${{ needs.tomcat.outputs.context }}
-      image: fcrepo6
+      image: fcrepo
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
       strip-apk-pinning: ${{ inputs.strip-apk-pinning || false }}
@@ -221,7 +200,6 @@ jobs:
   imagemagick:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.base.outputs.context }}
       image: imagemagick
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -247,7 +225,6 @@ jobs:
   leptonica:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.base.outputs.context }}
       image: leptonica
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -286,7 +263,7 @@ jobs:
   milliner:
     uses: ./.github/workflows/build.yml
     with:
-      contexts: ${{ needs.crayfish.outputs.context }}
+      contexts: ${{ needs.nginx.outputs.context }}
       image: milliner
       repository: ${{ vars.repository }}
       tags: ${{ needs.tags.outputs.tags }}
@@ -295,7 +272,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [tags, crayfish]
+    needs: [tags, nginx]
   nginx:
     uses: ./.github/workflows/build.yml
     with:
@@ -322,19 +299,6 @@ jobs:
       contents: read
       packages: write
     needs: [tags, base]
-  riprap:
-    uses: ./.github/workflows/build.yml
-    with:
-      contexts: ${{ needs.nginx.outputs.context }}
-      image: riprap
-      repository: ${{ vars.repository }}
-      tags: ${{ needs.tags.outputs.tags }}
-      strip-apk-pinning: ${{ inputs.strip-apk-pinning || false }}
-    secrets: inherit
-    permissions:
-      contents: read
-      packages: write
-    needs: [tags, nginx]
   scyllaridae:
     uses: ./.github/workflows/build.yml
     with:
@@ -413,7 +377,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [tags, base, imagemagick]
+    needs: [tags, base, scyllaridae]
   #############################################################################
   ## Tests.
   #############################################################################
@@ -445,14 +409,6 @@ jobs:
     needs:
       - activemq
       - alpaca
-  test-blazegraph:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: ${{ needs.blazegraph.outputs.digest }}
-      image: blazegraph
-    secrets: inherit
-    needs: [blazegraph]
   test-cantaloupe:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
@@ -461,14 +417,6 @@ jobs:
       image: cantaloupe
     secrets: inherit
     needs: [cantaloupe]
-  test-crayfish:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: ${{ needs.crayfish.outputs.digest }}
-      image: crayfish
-    secrets: inherit
-    needs: [crayfish]
   test-crayfits:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
@@ -491,20 +439,20 @@ jobs:
       - drupal
       - mariadb
       - postgresql
-  test-fcrepo6:
+  test-fcrepo:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
     with:
       digests: >-
         ${{ needs.activemq.outputs.digest }}
-        ${{ needs.fcrepo6.outputs.digest }}
+        ${{ needs.fcrepo.outputs.digest }}
         ${{ needs.mariadb.outputs.digest }}
         ${{ needs.postgresql.outputs.digest }}
-      image: fcrepo6
+      image: fcrepo
     secrets: inherit
     needs:
       - activemq
-      - fcrepo6
+      - fcrepo
       - mariadb
       - postgresql
   test-fits:
@@ -601,20 +549,6 @@ jobs:
       image: postgresql
     secrets: inherit
     needs: [postgresql]
-  test-riprap:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/test.yml
-    with:
-      digests: >-
-        ${{ needs.riprap.outputs.digest }}
-        ${{ needs.mariadb.outputs.digest }}
-        ${{ needs.postgresql.outputs.digest }}
-      image: riprap
-    secrets: inherit
-    needs:
-      - riprap
-      - mariadb
-      - postgresql
   test-solr:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/test.yml
@@ -630,9 +564,8 @@ jobs:
       digests: >-
         ${{ needs.activemq.outputs.digest }}
         ${{ needs.alpaca.outputs.digest }}
-        ${{ needs.blazegraph.outputs.digest }}
         ${{ needs.crayfits.outputs.digest }}
-        ${{ needs.fcrepo6.outputs.digest }}
+        ${{ needs.fcrepo.outputs.digest }}
         ${{ needs.fits.outputs.digest }}
         ${{ needs.homarus.outputs.digest }}
         ${{ needs.houdini.outputs.digest }}
@@ -646,9 +579,8 @@ jobs:
     needs:
       - activemq
       - alpaca
-      - blazegraph
       - crayfits
-      - fcrepo6
+      - fcrepo
       - fits
       - homarus
       - houdini
@@ -708,14 +640,6 @@ jobs:
       image: alpaca
     secrets: inherit
     needs: [alpaca]
-  grype-blazegraph:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.blazegraph.outputs.digest }}
-      image: blazegraph
-    secrets: inherit
-    needs: [blazegraph]
   grype-cantaloupe:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
@@ -724,14 +648,6 @@ jobs:
       image: cantaloupe
     secrets: inherit
     needs: [cantaloupe]
-  grype-crayfish:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.crayfish.outputs.digest }}
-      image: crayfish
-    secrets: inherit
-    needs: [crayfish]
   grype-crayfits:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
@@ -749,14 +665,14 @@ jobs:
       image: drupal
     secrets: inherit
     needs: [drupal]
-  grype-fcrepo6:
+  grype-fcrepo:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
     with:
-      digest: ${{ needs.fcrepo6.outputs.digest }}
-      image: fcrepo6
+      digest: ${{ needs.fcrepo.outputs.digest }}
+      image: fcrepo
     secrets: inherit
-    needs: [fcrepo6]
+    needs: [fcrepo]
   grype-fits:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml
@@ -837,14 +753,6 @@ jobs:
       image: postgresql
     secrets: inherit
     needs: [postgresql]
-  grype-riprap:
-    if: ${{ !inputs.strip-apk-pinning }}
-    uses: ./.github/workflows/grype.yml
-    with:
-      digest: ${{ needs.riprap.outputs.digest }}
-      image: riprap
-    secrets: inherit
-    needs: [riprap]
   grype-solr:
     if: ${{ !inputs.strip-apk-pinning }}
     uses: ./.github/workflows/grype.yml

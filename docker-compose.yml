@@ -150,7 +150,7 @@ services:
             - drupal-solr-config:/opt/solr/server/solr/default:ro
     fcrepo:
         <<: *common
-        image: ${REPOSITORY}/fcrepo6:${TAG}
+        image: ${REPOSITORY}/fcrepo:${TAG}
         environment:
             FCREPO_ALLOW_EXTERNAL_DEFAULT: "http://default/"
             FCREPO_ALLOW_EXTERNAL_DRUPAL: "https://islandora.dev/"

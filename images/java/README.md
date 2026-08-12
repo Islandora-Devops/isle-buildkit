@@ -1,6 +1,6 @@
 # Java
 
-Docker image for [Java] OpenJDK version 17.
+Docker image for [Java] OpenJDK version 21.
 
 Built from [Islandora-DevOps/isle-buildkit java](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/java)
 

@@ -19,6 +19,21 @@ fi
 TMP_DIR=$(mktemp -d)
 INPUT_FILE="$TMP_DIR/input.$SOURCE_EXT"
 OUTPUT_FILE="$TMP_DIR/output.$DESTINATION_EXT"
+IMAGE_CODEC=
+IMAGE_ARGS=()
+
+case "$DESTINATION_EXT" in
+  jpg|jpeg)
+    IMAGE_CODEC=mjpeg
+    ;;
+  pjpeg)
+    IMAGE_CODEC=mjpeg
+    IMAGE_ARGS=(-compression_algo 1)
+    ;;
+  png)
+    IMAGE_CODEC=png
+    ;;
+esac
 
 cleanup() {
   rm -rf "$TMP_DIR"
@@ -66,7 +81,7 @@ elif [ "$DESTINATION_EXT" = "mp4" ]; then
   )
   echo "${cmd[@]}" >&2
   "${cmd[@]}" > /dev/null
-elif [ "$DESTINATION_EXT" = "jpg" ] || [ "$DESTINATION_EXT" = "png" ] ; then
+elif [ -n "$IMAGE_CODEC" ] ; then
   cmd=(
     ffmpeg -loglevel error
     -f "$SOURCE_EXT"
@@ -81,7 +96,8 @@ elif [ "$DESTINATION_EXT" = "jpg" ] || [ "$DESTINATION_EXT" = "png" ] ; then
   cmd+=(
     "${ARGS[@]}"
     -f image2pipe
-    -vcodec "${DESTINATION_EXT/#jpg/mjpeg}"
+    -vcodec "$IMAGE_CODEC"
+    "${IMAGE_ARGS[@]}"
     "$OUTPUT_FILE"
   )
   echo "${cmd[@]}" >&2

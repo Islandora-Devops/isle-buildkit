@@ -3,10 +3,10 @@ FROM base AS build
 
 ARG TARGETARCH
 ARG \
-    # renovate: datasource=repology depName=alpine_3_22/build-base
-    BUILD_BASE_VERSION=0.5-r3 \
-    # renovate: datasource=repology depName=alpine_3_22/cmake
-    CMAKE_VERSION=3.31.7-r1
+  # renovate: datasource=repology depName=alpine_3_24/build-base
+  BUILD_BASE_VERSION=0.5-r4 \
+  # renovate: datasource=repology depName=alpine_3_24/cmake
+  CMAKE_VERSION=4.2.3-r0
 
 RUN --mount=type=cache,id=whisper-build-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
@@ -30,7 +30,11 @@ RUN download.sh \
 
 WORKDIR /build/whisper.cpp
 
-RUN make "${WHISPER_MODEL}"
+# Avoid -march=native: CI builders may expose AVX-512 instructions that are
+# unavailable on the hosts running the published image.
+RUN make \
+      CMAKE_ARGS="-DGGML_NATIVE=OFF -DGGML_BMI2=OFF" \
+      "${WHISPER_MODEL}"
 
 FROM scyllaridae
 
@@ -39,10 +43,10 @@ EXPOSE 8080
 WORKDIR /app
 
 ARG \
-    # renovate: datasource=repology depName=alpine_3_22/ffmpeg
-    FFMPEG_VERSION=6.1.2-r2 \
-    # renovate: datasource=repology depName=alpine_3_22/sdl2
-    SDL2_VERSION=2.32.8-r0
+  # renovate: datasource=repology depName=alpine_3_24/ffmpeg
+  FFMPEG_VERSION=8.1.2-r0 \
+  # renovate: datasource=repology depName=alpine_3_24/sdl2
+  SDL2_VERSION=2.32.10-r0
 
 RUN --mount=type=cache,id=whisper-runtime-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \

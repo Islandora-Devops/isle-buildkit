@@ -531,7 +531,7 @@ function set_carapace_default_theme {
 # Assumes that the destination will be a shared volume.
 function generate_solr_config {
     # renovate: datasource=custom.apache-downloads depName=apache-solr packageName=solr/solr
-    local SOLR_VERSION=9.10.1
+    local SOLR_VERSION=10.0.0
     local site site_url core dest
     site="${1}"
     shift

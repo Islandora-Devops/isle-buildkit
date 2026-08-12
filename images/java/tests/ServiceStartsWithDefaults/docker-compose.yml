@@ -1,0 +1,14 @@
+---
+
+# Common to all services
+x-common: &common
+  restart: "no"
+
+name: java-servicestartswithdefaults
+services:
+  java:
+    <<: *common
+    image: ${JAVA:-islandora/java:local}
+    command:
+      - java
+      - -version

@@ -70,7 +70,7 @@ additional settings, volumes, ports, etc.
 | ALPACA_MAX_REDELIVERIES                   | 5                                                         | Number of attempts to redeliver if an exception occurs                  |
 | ALPACA_TRIPLESTORE_INDEXER_ASYNC_CONSUMER | true                                                      |                                                                         |
 | ALPACA_TRIPLESTORE_INDEXER_CONSUMERS      | -1                                                        |                                                                         |
-| ALPACA_TRIPLESTORE_INDEXER_ENABLED        | true                                                      |                                                                         |
+| ALPACA_TRIPLESTORE_INDEXER_ENABLED        | false                                                     |                                                                         |
 | ALPACA_TRIPLESTORE_INDEXER_MAX_CONSUMERS  | -1                                                        |                                                                         |
 | ALPACA_TRIPLESTORE_INDEXER_QUEUE_DELETE   | queue:islandora-indexing-triplestore-delete               | ActiveMQ Queue to consume from                                          |
 | ALPACA_TRIPLESTORE_INDEXER_QUEUE_INDEX    | queue:islandora-indexing-triplestore-index                | ActiveMQ Queue to consume from                                          |

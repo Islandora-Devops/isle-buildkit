@@ -38,4 +38,4 @@ if [[ "$(stat -c %u /var/www/drupal)" != "${UID}" ]]; then
 fi
 
 # Always ensure nginx has access to the socket
-chown -R nginx:nginx /run/php-fpm83
+chown -R nginx:nginx /run/php-fpm84
