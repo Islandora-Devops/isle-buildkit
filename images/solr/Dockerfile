@@ -3,15 +3,15 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=custom.apache-downloads depName=apache-solr packageName=solr/solr
-ARG SOLR_VERSION=9.10.1
+ARG SOLR_VERSION=10.0.0
 ARG SOLR_FILE=solr-${SOLR_VERSION}.tgz
-ARG SOLR_URL=https://archive.apache.org/dist/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz
-ARG SOLR_FILE_SHA256="31dd91aeade540f4d7005cc1a1f7cc583ad77a78d800c9065cac06af1b097454"
+ARG SOLR_URL=https://downloads.apache.org/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz
+ARG SOLR_FILE_SHA256="07c180970f60d13776be13ccb60c707d041e5e1a8b914d197d1358ac25f804b5"
 # renovate: datasource=github-releases depName=solr-ocrhighlighting packageName=dbmdz/solr-ocrhighlighting
-ARG OCRHIGHLIGHT_VERSION=0.9.5
+ARG OCRHIGHLIGHT_VERSION=0.10.0
 ARG OCRHIGHLIGHT_FILE=solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
 ARG OCRHIGHLIGHT_URL=https://github.com/dbmdz/solr-ocrhighlighting/releases/download/${OCRHIGHLIGHT_VERSION}/solr-ocrhighlighting-${OCRHIGHLIGHT_VERSION}.jar
-ARG OCRHIGHLIGHT_FILE_SHA256="0fb598699ed17e9e70cbd2923ee1907595b85068402a39fdd64e06e8b23bd419"
+ARG OCRHIGHLIGHT_FILE_SHA256="b47906fd5723869059aea23fb7ae6c5cb9bacd313db4f1cc3f595ac98b34d154"
 ARG OCRHIGHLIGHT_DEST=/opt/solr/lib
 
 EXPOSE 8983
@@ -48,7 +48,7 @@ RUN create-service-user.sh --name solr /data && \
 # Defaults environment variables to be overloaded.
 ENV \
     SOLR_JAVA_OPTS= \
-    SOLR_JETTY_OPTS="-Dsolr.jetty.host=0.0.0.0" \
+    SOLR_JETTY_OPTS="-Dsolr.host.bind=0.0.0.0" \
     SOLR_LOG_LEVEL=INFO \
     SOLR_MEMORY=512m \
     SOLR_MODULES=analysis-extras,extraction,langid,ltr

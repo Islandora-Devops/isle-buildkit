@@ -15,4 +15,4 @@ fi
 # actually can write to the folder.
 chown -R solr:solr /opt/solr/server/solr
 
-exec s6-setuidgid solr /opt/solr/bin/solr start -f "${ARGS[@]}"
+exec s6-setuidgid solr /opt/solr/bin/solr start -f --user-managed "${ARGS[@]}"
