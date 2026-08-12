@@ -133,10 +133,7 @@ elif [ "$DEP" = "fits" ]; then
 elif [ "$DEP" = "apache-log4j" ]; then
   URL="https://archive.apache.org/dist/logging/log4j/${NEW_VERSION}/apache-log4j-${NEW_VERSION}-bin.zip"
   ARG="LOG4J_FILE_SHA256"
-  DOCKERFILES=(
-    "images/blazegraph/Dockerfile"
-    "images/fits/Dockerfile"
-  )
+  DOCKERFILES=("images/fits/Dockerfile")
 
 elif [ "$DEP" = "islandora-starter-site" ]; then
   URL=https://github.com/Islandora-Devops/islandora-starter-site/archive/${NEW_DIGEST}.tar.gz
