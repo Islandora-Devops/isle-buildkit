@@ -55,8 +55,8 @@ RUN --mount=type=cache,id=whisper-runtime-apk-${TARGETARCH},sharing=locked,targe
     && \
     cleanup.sh
 
-COPY --from=build /build/whisper.cpp/build/src/libwhisper.so* /usr/local/lib/
-COPY --from=build /build/whisper.cpp/build/ggml/src/libggml* /usr/local/lib/
+COPY --from=build /build/whisper.cpp/build/bin/libwhisper.so* /usr/local/lib/
+COPY --from=build /build/whisper.cpp/build/bin/libggml*.so* /usr/local/lib/
 COPY --from=build /build/whisper.cpp/build/bin/whisper-cli /app/
 COPY --from=build /build/whisper.cpp/models /app/models
 

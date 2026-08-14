@@ -8,9 +8,10 @@ BASE_URL=$(dirname "$INPUT_URL")
 
 input_temp=$(mktemp /tmp/whisper-input-XXXXXX)
 output_file="${input_temp}_16khz.wav"
+whisper_log="${input_temp}.log"
 
 cleanup() {
-  rm -f "$input_temp" "$input_temp.vtt" "$output_file"
+  rm -f "$input_temp" "$input_temp.vtt" "$output_file" "$whisper_log"
 }
 
 trap cleanup EXIT
@@ -36,17 +37,23 @@ if [ -n "${CUDA_VISIBLE_DEVICES:-}" ]; then
   export CUDA_VISIBLE_DEVICES=$best_gpu
 fi
 
+whisper_status=0
 /app/whisper-cli \
   -t "$WHISPER_THREADS" \
   -p "$WHISPER_PROCESSORS" \
   -m /app/models/ggml-medium.en.bin \
   --output-vtt \
   -f "$output_file" \
-  --output-file "$input_temp" > /dev/null 2>&1 || true
+  --output-file "$input_temp" > "$whisper_log" 2>&1 || whisper_status=$?
 
-STATUS=$(grep -q WEBVTT "$input_temp.vtt" || echo "FAIL")
-if [ "$STATUS" != "FAIL" ]; then
-  cat "$input_temp.vtt"
-else
+if [ "$whisper_status" -ne 0 ]; then
+  echo "whisper-cli exited with status ${whisper_status}: $(cat "$whisper_log")" >&2
   exit 1
 fi
+
+if [ ! -s "$input_temp.vtt" ] || ! grep -q WEBVTT "$input_temp.vtt"; then
+  echo "whisper-cli exited successfully but produced no valid VTT output: $(cat "$whisper_log")" >&2
+  exit 1
+fi
+
+cat "$input_temp.vtt"
