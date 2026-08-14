@@ -48,33 +48,39 @@ additional settings, volumes, ports, etc.
 | ACTIVEMQ_LOG_LEVEL          | INFO     | Log level. Possible Values: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE or ALL |
 | ACTIVEMQ_PASSWORD           | password | See [Security]: credentials.properties                                         |
 | ACTIVEMQ_USER               | admin    | See [Security]: credentials.properties                                         |
-| ACTIVEMQ_WEB_ADMIN_NAME     | admin    | See [WebConsole]: jetty-realm.properties                                       |
-| ACTIVEMQ_WEB_ADMIN_PASSWORD | password | See [WebConsole]: jetty-realm.properties                                       |
-| ACTIVEMQ_WEB_ADMIN_ROLES    | admin    | See [WebConsole]: jetty-realm.properties                                       |
+| ACTIVEMQ_WEB_ADMIN_NAME     | admin    | See [Security]: users.properties. Also used to log into the [WebConsole]/health API |
+| ACTIVEMQ_WEB_ADMIN_PASSWORD | password | See [Security]: users.properties. Also used to log into the [WebConsole]/health API |
+| ACTIVEMQ_WEB_ADMIN_ROLES    | admins   | See [Security]: groups.properties. Must be `admins` to access the [WebConsole]/Jolokia API (enforced by `conf/jetty/jetty-security.xml`) |
 
 Additional users/groups/etc can be defined by adding more environment variables,
 following the above conventions:
 
-| Environment Variable              | Description                              |
-| :-------------------------------- | :--------------------------------------- |
-| ACTIVEMQ_USER_{USER}_NAME         | See [Security]: users.properties         |
-| ACTIVEMQ_USER_{USER}_PASSWORD     | See [Security]: users.properties         |
-| ACTIVEMQ_GROUP_{GROUP}_NAME       | See [Security]: groups.properties        |
-| ACTIVEMQ_GROUP_{GROUP}_MEMBERS    | See [Security]: groups.properties        |
-| ACTIVEMQ_WEB_USER_{USER}_NAME     | See [WebConsole]: jetty-realm.properties |
-| ACTIVEMQ_WEB_USER_{USER}_PASSWORD | See [WebConsole]: jetty-realm.properties |
-| ACTIVEMQ_WEB_USER_{USER}_ROLES    | See [WebConsole]: jetty-realm.properties |
+| Environment Variable           | Description                       |
+| :------------------------------ | :--------------------------------- |
+| ACTIVEMQ_USER_{USER}_NAME       | See [Security]: users.properties  |
+| ACTIVEMQ_USER_{USER}_PASSWORD   | See [Security]: users.properties  |
+| ACTIVEMQ_GROUP_{GROUP}_NAME     | See [Security]: groups.properties |
+| ACTIVEMQ_GROUP_{GROUP}_MEMBERS  | See [Security]: groups.properties |
 
 > N.B. These do not have defaults.
 
-For example to add a new user `someone` to the [WebConsole] you would need to
-define the following:
+Since ActiveMQ 6.3, the broker and the [WebConsole]/Jolokia API share a single
+JAAS realm (`users.properties`/`groups.properties`), so the same mechanism
+above is used to grant additional users access to the [WebConsole]. For
+example to add a new user `someone` with admin access to the [WebConsole] you
+would need to define the following:
 
-| Environment Variable               | Value    |
-| :--------------------------------- | :------- |
-| ACTIVEMQ_WEB_USER_SOMEONE_NAME     | someone  |
-| ACTIVEMQ_WEB_USER_SOMEONE_PASSWORD | password |
-| ACTIVEMQ_WEB_USER_SOMEONE_ROLES    | admin    |
+| Environment Variable          | Value    |
+| :----------------------------- | :------- |
+| ACTIVEMQ_USER_SOMEONE_NAME     | someone  |
+| ACTIVEMQ_USER_SOMEONE_PASSWORD | password |
+| ACTIVEMQ_GROUP_ADMINS_NAME     | admins   |
+| ACTIVEMQ_GROUP_ADMINS_MEMBERS  | someone  |
+
+> N.B. Broker-level authentication (the `jaasAuthenticationPlugin` in
+> `conf/activemq.xml`) is disabled by default, so [STOMP]/[OpenWire]/etc
+> connections remain unauthenticated out of the box, as before. Only the
+> [WebConsole] and Jolokia API enforce login.
 
 ## Logs
 

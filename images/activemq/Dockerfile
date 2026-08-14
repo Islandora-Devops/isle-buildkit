@@ -32,7 +32,7 @@ ENV \
     ACTIVEMQ_USER=admin \
     ACTIVEMQ_WEB_ADMIN_NAME=admin \
     ACTIVEMQ_WEB_ADMIN_PASSWORD=password \
-    ACTIVEMQ_WEB_ADMIN_ROLES=admin
+    ACTIVEMQ_WEB_ADMIN_ROLES=admins
 
 COPY --link rootfs /
 

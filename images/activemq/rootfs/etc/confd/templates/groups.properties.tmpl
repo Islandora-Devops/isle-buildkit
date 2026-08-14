@@ -2,3 +2,8 @@
 # group=user[,user ...]
 {{ range $dir := lsdir "/activemq/group" }}{{ getv (printf "/activemq/group/%s/name" $dir) }}={{ getv (printf "/activemq/group/%s/members" $dir) }}
 {{ end }}
+# The WebConsole/Jolokia realm (conf/jetty/jetty-security.xml) hard-codes the
+# "admins" group name, so this line is intentionally last: it always wins over
+# a same-named ACTIVEMQ_GROUP_ADMINS_MEMBERS entry (Java Properties files use
+# last-line-wins), guaranteeing the web admin account keeps console/health access.
+{{ getenv "ACTIVEMQ_WEB_ADMIN_ROLES" }}={{ getenv "ACTIVEMQ_WEB_ADMIN_NAME" }}
