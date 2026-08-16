@@ -9,10 +9,10 @@ ARG HANDLE_URL="https://handle.net/hnr-source/${HANDLE_FILE}"
 ARG HANDLE_FILE_SHA256="b3d03ef44740e34c0adfef4356f1308bb7886aaba6b22e7e019138d9850eb29e"
 
 # renovate: datasource=github-tags depName=jdbc-mysql packageName=mysql/mysql-connector-j
-ARG MYSQL_DRIVER_VERSION=9.7.0
+ARG MYSQL_DRIVER_VERSION=26.7.0
 ARG MYSQL_DRIVER_FILE="mysql-connector-j-${MYSQL_DRIVER_VERSION}.tar.gz"
 ARG MYSQL_DRIVER_URL="https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_DRIVER_FILE}"
-ARG MYSQL_DRIVER_FILE_SHA256="53d8fdf1b9b8040907cecd470bf3333af96b00371d74dbe4230a15c58f0cb310"
+ARG MYSQL_DRIVER_FILE_SHA256="dc2bd098232903c1af5b6845c3b66388a8bc36e369c5d498cb35a987a341197b"
 
 # renovate: datasource=github-releases depName=jdbc-postgres packageName=pgjdbc/pgjdbc
 ARG POSTGRES_DRIVER_VERSION=42.7.13
