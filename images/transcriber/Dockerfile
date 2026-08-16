@@ -14,9 +14,9 @@ RUN --mount=type=cache,id=whisper-build-apk-${TARGETARCH},sharing=locked,target=
         cmake=="${CMAKE_VERSION}"
 
 # renovate: datasource=github-releases depName=whisper.cpp packageName=ggml-org/whisper.cpp
-ARG WHISPER_VERSION=1.8.6
+ARG WHISPER_VERSION=1.9.2
 ARG WHISPER_URL="https://github.com/ggml-org/whisper.cpp/archive/refs/tags/v${WHISPER_VERSION}.tar.gz"
-ARG WHISPER_SHA256="f8e632016ceae556f3132a16c7f704be1e7715595041f474fa81a2b64c1abf7c"
+ARG WHISPER_SHA256="a6abd064fcca8b85e794d205abf328c522e9451db43a3eadc178b883b7d0e9cd"
 # whisper model to include in this image
 # see https://github.com/ggml-org/whisper.cpp#more-audio-samples for options
 ARG WHISPER_MODEL=medium.en
@@ -55,8 +55,8 @@ RUN --mount=type=cache,id=whisper-runtime-apk-${TARGETARCH},sharing=locked,targe
     && \
     cleanup.sh
 
-COPY --from=build /build/whisper.cpp/build/src/libwhisper.so* /usr/local/lib/
-COPY --from=build /build/whisper.cpp/build/ggml/src/libggml* /usr/local/lib/
+COPY --from=build /build/whisper.cpp/build/bin/libwhisper.so* /usr/local/lib/
+COPY --from=build /build/whisper.cpp/build/bin/libggml*.so* /usr/local/lib/
 COPY --from=build /build/whisper.cpp/build/bin/whisper-cli /app/
 COPY --from=build /build/whisper.cpp/models /app/models
 

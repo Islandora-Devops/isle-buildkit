@@ -1,2 +1,3 @@
+{{ getenv "ACTIVEMQ_WEB_ADMIN_NAME" }}={{ getenv "ACTIVEMQ_WEB_ADMIN_PASSWORD" }}
 {{ range $dir := lsdir "/activemq/user" }}{{ getv (printf "/activemq/user/%s/name" $dir) }}={{ getv (printf "/activemq/user/%s/password" $dir) }}
 {{ end }}

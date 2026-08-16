@@ -20,10 +20,10 @@ ARG FITS_URL="https://github.com/harvard-lts/fits/releases/download/${FITS_VERSI
 ARG FITS_SHA256="32e436effe7251c5b067ec3f02321d5baf4944b3f0d1010fb8ec42039d9e3b73"
 
 # renovate: datasource=custom.apache-downloads depName=apache-log4j packageName=logging/log4j
-ARG LOG4J_VERSION=2.26.0
+ARG LOG4J_VERSION=2.26.1
 ARG LOG4J_FILE="apache-log4j-${LOG4J_VERSION}-bin.zip"
 ARG LOG4J_URL="https://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/${LOG4J_FILE}"
-ARG LOG4J_FILE_SHA256="6735d0f8f10c858aa0499aac5500d75fc32464baeb1667e73cdb00562ad20fa6"
+ARG LOG4J_FILE_SHA256="e1488c19241772da9d391da755536af9da3b10f59ae07747ddd4802ae1a5ea77"
 
 # FITSservlet still targets the Java EE javax namespace, so migrate it for
 # Tomcat 11's Jakarta APIs before deployment.
