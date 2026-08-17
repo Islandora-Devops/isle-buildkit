@@ -48,6 +48,8 @@ for dockerfile in "${IMAGES_DIR}"/*/Dockerfile; do
     if [[ ! -f "${dockerfile}" ]]; then
         continue
     fi
-    sed -i.bak 's/==[^ ]*//g' "${dockerfile}"
+    # Only strip "pkg==version" pins (no space before "=="), so this doesn't
+    # touch unrelated "==" operators, e.g. bash's `[[ "$x" == pattern ]]`.
+    sed -i.bak -E 's/([^ =])==[^ ]*/\1/g' "${dockerfile}"
     rm "${dockerfile}.bak"
 done

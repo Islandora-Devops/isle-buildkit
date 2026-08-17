@@ -78,7 +78,8 @@ jobs:
             "TARGET=${{ inputs.image }}-$PLATFORM" \
             "REPOSITORY=${{ inputs.repository }}" \
             "TAGS=${FIRST_TAG}" \
-            "CONTEXTS=${{ inputs.contexts }}"
+            "CONTEXTS=${{ inputs.contexts }}" \
+            "BRANCH=${{ github.ref_name }}"
   merge:
     runs-on: ubuntu-24.04
     outputs:
