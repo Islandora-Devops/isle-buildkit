@@ -38,6 +38,6 @@ jobs:
           git tag $TAG
           git push origin $TAG
           gh release create $TAG --title "$TAG" --generate-notes
-          gh workflow run push.yml -f tag=$TAG --ref $TAG
+          gh workflow run push.yml -f tag=$TAG -f strip-apk-pinning=false --ref $TAG
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

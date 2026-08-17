@@ -30,5 +30,6 @@ jobs:
             fi
             echo "tags=${TAGS}" >> $GITHUB_OUTPUT
           else
-            echo "tags=${TAG}" >> $GITHUB_OUTPUT
+            # Docker tags can't contain "/", but branch names can (e.g. "feat/foo").
+            echo "tags=${TAG//\//-}" >> $GITHUB_OUTPUT
           fi

@@ -53,6 +53,9 @@ PROGRESS ?= auto
 CACHE_FROM_REPOSITORY ?= $(REPOSITORY)
 CACHE_TO_REPOSITORY ?= $(REPOSITORY)
 
+# Only CI should push build cache; local builds must never write to it.
+CI ?= false
+
 # Go command used by the local test helper.
 GO ?= $(shell command -v go 2>/dev/null || { test -x /usr/local/go/bin/go && printf /usr/local/go/bin/go; })
 
@@ -214,6 +217,7 @@ build/bake.json: | docker-buildx jq build folder-permissions executable-permisso
 	BRANCH=$(BRANCH) \
 	CACHE_FROM_REPOSITORY=$(CACHE_FROM_REPOSITORY) \
 	CACHE_TO_REPOSITORY=$(CACHE_TO_REPOSITORY) \
+	CI=$(CI) \
 	REPOSITORY=$(REPOSITORY) \
 	TAGS="$(TAGS)" \
 	docker buildx bake --print $(TARGET) 2>/dev/null > build/bake.json; \

@@ -80,6 +80,11 @@ variable "CACHE_TO_REPOSITORY" {
   default = "islandora"
 }
 
+variable "CI" {
+  # Only push build cache from CI, never from local builds.
+  default = "false"
+}
+
 variable "TAGS" {
   # "latest" is reserved for the most recent release.
   # "local" is to distinguish that from builds produced locally.
@@ -136,7 +141,9 @@ function "cacheFrom" {
 
 function "cacheTo" {
   params = [image, arch]
-  result = [notequal("", BRANCH) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${CACHE_TO_REPOSITORY}/cache:${image}-${BRANCH}-${arch}" : ""]
+  # Only push cache from CI builds of main. PR/branch builds and tag builds
+  # read from main's cache but never write their own - not worth the cost.
+  result = [(equal("true", CI) && equal("main", BRANCH)) ? "type=registry,oci-mediatypes=true,mode=max,compression=estargz,compression-level=5,ref=${CACHE_TO_REPOSITORY}/cache:${image}-main-${arch}" : ""]
 }
 
 function "context" {
@@ -190,5 +197,6 @@ target "_images" {
   contexts = merge(lookup(IMAGE_CONTEXTS, image, {}), dependencies(image, arch))
   platforms = equal("", arch) ? [] : ["linux/${arch}"]
   cache-from = cacheFrom(image, equal("", arch) ? hostArch() : arch)
+  cache-to = cacheTo(image, equal("", arch) ? hostArch() : arch)
   tags = tags(image, arch)
 }
