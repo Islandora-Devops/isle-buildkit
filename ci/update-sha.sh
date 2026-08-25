@@ -159,6 +159,7 @@ elif [ "$DEP" = "scyllaridae" ] ; then
   URL="https://github.com/islandora/scyllaridae/archive/refs/tags/${NEW_VERSION}.tar.gz"
   ARG=SCYLLARIDAE_SHA256
   DOCKERFILES=("images/scyllaridae/Dockerfile")
+  README="images/scyllaridae/README.md"
 
 elif [ "$DEP" = "transkribus-process" ]; then
   URL="https://github.com/ulsdevteam/transkribus-process/archive/refs/tags/v${NEW_VERSION}.tar.gz"
