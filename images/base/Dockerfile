@@ -43,7 +43,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/netcat-openbsd
   NETCAT_OPENBSD_VERSION=1.234.1-r0 \
   # renovate: datasource=repology depName=alpine_3_24/openssl
-  OPENSSL_VERSION=3.5.7-r0 \
+  OPENSSL_VERSION=3.5.8-r0 \
   # renovate: datasource=repology depName=alpine_3_24/patch
   PATCH_VERSION=2.8-r0 \
   # renovate: datasource=repology depName=alpine_3_24/postgresql16-client
