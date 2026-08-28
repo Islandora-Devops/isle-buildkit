@@ -4,6 +4,7 @@ allowedMimeTypes:
   - "video/*"
   - "image/jpeg"
   - "image/png"
+  - "application/vnd.apple.mpegurl"
 cmdByMimeType:
   default:
     cmd: /app/cmd.sh
