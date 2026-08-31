@@ -33,7 +33,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/gnupg
   GNUPG_VERSION=2.4.9-r1 \
   # renovate: datasource=repology depName=alpine_3_24/gzip
-  GZIP_VERSION=1.14-r2 \
+  GZIP_VERSION=1.14-r3 \
   # renovate: datasource=repology depName=alpine_3_24/jq
   JQ_VERSION=1.8.1-r0 \
   # renovate: datasource=repology depName=alpine_3_24/mariadb-client
