@@ -53,7 +53,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/shadow
   SHADOW_VERSION=4.18.0-r1 \
   # renovate: datasource=repology depName=alpine_3_24/util-linux
-  UTIL_LINUX_VERSION=2.42.1-r0 \
+  UTIL_LINUX_VERSION=2.42.3-r0 \
   # renovate: datasource=repology depName=alpine_3_24/wget
   WGET_VERSION=1.25.0-r3 \
   # renovate: datasource=repology depName=alpine_3_24/yq-go
