@@ -1,6 +1,6 @@
 # Scyllaridae
 
-Docker image for [scyllaridae] 5.3.0.
+Docker image for [scyllaridae] 5.3.2.
 
 Acts as base Docker image for scyllaridae based micro-services. It is not meant to
 be run on its own it is only used to cache the download.
