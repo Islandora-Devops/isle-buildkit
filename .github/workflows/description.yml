@@ -9,7 +9,7 @@ on:
       - ".github/workflows/dockerhub-description.yml"
 jobs:
   find-images:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       readmes: ${{ steps.set-matrix.outputs.readmes }}
     steps:
@@ -31,7 +31,7 @@ jobs:
 
   update-descriptions:
     needs: find-images
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     strategy:
       matrix:
         name: ${{ fromJson(needs.find-images.outputs.readmes) }}

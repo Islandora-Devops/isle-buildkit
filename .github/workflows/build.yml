@@ -81,7 +81,7 @@ jobs:
             "CONTEXTS=${{ inputs.contexts }}" \
             "BRANCH=${{ github.ref_name }}"
   merge:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       digest: ${{ steps.build-push-manifest.outputs.digest }}
       context: ${{ steps.build-push-manifest.outputs.context }}

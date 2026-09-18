@@ -10,7 +10,7 @@ on:
     - cron: "0 13 * * 0" # Every Sunday at 1PM UTC (9AM EST)
 jobs:
   find-images:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       images: ${{ steps.set-matrix.outputs.images }}
     steps:
@@ -37,7 +37,7 @@ jobs:
 
   clean-dockerhub:
     name: "DockerHub: ${{ matrix.name }}"
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [find-images]
     permissions:
       contents: read
@@ -58,7 +58,7 @@ jobs:
 
   clean-ghcr:
     name: "GHCR: ${{ matrix.name }}"
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [find-images]
     permissions:
       contents: read
