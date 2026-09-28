@@ -37,10 +37,10 @@ Requires `islandora/java` Docker image to build. Please refer to the
 | HANDLE_ALLOW_NA_ADMINS       | yes                                                  | "yes" or "no". Allow admins from GHR?                                                               |
 | HANDLE_AUTO_HOME             | yes                                                  | "yes" or "no".  Controls whether the `auto_homed_prefixes` clause is included in the server configuration (config.dct).                                                         |
 | HANDLE_CASE_SENSITIVE        | no                                                   | "yes" or "no". Whether or not handles are case sensitive                                            |
-| HANDLE_DB_NAME               | handle                                               | The name of the handle database                                                                     |
-| HANDLE_DB_PASSWORD           | password                                             | The database users password                                                                         |
+| DB_NAME               | handle                                               | The name of the handle database                                                                     |
+| DB_PASSWORD           | password                                             | The database users password                                                                         |
 | HANDLE_DB_READONLY           | no                                                   | A boolean setting (can be "yes" or "no") prevent / allow database modification                      |
-| HANDLE_DB_USER               | handle                                               | The database user                                                                                   |
+| DB_USER               | handle                                               | The database user                                                                                   |
 | HANDLE_MAX_AUTH_TIME         | 60000                                                | The number of seconds to wait for a client to respond to an authentication challenge                |
 | HANDLE_MAX_SESSION_TIME      | 86400000                                             | Time in milliseconds that an authenticated client session can persist                               |
 | HANDLE_PREFIX                | 200                                                  | Please read the handle documentation for how this is use                                            |
@@ -74,9 +74,12 @@ The following settings are only used if `HANDLE_PERSISTENCE_TYPE` is set to
 
 | Environment Variable | Default  | Description                                              |
 | :------------------- | :------- | :------------------------------------------------------- |
-| HANDLE_DB_NAME       | handle   | The name of the database                                 |
-| HANDLE_DB_USER       | handle   | The user to connect to the database                      |
-| HANDLE_DB_PASSWORD   | password | The password of the user used to connect to the database |
+| DB_NAME               | handle   | The name of the database                                 |
+| DB_USER               | handle   | The user to connect to the database                      |
+| DB_PASSWORD           | password | The password of the user used to connect to the database |
+
+Use the canonical `DB_*` names directly in this container. See the
+[migration guide](../../docs/environment-variables/README.md).
 
 Additionally the `DB_DRIVER` variable is derived from the
 `HANDLE_PERSISTENCE_TYPE` so users do not need to specify it separately.

@@ -30,7 +30,11 @@ function drupal_site_env {
     suffix="$(uppercase "${1}")"
     shift
     if [ "${site}" = "DEFAULT" ]; then
-        var="DRUPAL_DEFAULT_${suffix}"
+        if [[ "${suffix}" == DB_* ]]; then
+            var="${suffix}"
+        else
+            var="DRUPAL_DEFAULT_${suffix}"
+        fi
         echo "${!var}"
     else
         var="DRUPAL_SITE_${site}_${suffix}"

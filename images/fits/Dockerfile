@@ -80,7 +80,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/libzen
   LIBZEN_VERSION=0.4.41-r0 \
   # renovate: datasource=repology depName=alpine_3_24/perl
-  PERL_VERSION=5.42.2-r0 \
+  PERL_VERSION=5.42.2-r1 \
   # renovate: datasource=repology depName=alpine_3_24/py3-pip
   PIP_VERSION=26.1.2-r0 \
   # renovate: datasource=repology depName=alpine_3_24/python3

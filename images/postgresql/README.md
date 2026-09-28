@@ -34,9 +34,12 @@ default database connection configuration.
 
 | Environment Variable     | Default | Description                                                                           |
 | :----------------------- | :------ | :------------------------------------------------------------------------------------ |
-| POSTGRESQL_ROOT_USER     |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
-| POSTGRESQL_ROOT_PASSWORD |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
+| DB_ROOT_USER | root | The database root user |
+| DB_ROOT_PASSWORD | password | The database root user password |
 
 [base image]: ../base/README.md
 [PostgreSQL Documentation]: https://www.postgresql.org/docs/
 [PostgreSQL]: https://www.postgresql.org/
+
+Use `DB_ROOT_USER` and `DB_ROOT_PASSWORD` directly. Image-prefixed aliases
+are no longer supported. See the [migration guide](../../docs/environment-variables/README.md).

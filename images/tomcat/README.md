@@ -61,10 +61,10 @@ For example to add a new user `someone` you would need to define the following:
 | TOMCAT_USER_SOMEONE_PASSWORD | password |
 | TOMCAT_USER_SOMEONE_ROLES    | admin    |
 
-> N.B. For all of the settings above, images that descend from this image can
-> apply a prefix to every setting. So for example `TOMCAT_CATALINA_OPTS` would
-> become `FCREPO_TOMCAT_CATALINA_OPTS`. This is to allow for different settings
-> on a per-service basis when sharing the same confd backend.
+Use these variable names directly in each container's environment or mounted
+secrets. Image-prefixed overrides are no longer supported. For example, map a
+host variable with `DB_PASSWORD: ${FCREPO_DB_PASSWORD}` in Compose, or mount the
+secret with `target: DB_PASSWORD`. See the [migration guide](../../docs/environment-variables/README.md).
 
 [AJP]: https://tomcat.apache.org/tomcat-9.0-doc/config/ajp.html
 [Tomcat Documentation]: https://tomcat.apache.org/tomcat-9.0-doc/

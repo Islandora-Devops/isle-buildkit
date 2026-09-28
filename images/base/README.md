@@ -117,10 +117,10 @@ and `DB_MYSQL_PORT` variables will be used when connecting to the backend.
 | DB_ROOT_USER         | root       | The root user, which is used only on startup to create database / user in the chosen backend    |
 | DB_USER              | default    | The user used by the service (e.g. Drupal) to connect to the database                           |
 
-> N.B. For all of the settings above, images that descend from this image can
-> apply a prefix to every setting. So for example `DB_NAME` would become
-> `FCREPO_DB_NAME`. This is to allow for different settings on a per-service
-> basis when sharing the same confd backend.
+Use these variable names directly in each container's environment or mounted
+secrets. Image-prefixed overrides are no longer supported. For example, map a
+host variable with `DB_PASSWORD: ${FCREPO_DB_PASSWORD}` in Compose, or mount the
+secret with `target: DB_PASSWORD`. See the [migration guide](../../docs/environment-variables/README.md).
 
 ### Development Settings
 

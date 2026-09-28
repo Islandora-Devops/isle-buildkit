@@ -4,7 +4,7 @@
 # shellcheck disable=SC1091
 source /usr/local/share/isle/utilities.sh
 
-# Checks that all `DB` environment variables can be overriden.
+# Checks that canonical DB settings are used despite legacy prefixed values.
 expect "DB_DRIVER" "postgresql"
 expect "DB_MYSQL_HOST" "DB_MYSQL_HOST override"
 expect "DB_MYSQL_PORT" "DB_MYSQL_PORT override"

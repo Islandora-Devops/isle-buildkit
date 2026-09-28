@@ -145,9 +145,7 @@ ENV \
 
 # CERT_AUTHORITY and CERT_PUBLIC as well as JWT_PUBLIC_KEY and JWT_PRIVATE_KEY
 # are defined in /etc/defaults. As Docker does not support setting multiline
-# environment variables via ENV. The 'DB' environment variables can be
-# overridden by prefixing it with the image name i.e. `FCREPO_DB_NAME` would
-# override the value for `DB_NAME`.
+# environment variables via ENV. Use DB_* directly in each container.
 ENV \
     DB_DRIVER=mysql \
     DB_HOST= \
