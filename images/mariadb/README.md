@@ -11,7 +11,7 @@ log in with client as the user `root` with the password `password`.
 
 ```bash
 docker run --rm -d -name mariadb islandora/mariadb
-docker exec -ti mariadb mysql -u root --password='password'
+docker exec -ti mariadb mariadb -u root --password='password'
 ```
 
 ## Dependencies

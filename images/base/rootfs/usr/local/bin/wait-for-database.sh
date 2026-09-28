@@ -106,7 +106,7 @@ function wait_for_connection {
 }
 
 function mysql_validate_credentials {
-    mysqladmin \
+    mariadb-admin \
         -s \
         --user="${USER}" \
         --password="${PASSWORD}" \

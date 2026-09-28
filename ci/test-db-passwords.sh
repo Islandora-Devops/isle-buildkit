@@ -58,6 +58,10 @@ for service in drupal fcrepo; do
             docker logs "${test_name}-app"
             exit 1
         fi
+        if docker logs "${test_name}-app" 2>&1 | grep 'Deprecated program name'; then
+            echo "Startup used a deprecated database command" >&2
+            exit 1
+        fi
         result=$(docker exec -e MYSQL_PWD="${password}" "${test_name}-db" \
             mariadb --protocol=tcp -h127.0.0.1 -u"${service}" -N \
             -e "SELECT id FROM ${service}.preserved")
@@ -73,3 +77,8 @@ for service in drupal fcrepo; do
     done
     echo "PASS: ${service} startup rotates secret passwords and preserves data"
 done
+
+if docker logs "${test_name}-db" 2>&1 | grep 'Deprecated program name'; then
+    echo "MariaDB startup used a deprecated database command" >&2
+    exit 1
+fi
