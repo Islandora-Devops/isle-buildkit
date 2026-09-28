@@ -41,8 +41,8 @@ default database connection configuration.
 
 | Environment Variable | Default | Description                                                                           |
 | :------------------- | :------ | :------------------------------------------------------------------------------------ |
-| MYSQL_ROOT_PASSWORD  |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
-| MYSQL_ROOT_USER      |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
+| DB_ROOT_PASSWORD | password | The database root user password |
+| DB_ROOT_USER | root | The database root user |
 | MYSQL_MAX_ALLOWED_PACKET | 16777216 | Max packet length to send to or receive from the server, [documentation](https://mariadb.com/docs/server/ref/mdb/system-variables/max_allowed_packet/)
 | MYSQL_TRANSACTION_ISOLATION | READ-COMMITTED | The isolation level for transactions.
 
@@ -55,3 +55,6 @@ default database connection configuration.
 [base image]: ../base/README.md
 [MariaDB Documentation]: https://mariadb.org/documentation/
 [MariaDB]: https://mariadb.org/
+
+Use `DB_ROOT_USER` and `DB_ROOT_PASSWORD` directly. Image-prefixed aliases
+are no longer supported. See the [migration guide](../../docs/environment-variables/README.md).

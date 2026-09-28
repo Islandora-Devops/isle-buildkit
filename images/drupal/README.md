@@ -36,16 +36,16 @@ additional settings, volumes, ports, etc.
 documentation in the [base image] for more information about the default
 database connection configuration.
 
-| Environment Variable            | Default | Description                                                                           |
-| :------------------------------ | :------ | :------------------------------------------------------------------------------------ |
-| DRUPAL_DEFAULT_DB_DRIVER        |         | The database driver. Defaults to `DB_DRIVER`                                          |
-| DRUPAL_DEFAULT_DB_HOST          |         | The database host. Defaults to `DB_HOST`                                              |
-| DRUPAL_DEFAULT_DB_PORT          |         | The database port. Defaults to `DB_PORT`                                              |
-| DRUPAL_DEFAULT_DB_ROOT_PASSWORD |         | The database root user password. Defaults to `DB_ROOT_PASSWORD`                       |
-| DRUPAL_DEFAULT_DB_ROOT_USER     |         | The database root user (used to create the site database). Defaults to `DB_ROOT_USER` |
+Use the `DB_*` settings from the [base image] for the default site's database.
+`DB_NAME` and `DB_USER` default to `drupal_default`; `DB_PASSWORD` defaults to
+`password`. Use `DB_*` directly; the `DRUPAL_DEFAULT_DB_*` aliases have been
+removed. `DRUPAL_SITE_{SITE}_DB_*` settings remain site-specific; connection
+settings inherit from `DB_*`, while names and users default to `drupal_{SITE}`. See the [migration guide](../../docs/environment-variables/README.md).
 
-These variables also provide the default for their site specific variants such
-as `DRUPAL_SITE_{SITE}_DB_HOST` are defined.
+Database setup updates existing users' passwords as well as creating missing
+accounts. Downstream install hooks must call `create_database` on every startup,
+before checking whether Drupal is already installed (as the test image does).
+Recreate the container after changing a mounted password secret.
 
 ### JWT Settings
 
@@ -62,9 +62,9 @@ The public/private key pair used here should be the same key as is used in the
 | DRUPAL_DEFAULT_ACCOUNT_EMAIL    | webmaster@localhost.com | The email to use for the admin account             |
 | DRUPAL_DEFAULT_ACCOUNT_NAME     | admin                   | The Drupal administrator user                      |
 | DRUPAL_DEFAULT_ACCOUNT_PASSWORD | password                | The Drupal administrator user password             |
-| DRUPAL_DEFAULT_DB_NAME          | drupal_default          | The name of the sites database                     |
-| DRUPAL_DEFAULT_DB_PASSWORD      | password                | The database users password                        |
-| DRUPAL_DEFAULT_DB_USER          | drupal_default          | The database user used by the site                 |
+| DB_NAME                          | drupal_default          | The name of the sites database                     |
+| DB_PASSWORD                      | password                | The database users password                        |
+| DB_USER                          | drupal_default          | The database user used by the site                 |
 | DRUPAL_DEFAULT_EMAIL            | webmaster@localhost.com | The Drupal administrators email                    |
 | DRUPAL_DEFAULT_LOCALE           | en                      | The Drupal sites locale                            |
 | DRUPAL_DEFAULT_NAME             | default                 | The Drupal sites name                              |

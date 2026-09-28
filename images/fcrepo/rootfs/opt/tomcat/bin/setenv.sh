@@ -18,10 +18,10 @@ none)
     # No action required.
     ;;
 mysql)
-    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.url=jdbc:mysql://${DB_MYSQL_HOST}:${DB_MYSQL_PORT}/${FCREPO_DB_NAME}"
+    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.url=jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}"
     ;;
 postgresql)
-    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.url=jdbc:postgresql://${DB_POSTGRESQL_HOST}:${DB_POSTGRESQL_PORT}/${FCREPO_DB_NAME}"
+    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}"
     ;;
 *)
     echo "Only mysql/postgresql are supported values for DB_DRIVER." >&2
@@ -30,8 +30,8 @@ postgresql)
 esac
 
 if [[ "${DB_DRIVER}" != "none" ]]; then
-    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.user=${FCREPO_DB_USER}"
-    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.password=${FCREPO_DB_PASSWORD}"
+    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.user=${DB_USER}"
+    CATALINA_OPTS="${CATALINA_OPTS} -Dfcrepo.db.password=${DB_PASSWORD}"
 fi
 
 if [[ "${FCREPO_DISABLE_SYN}" == "true" ]]; then

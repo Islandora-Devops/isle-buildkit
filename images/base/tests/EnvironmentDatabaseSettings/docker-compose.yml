@@ -1,0 +1,29 @@
+# file: docker-compose.yml
+#
+# Tests that the base values for database environment variables can be
+# configured directly without prefixed overrides.
+#
+# `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
+
+name: base-environmentdatabasesettings
+services:
+  base:
+    environment:
+      TEST_DB_PASSWORD: "ignored legacy password"
+      DRUPAL_DEFAULT_DB_PASSWORD: "ignored legacy password"
+      MARIADB_DB_PASSWORD: "ignored legacy password"
+      DB_DRIVER: "postgresql"
+      DB_MYSQL_HOST: "DB_MYSQL_HOST override"
+      DB_MYSQL_PORT: "DB_MYSQL_PORT override"
+      DB_NAME: "DB_NAME override"
+      DB_PASSWORD: "DB_PASSWORD override"
+      DB_POSTGRESQL_HOST: "DB_POSTGRESQL_HOST override"
+      DB_POSTGRESQL_PORT: "DB_POSTGRESQL_PORT override"
+      DB_ROOT_PASSWORD: "DB_ROOT_PASSWORD override"
+      DB_ROOT_USER: "DB_ROOT_USER override"
+      DB_USER: "DB_USER override"
+    volumes:
+      - ./test.sh:/test.sh # Test to run.
+    command:
+      - /test.sh # Run test and exit.
+    image: ${BASE:-islandora/base:local}

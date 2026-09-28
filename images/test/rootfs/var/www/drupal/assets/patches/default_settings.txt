@@ -59,11 +59,11 @@ $settings['trusted_host_patterns'] = [
 
 // Database settings are also derived from environment variables.
 $databases['default']['default'] = [
-  'database' => file_get_contents($path . 'DRUPAL_DEFAULT_DB_NAME'),
-  'username' => file_get_contents($path . 'DRUPAL_DEFAULT_DB_USER'),
-  'password' => file_get_contents($path . 'DRUPAL_DEFAULT_DB_PASSWORD'),
-  'host' => file_get_contents($path . 'DB_MYSQL_HOST'),
-  'port' => file_get_contents($path . 'DB_MYSQL_PORT'),
+  'database' => file_get_contents($path . 'DB_NAME'),
+  'username' => file_get_contents($path . 'DB_USER'),
+  'password' => file_get_contents($path . 'DB_PASSWORD'),
+  'host' => file_get_contents($path . 'DB_HOST'),
+  'port' => file_get_contents($path . 'DB_PORT'),
   'prefix' => '',
   'driver' => 'mysql',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',

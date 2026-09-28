@@ -1,7 +1,6 @@
 # file: docker-compose.yml
 #
-# Tests that the base values for database environment variables can be
-# overridden by prefixing them.
+# Tests that the service starts with the selected database backend.
 #
 # `base/rootfs/etc/cont-init.d/00-container-environment-00-init.sh`
 

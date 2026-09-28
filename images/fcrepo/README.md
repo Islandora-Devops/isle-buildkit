@@ -66,9 +66,14 @@ The following settings are only used if `FCREPO_PERSISTENCE_TYPE` is set to
 
 | Environment Variable | Default  | Description                                              |
 | :------------------- | :------- | :------------------------------------------------------- |
-| FCREPO_DB_NAME       | fedora   | The name of the database                                 |
-| FCREPO_DB_USER       | fedora   | The user to connect to the database                      |
-| FCREPO_DB_PASSWORD   | password | The password of the user used to connect to the database |
+| DB_NAME               | fcrepo   | The name of the database                                 |
+| DB_USER               | fcrepo   | The user to connect to the database                      |
+| DB_PASSWORD           | password | The password of the user used to connect to the database |
+
+Database accounts and passwords are reconciled on every s6 startup. Mount
+`DB_PASSWORD` in this container and recreate it to rotate an existing account.
+Use `DB_*` directly; `FCREPO_DB_*` aliases have been removed.
+See the [migration guide](../../docs/environment-variables/README.md).
 
 Additionally the `DB_DRIVER` variable is derived from the
 `FCREPO_PERSISTENCE_TYPE` so users do not need to specify it separately.
