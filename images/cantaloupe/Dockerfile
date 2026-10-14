@@ -65,7 +65,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/ffmpeg
   FFMPEG_VERSION=8.1.2-r0 \
   # renovate: datasource=repology depName=alpine_3_24/openjpeg-tools
-  OPENJPG_TOOLS_VERSION=2.5.4-r1
+  OPENJPG_TOOLS_VERSION=2.5.4-r2
 
 # Opted for OpenJPG over Kakadu but that could be changed.
 # For reference see: https://cantaloupe-project.github.io/manual/5.0/processors.html

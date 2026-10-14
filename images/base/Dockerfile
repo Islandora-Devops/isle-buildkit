@@ -25,7 +25,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/bash
   BASH_VERSION=5.3.9-r1 \
   # renovate: datasource=repology depName=alpine_3_24/ca-certificates
-  CA_CERTIFICATES_VERSION=20260611-r0 \
+  CA_CERTIFICATES_VERSION=20260909-r0 \
   # renovate: datasource=repology depName=alpine_3_24/curl
   CURL_VERSION=8.22.0-r0 \
   # renovate: datasource=repology depName=alpine_3_24/git
@@ -43,7 +43,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/netcat-openbsd
   NETCAT_OPENBSD_VERSION=1.234.1-r0 \
   # renovate: datasource=repology depName=alpine_3_24/openssl
-  OPENSSL_VERSION=3.5.8-r0 \
+  OPENSSL_VERSION=3.5.9-r0 \
   # renovate: datasource=repology depName=alpine_3_24/patch
   PATCH_VERSION=2.8-r0 \
   # renovate: datasource=repology depName=alpine_3_24/postgresql16-client
