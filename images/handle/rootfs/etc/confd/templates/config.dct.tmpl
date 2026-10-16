@@ -70,15 +70,15 @@
 
     sql_settings = {
       {{ if eq (getenv "DB_DRIVER" ) "mysql" }}
-      sql_url = "jdbc:mysql://{{ getenv "DB_MYSQL_HOST" }}:{{ getenv "DB_MYSQL_PORT" }}/{{ getenv "HANDLE_DB_NAME" }}"
+      sql_url = "jdbc:mysql://{{ getenv "DB_HOST" }}:{{ getenv "DB_PORT" }}/{{ getenv "DB_NAME" }}"
       sql_driver = "com.mysql.jdbc.Driver"
       {{ end }}
       {{ if eq (getenv "DB_DRIVER" ) "postgresql" }}
-      sql_url = "jdbc:postgresql://{{ getenv "DB_POSTGRESQL_HOST" }}:{{ getenv "DB_POSTGRESQL_PORT" }}/{{ getenv "HANDLE_DB_NAME" }}"
+      sql_url = "jdbc:postgresql://{{ getenv "DB_HOST" }}:{{ getenv "DB_PORT" }}/{{ getenv "DB_NAME" }}"
       sql_driver = "org.postgresql.Driver"
       {{ end }}
-      sql_login = "{{ getenv "HANDLE_DB_USER" }}"
-      sql_passwd = "{{ getenv "HANDLE_DB_PASSWORD" }}"
+      sql_login = "{{ getenv "DB_USER" }}"
+      sql_passwd = "{{ getenv "DB_PASSWORD" }}"
       sql_read_only = "{{ getenv "HANDLE_DB_READONLY" }}"
     }
   }

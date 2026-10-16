@@ -34,9 +34,8 @@ ENV \
     DRUPAL_DEFAULT_BROKER_WEB_PORT=8161 \
     DRUPAL_DEFAULT_CANTALOUPE_URL=https://islandora.traefik.me/cantaloupe/iiif/2 \
     DRUPAL_DEFAULT_CONFIGDIR=/var/www/drupal/config/sync \
-    DRUPAL_DEFAULT_DB_NAME=drupal_default \
-    DRUPAL_DEFAULT_DB_PASSWORD=password \
-    DRUPAL_DEFAULT_DB_USER=drupal_default \
+    DB_NAME=drupal_default \
+    DB_USER=drupal_default \
     DRUPAL_DEFAULT_EMAIL=webmaster@localhost.com \
     DRUPAL_DEFAULT_FCREPO_HOST=islandora.traefik.me \
     DRUPAL_DEFAULT_FCREPO_PORT=8081 \

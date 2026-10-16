@@ -9,7 +9,7 @@ services:
   drupal:
     image: ${DRUPAL:-islandora/drupal:local}
     environment:
-      DRUPAL_DEFAULT_DB_DRIVER: postgresql
+      DB_DRIVER: postgresql
     volumes:
       - ./test.sh:/test.sh # Test to run.
     command:

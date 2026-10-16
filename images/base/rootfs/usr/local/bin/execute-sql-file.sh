@@ -184,7 +184,7 @@ function mysql_execute_sql_file {
         database_arg="--database=${DATABASE}"
     fi
 
-    mysql \
+    mariadb \
         --host="${HOST}" \
         --port="${PORT}" \
         --user="${USER}" \

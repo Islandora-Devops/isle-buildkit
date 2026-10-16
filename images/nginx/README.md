@@ -17,10 +17,10 @@ Requires `islandora/base` Docker image to build. Please refer to the
 
 ## Settings
 
-> N.B. For all of the settings below images that descend from
-> ``islandora/nginx`` will apply prefix to every setting. So for example
-> `PHP_LOG_LEVEL` would become `HOUDINI_PHP_LOG_LEVEL` this is to allow for
-> different settings on a per-service basis.
+Use these variable names directly in each container's environment or mounted
+secrets. Image-prefixed overrides are no longer supported. For example, map a
+host variable with `DB_PASSWORD: ${FCREPO_DB_PASSWORD}` in Compose, or mount the
+secret with `target: DB_PASSWORD`. See the [migration guide](../../docs/environment-variables/README.md).
 
 ### Nginx Settings
 

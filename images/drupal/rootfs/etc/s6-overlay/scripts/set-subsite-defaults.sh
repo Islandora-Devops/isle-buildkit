@@ -18,20 +18,11 @@ DRUPAL_SUBSITES="{{ toUpper (join (lsdir "/drupal/site") " ") }}"
 DRUPAL_SITES="DEFAULT {{ toUpper (join (lsdir "/drupal/site") " ") }}"
 EOF
 
-# Derive default `DB` variables if not explicitly given.
-cat <<EOF | /usr/local/bin/confd-import-environment.sh
-DRUPAL_DEFAULT_DB_DRIVER={{ getenv "DRUPAL_DEFAULT_DB_DRIVER" "${DB_DRIVER}" }}
-DRUPAL_DEFAULT_DB_HOST={{ getenv "DRUPAL_DEFAULT_DB_HOST" "${DB_HOST}" }}
-DRUPAL_DEFAULT_DB_PORT={{ getenv "DRUPAL_DEFAULT_DB_PORT" "${DB_PORT}" }}
-DRUPAL_DEFAULT_DB_ROOT_PASSWORD={{ getenv "DRUPAL_DEFAULT_DB_ROOT_PASSWORD" "${DB_ROOT_PASSWORD}" }}
-DRUPAL_DEFAULT_DB_ROOT_USER={{ getenv "DRUPAL_DEFAULT_DB_ROOT_USER" "${DB_ROOT_USER}" }}
-EOF
-
 # Populate container environment variables for each of the DRUPAL_SUBSITES.
 DRUPAL_SUBSITES=$(</var/run/s6/container_environment/DRUPAL_SUBSITES)
 {
     for DRUPAL_SITE in ${DRUPAL_SUBSITES}; do
-        for FILE in /var/run/s6/container_environment/DRUPAL_DEFAULT_*; do
+        for FILE in /var/run/s6/container_environment/DRUPAL_DEFAULT_* /var/run/s6/container_environment/DB_*; do
             DEFAULT_VAR=$(basename "${FILE}")
             SUFFIX=${DEFAULT_VAR##DRUPAL_DEFAULT_}
             VAR=DRUPAL_SITE_${DRUPAL_SITE}_${SUFFIX}
