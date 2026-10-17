@@ -11,7 +11,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/tesseract-ocr
   TESSERACT_VERSION=5.5.2-r0 \
   # renovate: datasource=repology depName=alpine_3_24/ghostscript
-  GHOSTSCRIPT_VERSION=10.07.1-r0
+  GHOSTSCRIPT_VERSION=10.08.0-r0
 
 RUN --mount=type=bind,from=leptonica,source=/packages,target=/packages \
     --mount=type=bind,from=leptonica,source=/etc/apk/keys,target=/etc/apk/keys \
