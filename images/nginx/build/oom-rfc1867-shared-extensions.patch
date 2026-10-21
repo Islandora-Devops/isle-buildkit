@@ -1,0 +1,21 @@
+--- a/tests/basic/oom_rfc1867.inc
++++ b/tests/basic/oom_rfc1867.inc
+@@ -51,6 +51,18 @@
+         '-d', 'html_errors=0',
+     ];
+ 
++    // The child uses -n, so shared extensions loaded by run-tests.php must
++    // be loaded explicitly here too. Only load modules used by this request.
++    foreach (['mbstring', 'session'] as $extension) {
++        if (preg_grep('/^' . $extension . '\./', $extraIni)) {
++            $module = ini_get('extension_dir') . '/' . $extension . '.' . PHP_SHLIB_SUFFIX;
++            if (is_file($module)) {
++                $cmd[] = '-d';
++                $cmd[] = 'extension=' . $module;
++            }
++        }
++    }
++
+     foreach ($extraIni as $ini) {
+         $cmd[] = '-d';
+         $cmd[] = $ini;
