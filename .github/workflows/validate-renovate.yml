@@ -4,6 +4,10 @@ on:
   pull_request:
     paths:
       - "renovate.json"
+      - "ci/update-php.sh"
+      - "ci/tests/update-php.sh"
+      - "images/nginx/build/**"
+      - "images/nginx/Dockerfile"
 
 env:
   LOG_LEVEL: debug
@@ -15,6 +19,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Check PHP source updater
+        run: bash ci/tests/update-php.sh
 
       - run: |
           set -eou pipefail

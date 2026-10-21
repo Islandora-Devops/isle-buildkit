@@ -1,6 +1,6 @@
 # Nginx
 
-Docker image for [Nginx] version 1.24.0 and [FPM] version 8.3.8.
+Docker image for [Nginx] and source-built PHP 8.4 [FPM].
 
 Built from [Islandora-DevOps/isle-buildkit nginx](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/nginx)
 
@@ -100,3 +100,30 @@ rm "${FILE}"
 [Nginx Documentation]: https://nginx.org/en/docs/
 [Nginx Logging]: https://docs.nginx.com/nginx/admin-guide/monitoring/logging/
 [Nginx]: https://www.nginx.com/
+
+## Building PHP from source
+
+`Dockerfile` builds PHP 8.4 from the vendored Alpine aport in `build/`, then
+installs the signed local APKs into the runtime image. It does not wait for
+Alpine's PHP binary packages. The aport retains Alpine's patches, extension
+packages, configuration paths, and upstream test suite. Its build dependencies
+exclude the prebuilt PHP runtime.
+
+Build with `make build TARGET=nginx`. The `php-build` stage is independent of
+Composer, runtime package pins, and `rootfs`, so Docker reuses the compiled PHP
+layer when those change. PHP/aport or pinned Alpine base changes invalidate it.
+CI already imports the nginx registry cache separately for amd64 and arm64 and
+exports intermediate layers on main (`mode=max` in `docker-bake.hcl`).
+
+Renovate tracks stable PHP 8.4 tags directly from `php/php-src` and runs
+`ci/update-php.sh` to update the aport checksum and runtime version together.
+These updates bypass the weekly dependency grouping. The current Renovate job
+checks daily; it can also be dispatched manually for urgent releases.
+To update immediately, run `bash ci/update-php.sh 8.4.27` with the desired 8.4
+patch version. The script verifies the archive against PHP.net's published
+SHA-256 before writing its SHA-512 into the aport. An upgrade remains subject
+to the normal build and test pipeline.
+
+The aport was vendored from Alpine aports commit
+`b42029ecc52c7679bbda71bb09830f6813648c31` on `3.24-stable`. When refreshing
+Alpine patches or changing the Alpine base, review the upstream aport as well.

@@ -35,7 +35,7 @@ jobs:
           echo "Running renovate against ${RENOVATE_BASE_BRANCHES}"
           docker run \
             --env LOG_LEVEL=debug \
-            --env RENOVATE_ALLOWED_COMMANDS='["^bash ci/update-sha.sh .*$"]' \
+            --env RENOVATE_ALLOWED_COMMANDS='["^bash ci/update-sha.sh .*$", "^bash ci/update-php.sh$"]' \
             --env RENOVATE_PLATFORM=github \
             --env RENOVATE_REPOSITORIES=islandora-devops/isle-buildkit \
             --env RENOVATE_BASE_BRANCHES \
