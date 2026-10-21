@@ -126,6 +126,24 @@
           "bash ci/update-sha.sh \"{{{depName}}}\" \"{{{currentVersion}}}\" \"{{{newVersion}}}\" \"{{{newDigest}}}\""
         ]
       }
+    },
+    {
+      "matchDepNames": [
+        "php84-source"
+      ],
+      "allowedVersions": "/^8\\.4\\.[0-9]+$/",
+      "groupName": null,
+      "minimumReleaseAge": null,
+      "schedule": [],
+      "postUpgradeTasks": {
+        "commands": [
+          "bash ci/update-php.sh"
+        ],
+        "fileFilters": [
+          "images/nginx/build/APKBUILD",
+          "images/nginx/Dockerfile"
+        ]
+      }
     }
   ],
   "customManagers": [
@@ -142,6 +160,20 @@
         "# renovate: datasource=(?<datasource>[a-z-\\.]+?) depName=(?<depName>.+?) packageName=(?<packageName>.+?) branch=(?<currentValue>.+?)\\s(?:ENV|ARG) COMMIT=(?<currentDigest>.+?)(\\s|$)"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}loose{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^images/nginx/build/APKBUILD$/"
+      ],
+      "matchStrings": [
+        "pkgver=(?<currentValue>8\\.4\\.[0-9]+)"
+      ],
+      "datasourceTemplate": "github-tags",
+      "packageNameTemplate": "php/php-src",
+      "depNameTemplate": "php84-source",
+      "extractVersionTemplate": "^php-(?<version>8\\.4\\.[0-9]+)$",
+      "versioningTemplate": "semver"
     }
   ],
   "customDatasources": {

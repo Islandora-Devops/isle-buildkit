@@ -61,7 +61,7 @@ DEPENDENCIES = {
 # Named build contexts that are not other targets in this file.
 ALPINE_CONTEXT = "docker-image://alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b"
 IMAGE_CONTEXTS = {
-  for image in ["base", "imagemagick", "leptonica"] :
+  for image in ["base", "imagemagick", "leptonica", "nginx"] :
   image => { alpine = ALPINE_CONTEXT }
 }
 
