@@ -39,7 +39,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/icu-data-full
   ICU_VERSION=78.1-r0 \
   # renovate: datasource=repology depName=alpine_3_24/nginx
-  NGINX_VERSION=1.30.4-r1 \
+  NGINX_VERSION=1.30.6-r0 \
   # PHP is built from the vendored aport; ci/update-php.sh updates this pin.
   PHP_VERSION=8.4.27-r0
 
