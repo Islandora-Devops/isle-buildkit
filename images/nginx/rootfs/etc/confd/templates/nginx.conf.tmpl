@@ -2,6 +2,9 @@
 
 user nginx;
 
+# Keep the PID path consistent with the s6 readiness check.
+pid /run/nginx/nginx.pid;
+
 # Set number of worker processes automatically based on number of CPU cores.
 worker_processes {{ getenv "NGINX_WORKER_PROCESSES" }};
 

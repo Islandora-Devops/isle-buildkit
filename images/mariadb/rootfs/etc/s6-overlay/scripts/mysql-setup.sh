@@ -6,6 +6,10 @@ set -e
 mkdir /run/mysqld &>/dev/null || true
 chown mysql:mysql /run/mysqld
 
+# Alpine used mysql UID/GID 100:101; upstream Ubuntu uses 999:999.
+# Repair existing volumes before starting the daemon under its new identity.
+find /var/lib/mysql \( ! -user mysql -o ! -group mysql \) -exec chown --no-dereference mysql:mysql {} +
+
 # Create the database if it does not exist.
 if [[ ! -d "/var/lib/mysql/mysql" ]]; then
     s6-setuidgid mysql mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --skip-test-db --user mysql
