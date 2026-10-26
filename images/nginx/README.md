@@ -2,6 +2,10 @@
 
 Docker image for [Nginx] and source-built PHP 8.4 [FPM].
 
+NGINX is installed from signed nginx.org release packages for Alpine, rather
+than Alpine aports. See [Choosing Dependency Sources](../../README.md#choosing-dependency-sources)
+for the release and packaging policy.
+
 Built from [Islandora-DevOps/isle-buildkit nginx](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/nginx)
 
 Please refer to the [Nginx Documentation] and [FPM Documentation] for more
