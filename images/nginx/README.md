@@ -2,6 +2,10 @@
 
 Docker image for [Nginx] and source-built PHP 8.4 [FPM].
 
+NGINX is installed from signed nginx.org release packages for Alpine, rather
+than Alpine aports. See [Choosing Dependency Sources](../../README.md#choosing-dependency-sources)
+for the release and packaging policy.
+
 Built from [Islandora-DevOps/isle-buildkit nginx](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/nginx)
 
 Please refer to the [Nginx Documentation] and [FPM Documentation] for more
@@ -40,9 +44,9 @@ Requires `islandora/base` Docker image to build. Please refer to the
 | NGINX_REAL_IP_HEADER          | X-Forwarded-For | Request header field whose value will be used to replace the client address.          |
 | NGINX_REAL_IP_RECURSIVE       | off             | See https://nginx.org/en/docs/http/ngx_http_realip_module.html         |
 | NGINX_SEND_TIMEOUT            | 60s             | Timeout for transmitting a response to the client                                     |
-| NGINX_SET_REAL_IP_FROM        | 172.0.0.0/8     | Trusted addresses that are known to send correct replacement addresses                |
-| NGINX_SET_REAL_IP_FROM2       | 172.0.0.0/8     | Trusted addresses that are known to send correct replacement addresses                |
-| NGINX_SET_REAL_IP_FROM3       | 172.0.0.0/8     | Trusted addresses that are known to send correct replacement addresses                |
+| NGINX_SET_REAL_IP_FROM        | 10.0.0.0/8      | Trusted addresses that are known to send correct replacement addresses                |
+| NGINX_SET_REAL_IP_FROM2       | 192.168.0.0/16  | Trusted addresses that are known to send correct replacement addresses                |
+| NGINX_SET_REAL_IP_FROM3       | 172.16.0.0/12   | Trusted addresses that are known to send correct replacement addresses                |
 | NGINX_WORKER_CONNECTIONS      | 1024            | The maximum number of simultaneous connections that can be opened by a worker process |
 | NGINX_WORKER_PROCESSES        | auto            | Set number of worker processes automatically based on number of CPU cores             |
 
