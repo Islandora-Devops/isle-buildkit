@@ -34,5 +34,24 @@ fi
 # Clean up
 rm image.png
 
+# Test: Generate JPEG from an animated GIF served by nginx
+echo "Testing JPEG generation from animated GIF..."
+
+curl -s -o image.jpg \
+    --header "Accept: image/jpeg" \
+    --header "Content-Type: image/gif" \
+    --header "Apix-Ldp-Resource: http://nginx/animated.gif" \
+    "$URL"
+
+if file image.jpg | grep -q JPEG; then
+    echo "✓ JPEG created from animated GIF"
+else
+    echo "✗ Failed to create JPEG from animated GIF"
+    file image.jpg
+    exit 1
+fi
+
+rm image.jpg
+
 echo "All tests passed!"
 exit 0
