@@ -65,7 +65,9 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/ffmpeg
   FFMPEG_VERSION=8.1.3-r0 \
   # renovate: datasource=repology depName=alpine_3_24/openjpeg-tools
-  OPENJPG_TOOLS_VERSION=2.5.4-r2
+  OPENJPG_TOOLS_VERSION=2.5.4-r2 \
+  # renovate: datasource=repology depName=alpine_3_24/font-dejavu
+  FONT_DEJAVU_VERSION=2.37-r6
 
 # Opted for OpenJPG over Kakadu but that could be changed.
 # For reference see: https://cantaloupe-project.github.io/manual/5.0/processors.html
@@ -74,8 +76,9 @@ ARG \
 RUN --mount=type=cache,id=cantaloupe-apk-${TARGETARCH},sharing=locked,target=/var/cache/apk \
     apk add \
         ffmpeg=="${FFMPEG_VERSION}" \
-        openjpeg-tools=="${OPENJPG_TOOLS_VERSION}" && \
-    create-service-user.sh --name cantaloupe --group jwt /data /opt/cantaloupe/logs && \
+        openjpeg-tools=="${OPENJPG_TOOLS_VERSION}" \
+        font-dejavu=="${FONT_DEJAVU_VERSION}" && \
+    create-service-user.sh --name cantaloupe --group jwt /data /opt/cantaloupe/logs /var/cache/fontconfig && \
     cleanup.sh
 
 
