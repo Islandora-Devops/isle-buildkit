@@ -41,10 +41,10 @@ ARG FCREPO_URL=https://github.com/fcrepo/fcrepo/releases/download/fcrepo-${FCREP
 ARG FCREPO_SHA256="83e19e9ccddaf74dd36f6e1164156ef8eb91262175b9456820138413f0ae2244"
 
 # renovate: datasource=github-releases depName=fcrepo-import-export packageName=fcrepo-exts/fcrepo-import-export
-ARG IMPORT_EXPORT_VERSION=1.2.0
+ARG IMPORT_EXPORT_VERSION=2.0.0
 ARG IMPORT_EXPORT_FILE=fcrepo-import-export-${IMPORT_EXPORT_VERSION}.jar
 ARG IMPORT_EXPORT_URL=https://github.com/fcrepo-exts/fcrepo-import-export/releases/download/fcrepo-import-export-${IMPORT_EXPORT_VERSION}/${IMPORT_EXPORT_FILE}
-ARG IMPORT_EXPORT_SHA256=e767f43b0b4f639042b0e399ebfebdf61957515d585b7f0d2d8aeb9f877b12a0
+ARG IMPORT_EXPORT_SHA256="8d438b0a5a77036722c7808a775fea110df6b78bc6cb4fe446443185de25e6b7"
 
 # renovate: datasource=github-releases depName=fcrepo-upgrade-utils packageName=fcrepo-exts/fcrepo-upgrade-utils
 ARG UPGRADE_UTILS_VERSION=6.3.0
