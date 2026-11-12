@@ -144,6 +144,27 @@
           "images/nginx/Dockerfile"
         ]
       }
+    },
+    {
+      "matchDepNames": [
+        "nginx-upstream"
+      ],
+      "allowedVersions": "/^1\\.30\\.[0-9]+-r[0-9]+$/",
+      "groupName": null,
+      "minimumReleaseAge": null,
+      "schedule": []
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "mariadb"
+      ],
+      "allowedVersions": "/^11\\.8\\.[0-9]+$/",
+      "groupName": null,
+      "minimumReleaseAge": null,
+      "schedule": []
     }
   ],
   "customManagers": [
@@ -174,6 +195,18 @@
       "depNameTemplate": "php84-source",
       "extractVersionTemplate": "^php-(?<version>8\\.4\\.[0-9]+)$",
       "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Track the upstream MariaDB image version and digest",
+      "managerFilePatterns": [
+        "/^images/mariadb/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "FROM (?<depName>mariadb):(?<currentValue>11\\.8\\.[0-9]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     }
   ],
   "customDatasources": {
@@ -189,6 +222,13 @@
       "format": "html",
       "transformTemplates": [
         "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $match($v, /^handle-\\d+\\.\\d+\\.\\d+-distribution\\.tar\\.gz$/) }),function($v,$i,$a){ { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+/).match } })] }"
+      ]
+    },
+    "nginx-apk": {
+      "defaultRegistryUrlTemplate": "https://nginx.org/packages/alpine/{{ packageName }}/main/x86_64/",
+      "format": "html",
+      "transformTemplates": [
+        "{ \"releases\": [$map($filter(releases.version, function($v) { $match($v, /^nginx-\\d+\\.\\d+\\.\\d+-r\\d+\\.apk$/) }), function($v) { { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+-r\\d+/).match } })] }"
       ]
     }
   },
