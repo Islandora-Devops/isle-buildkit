@@ -10,7 +10,7 @@ ARG TRANSKRIBUS_PROCESS_URL=https://github.com/ulsdevteam/transkribus-process/ar
 ARG TRANSKRIBUS_PROCESS_SHA256="8a88c135fed7668d3bdbfaefa0ca75f0cbb8daa406158784a05aea53bf0eb9f6"
 
 # renovate: datasource=repology depName=alpine_3_24/dotnet8-sdk
-ARG DOTNET_SDK_VERSION=8.0.132-r0
+ARG DOTNET_SDK_VERSION=8.0.134-r0
 
 RUN --mount=type=cache,id=transkribus-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
     download.sh \
@@ -36,9 +36,9 @@ ARG TARGETARCH
 
 ARG \
   # renovate: datasource=repology depName=alpine_3_24/aspnetcore8-runtime
-  ASPNETCORE_VERSION=8.0.32-r0 \
+  ASPNETCORE_VERSION=8.0.34-r0 \
   # renovate: datasource=repology depName=alpine_3_24/nodejs
-  NODEJS_VERSION=24.22.1-r0 \
+  NODEJS_VERSION=24.22.3-r0 \
   # renovate: datasource=repology depName=alpine_3_24/npm
   NPM_VERSION=11.12.1-r0 \
   # renovate: datasource=npm depName=xslt3
