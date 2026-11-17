@@ -22,6 +22,8 @@ RUN --mount=type=cache,id=activemq-downloads-${TARGETARCH},sharing=locked,target
     && \
     sed -i '/transportConnector name="stomp"/ s/^[[:space:]]*<!-- \(.*\) -->$/            \1/' conf/activemq.xml \
     && \
+    sed -i 's/^jetty.http.host=.*/jetty.http.host=0.0.0.0/' conf/jetty-spring.properties \
+    && \
     cleanup.sh
 
 # Defaults environment variables to be overloaded.

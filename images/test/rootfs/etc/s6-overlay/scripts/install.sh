@@ -1,6 +1,6 @@
 #!/command/with-contenv bash
 # shellcheck shell=bash
-set -e
+set -eo pipefail
 
 # shellcheck disable=SC1091
 source /etc/islandora/utilities.sh
@@ -24,8 +24,7 @@ function jolokia {
     if [ "$action" != "" ]; then
         url="${url}/$action"
     fi
-    curl -s -u "${DRUPAL_DEFAULT_BROKER_WEB_ADMIN_USER}:${DRUPAL_DEFAULT_BROKER_WEB_ADMIN_PASSWORD}" "${url}"
-    printf "\n"
+    curl -fsS -u "${DRUPAL_DEFAULT_BROKER_WEB_ADMIN_USER}:${DRUPAL_DEFAULT_BROKER_WEB_ADMIN_PASSWORD}" "${url}"
 }
 
 function wait_for_dequeue {
@@ -34,7 +33,7 @@ function wait_for_dequeue {
     while [ "${continue_waiting}" -ne 0 ]; do
         continue_waiting=0
         for queue in "${QUEUES[@]}"; do
-            queue_size=$(jolokia "read" "${queue}" | jq .value.QueueSize) &>/dev/null || exit $?
+            queue_size=$(jolokia "read" "${queue}" | jq -e 'select(.status == 200) | .value.QueueSize | numbers | select(. >= 0)') || exit $?
             echo "Queue (${queue}) remaining: ${queue_size}"
             if [ "${queue_size}" != "0" ]; then
                 continue_waiting=1
