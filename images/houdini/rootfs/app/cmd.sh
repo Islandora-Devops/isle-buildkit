@@ -20,7 +20,7 @@ trap cleanup EXIT
 INPUT="-"
 if [ "$SOURCE_EXT" = "pdf" ]; then
   INPUT="pdf:-[0]"
-elif [ "$SOURCE_EXT" = "tiff" ]; then
+elif [ "$SOURCE_EXT" = "tiff" ] || [ "$SOURCE_EXT" = "gif" ]; then
   INPUT="-[0]"
 fi
 

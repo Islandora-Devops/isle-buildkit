@@ -3,6 +3,7 @@
 # Tests the following:
 # - Houdini starts.
 # - Can generate PNG thumbnails from PDFs using ImageMagick.
+# - Can generate a JPEG from an animated GIF.
 ---
 
 name: houdini-integrationtests
