@@ -215,7 +215,7 @@ additional settings, volumes, ports, etc.
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MOV                                       | "FfmpegProcessor"                                                |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MP4                                       | "FfmpegProcessor"                                                |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_MPG                                       | "FfmpegProcessor"                                                |
-| CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_PDF                                       | "PDFBox"                                                         |
+| CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_PDF                                       | "PdfBoxProcessor"                                                |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_PNG                                       | "Java2dProcessor"                                                |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_TIF                                       | "Java2dProcessor"                                                |
 | CANTALOUPE_PROCESSOR_MANUALSELECTIONSTRATEGY_WEBM                                      | "FfmpegProcessor"                                                |
