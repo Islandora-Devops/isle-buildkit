@@ -5,5 +5,5 @@ on:
     - cron: '47 18 * * *'
 jobs:
   stale:
-    uses: Islandora-Devops/.github/.github/workflows/stale.yaml@3626464d449daffadaf7ee69ca661b3fb5ad7c59 # main
+    uses: Islandora-Devops/.github/.github/workflows/stale.yaml@2426b5272e665a76bbff3a62a2ba6ca35f9e52e2 # main
     secrets: inherit

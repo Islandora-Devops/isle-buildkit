@@ -15,7 +15,7 @@ source /usr/local/share/isle/utilities.sh
 until curl -sf \
     -u "${ACTIVEMQ_WEB_ADMIN_NAME}:${ACTIVEMQ_WEB_ADMIN_PASSWORD}" \
     -H origin:localhost \
-    "http://localhost:8161/api/jolokia/read/org.apache.activemq:type=Broker,brokerName=localhost,service=Health/CurrentStatus" \
+    "http://$(hostname -i):8161/api/jolokia/read/org.apache.activemq:type=Broker,brokerName=localhost,service=Health/CurrentStatus" \
     | grep -q Good
 do
     echo "Waiting for ActiveMQ to successfully start"

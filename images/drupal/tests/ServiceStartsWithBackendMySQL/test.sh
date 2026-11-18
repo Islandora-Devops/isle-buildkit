@@ -7,7 +7,7 @@ source /usr/local/share/isle/utilities.sh
 # Install basic Drupal
 cd /var/www/drupal || exit 1
 rm -fr /var/www/drupal/*
-composer create-project drupal/recommended-project:^10.3 \
+composer create-project drupal/recommended-project:^11.4 \
     --prefer-dist \
     --no-interaction \
     --stability stable \

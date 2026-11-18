@@ -5,9 +5,9 @@ WORKDIR /build
 ARG TARGETARCH
 
 # renovate: datasource=github-releases depName=scyllaridae packageName=islandora/scyllaridae
-ARG SCYLLARIDAE_VERSION=5.3.6
+ARG SCYLLARIDAE_VERSION=5.3.9
 ARG SCYLLARIDAE_URL="https://github.com/islandora/scyllaridae/archive/refs/tags/${SCYLLARIDAE_VERSION}.tar.gz"
-ARG SCYLLARIDAE_SHA256="d0c4f21fd34ee7f12d4f8a05bec757d7bc9586f65f8f604e80c23f4a0ac29e77"
+ARG SCYLLARIDAE_SHA256="e31d1066c069783c8387cf18353677260123fd31603addb926092f62602fe60c"
 RUN download.sh \
       --url "${SCYLLARIDAE_URL}" \
       --sha256 "${SCYLLARIDAE_SHA256}" \
