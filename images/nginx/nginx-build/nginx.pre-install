@@ -1,0 +1,4 @@
+#!/bin/sh
+addgroup -S nginx 2>/dev/null || true
+adduser -S -D -H -h /var/lib/nginx -s /sbin/nologin -G nginx -g nginx nginx 2>/dev/null || true
+exit 0

@@ -2,9 +2,17 @@
 
 Docker image for [Nginx] and source-built PHP 8.4 [FPM].
 
-NGINX is installed from signed nginx.org release packages for Alpine, rather
-than Alpine aports. See [Choosing Dependency Sources](../../README.md#choosing-dependency-sources)
-for the release and packaging policy.
+NGINX is compiled from upstream source into a signed local APK using
+`nginx-build/APKBUILD`. The build retains the official upstream Alpine package's
+modules and runtime paths, with the PID under `/run/nginx` for s6 readiness.
+Source releases are BSD-2-Clause licensed; the package includes the license.
+
+Renovate tracks stable 1.30.x source releases and runs `ci/update-nginx.sh` to
+verify the release signature and synchronize the source checksum and package pin.
+The trusted release keys are vendored from [NGINX's published keys](https://nginx.org/en/pgp_keys.html).
+Run `bash ci/update-nginx.sh 1.30.7` for an urgent update, then
+`make bake TARGET=nginx` and `make test TARGET=nginx`.
+Additional dynamic modules must be compiled for this NGINX build.
 
 Built from [Islandora-DevOps/isle-buildkit nginx](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/nginx)
 

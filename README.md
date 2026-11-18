@@ -475,16 +475,15 @@ Bazel would not eliminate package publication delays or compatibility testing.
 | Component | Selected source | Reason |
 | --- | --- | --- |
 | Solr and ActiveMQ | Checksummed Apache binary release archives | Upstream distributes runnable release artifacts |
-| NGINX | Signed APKs from nginx.org for our Alpine release | Upstream packages both supported architectures; no need to wait for Alpine aports |
+| NGINX | Signed upstream source, compiled into a local APK | Security source releases can precede upstream and Alpine binary packages |
 | OpenJDK 21 | Upstream source, built with our vendored Alpine recipe | Preserves musl, JNI, Java certificates, and APK metadata without waiting for Alpine to publish the runtime |
 | PHP | Upstream source, built with our vendored Alpine recipe | PHP does not publish Linux binary packages; local packaging preserves our extensions and Alpine integration |
 | MariaDB, PostgreSQL and routine OS utilities | Alpine packages | Retain distribution packaging where a separate build is not currently justified |
 
-NGINX's upstream package uses different module and PID paths from Alpine's
-package; our image preserves the paths required by ISLE configuration and s6
-readiness. Additional dynamic modules must match the upstream NGINX build;
-Alpine's `nginx-mod-*` packages are not interchangeable with upstream modules.
-Renovate tracks NGINX's upstream APK releases and OpenJDK's upstream source tags,
+NGINX is built from signature-verified source with the features of its upstream
+Alpine package and the paths required by ISLE configuration and s6 readiness.
+Additional dynamic modules must match this build. Renovate tracks NGINX and
+OpenJDK upstream source tags,
 restricting automatic updates to the supported release lines. These updates and
 PHP source updates bypass the weekly dependency group. Scheduled detection still
 runs daily; use the Renovate workflow's manual dispatch for urgent releases.

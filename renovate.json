@@ -147,12 +147,21 @@
     },
     {
       "matchDepNames": [
-        "nginx-upstream"
+        "nginx-source"
       ],
-      "allowedVersions": "/^1\\.30\\.[0-9]+-r[0-9]+$/",
+      "allowedVersions": "/^1\\.30\\.[0-9]+$/",
       "groupName": null,
       "minimumReleaseAge": null,
-      "schedule": []
+      "schedule": [],
+      "postUpgradeTasks": {
+        "commands": [
+          "bash ci/update-nginx.sh"
+        ],
+        "fileFilters": [
+          "images/nginx/nginx-build/APKBUILD",
+          "images/nginx/Dockerfile"
+        ]
+      }
     },
     {
       "matchDepNames": [
@@ -214,6 +223,20 @@
       "packageNameTemplate": "openjdk/jdk21u",
       "depNameTemplate": "openjdk21-source",
       "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^images/nginx/nginx-build/APKBUILD$/"
+      ],
+      "matchStrings": [
+        "pkgver=(?<currentValue>1\\.30\\.[0-9]+)"
+      ],
+      "datasourceTemplate": "github-tags",
+      "packageNameTemplate": "nginx/nginx",
+      "depNameTemplate": "nginx-source",
+      "extractVersionTemplate": "^release-(?<version>1\\.30\\.[0-9]+)$",
+      "versioningTemplate": "semver"
     }
   ],
   "customDatasources": {
@@ -229,13 +252,6 @@
       "format": "html",
       "transformTemplates": [
         "{ \"releases\":[ $map($filter(releases.version,function($v,$i,$a){ $match($v, /^handle-\\d+\\.\\d+\\.\\d+-distribution\\.tar\\.gz$/) }),function($v,$i,$a){ { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+/).match } })] }"
-      ]
-    },
-    "nginx-apk": {
-      "defaultRegistryUrlTemplate": "https://nginx.org/packages/alpine/{{ packageName }}/main/x86_64/",
-      "format": "html",
-      "transformTemplates": [
-        "{ \"releases\": [$map($filter(releases.version, function($v) { $match($v, /^nginx-\\d+\\.\\d+\\.\\d+-r\\d+\\.apk$/) }), function($v) { { \"version\": $match($v, /\\d+\\.\\d+\\.\\d+-r\\d+/).match } })] }"
       ]
     }
   },

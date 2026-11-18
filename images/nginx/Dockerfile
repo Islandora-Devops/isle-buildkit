@@ -13,6 +13,19 @@ RUN abuild-keygen -ain && abuild-apk update && abuild -r && \
     find /home/builder/packages -name '*.apk' -exec cp {} /home/builder/apks/ \; && \
     rm /home/builder/.abuild/*.rsa
 
+FROM alpine AS nginx-build
+
+RUN apk add --no-cache alpine-sdk sudo && \
+    adduser -D -G abuild builder && \
+    echo 'builder ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/builder
+COPY --chown=builder:abuild nginx-build /home/builder/aports/nginx
+USER builder
+WORKDIR /home/builder/aports/nginx
+RUN abuild-keygen -ain && abuild-apk update && abuild -r && \
+    mkdir /home/builder/apks && \
+    find /home/builder/packages -name '*.apk' -exec cp {} /home/builder/apks/ \; && \
+    rm /home/builder/.abuild/*.rsa
+
 FROM base
 
 ARG TARGETARCH
@@ -38,22 +51,16 @@ RUN --mount=type=cache,id=download-downloads-${TARGETARCH},sharing=locked,target
 ARG \
   # renovate: datasource=repology depName=alpine_3_24/icu-data-full
   ICU_VERSION=78.1-r0 \
-  # renovate: datasource=custom.nginx-apk depName=nginx-upstream packageName=v3.24
-  NGINX_VERSION=1.30.6-r1 \
+  # Built from upstream source; ci/update-nginx.sh updates this pin.
+  NGINX_VERSION=1.30.7-r0 \
   # PHP is built from the vendored aport; ci/update-php.sh updates this pin.
   PHP_VERSION=8.4.27-r0
 
-# Verify the upstream APK signing key before trusting release packages.
-# Keep this separate from the PHP key mount used below.
-RUN curl -fsSL https://nginx.org/keys/nginx_signing.rsa.pub -o /tmp/nginx_signing.rsa.pub && \
-    echo 'e09fa32f0a0eab2b879ccbbc4d0e4fb9751486eedda75e35fac65802cc9faa266425edf83e261137a2f4d16281ce2c1a5f4502930fe75154723da014214f0655  /tmp/nginx_signing.rsa.pub' | sha512sum -c - && \
-    mv /tmp/nginx_signing.rsa.pub /etc/apk/keys/ && \
-    curl -fsSL "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main/$(apk --print-arch)/nginx-${NGINX_VERSION}.apk" -o /tmp/nginx.apk && \
-    apk add /tmp/nginx.apk && \
-    rm /tmp/nginx.apk && \
-    nginx -v 2>&1 | grep -Fx "nginx version: nginx/${NGINX_VERSION%-r*}" && \
-    rm /etc/nginx/modules && \
-    mkdir -p /etc/nginx/modules /etc/nginx/http.d
+# Install the signed package built directly from upstream source.
+RUN --mount=type=bind,from=nginx-build,source=/home/builder/apks,target=/packages \
+    --mount=type=bind,from=nginx-build,source=/etc/apk/keys,target=/etc/apk/keys \
+    apk add /packages/nginx-${NGINX_VERSION}.apk && \
+    nginx -v 2>&1 | grep -Fx "nginx version: nginx/${NGINX_VERSION%-r*}"
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=bind,from=php-build,source=/home/builder/apks,target=/packages \
