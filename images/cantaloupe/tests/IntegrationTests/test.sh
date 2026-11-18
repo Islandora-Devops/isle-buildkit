@@ -20,4 +20,11 @@ for IMG_PATH in /images/*; do
   identify default.jpg | grep JPEG
 done
 
+# The source URL encodes a space as %20; the IIIF identifier must encode it again.
+# nginx maps this URL to an existing fixture without duplicating binary files.
+IDENTIFIER='http%3A%2F%2Fnginx%2FService%2520File.jpg'
+curl -sf "http://localhost:8182/iiif/2/$IDENTIFIER/info.json" | jq -e '.width == 64 and .height == 56'
+curl -sf -o default.jpg "http://localhost:8182/iiif/2/$IDENTIFIER/full/1,/0/default.jpg"
+identify default.jpg | grep JPEG
+
 exit 0
