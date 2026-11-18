@@ -1,0 +1,423 @@
+# Contributor: Simon Frankenberger <simon-alpine@fraho.eu>
+# Maintainer: Simon Frankenberger <simon-alpine@fraho.eu>
+pkgname=openjdk21
+# upstream-tag=jdk-21.0.13.1-ga
+pkgver=21.0.13.1_p2
+_pkgver=21.0.13.1-ga
+pkgrel=0
+pkgdesc="Oracle OpenJDK 21"
+provider_priority=21
+url="https://github.com/openjdk/jdk21u"
+# 32-bit: needs patches
+arch="all !x86 !armhf !armv7"
+license="GPL-2.0-with-classpath-exception"
+makedepends="
+	$pkgname-bootstrap
+	autoconf
+	bash
+	gawk
+	grep
+	make
+	zip
+	alsa-lib-dev
+	cups-dev
+	elfutils-dev
+	fontconfig-dev
+	freetype-dev
+	giflib-dev
+	lcms2-dev
+	libffi-dev
+	libjpeg-turbo-dev
+	libx11-dev
+	libxext-dev
+	libxrandr-dev
+	libxrender-dev
+	libxt-dev
+	libxtst-dev
+	linux-headers
+	zlib-dev
+	"
+depends="$pkgname-jdk $pkgname-demos $pkgname-doc" # for the virtual openjdk18 package
+subpackages="$pkgname-jmods:_jmods:noarch
+	$pkgname-demos:_demos:noarch
+	$pkgname-doc:_doc:noarch
+	$pkgname-jre:_jre
+	$pkgname-src:_src:noarch
+	$pkgname-static-libs:_static_libs
+	$pkgname-jre-headless:_jre_headless
+	$pkgname-jdk:_jdk
+	"
+source="jdk-$_pkgver.tar.gz::https://github.com/openjdk/jdk21u/archive/jdk-$_pkgver.tar.gz
+	gtest-1.14.0.tar.gz::https://github.com/google/googletest/archive/v1.14.0.tar.gz
+
+	ppc64le.patch
+	riscv64.patch
+	JDK-8299245_disable-tests.patch
+	JDK-8218814_Wformat-security.patch
+"
+builddir="$srcdir/jdk21u-jdk-${_pkgver/+/-}"
+
+provides="$pkgname-bootstrap=$pkgver-r$pkgrel"
+
+_java_home="usr/lib/jvm/java-21-openjdk"
+
+sonameprefix="$pkgname:"
+
+# enable running the JTReg tests in check?
+# see comment in that function for explanation
+_run_jtreg=${_run_jtreg:-0}
+if [ $_run_jtreg -ne 0 ]; then
+	makedepends="$makedepends java-jtreg"
+	checkdepends="$checkdepends ttf-freefont xvfb-run"
+fi
+
+_jvm_variants=server
+case $CTARGET_ARCH in
+loongarch64)	_jvm_variants=zero	;;
+*)		_jvm_variants=server	;;
+esac
+ldpath="/$_java_home/lib:/$_java_home/lib/$_jvm_variants"
+
+# secfixes:
+#   21.0.13.1_p2-r0:
+#     - CVE-2026-114938
+#     - CVE-2026-114939
+#     - CVE-2026-114940
+#     - CVE-2026-114941
+#     - CVE-2026-114942
+#     - CVE-2026-114943
+#     - CVE-2026-114944
+#     - CVE-2026-114945
+#     - CVE-2026-114946
+#   21.0.13.0.3_p1-r0:
+#     - CVE-2026-6732
+#     - CVE-2026-46470
+#     - CVE-2026-83374
+#     - CVE-2026-83376
+#     - CVE-2026-83378
+#     - CVE-2026-83381
+#     - CVE-2026-83387
+#     - CVE-2026-83400
+#     - CVE-2026-87255
+#     - CVE-2026-87290
+#     - CVE-2026-87291
+#     - CVE-2026-87292
+#     - CVE-2026-87367
+#     - CVE-2026-91332
+#     - CVE-2026-91335
+#     - CVE-2026-91373
+#     - CVE-2026-91374
+#     - CVE-2026-91375
+#     - CVE-2026-91379
+#     - CVE-2026-91381
+#     - CVE-2026-91397
+#     - CVE-2026-91400
+#     - CVE-2026-91402
+#     - CVE-2026-91403
+#     - CVE-2026-91417
+#     - CVE-2026-91418
+#     - CVE-2026-91451
+#     - CVE-2026-91452
+#     - CVE-2026-91453
+#     - CVE-2026-91461
+#     - CVE-2026-91462
+#     - CVE-2026-91463
+#     - CVE-2026-91464
+#     - CVE-2026-91487
+#     - CVE-2026-114820
+#   21.0.12_p8-r0:
+#     - CVE-2026-62574
+#     - CVE-2026-41254
+#     - CVE-2026-47063
+#     - CVE-2026-60147
+#     - CVE-2026-46968
+#     - CVE-2026-47027
+#     - CVE-2026-47021
+#     - CVE-2026-46917
+#     - CVE-2026-47059
+#     - CVE-2026-47010
+#   21.0.11_p10-r0:
+#     - CVE-2026-22016
+#     - CVE-2026-34282
+#     - CVE-2026-22021
+#     - CVE-2026-22013
+#     - CVE-2026-23865
+#     - CVE-2026-22018
+#     - CVE-2026-22007
+#     - CVE-2026-34268
+#   21.0.10_p7-r0:
+#     - CVE-2026-21945
+#     - CVE-2026-21932
+#     - CVE-2026-21933
+#     - CVE-2026-21925
+#   21.0.9_p10-r0:
+#     - CVE-2025-53066
+#     - CVE-2025-53057
+#     - CVE-2025-61748
+#   21.0.8_p9-r0:
+#     - CVE-2025-50059
+#     - CVE-2025-30749
+#     - CVE-2025-50106
+#     - CVE-2025-30754
+#   21.0.7_p6-r0:
+#     - CVE-2025-23083
+#     - CVE-2025-21587
+#     - CVE-2025-30698
+#     - CVE-2025-30691
+#   21.0.6_p7-r0:
+#     - CVE-2025-21502
+#   21.0.5_p11-r0:
+#     - CVE-2024-21235
+#     - CVE-2024-21210
+#     - CVE-2024-21211
+#     - CVE-2024-21208
+#     - CVE-2024-21217
+#   21.0.4_p7-r0:
+#     - CVE-2024-21147
+#     - CVE-2024-21145
+#     - CVE-2024-21140
+#     - CVE-2024-21131
+#     - CVE-2024-21138
+#     - CVE-2024-21217
+#   21.0.3_p9-r0:
+#     - CVE-2024-21892
+#     - CVE-2024-20954
+#     - CVE-2024-21098
+#     - CVE-2024-21011
+#     - CVE-2024-21068
+#     - CVE-2024-21094
+#     - CVE-2024-21012
+#   21.0.2_p13-r0:
+#     - CVE-2023-44487
+#     - CVE-2023-45143
+#     - CVE-2023-5072
+#     - CVE-2024-20918
+#     - CVE-2024-20952
+#     - CVE-2024-20919
+#     - CVE-2024-20921
+#     - CVE-2024-20945
+#   21.0.1_p12-r0:
+#     - CVE-2023-22081
+#     - CVE-2023-22091
+#     - CVE-2023-22025
+
+build() {
+	if [ $_run_jtreg -ne 0 ]; then
+		_with_jtreg="--with-jtreg=/usr/share/java/jtreg"
+	else
+		_with_jtreg="--with-jtreg=no"
+	fi
+
+	if [ -n "$USE_CCACHE" ]; then
+		# workaround ccache being disallowed
+		export PATH="/usr/bin:/bin:/sbin:/usr/sbin"
+		local ccache="--enable-ccache"
+	fi
+
+	# CFLAGS, CXXFLAGS and LDFLAGS are ignored as shown by a warning
+	# in the output of ./configure unless used like such:
+	#  --with-extra-cflags="$CFLAGS"
+	#  --with-extra-cxxflags="$CXXFLAGS"
+	#  --with-extra-ldflags="$LDFLAGS"
+	# See also paragraph "Configure Control Variables" from "common/doc/building.md"
+	# shellcheck disable=2097 disable=2098
+	CFLAGS='' CXXFLAGS='' LDFLAGS='' \
+		bash ./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--target=$CTARGET \
+		--prefix="/$_java_home" \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--localstatedir=/var \
+		--with-extra-cflags="$CFLAGS -D_LARGEFILE64_SOURCE" \
+		--with-extra-cxxflags="$CXXFLAGS -D_LARGEFILE64_SOURCE" \
+		--with-extra-ldflags="$LDFLAGS" \
+		--with-zlib=system \
+		--with-libjpeg=system \
+		--with-giflib=system \
+		--with-libpng=system \
+		--with-lcms=system \
+		--with-jobs=${JOBS:-4} \
+		--with-test-jobs=${JOBS:-4} \
+		--with-native-debug-symbols=none \
+		--with-gtest=../googletest-1.14.0 \
+		$ccache \
+		$_with_jtreg \
+		--disable-warnings-as-errors \
+		--disable-precompiled-headers \
+		--enable-dtrace=no \
+		--with-jvm-variants=$_jvm_variants \
+		--with-debug-level=release \
+		--with-version-pre= \
+		--with-version-opt="alpine-r$pkgrel" \
+		--with-version-build="${pkgver##*p}" \
+		--with-vendor-name="Alpine" \
+		--with-vendor-url="https://alpinelinux.org/" \
+		--with-vendor-bug-url="https://gitlab.alpinelinux.org/alpine/aports/issues" \
+		--with-vendor-vm-bug-url="https://gitlab.alpinelinux.org/alpine/aports/issues"
+	MAKEFLAGS='' make jdk-image
+	MAKEFLAGS='' make static-libs-image
+}
+
+check() {
+	# run the gtest unittest suites
+	# they don't take long, DO NOT DISABLE THEM!
+	# override make variable, disable -Werror
+	MAKEFLAGS='' make test-hotspot-gtest
+
+	# The jtreg tests take very, very long to finish and show some failures (9 - 12 on my machine, varying between runs)
+	# I think these are not critical and can be safely ignored.
+	# As the tests take too long, they are disabled by default.
+	# When updating this aport please let them run at least once on your machine to see if the failure count changes.
+	if [ $_run_jtreg -ne 0 ]; then
+		_logfile=$( mktemp -p "$builddir" )
+		MAKEFLAGS='' xvfb-run make \
+			run-test-tier1 \
+			run-test-tier2 \
+			run-test-tier3 \
+			| tee "$_logfile"
+		msg "---------------------------------------"
+		msg "The build log can be found at $_logfile"
+		# abort the build so you may take a look at the logfile
+		false
+		return 1
+	fi
+}
+
+package() {
+	local libstaticdir="lib/static/linux-${CARCH/x86_64/amd64}/musl"
+
+	mkdir -p "$pkgdir/$_java_home/$libstaticdir"
+
+	cd build/linux-*-$_jvm_variants-release/images/
+	cp -r jdk/* "$pkgdir/$_java_home"
+	cp -r static-libs/lib/* "$pkgdir/$_java_home/$libstaticdir"
+}
+
+_jmods() {
+	pkgdesc="Oracle OpenJDK 21 (jmods)"
+	depends=""
+	_fromroot="$pkgdir/$_java_home"
+	_toroot="$subpkgdir/$_java_home"
+
+	mkdir -p "$_toroot"
+	mv "$_fromroot/jmods" "$_toroot"
+}
+
+_demos() {
+	pkgdesc="Oracle OpenJDK 21 (demos)"
+	depends=""
+	_fromroot="$pkgdir/$_java_home"
+	_toroot="$subpkgdir/$_java_home"
+
+	mkdir -p "$_toroot"
+	mv "$_fromroot/demo" "$_toroot"
+}
+
+_doc() {
+	pkgdesc="Oracle OpenJDK 21 (Documentation)"
+	depends=""
+	_fromroot="$pkgdir/$_java_home"
+	_toroot="$subpkgdir/$_java_home"
+
+	mkdir -p "$_toroot"
+	mv "$_fromroot/man" "$_toroot"
+}
+
+_jre() {
+	pkgdesc="Oracle OpenJDK 21 (JRE)"
+	depends="$pkgname-jre-headless"
+	provides=java-jre
+	_fromroot="$pkgdir/$_java_home"
+	_toroot="$subpkgdir/$_java_home"
+
+	mkdir -p "$_toroot/lib"
+	mv "$_fromroot/lib/libawt_xawt.so" \
+		"$_fromroot/lib/libfontmanager.so" \
+		"$_fromroot/lib/libjavajpeg.so" \
+		"$_fromroot/lib/libjawt.so" \
+		"$_fromroot/lib/libjsound.so" \
+		"$_fromroot/lib/liblcms.so" \
+		"$_fromroot/lib/libsplashscreen.so" \
+		"$_toroot/lib"
+}
+
+_src() {
+	pkgdesc="Oracle OpenJDK 21 (sources)"
+	depends="$pkgname-jre-headless"
+	mkdir -p "$subpkgdir/$_java_home"/lib
+	mv "$pkgdir"/$_java_home/lib/src.zip \
+		"$subpkgdir"/$_java_home/lib/
+}
+
+_static_libs() {
+	pkgdesc="Oracle OpenJDK 21 libraries for static linking"
+	provides="java-jdk-static-libs"
+	depends="$pkgname=$pkgver-r$pkgrel"
+
+	amove $_java_home/lib/static
+}
+
+_jre_headless() {
+	pkgdesc="Oracle OpenJDK 21 (JRE headless)"
+	depends="java-common java-cacerts"
+	provides=java-jre-headless
+	_fromroot="$pkgdir/$_java_home"
+	_toroot="$subpkgdir/$_java_home"
+
+	mkdir -p "$_toroot"
+	mv "$_fromroot/lib" "$_toroot"
+
+	# ct.sym should stay in -jdk
+	mkdir "$_fromroot/lib"
+	mv "$_toroot/lib/ct.sym" "$_fromroot/lib"
+
+	mkdir -p "$_toroot/bin"
+	for i in java \
+		jfr \
+		jrunscript \
+		jwebserver \
+		keytool \
+		rmiregistry; do
+		mv "$_fromroot/bin/$i" "$_toroot/bin/$i"
+	done
+
+	mv "$_fromroot/legal"              "$_toroot"
+	mv "$_fromroot/conf"               "$_toroot"
+	mv "$_fromroot/release"            "$_toroot"
+	cp "$builddir/ASSEMBLY_EXCEPTION"  "$_toroot"
+	cp "$builddir/LICENSE"             "$_toroot"
+	cp "$builddir/README.md"           "$_toroot"
+
+	# symlink to shared cacerts store
+	rm "$_toroot/lib/security/cacerts"
+	ln -sf /etc/ssl/certs/java/cacerts \
+		"$_toroot/lib/security/cacerts"
+
+	# symlink for java-common to work (expects jre in $_java_home/jre)
+	ln -sf . "$_toroot/jre"
+}
+
+_jdk() {
+	pkgdesc="Oracle OpenJDK 21 (JDK) ($_jvm_variants variant)"
+	depends="$pkgname-jre $pkgname-jmods"
+	provides=java-jdk
+	_fromroot="$pkgdir/$_java_home"
+	_toroot="$subpkgdir/$_java_home"
+
+	mkdir -p "$_toroot"
+	mv "$_fromroot/bin" "$_toroot"
+	mv "$_fromroot/lib" "$_toroot"
+	mv "$_fromroot/include" "$_toroot"
+}
+
+sha512sums="
+dbc487ac88bf519f3e4c2e10338ca22c3ed2ded298029693f0429699071b9ae7a9064e04f8664da7f17150a31452ea77ff161ef9f2a2e2593ec4449d4dc2ff6e  jdk-21.0.13.1-ga.tar.gz
+765c326ccc1b87a01027385e69238266e356361cd4ee3e18e3c9d137a5d11fa5d657c164d02dd1be8fe693c8e10f2b580588dbfa57d27f070e2750f50d3e662c  gtest-1.14.0.tar.gz
+49128238737587dda2b170b20245bddf5e70d9644d9cc5b8e76d6e5e17102a10808d0a8f863e9dd9a68c4033beaa226ae95e8f6742a11960ca7ac5e59c1704ea  ppc64le.patch
+73c8aeb77e2b1f105c62d1739a19f973cb34a16380fbff142605ee7e93cbc388613fa693d96b779ce73e82cd5fc4e46ffb09c3e3a522a8d459088dd47388ac23  riscv64.patch
+403862d6e6919f40d705c59463e9d6ecc5ac5b3f95e107a7e91f84d64068176e4abe7b63f15ba8fc9b4ab2f1ab58f3a489e07716e4c370356e40c2699e870b4f  JDK-8299245_disable-tests.patch
+66f9d80d189ee2cd3658a5d4f744247731ee2659c3bae2f3e8e4ca29d834170aa265b7db9376d80c3050d10defc8247c2d8ed690d06707fe86691a6c2066c320  JDK-8218814_Wformat-security.patch
+"

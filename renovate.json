@@ -20,10 +20,10 @@
   "packageRules": [
     {
       "matchManagers": [
-          "custom.regex"
+        "custom.regex"
       ],
       "matchDatasources": [
-          "!repology"
+        "!repology"
       ],
       "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/"
     },
@@ -155,16 +155,22 @@
       "schedule": []
     },
     {
-      "matchDatasources": [
-        "docker"
+      "matchDepNames": [
+        "openjdk21-source"
       ],
-      "matchPackageNames": [
-        "mariadb"
-      ],
-      "allowedVersions": "/^11\\.8\\.[0-9]+$/",
+      "allowedVersions": "/^jdk-21\\.[0-9]+\\.[0-9]+(?:\\.[0-9]+)?-ga$/",
       "groupName": null,
       "minimumReleaseAge": null,
-      "schedule": []
+      "schedule": [],
+      "postUpgradeTasks": {
+        "commands": [
+          "bash ci/update-openjdk.sh"
+        ],
+        "fileFilters": [
+          "images/java/build/APKBUILD",
+          "images/java/Dockerfile"
+        ]
+      }
     }
   ],
   "customManagers": [
@@ -198,15 +204,16 @@
     },
     {
       "customType": "regex",
-      "description": "Track the upstream MariaDB image version and digest",
       "managerFilePatterns": [
-        "/^images/mariadb/Dockerfile$/"
+        "/^images/java/build/APKBUILD$/"
       ],
       "matchStrings": [
-        "FROM (?<depName>mariadb):(?<currentValue>11\\.8\\.[0-9]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
+        "# upstream-tag=(?<currentValue>jdk-21[^\\s]+)"
       ],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
+      "datasourceTemplate": "github-tags",
+      "packageNameTemplate": "openjdk/jdk21u",
+      "depNameTemplate": "openjdk21-source",
+      "versioningTemplate": "loose"
     }
   ],
   "customDatasources": {

@@ -1,6 +1,6 @@
 # MariaDB
 
-Docker image for [MariaDB] version 11.8 (LTS).
+Docker image for [MariaDB] version 10.11.6
 
 Built from [Islandora-DevOps/isle-buildkit mariadb](https://github.com/Islandora-DevOps/isle-buildkit/tree/main/images/mariadb)
 
@@ -16,11 +16,8 @@ docker exec -ti mariadb mysql -u root --password='password'
 
 ## Dependencies
 
-Uses MariaDB's version- and digest-pinned upstream Ubuntu image for the server
-and clients, and copies static s6/confd support and shared startup scripts from
-`islandora/base`. The ISLE entrypoint, secrets, environment variables, and data
-directory are retained. See [Choosing Dependency Sources](../../README.md#choosing-dependency-sources)
-for the release and packaging policy.
+Requires `islandora/base` Docker image to build. Please refer to the
+[Base Image README](../base/README.md) for additional information.
 
 ## Ports
 

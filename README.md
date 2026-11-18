@@ -476,29 +476,15 @@ Bazel would not eliminate package publication delays or compatibility testing.
 | --- | --- | --- |
 | Solr and ActiveMQ | Checksummed Apache binary release archives | Upstream distributes runnable release artifacts |
 | NGINX | Signed APKs from nginx.org for our Alpine release | Upstream packages both supported architectures; no need to wait for Alpine aports |
-| MariaDB server | Version- and digest-pinned Docker Official Image maintained by MariaDB | Uses upstream MariaDB packages on Ubuntu; avoids maintaining our own database compilation recipe |
+| OpenJDK 21 | Upstream source, built with our vendored Alpine recipe | Preserves musl, JNI, Java certificates, and APK metadata without waiting for Alpine to publish the runtime |
 | PHP | Upstream source, built with our vendored Alpine recipe | PHP does not publish Linux binary packages; local packaging preserves our extensions and Alpine integration |
-| PostgreSQL and routine OS utilities | Alpine packages | Retain distribution packaging where a separate build is not currently justified |
+| MariaDB, PostgreSQL and routine OS utilities | Alpine packages | Retain distribution packaging where a separate build is not currently justified |
 
 NGINX's upstream package uses different module and PID paths from Alpine's
 package; our image preserves the paths required by ISLE configuration and s6
 readiness. Additional dynamic modules must match the upstream NGINX build;
 Alpine's `nginx-mod-*` packages are not interchangeable with upstream modules.
-MariaDB uses the upstream Ubuntu runtime, with static s6/confd and
-shared startup helpers copied from our base image. It keeps ISLE's environment,
-secrets, configuration, `/var/lib/mysql` volume, and initialization conventions;
-the upstream container entrypoint is replaced by `/init`. Our server configuration
-at `/etc/my.cnf.d/mariadb-server.cnf` is included by the upstream configuration.
-MariaDB clients in other Alpine images still come from Alpine and are updated
-separately; they are not copied from the Ubuntu image.
-On startup, MariaDB repairs data-file ownership for the upstream image's mysql
-UID/GID (999:999), including volumes created by Alpine's mysql user (100:101).
-Back up existing databases before migrating; host bind mounts will also receive
-the updated ownership. Run `bash ci/tests/mariadb-runtime.sh` to check secrets,
-configuration, shutdown, and persistence. Set `MARIADB_PREVIOUS` to an older image
-reference to initialize the test volume with that image before migration.
-
-Renovate tracks NGINX's upstream APK releases and MariaDB's image tags/digests,
+Renovate tracks NGINX's upstream APK releases and OpenJDK's upstream source tags,
 restricting automatic updates to the supported release lines. These updates and
 PHP source updates bypass the weekly dependency group. Scheduled detection still
 runs daily; use the Renovate workflow's manual dispatch for urgent releases.
@@ -507,7 +493,7 @@ security update complete. Validate database upgrades against a backup of existin
 data; restoring an older image is not a substitute for a database restore plan.
 
 References: [NGINX packaging](https://github.com/nginx/docker-nginx),
-[MariaDB image packaging](https://github.com/MariaDB/mariadb-docker),
+[OpenJDK build instructions](https://github.com/openjdk/jdk21u/blob/master/doc/building.md),
 and [PHP distribution policy](https://www.php.net/faq.obtaining).
 
 All of the images build by this project are derived from the
@@ -698,6 +684,7 @@ are arranged in a hierarchy, that roughly follows below:
     │       ├── cantaloupe
     │       ├── fcrepo
     │       └── fits
+    ├── mariadb
     ├── postgresql
     ├── nginx
     │   ├── milliner
@@ -714,9 +701,6 @@ are arranged in a hierarchy, that roughly follows below:
 
 [imagemagick] & [leptonica] stand outside of the hierarchy as they are use only
 to build packages that are consumed by other images during their build stage.
-
-MariaDB also stands outside this runtime hierarchy: it inherits the upstream
-MariaDB image and copies static s6/confd support and shared scripts from `base`.
 
 ### Folder Layout
 
