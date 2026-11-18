@@ -3,7 +3,7 @@ FROM java
 
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=cantaloupe packageName=cantaloupe-project/cantaloupe
-ARG CANTALOUPE_VERSION=5.0.7
+ARG CANTALOUPE_VERSION=5.0.8
 ARG CANTALOUPE_FILE="cantaloupe-${CANTALOUPE_VERSION}.zip"
 ARG CANTALOUPE_URL="https://github.com/cantaloupe-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/${CANTALOUPE_FILE}"
 ARG CANTALOUPE_SHA256="741ddee3f5284b179cd2555dc545a8afcb02534f03896cfa9235249fd66b0665"
