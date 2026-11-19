@@ -1,0 +1,14 @@
+The no-ini assertion must not inherit the runner's explicit -c option.
+PHP intentionally permits an explicit config file alongside -n.
+
+--- a/ext/standard/tests/ini_info/php_ini_loaded_file.phpt
++++ b/ext/standard/tests/ini_info/php_ini_loaded_file.phpt
+@@ -8,7 +8,7 @@
+     $code = '"var_dump(php_ini_loaded_file());"';
+ 
+     // No ini file
+-    passthru("$php $args -n -r $code");
++    passthru("$php -n -r $code");
+ 
+     // Specified ini file
+     passthru("$php $args -c $inifile -r $code");

@@ -56,6 +56,8 @@ jobs:
           driver-opts: |
             image=moby/buildkit:v0.11.1
             network=host
+            env.BUILDKIT_STEP_LOG_MAX_SIZE=50000000
+            env.BUILDKIT_STEP_LOG_MAX_SPEED=10000000
 
       - name: Login to Docker Hub
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4

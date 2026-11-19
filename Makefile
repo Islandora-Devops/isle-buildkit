@@ -42,7 +42,7 @@ OS := $(shell uname -s | tr A-Z a-z)
 BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 
 # The buildkit builder to use.
-BUILDER ?= default
+BUILDER ?= isle-buildkit
 
 # Were to push/pull from.
 REPOSITORY ?= islandora
@@ -239,8 +239,16 @@ build/manifests.json: build/bake.json
 
 .PHONY: bake
 ## Builds and loads the target(s) into the local docker context.
-bake: build/bake.json
+bake: build/bake.json | build-builder
 	docker buildx bake --builder $(BUILDER) -f build/bake.json --progress=$(PROGRESS) --load
+
+.PHONY: build-builder
+build-builder: | docker-buildx
+	@if [ "$(BUILDER)" = isle-buildkit ] && ! docker buildx inspect "$(BUILDER)" >/dev/null 2>&1; then \
+		docker buildx create --name "$(BUILDER)" --driver docker-container \
+			--driver-opt env.BUILDKIT_STEP_LOG_MAX_SIZE=50000000 \
+			--driver-opt env.BUILDKIT_STEP_LOG_MAX_SPEED=10000000; \
+	fi
 
 .PHONY: test
 ## Runs docker compose tests for built images. Use TARGET=<image> to narrow the run.
@@ -277,7 +285,7 @@ list-tests:
 
 .PHONY: push
 ## Builds and pushes the target(s) into remote repository.
-push: build/bake.json login
+push: build/bake.json login | build-builder
 push:
 	docker buildx bake --builder $(BUILDER) -f build/bake.json --progress=$(PROGRESS) --push
 

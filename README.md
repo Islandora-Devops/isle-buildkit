@@ -171,6 +171,18 @@ cache.
 make bake
 ```
 
+`make bake` and `make push` create and reuse a local `isle-buildkit` container
+builder with a 50 MB log limit per build step, so verbose test output remains
+available for debugging. CI uses the same limit. This builder has its own local
+cache; the first build also uses the configured registry caches. Set
+`BUILDER=<name>` to use another builder with its own logging configuration.
+To save a complete text log while preserving the build's exit status, run:
+
+```bash
+set -o pipefail
+make bake TARGET=nginx PROGRESS=plain 2>&1 | tee log.txt
+```
+
 ### Build All Images
 
 The following will build all the images in the correct order.
