@@ -41,7 +41,7 @@ ARG \
   # renovate: datasource=repology depName=alpine_3_24/nginx
   NGINX_VERSION=1.30.6-r0 \
   # PHP is built from the vendored aport; ci/update-php.sh updates this pin.
-  PHP_VERSION=8.4.27-r0
+  PHP_VERSION=8.4.28-r0
 
 # Platform specific does require arch specific identifier.
 RUN --mount=type=bind,from=php-build,source=/home/builder/apks,target=/packages \
