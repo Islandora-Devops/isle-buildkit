@@ -32,6 +32,8 @@ RUN --mount=type=cache,id=hypercube-apk-${TARGETARCH},sharing=locked,target=/var
         tesseract-ocr-data-deu=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-jpn=="${TESSERACT_VERSION}" \
         tesseract-ocr-data-rus=="${TESSERACT_VERSION}" \
+        vips-heif \
+        vips-tools \
     && cleanup.sh
 
 COPY --link rootfs /

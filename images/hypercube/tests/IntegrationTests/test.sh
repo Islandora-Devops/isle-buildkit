@@ -29,7 +29,27 @@ else
     exit 1
 fi
 
-# Test 2: PDF OCR from POST data
+# Test 2: Pyramid TIFF and 16-bit JP2 OCR from POST data
+for fixture in test-pyramid.tif:image/tiff test-16bit.jp2:image/jp2; do
+    mime="${fixture#*:}"
+    fixture="${fixture%%:*}"
+    echo "Testing image OCR of $fixture..."
+    curl -s -o ocr.txt -X POST \
+        --header "Accept: text/plain" \
+        --header "Content-Type: $mime" \
+        --data-binary "@/fixtures/$fixture" \
+        "$URL"
+    if grep -q "Pyrases" ocr.txt; then
+        echo "✓ $fixture OCR as expected"
+    else
+        echo "✗ Failed to OCR $fixture correctly"
+        echo "Got:"
+        cat ocr.txt
+        exit 1
+    fi
+done
+
+# Test 3: PDF OCR from POST data
 echo "Testing PDF OCR..."
 
 curl -s -o ocr.txt \
