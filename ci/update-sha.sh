@@ -10,6 +10,8 @@ URL=""
 ARG=""
 DOCKERFILES=()
 README=""
+TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TMP_DIR"' EXIT
 
 # Function to update the Dockerfile(s) ARG SHA256 value
 update_dockerfile_sha() {
@@ -17,15 +19,15 @@ update_dockerfile_sha() {
   local ARG="$2"
   local DOCKERFILES=("${@:3}")
   local SHA
-  curl -fLs "$URL" -o curl.resp || echo "Request failed with exit code $?"
-  SHA=$(shasum -a 256 curl.resp | awk '{print $1}')
+  curl -fLs "$URL" -o "$TMP_DIR/download"
+  SHA=$(shasum -a 256 "$TMP_DIR/download" | awk '{print $1}')
 
   if [[ "$OSTYPE" == "darwin"* ]]; then
     sed -i '' 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
   else
     sed -i 's|^ARG '"$ARG"'=.*|ARG '"$ARG"'="'"$SHA"'"|g' "${DOCKERFILES[@]}"
   fi
-  rm curl.resp
+  rm "$TMP_DIR/download"
 }
 
 update_readme() {
@@ -99,7 +101,9 @@ elif [ "$DEP" = "fcrepo-upgrade-utils" ]; then
   DOCKERFILES=("images/fcrepo/Dockerfile")
 
 elif [ "$DEP" = "cantaloupe" ]; then
-  URL="https://github.com/cantaloupe-project/cantaloupe/releases/download/v${NEW_VERSION}/cantaloupe-${NEW_VERSION}.zip"
+  OLD_VERSION=${OLD_VERSION#v}
+  NEW_VERSION=${NEW_VERSION#v}
+  URL="https://github.com/cantaloupe-project/cantaloupe/archive/refs/tags/v${NEW_VERSION}.tar.gz"
   ARG="CANTALOUPE_SHA256"
   DOCKERFILES=("images/cantaloupe/Dockerfile")
   README="images/cantaloupe/README.md"

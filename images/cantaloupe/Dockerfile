@@ -1,12 +1,30 @@
 # syntax=docker/dockerfile:1.20.0
-FROM java
+FROM java AS cantaloupe-builder
 
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=cantaloupe packageName=cantaloupe-project/cantaloupe
-ARG CANTALOUPE_VERSION=5.0.7
-ARG CANTALOUPE_FILE="cantaloupe-${CANTALOUPE_VERSION}.zip"
-ARG CANTALOUPE_URL="https://github.com/cantaloupe-project/cantaloupe/releases/download/v${CANTALOUPE_VERSION}/${CANTALOUPE_FILE}"
-ARG CANTALOUPE_SHA256="741ddee3f5284b179cd2555dc545a8afcb02534f03896cfa9235249fd66b0665"
+ARG CANTALOUPE_VERSION=5.0.8
+ARG CANTALOUPE_URL="https://github.com/cantaloupe-project/cantaloupe/archive/refs/tags/v${CANTALOUPE_VERSION}.tar.gz"
+ARG CANTALOUPE_SHA256="7eaef792014146993401dc7fd950797c4d65f4c3fe4cd5d82f7bbcf1cef61003"
+
+WORKDIR /build/cantaloupe
+COPY patches/uri-encoding.patch /tmp/uri-encoding.patch
+# Build from source until upstream permits nested encoding in IIIF identifiers.
+RUN --mount=type=cache,id=cantaloupe-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
+    --mount=type=cache,id=cantaloupe-maven-${TARGETARCH},sharing=locked,target=/root/.m2 \
+    download.sh --url "${CANTALOUPE_URL}" --sha256 "${CANTALOUPE_SHA256}" --dest . --strip && \
+    patch -p1 < /tmp/uri-encoding.patch && \
+    mvn -B -Dmaven.test.skip=true package && \
+    unzip -q "target/cantaloupe-${CANTALOUPE_VERSION}.zip" -d /tmp/release && \
+    mv "/tmp/release/cantaloupe-${CANTALOUPE_VERSION}" /opt/cantaloupe && \
+    mv "/opt/cantaloupe/cantaloupe-${CANTALOUPE_VERSION}.jar" /opt/cantaloupe/cantaloupe.jar && \
+    rm -rf /opt/cantaloupe/deps
+
+FROM java
+
+ARG TARGETARCH
+
+COPY --from=cantaloupe-builder /opt/cantaloupe /opt/cantaloupe
 
 ARG LIBJPEG_TURBO_VERSION=2.1.5.1
 ARG LIBJPEG_TURBO_URL="https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/${LIBJPEG_TURBO_VERSION}.zip"
@@ -34,14 +52,6 @@ WORKDIR /opt/cantaloupe
 #
 # Platform agnostic does not require arch specific identifier.
 RUN --mount=type=cache,id=cantaloupe-downloads-${TARGETARCH},sharing=locked,target=/opt/downloads \
-    download.sh \
-        --url "${CANTALOUPE_URL}" \
-        --sha256 "${CANTALOUPE_SHA256}" \
-        --dest "/opt/cantaloupe" \
-        --strip \
-        deps \
-    && \
-    mv "/opt/cantaloupe/cantaloupe-${CANTALOUPE_VERSION}.jar" "/opt/cantaloupe/cantaloupe.jar" && \
     apk add cmake make alpine-sdk && \
     download.sh \
         --url "${LIBJPEG_TURBO_URL}" \
