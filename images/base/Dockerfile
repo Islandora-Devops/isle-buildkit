@@ -38,8 +38,6 @@ ARG \
   JQ_VERSION=1.8.2-r0 \
   # renovate: datasource=repology depName=alpine_3_24/mariadb-client
   MARIADB_CLIENT_VERSION=11.8.10-r0 \
-  # renovate: datasource=repology depName=alpine_3_24/mysql-client
-  MYSQL_CLIENT_VERSION=11.8.10-r0 \
   # renovate: datasource=repology depName=alpine_3_24/netcat-openbsd
   NETCAT_OPENBSD_VERSION=1.234.1-r0 \
   # renovate: datasource=repology depName=alpine_3_24/openssl
@@ -72,7 +70,6 @@ RUN --mount=type=cache,id=base-apk-${TARGETARCH},sharing=locked,target=/var/cach
         gzip=="${GZIP_VERSION}" \
         jq=="${JQ_VERSION}" \
         mariadb-client=="${MARIADB_CLIENT_VERSION}" \
-        mysql-client=="${MYSQL_CLIENT_VERSION}" \
         netcat-openbsd=="${NETCAT_OPENBSD_VERSION}" \
         openssl=="${OPENSSL_VERSION}" \
         patch=="${PATCH_VERSION}" \

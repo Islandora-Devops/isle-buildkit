@@ -11,7 +11,7 @@ log in with client as the user `root` with the password `password`.
 
 ```bash
 docker run --rm -d -name mariadb islandora/mariadb
-docker exec -ti mariadb mysql -u root --password='password'
+docker exec -ti mariadb mariadb -u root --password='password'
 ```
 
 ## Dependencies
@@ -23,7 +23,7 @@ Requires `islandora/base` Docker image to build. Please refer to the
 
 | Port | Description       |
 | :--- | :---------------- |
-| 3306 | MySQL Client Port |
+| 3306 | MariaDB Client Port |
 
 ## Volumes
 
