@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 set -e
-exec s6-setuidgid mysql mysqld --user mysql
+exec s6-setuidgid mysql mariadbd --user mysql
